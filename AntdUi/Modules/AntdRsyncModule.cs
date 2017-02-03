@@ -27,8 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Linq;
-using antdlib.config;
+using System.Collections.Generic;
+using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -40,72 +40,53 @@ namespace AntdUi.Modules {
 
         public AntdRsyncModule() {
             Get["/rsync"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                var rsyncIsActive = rsyncConfiguration.IsActive();
-                var model = new PageRsyncModel {
-                    RsyncIsActive = rsyncIsActive,
-                    RsyncDirectories = rsyncConfiguration.Get()?.Directories.OrderBy(_ => _.Type)
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageRsyncModel>($"http://127.0.0.1:{Application.ServerPort}/rsync");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
-            Post["/services/rsync/set"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Set();
-                return HttpStatusCode.OK;
+            Post["/rsync/set"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/set", null);
             };
 
-            Post["/services/rsync/restart"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Start();
-                return HttpStatusCode.OK;
+            Post["/rsync/restart"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/restart", null);
             };
 
-            Post["/services/rsync/stop"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Stop();
-                return HttpStatusCode.OK;
+            Post["/rsync/stop"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/stop", null);
             };
 
-            Post["/services/rsync/enable"] = x => {
-                var dhcpdConfiguration = new RsyncConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
-                return HttpStatusCode.OK;
+            Post["/rsync/enable"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/enable", null);
             };
 
-            Post["/services/rsync/disable"] = x => {
-                var dhcpdConfiguration = new RsyncConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
-                return HttpStatusCode.OK;
+            Post["/rsync/disable"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/disable", null);
             };
 
-            Post["/services/rsync/options"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Save(new RsyncConfigurationModel());
-                return Response.AsRedirect("/");
+            Post["/rsync/options"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/options", null);
             };
 
-            Post["/services/rsync/directory"] = x => {
+            Post["/rsync/directory"] = x => {
                 string source = Request.Form.Source;
                 string destination = Request.Form.Destination;
                 string type = Request.Form.Type;
-                var model = new RsyncObjectModel {
-                    Source = source,
-                    Destination = destination,
-                    Type = type
+                var dict = new Dictionary<string, string> {
+                    { "Source", source },
+                    { "Destination", destination },
+                    { "Type", type },
                 };
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.AddDirectory(model);
-                return Response.AsRedirect("/");
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/directory", dict);
             };
 
-            Post["/services/rsync/directory/del"] = x => {
+            Post["/rsync/directory/del"] = x => {
                 string guid = Request.Form.Guid;
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.RemoveDirectory(guid);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/directory/del", dict);
             };
         }
     }

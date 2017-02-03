@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 	ProjectSection(SolutionItems) = preProject
 		_frequentregex.txt = _frequentregex.txt
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
+		TextFile1.txt = TextFile1.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
@@ -63,8 +64,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA4989
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"
 	ProjectSection(SolutionItems) = preProject
-		AntdUi\Modules\AntdAclModule.cs = AntdUi\Modules\AntdAclModule.cs
-		AntdUi\Modules\AntdBindModule.cs = AntdUi\Modules\AntdBindModule.cs
 		AntdUi\Modules\AntdDhcpdModule.cs = AntdUi\Modules\AntdDhcpdModule.cs
 		AntdUi\Modules\AntdDhcpLeasesModule.cs = AntdUi\Modules\AntdDhcpLeasesModule.cs
 		AntdUi\Modules\AntdDiskUsageModule.cs = AntdUi\Modules\AntdDiskUsageModule.cs
@@ -80,6 +79,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A
 		AntdUi\Modules\AntdVmModule.cs = AntdUi\Modules\AntdVmModule.cs
 		AntdUi\Modules\AntdVpnModule.cs = AntdUi\Modules\AntdVpnModule.cs
 		AntdUi\Modules\AntdZfsModule.cs = AntdUi\Modules\AntdZfsModule.cs
+		AntdUi\Modules\AppsDetectModule.cs = AntdUi\Modules\AppsDetectModule.cs
+		AntdUi\Modules\AppsManagementModule.cs = AntdUi\Modules\AppsManagementModule.cs
+		AntdUi\Modules\AssetDiscoveryModule.cs = AntdUi\Modules\AssetDiscoveryModule.cs
+		AntdUi\Modules\AssetScanModule.cs = AntdUi\Modules\AssetScanModule.cs
+		AntdUi\Modules\AssetSettingModule.cs = AntdUi\Modules\AssetSettingModule.cs
+		AntdUi\Modules\AssetSyncMachineModule.cs = AntdUi\Modules\AssetSyncMachineModule.cs
+		AntdUi\Modules\BootCommandsModule.cs = AntdUi\Modules\BootCommandsModule.cs
+		AntdUi\Modules\BootModulesModule.cs = AntdUi\Modules\BootModulesModule.cs
+		AntdUi\Modules\BootOsParametersModule.cs = AntdUi\Modules\BootOsParametersModule.cs
+		AntdUi\Modules\BootServicesModule.cs = AntdUi\Modules\BootServicesModule.cs
+		AntdUi\Modules\CaModule.cs = AntdUi\Modules\CaModule.cs
+		AntdUi\Modules\LogJournaldModule.cs = AntdUi\Modules\LogJournaldModule.cs
+		AntdUi\Modules\LogJournalModule.cs = AntdUi\Modules\LogJournalModule.cs
+		AntdUi\Modules\LogModule.cs = AntdUi\Modules\LogModule.cs
+		AntdUi\Modules\LogReportModule.cs = AntdUi\Modules\LogReportModule.cs
+		AntdUi\Modules\LogSyslogNgModule.cs = AntdUi\Modules\LogSyslogNgModule.cs
 	EndProjectSection
 EndProject
 Global

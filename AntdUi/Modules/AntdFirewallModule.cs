@@ -27,9 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Linq;
+using System.Collections.Generic;
 using antdlib.common;
-using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -41,48 +40,29 @@ namespace AntdUi.Modules {
 
         public AntdFirewallModule() {
             Get["/firewall"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                var firewallIsActive = firewallConfiguration.IsActive();
-                var model = new PageFirewallModel {
-                    FirewallIsActive = firewallIsActive,
-                    FwIp4Filter = firewallConfiguration.Get()?.Ipv4FilterTable,
-                    FwIp4Nat = firewallConfiguration.Get()?.Ipv4NatTable,
-                    FwIp6Filter = firewallConfiguration.Get()?.Ipv6FilterTable,
-                    FwIp6Nat = firewallConfiguration.Get()?.Ipv6NatTable
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageFirewallModel>($"http://127.0.0.1:{Application.ServerPort}/firewall");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/firewall/set"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Set();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set", null);
             };
 
             Post["/firewall/restart"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart", null);
             };
 
             Post["/firewall/stop"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop", null);
             };
 
             Post["/firewall/enable"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Enable();
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable", null);
             };
 
             Post["/firewall/disable"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Disable();
-                firewallConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable", null);
             };
 
             #region [    IPV4    ]
@@ -90,182 +70,90 @@ namespace AntdUi.Modules {
                 string set = Request.Form.Set;
                 string type = Request.Form.Type;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
-                var sets = table.Sets.ToList();
-                var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
-                if(tryGetSet == null) {
-                    sets.Add(new FirewallSet { Name = set, Type = type, Elements = elements.SplitToList().ToArray() });
-                }
-                else {
-                    sets.Remove(tryGetSet);
-                    tryGetSet.Elements = elements.SplitToList().ToArray();
-                    sets.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Set", set },
+                    { "Type", type },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/filter/set", dict);
             };
 
             Post["/firewall/ipv4/filter/chain"] = x => {
                 string chain = Request.Form.Chain;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
-                var chains = table.Chains.ToList();
-                var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
-                if(tryGetSet == null) {
-                    chains.Add(new FirewallChain { Name = chain, Rules = elements.SplitToList().ToArray() });
-                }
-                else {
-                    chains.Remove(tryGetSet);
-                    tryGetSet.Rules = elements.SplitToList().ToArray();
-                    chains.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Chain", chain },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/filter/chain", dict);
             };
 
             Post["/firewall/ipv4/nat/set"] = x => {
                 string set = Request.Form.Set;
                 string type = Request.Form.Type;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
-                var sets = table.Sets.ToList();
-                var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
-                if(tryGetSet == null) {
-                    sets.Add(new FirewallSet { Name = set, Type = type, Elements = elements.SplitToList().ToArray() });
-                }
-                else {
-                    sets.Remove(tryGetSet);
-                    tryGetSet.Elements = elements.SplitToList().ToArray();
-                    sets.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Set", set },
+                    { "Type", type },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/nat/set", dict);
             };
 
             Post["/firewall/ipv4/nat/chain"] = x => {
                 string chain = Request.Form.Chain;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
-                var chains = table.Chains.ToList();
-                var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
-                if(tryGetSet == null) {
-                    chains.Add(new FirewallChain { Name = chain, Rules = elements.SplitToList().ToArray() });
-                }
-                else {
-                    chains.Remove(tryGetSet);
-                    tryGetSet.Rules = elements.SplitToList().ToArray();
-                    chains.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Chain", chain },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/nat/chain", dict);
             };
             #endregion
 
             #region [    IPV6    ]
-            Post["/firewall/ipv4/filter/set"] = x => {
+            Post["/firewall/ipv6/filter/set"] = x => {
                 string set = Request.Form.Set;
                 string type = Request.Form.Type;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
-                var sets = table.Sets.ToList();
-                var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
-                if(tryGetSet == null) {
-                    sets.Add(new FirewallSet { Name = set, Type = type, Elements = elements.SplitToList().ToArray() });
-                }
-                else {
-                    sets.Remove(tryGetSet);
-                    tryGetSet.Elements = elements.SplitToList().ToArray();
-                    sets.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Set", set },
+                    { "Type", type },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/filter/set", dict);
             };
 
-            Post["/firewall/ipv4/filter/chain"] = x => {
+            Post["/firewall/ipv6/filter/chain"] = x => {
                 string chain = Request.Form.Chain;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
-                var chains = table.Chains.ToList();
-                var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
-                if(tryGetSet == null) {
-                    chains.Add(new FirewallChain { Name = chain, Rules = elements.SplitToList().ToArray() });
-                }
-                else {
-                    chains.Remove(tryGetSet);
-                    tryGetSet.Rules = elements.SplitToList().ToArray();
-                    chains.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Chain", chain },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/filter/chain", dict);
             };
 
-            Post["/firewall/ipv4/nat/set"] = x => {
+            Post["/firewall/ipv6/nat/set"] = x => {
                 string set = Request.Form.Set;
                 string type = Request.Form.Type;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
-                var sets = table.Sets.ToList();
-                var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
-                if(tryGetSet == null) {
-                    sets.Add(new FirewallSet { Name = set, Type = type, Elements = elements.SplitToList().ToArray() });
-                }
-                else {
-                    sets.Remove(tryGetSet);
-                    tryGetSet.Elements = elements.SplitToList().ToArray();
-                    sets.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Set", set },
+                    { "Type", type },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/nat/set", dict);
             };
 
-            Post["/firewall/ipv4/nat/chain"] = x => {
+            Post["/firewall/ipv6/nat/chain"] = x => {
                 string chain = Request.Form.Chain;
                 string elements = Request.Form.Elements;
-                if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
-                var chains = table.Chains.ToList();
-                var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
-                if(tryGetSet == null) {
-                    chains.Add(new FirewallChain { Name = chain, Rules = elements.SplitToList().ToArray() });
-                }
-                else {
-                    chains.Remove(tryGetSet);
-                    tryGetSet.Rules = elements.SplitToList().ToArray();
-                    chains.Add(tryGetSet);
-                }
-                firewallConfiguration.Start();
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Chain", chain },
+                    { "Elements", elements },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/nat/chain", dict);
             };
             #endregion
         }

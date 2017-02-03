@@ -176,7 +176,7 @@ namespace Antd.ServerModules {
             #endregion
 
             #region [    IPV6    ]
-            Post["/firewall/ipv4/filter/set"] = x => {
+            Post["/firewall/ipv6/filter/set"] = x => {
                 string set = Request.Form.Set;
                 string type = Request.Form.Type;
                 string elements = Request.Form.Elements;
@@ -199,7 +199,7 @@ namespace Antd.ServerModules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/firewall/ipv4/filter/chain"] = x => {
+            Post["/firewall/ipv6/filter/chain"] = x => {
                 string chain = Request.Form.Chain;
                 string elements = Request.Form.Elements;
                 if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
@@ -221,7 +221,7 @@ namespace Antd.ServerModules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/firewall/ipv4/nat/set"] = x => {
+            Post["/firewall/ipv6/nat/set"] = x => {
                 string set = Request.Form.Set;
                 string type = Request.Form.Type;
                 string elements = Request.Form.Elements;
@@ -244,7 +244,7 @@ namespace Antd.ServerModules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/firewall/ipv4/nat/chain"] = x => {
+            Post["/firewall/ipv6/nat/chain"] = x => {
                 string chain = Request.Form.Chain;
                 string elements = Request.Form.Elements;
                 if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {

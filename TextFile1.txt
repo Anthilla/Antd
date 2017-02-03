@@ -1,55 +1,38 @@
-[ ] acl.html
-[ ] bind.html
-[ ] cpu.html
-[ ] cron.html
-[ ] dhcpd.html
-[ ] disk.html
-[ ] fw.html
-[ ] host.html
-[ ] hostparam.html
-[ ] info.html
-[ ] leases.html
-[ ] losetup.html
-[ ] memory.html
-[ ] mod.html
-[ ] network.html
-[ ] ns.html
-[ ] om.html
-[ ] overlay.html
-[ ] rsync.html
-[ ] samba.html
-[ ] sshd.html
-[ ] storage.html
-[ ] svcs.html
-[ ] sync.html
-[ ] system.html
-[ ] time.html
-[ ] update.html
-[ ] users.html
-[ ] vm.html
-[ ] vpn.html
-[ ] zfs.html
+restart
+stop
+enable
+disable
 
-[ ] appsdetect.html
-[ ] appsmgmt.html
 
-[ ] assetconfig.html
-[ ] assetsync.html
-[ ] discovery.html
-[ ] scan.html
+$scope.$1 = function () {\n\t$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";\n\t$http.post("/acl/$1").then(function () { alert("Ok!"); }, function (r) { console.log(r); });\n}\n
 
-[ ] bootcmd.html
-[ ] bootmod.html
-[ ] bootparam.html
-[ ] bootsvc.html
 
-[ ] ca.html
-[ ] cert.html
-[ ] dc.html
-[ ] dcusers.html
 
-[ ] journal.html
-[ ] logconfig.html
-[ ] log.html
-[ ] report.html
-[ ] syslogng.html
+ $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/acl/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/acl/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/acl/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/acl/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/acl/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/acl").success(function (data) {
+        $scope.Acl = data;
+    });

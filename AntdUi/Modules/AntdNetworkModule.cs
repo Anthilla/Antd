@@ -27,10 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Linq;
+using System.Collections.Generic;
 using antdlib.common;
-using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -43,31 +41,13 @@ namespace AntdUi.Modules {
         public AntdNetworkModule() {
 
             Get["/network"] = x => {
-                var networkConfiguration = new NetworkConfiguration();
-                var physicalInterfaces = networkConfiguration.InterfacePhysicalModel.ToList();
-                var bridgeInterfaces = networkConfiguration.InterfaceBridgeModel.ToList();
-                var bondInterfaces = networkConfiguration.InterfaceBondModel.ToList();
-                var virtualInterfaces = networkConfiguration.InterfaceVirtualModel.ToList();
-                foreach(var vif in virtualInterfaces) {
-                    if(physicalInterfaces.Any(_ => _.Interface == vif.Interface) ||
-                    bridgeInterfaces.Any(_ => _.Interface == vif.Interface) ||
-                    bondInterfaces.Any(_ => _.Interface == vif.Interface)) {
-                        virtualInterfaces.Remove(vif);
-                    }
-                }
-                var model = new PageNetworkModel {
-                    NetworkPhysicalIf = physicalInterfaces,
-                    NetworkBridgeIf = bridgeInterfaces,
-                    NetworkBondIf = bondInterfaces,
-                    NetworkVirtualIf = virtualInterfaces
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageNetworkModel>($"http://127.0.0.1:{Application.ServerPort}/network");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/network/restart"] = x => {
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/restart", null);
             };
 
             Post["/network/interface"] = x => {
@@ -78,25 +58,24 @@ namespace AntdUi.Modules {
                 string staticRange = Request.Form.StaticRange;
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
-                var model = new NetworkInterfaceConfigurationModel {
-                    Interface = Interface,
-                    Mode = (NetworkInterfaceMode)Enum.Parse(typeof(NetworkInterfaceMode), mode),
-                    Status = (NetworkInterfaceStatus)Enum.Parse(typeof(NetworkInterfaceStatus), status),
-                    StaticAddress = staticAddres,
-                    StaticRange = staticRange,
-                    Txqueuelen = txqueuelen,
-                    Mtu = mtu
+                var dict = new Dictionary<string, string> {
+                    { "Interface", Interface },
+                    { "Mode", mode },
+                    { "Status", status },
+                    { "StaticAddres", staticAddres },
+                    { "StaticRange", staticRange },
+                    { "Txqueuelen", txqueuelen },
+                    { "Mtu", mtu },
                 };
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.AddInterfaceSetting(model);
-                return Response.AsRedirect("/");
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface", dict);
             };
 
             Post["/network/interface/del"] = x => {
                 string guid = Request.Form.Guid;
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.RemoveInterfaceSetting(guid);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/del", dict);
             };
         }
     }

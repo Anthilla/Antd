@@ -27,7 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.config;
+using System.Collections.Generic;
+using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -39,45 +40,29 @@ namespace AntdUi.Modules {
 
         public AntdSshdModule() {
             Get["/sshd"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                var sshdIsActive = sshdConfiguration.IsActive();
-                var model = new PageSshdModel {
-                    SshdIsActive = sshdIsActive,
-                    SshdOptions = sshdConfiguration.Get() ?? new SshdConfigurationModel()
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageSshdModel>($"http://127.0.0.1:{Application.ServerPort}/sshd");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/sshd/set"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Set();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/set", null);
             };
 
             Post["/sshd/restart"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/restart", null);
             };
 
             Post["/sshd/stop"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/stop", null);
             };
 
             Post["/sshd/enable"] = x => {
-                var dhcpdConfiguration = new SshdConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/enable", null);
             };
 
             Post["/sshd/disable"] = x => {
-                var dhcpdConfiguration = new SshdConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/disable", null);
             };
 
             Post["/sshd/options"] = x => {
@@ -89,19 +74,17 @@ namespace AntdUi.Modules {
                 string rsaAuthentication = Request.Form.RsaAuthentication;
                 string pubkeyAuthentication = Request.Form.PubkeyAuthentication;
                 string usePam = Request.Form.UsePam;
-                var model = new SshdConfigurationModel {
-                    Port = port,
-                    PermitRootLogin = permitRootLogin,
-                    PermitTunnel = permitTunnel,
-                    MaxAuthTries = maxAuthTries,
-                    MaxSessions = maxSessions,
-                    RsaAuthentication = rsaAuthentication,
-                    PubkeyAuthentication = pubkeyAuthentication,
-                    UsePam = usePam
+                var dict = new Dictionary<string, string> {
+                    { "Port", port },
+                    { "PermitRootLogin", permitRootLogin },
+                    { "PermitTunnel", permitTunnel },
+                    { "MaxAuthTries", maxAuthTries },
+                    { "MaxSessions", maxSessions },
+                    { "RsaAuthentication", rsaAuthentication },
+                    { "PubkeyAuthentication", pubkeyAuthentication },
+                    { "UsePam", usePam },
                 };
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/options", dict);
             };
         }
     }

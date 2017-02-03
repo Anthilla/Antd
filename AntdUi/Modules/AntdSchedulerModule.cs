@@ -28,6 +28,7 @@
 //-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -37,61 +38,47 @@ namespace AntdUi.Modules {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        private readonly TimerRepository _timerRepository = new TimerRepository();
-        private readonly Timers _timers = new Timers();
-
         public AntdSchedulerModule() {
             Get["/scheduler"] = x => {
-                var timers = new Timers();
-                var scheduledJobs = timers.GetAll();
-                var model = new PageSchedulerModel {
-                    Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias)
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageSchedulerModel>($"http://127.0.0.1:{Application.ServerPort}/scheduler");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/scheduler"] = x => {
                 var alias = (string)Request.Form.Alias;
                 var command = (string)Request.Form.Command;
-                var hi = (string)Request.Form.Interval;
-                if(!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(hi)) {
-                    _timers.Create(alias, hi, command);
-                }
-                return Response.AsRedirect("/");
+                var dict = new Dictionary<string, string> {
+                    { "Alias", alias },
+                    { "Command", command }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler", dict);
             };
 
             Post["/scheduler/enable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Enable(tt.Alias);
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/enable", null);
             };
 
             Post["/scheduler/disable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Disable(tt.Alias);
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/disable", null);
             };
 
             Post["/scheduler/delete"] = x => {
                 string guid = Request.Form.Guid;
-                _timerRepository.Delete(guid);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/delete", dict);
             };
 
             Post["/scheduler/edit"] = x => {
                 var id = (string)Request.Form.Guid;
                 var command = (string)Request.Form.Command;
-                _timerRepository.Edit(new Dictionary<string, string> {
-                    { "Id", id },
-                    { "Data", command }
-                });
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", id },
+                    { "Command", command }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/edit", dict);
             };
         }
     }

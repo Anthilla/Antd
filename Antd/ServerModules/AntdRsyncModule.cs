@@ -47,45 +47,45 @@ namespace Antd.ServerModules {
                 return JsonConvert.SerializeObject(model);
             };
 
-            Post["/services/rsync/set"] = x => {
+            Post["/rsync/set"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/rsync/restart"] = x => {
+            Post["/rsync/restart"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/rsync/stop"] = x => {
+            Post["/rsync/stop"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/rsync/enable"] = x => {
+            Post["/rsync/enable"] = x => {
                 var dhcpdConfiguration = new RsyncConfiguration();
                 dhcpdConfiguration.Enable();
                 dhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/rsync/disable"] = x => {
+            Post["/rsync/disable"] = x => {
                 var dhcpdConfiguration = new RsyncConfiguration();
                 dhcpdConfiguration.Disable();
                 dhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
-            Post["/services/rsync/options"] = x => {
+            Post["/rsync/options"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.Save(new RsyncConfigurationModel());
                 return Response.AsRedirect("/");
             };
 
-            Post["/services/rsync/directory"] = x => {
+            Post["/rsync/directory"] = x => {
                 string source = Request.Form.Source;
                 string destination = Request.Form.Destination;
                 string type = Request.Form.Type;
@@ -99,7 +99,7 @@ namespace Antd.ServerModules {
                 return Response.AsRedirect("/");
             };
 
-            Post["/services/rsync/directory/del"] = x => {
+            Post["/rsync/directory/del"] = x => {
                 string guid = Request.Form.Guid;
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.RemoveDirectory(guid);

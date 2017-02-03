@@ -27,10 +27,8 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using antdlib.config;
+using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -42,103 +40,59 @@ namespace AntdUi.Modules {
 
         public AntdGlusterModule() {
             Get["/gluster"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                var glusterIsActive = glusterConfiguration.IsActive();
-                var model = new PageGlusterModel {
-                    GlusterIsActive = glusterIsActive,
-                    Nodes = glusterConfiguration.Get()?.Nodes,
-                    Volumes = glusterConfiguration.Get()?.Volumes
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageGlusterModel>($"http://127.0.0.1:{Application.ServerPort}/gluster");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/gluster/set"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Set();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set", null);
             };
 
             Post["/gluster/restart"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart", null);
             };
 
             Post["/gluster/stop"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop", null);
             };
 
             Post["/gluster/enable"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Enable();
-                glusterConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable", null);
             };
 
             Post["/gluster/disable"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Disable();
-                glusterConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable", null);
             };
 
             Post["/gluster/options"] = x => {
                 string nodes = Request.Form.GlusterNode;
-                var nodelist = nodes.Split(new[] { "," }, StringSplitOptions.None).ToList();
                 string volumeNames = Request.Form.GlusterVolumeName;
                 string volumeBrick = Request.Form.GlusterVolumeBrick;
                 string volumeMountPoint = Request.Form.GlusterVolumeMountPoint;
-                var volumeNamesList = volumeNames.Split(new[] { "," }, StringSplitOptions.None);
-                var volumeBrickList = volumeBrick.Split(new[] { "," }, StringSplitOptions.None);
-                var volumeMountPointList = volumeMountPoint.Split(new[] { "," }, StringSplitOptions.None);
-                var volumelist = new List<GlusterVolume>();
-                for(var i = 0; i < 20; i++) {
-                    if(volumeNamesList.Length < i - 1 ||
-                        volumeBrickList.Length < i - 1 ||
-                        volumeMountPointList.Length < i - 1) {
-                        continue;
-                    }
-                    try {
-                        var vol = new GlusterVolume {
-                            Name = volumeNamesList[i],
-                            Brick = volumeBrickList[i],
-                            MountPoint = volumeMountPointList[i],
-                        };
-                        volumelist.Add(vol);
-                    }
-                    catch(Exception) {
-                        continue;
-                    }
-                }
-                var config = new GlusterConfigurationModel {
-                    Nodes = nodelist.ToArray(),
-                    Volumes = volumelist.ToArray()
+                var dict = new Dictionary<string, string> {
+                    { "GlusterNode", nodes },
+                    { "GlusterVolumeName", volumeNames },
+                    { "GlusterVolumeBrick", volumeBrick },
+                    { "GlusterVolumeMountPoint", volumeMountPoint },
                 };
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Save(config);
-                return Response.AsRedirect("/");
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/options", dict);
             };
 
             Post["/gluster/node"] = x => {
                 string node = Request.Form.Node;
-                if(string.IsNullOrWhiteSpace(node)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.AddNode(node);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Node", node }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/node", dict);
             };
 
             Post["/gluster/node/del"] = x => {
                 string node = Request.Form.Node;
-                if(string.IsNullOrWhiteSpace(node)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.RemoveNode(node);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Node", node }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/node/del", dict);
             };
         }
     }

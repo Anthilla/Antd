@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using antdlib.common;
 using antdlib.models;
@@ -38,82 +39,59 @@ namespace AntdUi.Modules {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        private readonly TimerRepository _timerRepository = new TimerRepository();
-        private readonly CommandLauncher _launcher = new CommandLauncher();
-        private readonly Timers _timers = new Timers();
-
         public AntdZfsModule() {
             Get["/zfs"] = x => {
-                var zpool = new Zpool();
-                var zfsSnap = new ZfsSnap();
-                var zfs = new Zfs();
-                var disks = new Disks();
-
-                var model = new PageZfsModel {
-                    ZpoolList = zpool.List(),
-                    ZfsList = zfs.List(),
-                    ZfsSnap = zfsSnap.List(),
-                    ZpoolHistory = zpool.History(),
-                    DisksList = disks.GetList().Where(_ => _.Type == "disk" && string.IsNullOrEmpty(_.Mountpoint))
-
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageZfsModel>($"http://127.0.0.1:{Application.ServerPort}/zfs");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Get["/zfs/cron"] = x => {
-                var list = _timerRepository.GetAll();
-                return Response.AsJson(list);
+                throw new NotImplementedException();
             };
 
             Post["/zfs/snap"] = x => {
-                var pool = (string)Request.Form.Pool;
-                var interval = (string)Request.Form.Interval;
-                if(string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
-                    return HttpStatusCode.InternalServerError;
-                }
-                _timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
-                return HttpStatusCode.OK;
+                string pool = Request.Form.Pool;
+                string interval = Request.Form.Interval;
+                var dict = new Dictionary<string, string> {
+                    { "Pool", pool },
+                    { "Interval", interval },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/snap", dict);
             };
 
             Post["/zfs/snap/disable"] = x => {
                 string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Disable(tt.Alias);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/snap/disable", dict);
             };
 
             Post["/zpool/create"] = x => {
-                var altroot = (string)Request.Form.Altroot;
-                var poolname = (string)Request.Form.Name;
-                var pooltype = (string)Request.Form.Type;
-                var diskid = (string)Request.Form.Id;
-                if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(pooltype) || string.IsNullOrEmpty(diskid)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                ConsoleLogger.Log($"[zpool] create => altroot:{altroot} poolname:{poolname} pooltype:{pooltype} diskid:{diskid} ");
-                _launcher.Launch("zpool-create", new Dictionary<string, string> {
-                    { "$pool_altroot", altroot },
-                    { "$pool_name", poolname.Replace("/dev/", "") },
-                    { "$disk_byid", diskid }
-                });
-                return HttpStatusCode.OK;
+                string altroot = Request.Form.Altroot;
+                string poolname = Request.Form.Name;
+                string pooltype = Request.Form.Type;
+                string diskid = Request.Form.Id;
+                var dict = new Dictionary<string, string> {
+                    { "Altroot", altroot },
+                    { "Name", poolname },
+                    { "Type", pooltype },
+                    { "Id", diskid },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zpool/create", dict);
             };
 
             Post["/zfs/create"] = x => {
-                var altroot = (string)Request.Form.Altroot;
-                var poolname = (string)Request.Form.Name;
-                var datasetname = (string)Request.Form.Dataset;
-                if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(datasetname)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                _launcher.Launch("zfs-create", new Dictionary<string, string> {
-                    { "$pool_altroot", altroot },
-                    { "$pool_name", poolname },
-                    { "$dataset_name", datasetname }
-                });
-                return HttpStatusCode.OK;
+                string altroot = Request.Form.Altroot;
+                string poolname = Request.Form.Name;
+                string datasetname = Request.Form.Dataset;
+                var dict = new Dictionary<string, string> {
+                    { "Altroot", altroot },
+                    { "Name", poolname },
+                    { "Dataset", datasetname },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/create", dict);
             };
         }
     }

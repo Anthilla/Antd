@@ -27,7 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Linq;
+using System.Collections.Generic;
 using antdlib.common;
 using antdlib.models;
 using Nancy;
@@ -38,29 +38,31 @@ namespace AntdUi.Modules {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        private readonly Bash _bash = new Bash();
-
         public AntdStorageModule() {
             Get["/storage"] = x => {
-                var disks = new Disks();
-                var model = new PageStorageModel {
-                    DisksList = disks.GetList()
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageStorageModel>($"http://127.0.0.1:{Application.ServerPort}/storage");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/storage/print"] = x => {
-                var disk = (string)Request.Form.Disk;
-                var result = _bash.Execute($"parted /dev/{disk} print 2> /dev/null").SplitBash().Grep("'Partition Table: '").First();
-                return Response.AsText(result.Replace("Partition Table: ", ""));
+                string disk = Request.Form.Disk;
+                var dict = new Dictionary<string, string> {
+                    { "Disk", disk }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/storage/print", dict);
             };
 
             Post["/storage/mklabel"] = x => {
-                var disk = (string)Request.Form.Disk;
-                var type = (string)Request.Form.Type;
-                var yn = (string)Request.Form.Confirm;
-                var result = _bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
-                return Response.AsText(result);
+                string disk = Request.Form.Disk;
+                string type = Request.Form.Type;
+                string yn = Request.Form.Confirm;
+                var dict = new Dictionary<string, string> {
+                    { "Disk", disk },
+                    { "Type", type },
+                    { "Confirm", yn },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/storage/mklabel", dict);
             };
         }
     }
