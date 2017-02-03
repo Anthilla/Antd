@@ -109,7 +109,6 @@
     <Compile Include="ServerModules\BootCommandsModule.cs" />
     <Compile Include="ServerModules\LogSyslogNgModule.cs" />
     <Compile Include="ServerModules\LogJournaldModule.cs" />
-    <Compile Include="ServerModules\LogConfigModule.cs" />
     <Compile Include="ServerModules\LogReportModule.cs" />
     <Compile Include="ServerModules\LogJournalModule.cs" />
     <Compile Include="ServerModules\LogModule.cs" />

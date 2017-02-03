@@ -27,55 +27,42 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.config;
+using System.Collections.Generic;
+using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace Antd.ServerModules {
-    public class LogConfigModule : NancyModule {
+namespace AntdUi.Modules {
+    public class LogJournaldModule : NancyModule {
 
-        public LogConfigModule() {
+        private readonly ApiConsumer _api = new ApiConsumer();
+
+        public LogJournaldModule() {
             Get["/journald"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                var journaldIsActive = journaldConfiguration.IsActive();
-                var model = new PageJournaldModel {
-                    JournaldIsActive = journaldIsActive,
-                    JournaldOptions = journaldConfiguration.Get() ?? new JournaldConfigurationModel()
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageJournaldModel>($"http://127.0.0.1:{Application.ServerPort}/journald");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/journald/set"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Set();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/set", null);
             };
 
             Post["/journald/restart"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/restart", null);
             };
 
             Post["/journald/stop"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/stop", null);
             };
 
             Post["/journald/enable"] = x => {
-                var dhcpdConfiguration = new JournaldConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/enable", null);
             };
 
             Post["/journald/disable"] = x => {
-                var dhcpdConfiguration = new JournaldConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/disable", null);
             };
 
             Post["/journald/options"] = x => {
@@ -104,36 +91,34 @@ namespace Antd.ServerModules {
                 string maxLevelKMsg = Request.Form.MaxLevelKMsg;
                 string maxLevelConsole = Request.Form.MaxLevelConsole;
                 string maxLevelWall = Request.Form.MaxLevelWall;
-                var model = new JournaldConfigurationModel {
-                    Storage = storage,
-                    Compress = compress,
-                    Seal = seal,
-                    SplitMode = splitMode,
-                    SyncIntervalSec = syncIntervalSec,
-                    RateLimitInterval = rateLimitInterval,
-                    RateLimitBurst = rateLimitBurst,
-                    SystemMaxUse = systemMaxUse,
-                    SystemKeepFree = systemKeepFree,
-                    SystemMaxFileSize = systemMaxFileSize,
-                    RuntimeMaxUse = runtimeMaxUse,
-                    RuntimeKeepFree = runtimeKeepFree,
-                    RuntimeMaxFileSize = runtimeMaxFileSize,
-                    MaxRetentionSec = maxRetentionSec,
-                    MaxFileSec = maxFileSec,
-                    ForwardToSyslog = forwardToSyslog,
-                    ForwardToKMsg = forwardToKMsg,
-                    ForwardToConsole = forwardToConsole,
-                    ForwardToWall = forwardToWall,
-                    TtyPath = ttyPath,
-                    MaxLevelStore = maxLevelStore,
-                    MaxLevelSyslog = maxLevelSyslog,
-                    MaxLevelKMsg = maxLevelKMsg,
-                    MaxLevelConsole = maxLevelConsole,
-                    MaxLevelWall = maxLevelWall,
+                var dict = new Dictionary<string, string> {
+                    { "Storage", storage },
+                    { "Compress", compress },
+                    { "Seal", seal },
+                    { "SplitMode", splitMode },
+                    { "SyncIntervalSec", syncIntervalSec },
+                    { "RateLimitInterval", rateLimitInterval },
+                    { "RateLimitBurst", rateLimitBurst },
+                    { "SystemMaxUse", systemMaxUse },
+                    { "SystemKeepFree", systemKeepFree },
+                    { "SystemMaxFileSize", systemMaxFileSize },
+                    { "RuntimeMaxUse", runtimeMaxUse },
+                    { "RuntimeKeepFree", runtimeKeepFree },
+                    { "RuntimeMaxFileSize", runtimeMaxFileSize },
+                    { "MaxRetentionSec", maxRetentionSec },
+                    { "MaxFileSec", maxFileSec },
+                    { "ForwardToSyslog", forwardToSyslog },
+                    { "ForwardToKMsg", forwardToKMsg },
+                    { "ForwardToConsole", forwardToConsole },
+                    { "ForwardToWall", forwardToWall },
+                    { "TTYPath", ttyPath },
+                    { "MaxLevelStore", maxLevelStore },
+                    { "MaxLevelSyslog", maxLevelSyslog },
+                    { "MaxLevelKMsg", maxLevelKMsg },
+                    { "MaxLevelConsole", maxLevelConsole },
+                    { "MaxLevelWall", maxLevelWall }
                 };
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/options", dict);
             };
         }
     }

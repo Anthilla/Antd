@@ -98,7 +98,7 @@ namespace Antd.ServerModules {
                 return Response.AsRedirect("/");
             };
 
-            Post["/acl/set"] = x => {
+            Post["/acl/create"] = x => {
                 string guid = Request.Form.Guid;
                 string textall = Request.Form.Acl;
                 if(string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(textall)) {

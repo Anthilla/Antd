@@ -5,11 +5,11 @@ using Newtonsoft.Json;
 
 namespace AntdUi.Modules {
 
-    public class AppConfigurationModule : NancyModule {
+    public class AntdAppConfigurationModule : NancyModule {
 
         private readonly AppConfiguration _appConfiguration = new AppConfiguration();
 
-        public AppConfigurationModule() {
+        public AntdAppConfigurationModule() {
 
             Get["/config"] = _ => {
                 var list = _appConfiguration.UiGet();

@@ -2,8 +2,8 @@
 using Nancy.Security;
 
 namespace AntdUi.Modules {
-    public class AppModule : NancyModule {
-        public AppModule() {
+    public class MainModule : NancyModule {
+        public MainModule() {
             this.RequiresAuthentication();
 
             //Before += ctx => {
@@ -12,13 +12,9 @@ namespace AntdUi.Modules {
             //    return null;
             //};
 
-            Get["/"] = _ => {
-                return Response.AsRedirect("/antd");
-            };
+            Get["/"] = _ => Response.AsRedirect("/antd");
 
-            Get["/antd"] = _ => {
-                return View["home"];
-            };
+            Get["/antd"] = _ => View["home"];
         }
     }
 }

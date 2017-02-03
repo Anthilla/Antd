@@ -61,6 +61,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA4989
 		AntdUi\Views\Pages\antd\time.html = AntdUi\Views\Pages\antd\time.html
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"
+	ProjectSection(SolutionItems) = preProject
+		AntdUi\Modules\AntdAclModule.cs = AntdUi\Modules\AntdAclModule.cs
+		AntdUi\Modules\AntdBindModule.cs = AntdUi\Modules\AntdBindModule.cs
+		AntdUi\Modules\AntdDhcpdModule.cs = AntdUi\Modules\AntdDhcpdModule.cs
+		AntdUi\Modules\AntdDhcpLeasesModule.cs = AntdUi\Modules\AntdDhcpLeasesModule.cs
+		AntdUi\Modules\AntdDiskUsageModule.cs = AntdUi\Modules\AntdDiskUsageModule.cs
+		AntdUi\Modules\AntdFirewallModule.cs = AntdUi\Modules\AntdFirewallModule.cs
+		AntdUi\Modules\AntdGlusterModule.cs = AntdUi\Modules\AntdGlusterModule.cs
+		AntdUi\Modules\AntdNameServiceModule.cs = AntdUi\Modules\AntdNameServiceModule.cs
+		AntdUi\Modules\AntdNetworkModule.cs = AntdUi\Modules\AntdNetworkModule.cs
+		AntdUi\Modules\AntdRsyncModule.cs = AntdUi\Modules\AntdRsyncModule.cs
+		AntdUi\Modules\AntdSambaModule.cs = AntdUi\Modules\AntdSambaModule.cs
+		AntdUi\Modules\AntdSchedulerModule.cs = AntdUi\Modules\AntdSchedulerModule.cs
+		AntdUi\Modules\AntdSshdModule.cs = AntdUi\Modules\AntdSshdModule.cs
+		AntdUi\Modules\AntdStorageModule.cs = AntdUi\Modules\AntdStorageModule.cs
+		AntdUi\Modules\AntdVmModule.cs = AntdUi\Modules\AntdVmModule.cs
+		AntdUi\Modules\AntdVpnModule.cs = AntdUi\Modules\AntdVpnModule.cs
+		AntdUi\Modules\AntdZfsModule.cs = AntdUi\Modules\AntdZfsModule.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,5 +144,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
 		{EA498959-0DEB-4A9A-97E2-54F099447C64} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
+		{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
 	EndGlobalSection
 EndGlobal

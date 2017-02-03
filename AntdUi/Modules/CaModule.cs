@@ -27,44 +27,36 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.IO;
 using antdlib.common;
-using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Nancy.Responses;
 using Newtonsoft.Json;
 
-namespace Antd.ServerModules {
+namespace AntdUi.Modules {
     public class CaModule : NancyModule {
+
+        private readonly ApiConsumer _api = new ApiConsumer();
 
         public CaModule() {
             Get["/ca"] = x => {
-                var caConfiguration = new CaConfiguration();
-                var caIsActive = caConfiguration.IsActive();
-                var model = new PageCaModel {
-                    CaIsActive = caIsActive,
-                    CaOptions = caConfiguration.Get() ?? new CaConfigurationModel()
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageCaModel>($"http://127.0.0.1:{Application.ServerPort}/ca");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
             Post["/ca/set"] = x => {
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Set();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/set", null);
             };
 
             Post["/ca/enable"] = x => {
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Enable();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/enable", null);
             };
 
             Post["/ca/disable"] = x => {
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Disable();
-                return HttpStatusCode.OK;
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/disable", null);
             };
 
             Post["/ca/options"] = x => {
@@ -76,22 +68,21 @@ namespace Antd.ServerModules {
                 string rootOrganizationalUnitName = Request.Form.RootOrganizationalUnitName;
                 string rootCommonName = Request.Form.RootCommonName;
                 string rootEmailAddress = Request.Form.RootEmailAddress;
-                var model = new CaConfigurationModel {
-                    KeyPassout = keyPassout,
-                    RootCountryName = rootCountryName,
-                    RootStateOrProvinceName = rootStateOrProvinceName,
-                    RootLocalityName = rootLocalityName,
-                    RootOrganizationName = rootOrganizationName,
-                    RootOrganizationalUnitName = rootOrganizationalUnitName,
-                    RootCommonName = rootCommonName,
-                    RootEmailAddress = rootEmailAddress,
+                var dict = new Dictionary<string, string> {
+                    { "KeyPassout", keyPassout },
+                    { "RootCountryName", rootCountryName },
+                    { "RootStateOrProvinceName", rootStateOrProvinceName },
+                    { "RootLocalityName", rootLocalityName },
+                    { "RootOrganizationName", rootOrganizationName },
+                    { "RootOrganizationalUnitName", rootOrganizationalUnitName },
+                    { "RootCommonName", rootCommonName },
+                    { "RootEmailAddress", rootEmailAddress },
                 };
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Save(model);
-                return Response.AsRedirect("/ca");
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
             };
 
             Get["/ca/crl"] = x => {
+                //todo controlla qui
                 var crl = $"{Parameter.AntdCfg}/ca/intermediate/crl/intermediate.crl.pem";
                 if(!File.Exists(crl)) {
                     return HttpStatusCode.ExpectationFailed;
@@ -111,9 +102,17 @@ namespace Antd.ServerModules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateUserCertificate(name, passphrase, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                var dict = new Dictionary<string, string> {
+                        { "Name", name },
+                        { "Passphrase", passphrase },
+                        { "Email", email },
+                        { "CountryName", c },
+                        { "StateOrProvinceName", st },
+                        { "LocalityName", l },
+                        { "OrganizationName", o },
+                        { "OrganizationalUnitName", ou }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/user", dict);
             };
 
             Post["/ca/certificate/server"] = x => {
@@ -125,9 +124,17 @@ namespace Antd.ServerModules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateServerCertificate(name, passphrase, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                var dict = new Dictionary<string, string> {
+                    { "Name", name },
+                    { "Passphrase", passphrase },
+                    { "Email", email },
+                    { "CountryName", c },
+                    { "StateOrProvinceName", st },
+                    { "LocalityName", l },
+                    { "OrganizationName", o },
+                    { "OrganizationalUnitName", ou }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/server", dict);
             };
 
             Post["/ca/certificate/dc"] = x => {
@@ -141,9 +148,19 @@ namespace Antd.ServerModules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateDomainControllerCertificate(name, passphrase, dcGuid, dcDns, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                var dict = new Dictionary<string, string> {
+                    { "Name", name },
+                    { "Passphrase", passphrase },
+                    { "Guid", dcGuid },
+                    { "Dns", dcDns },
+                    { "Email", email },
+                    { "CountryName", c },
+                    { "StateOrProvinceName", st },
+                    { "LocalityName", l },
+                    { "OrganizationName", o },
+                    { "OrganizationalUnitName", ou }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/dc", dict);
             };
 
             Post["/ca/certificate/sc"] = x => {
@@ -156,9 +173,18 @@ namespace Antd.ServerModules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateSmartCardCertificate(name, passphrase, upn, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                var dict = new Dictionary<string, string> {
+                    { "Name", name },
+                    { "Passphrase", passphrase },
+                    { "Upn", upn },
+                    { "Email", email },
+                    { "CountryName", c },
+                    { "StateOrProvinceName", st },
+                    { "LocalityName", l },
+                    { "OrganizationName", o },
+                    { "OrganizationalUnitName", ou }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/sc", dict);
             };
         }
     }
