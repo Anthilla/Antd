@@ -167,7 +167,7 @@ namespace Antd.ServerModules {
                 };
                 var bindConfiguration = new BindConfiguration();
                 bindConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/bind/zone"] = x => {
@@ -189,7 +189,7 @@ namespace Antd.ServerModules {
                 };
                 var bindConfiguration = new BindConfiguration();
                 bindConfiguration.AddZone(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/bind/zone/del"] = x => {

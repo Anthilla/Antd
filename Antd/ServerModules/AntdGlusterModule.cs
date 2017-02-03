@@ -116,7 +116,7 @@ namespace Antd.ServerModules {
                 };
                 var glusterConfiguration = new GlusterConfiguration();
                 glusterConfiguration.Save(config);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/gluster/node"] = x => {

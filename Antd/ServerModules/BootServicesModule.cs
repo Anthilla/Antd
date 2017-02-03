@@ -48,7 +48,7 @@ namespace Antd.ServerModules {
             };
 
             Post["/boot/services"] = x => {
-                var servicesText = (string)Request.Form.Config;
+                string servicesText = Request.Form.Config;
                 var services = servicesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostServices(services);

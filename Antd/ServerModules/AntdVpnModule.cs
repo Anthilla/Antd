@@ -93,7 +93,7 @@ namespace Antd.ServerModules {
                 };
                 var vpnConfiguration = new VpnConfiguration();
                 vpnConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
         }
     }

@@ -49,15 +49,15 @@ namespace Antd.ServerModules {
             };
 
             Post["/storage/print"] = x => {
-                var disk = (string)Request.Form.Disk;
+                string disk = Request.Form.Disk;
                 var result = _bash.Execute($"parted /dev/{disk} print 2> /dev/null").SplitBash().Grep("'Partition Table: '").First();
                 return Response.AsText(result.Replace("Partition Table: ", ""));
             };
 
             Post["/storage/mklabel"] = x => {
-                var disk = (string)Request.Form.Disk;
-                var type = (string)Request.Form.Type;
-                var yn = (string)Request.Form.Confirm;
+                string disk = Request.Form.Disk;
+                string type = Request.Form.Type;
+                string yn = Request.Form.Confirm;
                 var result = _bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
                 return Response.AsText(result);
             };

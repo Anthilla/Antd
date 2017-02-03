@@ -39,7 +39,7 @@ namespace AntdUi.Modules {
 
         public LogModule() {
             Get["/log"] = x => {
-              var model = _api.Get<PageLogModel>($"http://127.0.0.1:{Application.ServerPort}/log");
+                var model = _api.Get<PageLogModel>($"http://127.0.0.1:{Application.ServerPort}/log");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

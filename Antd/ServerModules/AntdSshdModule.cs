@@ -99,7 +99,7 @@ namespace Antd.ServerModules {
                 };
                 var sshdConfiguration = new SshdConfiguration();
                 sshdConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
         }
     }

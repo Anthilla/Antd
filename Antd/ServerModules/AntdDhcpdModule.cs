@@ -141,7 +141,7 @@ namespace Antd.ServerModules {
                 };
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/class"] = x => {
@@ -153,7 +153,7 @@ namespace Antd.ServerModules {
                 };
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.AddClass(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/class/del"] = x => {
@@ -170,7 +170,7 @@ namespace Antd.ServerModules {
                 };
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.AddPool(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/pool/del"] = x => {
@@ -191,7 +191,7 @@ namespace Antd.ServerModules {
                 };
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.AddReservation(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/reservation/del"] = x => {

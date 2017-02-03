@@ -133,7 +133,7 @@ namespace Antd.ServerModules {
                 };
                 var journaldConfiguration = new JournaldConfiguration();
                 journaldConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
         }
     }

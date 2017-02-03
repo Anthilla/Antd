@@ -59,13 +59,13 @@ namespace Antd.ServerModules {
             };
 
             Get["/apps/status/{unit}"] = x => {
-                var unitName = (string)x.unit;
+                string unitName = x.unit;
                 var status = Systemctl.Status(unitName);
                 return Response.AsJson(status);
             };
 
             Get["/apps/active/{unit}"] = x => {
-                var unitName = (string)x.unit;
+                string unitName = x.unit;
                 var status = Systemctl.IsActive(unitName);
                 return Response.AsJson(status ? "active" : "inactive");
             };

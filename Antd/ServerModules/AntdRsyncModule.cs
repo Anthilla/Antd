@@ -82,7 +82,7 @@ namespace Antd.ServerModules {
             Post["/rsync/options"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.Save(new RsyncConfigurationModel());
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/rsync/directory"] = x => {
@@ -96,7 +96,7 @@ namespace Antd.ServerModules {
                 };
                 var rsyncConfiguration = new RsyncConfiguration();
                 rsyncConfiguration.AddDirectory(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/rsync/directory/del"] = x => {

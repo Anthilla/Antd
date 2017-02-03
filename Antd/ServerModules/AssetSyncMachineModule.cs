@@ -88,7 +88,7 @@ namespace Antd.ServerModules {
                 };
                 var syncmachineConfiguration = new SyncMachineConfiguration();
                 syncmachineConfiguration.AddResource(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/syncmachine/machine/del"] = x => {

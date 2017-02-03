@@ -69,8 +69,8 @@ namespace Antd.ServerModules {
             };
 
             Post["/zfs/snap"] = x => {
-                var pool = (string)Request.Form.Pool;
-                var interval = (string)Request.Form.Interval;
+                string pool = Request.Form.Pool;
+                string interval = Request.Form.Interval;
                 if(string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
                     return HttpStatusCode.InternalServerError;
                 }
@@ -88,10 +88,10 @@ namespace Antd.ServerModules {
             };
 
             Post["/zpool/create"] = x => {
-                var altroot = (string)Request.Form.Altroot;
-                var poolname = (string)Request.Form.Name;
-                var pooltype = (string)Request.Form.Type;
-                var diskid = (string)Request.Form.Id;
+                string altroot = Request.Form.Altroot;
+                string poolname = Request.Form.Name;
+                string pooltype = Request.Form.Type;
+                string diskid = Request.Form.Id;
                 if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(pooltype) || string.IsNullOrEmpty(diskid)) {
                     return HttpStatusCode.BadRequest;
                 }
@@ -105,9 +105,9 @@ namespace Antd.ServerModules {
             };
 
             Post["/zfs/create"] = x => {
-                var altroot = (string)Request.Form.Altroot;
-                var poolname = (string)Request.Form.Name;
-                var datasetname = (string)Request.Form.Dataset;
+                string altroot = Request.Form.Altroot;
+                string poolname = Request.Form.Name;
+                string datasetname = Request.Form.Dataset;
                 if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(datasetname)) {
                     return HttpStatusCode.BadRequest;
                 }

@@ -116,7 +116,7 @@ namespace Antd.ServerModules {
                 };
                 var syslogngConfiguration = new SyslogNgConfiguration();
                 syslogngConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
         }
     }

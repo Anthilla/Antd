@@ -50,7 +50,7 @@ namespace Antd.ServerModules {
             };
 
             Post["/boot/modules"] = x => {
-                var modulesText = (string)Request.Form.Config;
+                string modulesText = Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostModprobes(modules);
@@ -59,7 +59,7 @@ namespace Antd.ServerModules {
             };
 
             Post["/boot/rmmodules"] = x => {
-                var modulesText = (string)Request.Form.Config;
+                string modulesText = Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostRemoveModules(modules);
@@ -68,7 +68,7 @@ namespace Antd.ServerModules {
             };
 
             Post["/boot/modblacklist"] = x => {
-                var modulesText = (string)Request.Form.Config;
+                string modulesText = Request.Form.Config;
                 var modules = modulesText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostBlacklistModules(modules);

@@ -91,28 +91,28 @@ namespace Antd.ServerModules {
             Post["/acl/add"] = x => {
                 string dir = Request.Form.Path;
                 if(string.IsNullOrEmpty(dir)) {
-                    return Response.AsRedirect("/");
+                    return HttpStatusCode.OK;
                 }
                 var aclConfiguration = new AclConfiguration();
                 aclConfiguration.AddAcl(dir);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/acl/create"] = x => {
                 string guid = Request.Form.Guid;
                 string textall = Request.Form.Acl;
                 if(string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(textall)) {
-                    return Response.AsRedirect("/");
+                    return HttpStatusCode.OK;
                 }
                 var aclConfiguration = new AclConfiguration();
                 aclConfiguration.SetAcl(guid, textall.SplitToList(Environment.NewLine).ToArray());
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Get["/acl/get/{guid}"] = x => {
                 string guid = x.guid;
                 if(string.IsNullOrEmpty(guid)) {
-                    return Response.AsRedirect("/");
+                    return HttpStatusCode.OK;
                 }
                 var aclConfiguration = new AclConfiguration();
                 var result = aclConfiguration.GetAcl(guid);
@@ -147,7 +147,7 @@ namespace Antd.ServerModules {
                 }
                 var aclConfiguration = new AclConfiguration();
                 aclConfiguration.ApplyAclScript(user);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
             #endregion
         }

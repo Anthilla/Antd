@@ -17,9 +17,9 @@ namespace AntdUi.Modules {
             };
 
             Post["/config"] = _ => {
-                var antdPort = Request.Form.AntdPort;
-                var antdUiPort = Request.Form.AntdUiPort;
-                var databasePath = Request.Form.DatabasePath;
+                int antdPort = Request.Form.AntdPort;
+                int antdUiPort = Request.Form.AntdUiPort;
+                string databasePath = Request.Form.DatabasePath;
                 var model = new AppConfigurationModel {
                     AntdPort = antdPort,
                     AntdUiPort = antdUiPort,

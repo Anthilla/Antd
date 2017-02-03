@@ -87,7 +87,7 @@ namespace Antd.ServerModules {
                 };
                 var networkConfiguration = new NetworkConfiguration();
                 networkConfiguration.AddInterfaceSetting(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/network/interface/del"] = x => {

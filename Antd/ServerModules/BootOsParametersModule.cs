@@ -49,7 +49,7 @@ namespace Antd.ServerModules {
             };
 
             Post["/boot/osparameter"] = x => {
-                var osparamText = (string)Request.Form.Config;
+                string osparamText = Request.Form.Config;
                 var osparameter = osparamText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
                 var dict = new Dictionary<string, string>();
                 foreach(var serv in osparameter) {

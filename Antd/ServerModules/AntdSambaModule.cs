@@ -191,7 +191,7 @@ namespace Antd.ServerModules {
                 };
                 var sambaConfiguration = new SambaConfiguration();
                 sambaConfiguration.Save(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/samba/resource"] = x => {
@@ -205,7 +205,7 @@ namespace Antd.ServerModules {
                 };
                 var sambaConfiguration = new SambaConfiguration();
                 sambaConfiguration.AddResource(model);
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/samba/resource/del"] = x => {

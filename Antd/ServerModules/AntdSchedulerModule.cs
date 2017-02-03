@@ -52,13 +52,13 @@ namespace Antd.ServerModules {
             };
 
             Post["/scheduler"] = x => {
-                var alias = (string)Request.Form.Alias;
-                var command = (string)Request.Form.Command;
-                var hi = (string)Request.Form.Interval;
+                string alias = Request.Form.Alias;
+                string command = Request.Form.Command;
+                string hi = Request.Form.Interval;
                 if(!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(hi)) {
                     _timers.Create(alias, hi, command);
                 }
-                return Response.AsRedirect("/");
+                return HttpStatusCode.OK;
             };
 
             Post["/scheduler/enable"] = x => {
@@ -86,8 +86,8 @@ namespace Antd.ServerModules {
             };
 
             Post["/scheduler/edit"] = x => {
-                var id = (string)Request.Form.Guid;
-                var command = (string)Request.Form.Command;
+                string id = Request.Form.Guid;
+                string command = Request.Form.Command;
                 _timerRepository.Edit(new Dictionary<string, string> {
                     { "Id", id },
                     { "Data", command }

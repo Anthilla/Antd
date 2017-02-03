@@ -46,8 +46,8 @@ namespace AntdUi.Modules {
             };
 
             Post["/scheduler"] = x => {
-                var alias = (string)Request.Form.Alias;
-                var command = (string)Request.Form.Command;
+                string alias = Request.Form.Alias;
+                string command = Request.Form.Command;
                 var dict = new Dictionary<string, string> {
                     { "Alias", alias },
                     { "Command", command }
@@ -72,8 +72,8 @@ namespace AntdUi.Modules {
             };
 
             Post["/scheduler/edit"] = x => {
-                var id = (string)Request.Form.Guid;
-                var command = (string)Request.Form.Command;
+                string id = Request.Form.Guid;
+                string command = Request.Form.Command;
                 var dict = new Dictionary<string, string> {
                     { "Guid", id },
                     { "Command", command }
