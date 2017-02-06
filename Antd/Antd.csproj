@@ -2950,10 +2950,6 @@
       <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>
       <Name>antdlib.models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\antdlib.views\antdlib.views.csproj">
-      <Project>{cf4e96eb-6cdf-48e4-87a4-0335f856a5fc}</Project>
-      <Name>antdlib.views</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
