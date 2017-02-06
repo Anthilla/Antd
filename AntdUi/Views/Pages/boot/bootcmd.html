@@ -1,5 +1,28 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">commands</h1>
 
 <div ng-controller="BootCommandsController">
-
+    <button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-anthilla-green"></span>&nbsp;Save</button>
+    <button ng-click="add()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-blue"></span>&nbsp;Add Line</button>
+    <button ng-click="refreshIndex()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop2 fg-anthilla-blue"></span>&nbsp;Refresh Index</button>
+    <br />
+    <div class="grid condensed">
+        <div ng-repeat="cmd in Commands | orderBy: 'Index'">
+            <div class="row cells4">
+                <div class="cell padding-right10">
+                    <div class="input-control number width100pc fg-white">
+                        <input placeholder="Index" type="number" ng-model="cmd.Index" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                    </div>
+                </div>
+                <div class="cell colspan3">
+                    <div class="input-control text width100pc fg-white">
+                        <input placeholder="Command" type="text" ng-model="cmd.FirstCommand" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-anthilla-green"></span>&nbsp;Save</button>
+    <button ng-click="add()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-blue"></span>&nbsp;Add Line</button>
+    <button ng-click="refreshIndex()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop2 fg-anthilla-blue"></span>&nbsp;Refresh Index</button>
 </div>

@@ -27,12 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.ModelBinding;
 using Newtonsoft.Json;
 
 namespace Antd.ServerModules {
@@ -43,27 +43,26 @@ namespace Antd.ServerModules {
                 var setupConfiguration = new SetupConfiguration();
                 var model = new PageBootCommandsModel {
                     HasConfiguration = setupConfiguration.Get().Any(),
-                    Controls = setupConfiguration.Get()
+                    Controls = setupConfiguration.Get().OrderBy(_ => _.Index)
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/boot/commands"] = x => {
-                var control = this.Bind<List<Control>>();
-                var checkedControl = new List<Control>();
-                foreach(var cr in control.Where(_ => !string.IsNullOrEmpty(_.FirstCommand?.Trim())).ToList()) {
-                    var s = new Control {
-                        Index = cr.Index,
-                        FirstCommand = cr.FirstCommand,
-                        ControlCommand = string.IsNullOrEmpty(cr.ControlCommand) ? "" : cr.ControlCommand,
-                        Check = string.IsNullOrEmpty(cr.Check) ? "" : cr.Check,
+                string data = Request.Form.Data;
+                var dataArr = data.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                var controls = new List<Control>();
+                foreach(var ctrl in dataArr) {
+                    var ctrlArr = ctrl.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    var control = new Control {
+                        Index = Convert.ToInt32(ctrlArr[0]),
+                        FirstCommand = ctrlArr[1]
                     };
-
-                    checkedControl.Add(s);
+                    controls.Add(control);
                 }
                 var setupConfiguration = new SetupConfiguration();
-                setupConfiguration.Export(checkedControl);
-                return Response.AsRedirect("/boot");
+                setupConfiguration.Export(controls);
+                return HttpStatusCode.OK;
             };
         }
     }

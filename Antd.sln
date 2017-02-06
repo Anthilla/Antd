@@ -43,7 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
 		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
-		AntdUi\Scripts\controller-context-boot.js = AntdUi\Scripts\controller-context-boot.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
@@ -52,14 +51,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-F
 		Antd\Views\antd\page-asset-scan.html = Antd\Views\antd\page-asset-scan.html
 		Antd\Views\antd\page-asset-setting.html = Antd\Views\antd\page-asset-setting.html
 		Antd\Views\antd\page-asset-syncmachine.html = Antd\Views\antd\page-asset-syncmachine.html
-		Antd\Views\antd\page-boot-cmd.html = Antd\Views\antd\page-boot-cmd.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
 	ProjectSection(SolutionItems) = preProject
 		AntdUi\Views\Pages\asset\assetconfig.html = AntdUi\Views\Pages\asset\assetconfig.html
 		AntdUi\Views\Pages\asset\assetsync.html = AntdUi\Views\Pages\asset\assetsync.html
-		AntdUi\Views\Pages\boot\bootcmd.html = AntdUi\Views\Pages\boot\bootcmd.html
 		AntdUi\Views\Pages\asset\discovery.html = AntdUi\Views\Pages\asset\discovery.html
 		AntdUi\Views\Pages\asset\scan.html = AntdUi\Views\Pages\asset\scan.html
 	EndProjectSection

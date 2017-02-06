@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using antdlib.common;
 using antdlib.models;
 using Nancy;
@@ -45,8 +46,11 @@ namespace AntdUi.Modules {
             };
 
             Post["/boot/commands"] = x => {
-                //todo rifare qui e relativo modulo di Antd
-                return HttpStatusCode.OK;
+                string data = Request.Form.Data;
+                var dict = new Dictionary<string, string> {
+                    { "Data", data }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/boot/commands", dict);
             };
         }
     }

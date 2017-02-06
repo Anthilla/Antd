@@ -3,17 +3,32 @@
 app.controller("BootCommandsController", ["$scope", "$http", BootCommandsController]);
 
 function BootCommandsController($scope, $http) {
-    $scope.save = function (guid) {
-        //todo
+    $scope.refreshIndex = function () {
+        angular.forEach($scope.Commands, function (v, i) {
+            v.Index = i;
+        });
+    }
+
+    $scope.add = function () {
+        var newIndex = $scope.Commands.length;
+        $scope.Commands.push({ Index: newIndex, FirstCommand: "", ControlCommand: "", Check: "" });
+    }
+
+    $scope.save = function () {
+        var commands = "";
+        angular.forEach($scope.Commands, function (v) {
+            commands += v.Index + "," + v.FirstCommand + ";";
+        });
         var data = $.param({
-            Guid: guid
+            Data: commands
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/commands", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
     }
 
+    $scope.Commands = [];
     $http.get("/boot/commands").success(function (data) {
-        $scope.Commands = data;
+        $scope.Commands = data.Controls;
     });
 }
 
