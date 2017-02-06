@@ -1,258 +1,151 @@
-//"use strict";
+"use strict";
 
-//app.controller("AntdHostParam", ["$rootScope", "$scope", "$http", AntdHostParam]);
+app.controller("LogJournaldController", ["$scope", "$http", LogJournaldController]);
 
-//function AntdHostParam($rootScope, $scope, $http) {
+function LogJournaldController($scope, $http) {
+    $scope.saveOptions = function (journald) {
+        var data = $.param({
+            Storage: journald.Storage,
+            Compress: journald.Compress,
+            Seal: journald.Seal,
+            SplitMode: journald.SplitMode,
+            SyncIntervalSec: journald.SyncIntervalSec,
+            RateLimitInterval: journald.RateLimitInterval,
+            RateLimitBurst: journald.RateLimitBurst,
+            SystemMaxUse: journald.SystemMaxUse,
+            SystemKeepFree: journald.SystemKeepFree,
+            SystemMaxFileSize: journald.SystemMaxFileSize,
+            RuntimeMaxUse: journald.RuntimeMaxUse,
+            RuntimeKeepFree: journald.RuntimeKeepFree,
+            RuntimeMaxFileSize: journald.RuntimeMaxFileSize,
+            MaxRetentionSec: journald.MaxRetentionSec,
+            MaxFileSec: journald.MaxFileSec,
+            ForwardToSyslog: journald.ForwardToSyslog,
+            ForwardToKMsg: journald.ForwardToKMsg,
+            ForwardToConsole: journald.ForwardToConsole,
+            ForwardToWall: journald.ForwardToWall,
+            TTYPath: journald.TTYPath,
+            MaxLevelStore: journald.MaxLevelStore,
+            MaxLevelSyslog: journald.MaxLevelSyslog,
+            MaxLevelKMsg: journald.MaxLevelKMsg,
+            MaxLevelConsole: journald.MaxLevelConsole,
+            MaxLevelWall: journald.MaxLevelWall
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/journald/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.Create = function (el) {
-//        var data = $.param({
-//            Ward: $scope.Ward,
-//            Nurse: $scope.Nurse,
-//            Materials: [
-//                {
-//                    MaterialName: $scope.MaterialName,
-//                    MaterialQty: $scope.MaterialQty,
-//                    MaterialFormat: $scope.MaterialFormat
-//                }
-//            ]
-//        });
-//        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//        $http.post("/repo/requestmaterialgeneric", data).then(
-//            function () {
-//                $scope.Ward = null;
-//                $scope.Nurse = null;
-//                $rootScope.$broadcast("RequestMaterialGenericDashboardSave");
-//            },
-//        function (response) {
-//            console.log(response);
-//        });
-//        $(el).hide();
-//    };
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/journald/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.ResetDashboard = function (el) {
-//        $(el).find("input").each(function () {
-//            $(this).val("");
-//        });
-//    };
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/journald/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.CloseDashboard = function (el) {
-//        $(el).find("input").each(function () {
-//            $(this).val("");
-//        });
-//        $(el).hide();
-//    };
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/journald/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.Ward = null;
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/journald/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $http.get("/cache/ward").success(function (data) {
-//        $scope.WardOptions = data;
-//        $http.get("/rawdata/project").success(function (rawdata) {
-//            angular.forEach(rawdata, function (v) {
-//                var found = $scope.WardOptions.some(function (el) {
-//                    return el.Value.toUpperCase() === v.Alias.toUpperCase();
-//                });
-//                if (!found) {
-//                    $scope.WardOptions.push({ Id: v.Guid, Value: v.Alias });
-//                }
-//            });
-//        });
-//    });
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/journald/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.Nurse = null;
-//    $scope.HideNurse = false;
+    $http.get("/journald").success(function (data) {
+        $scope.Journald = data;
+    });
+}
 
-//    $http.get("/auth/user").success(function (data) {
-//        $scope.Nurse = data.FirstName + " " + data.LastName;
-//        $scope.HideNurse = true;
-//    });
+app.controller("LogJournalController", ["$scope", "$http", LogJournalController]);
 
-//    $http.get("/cache/nurse").success(function (data) {
-//        $scope.NurseOptions = data;
-//    });
+function LogJournalController($scope, $http) {
+    $http.get("/journal").success(function (data) {
+        $scope.Journal = data;
+    });
+}
 
-//    $scope.CacheConfig = {
-//        valueField: "Value",
-//        labelField: "Value",
-//        searchField: ["Value"],
-//        persist: false,
-//        create: true,
-//        maxItems: 1
-//    };
+app.controller("LogController", ["$scope", "$http", LogController]);
 
-//    $scope.HideIfExist = function (v1, v2) {
-//        return v1 === null || v2 === null;
-//    }
+function LogController($scope, $http) {
+    $http.get("/log").success(function (data) {
+        $scope.Log = data;
+    });
+}
 
-//    $scope.SaveFile = function (file) {
-//        var mats = "";
-//        angular.forEach(file.Materials, function (mat) {
-//            mats += mat.MaterialName + "," + mat.MaterialQty + "," + mat.MaterialFormat + "," + mat.Status + "," + mat.Note + ";";
-//        });
-//        var data = $.param({
-//            Guid: file.Guid,
-//            Materials: mats
-//        });
-//        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//        $http.post("/repo/requestmaterialgeneric/save", data).then(
-//            function () {
-//                $http.get("/repo/requestmaterialgeneric").success(function (data) {
-//                    $scope.files = data;
-//                });
-//            },
-//        function (response) {
-//            console.log(response);
-//        });
-//    }
+app.controller("LogReportController", ["$scope", "$http", LogReportController]);
 
-//    $scope.SubmitFile = function (file) {
-//        var mats = "";
-//        angular.forEach(file.Materials, function (mat) {
-//            mats += mat.MaterialName + "," + mat.MaterialQty + "," + mat.MaterialFormat + "," + mat.Status + "," + mat.Note + ";";
-//        });
-//        var data = $.param({
-//            Guid: file.Guid,
-//            Materials: mats
-//        });
-//        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//        $http.post("/repo/requestmaterialgeneric/save", data).then(
-//            function () {
-//                var data = $.param({
-//                    Guid: file.Guid
-//                });
-//                $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//                $http.post("/repo/requestmaterialgeneric/submit", data).then(
-//                    function () {
-//                        $http.get("/repo/requestmaterialgeneric").success(function (data) {
-//                            $scope.files = data;
-//                        });
-//                    },
-//                function (response) {
-//                    console.log(response);
-//                });
-//            },
-//        function (response) {
-//            console.log(response);
-//        });
-//    }
+function LogReportController($scope, $http) {
+    $scope.create = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/report").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.Increase = function (file) {
-//        file.Materials.push({ MaterialName: "", MaterialQty: 0, MaterialFormat: "" });
-//    }
+    $http.get("/report").success(function (data) {
+        $scope.Report = data;
+    });
+}
 
-//    $http.get("/cache/material_generic").success(function (data) {
-//        $scope.MaterialNameOptions = data;
-//    });
+app.controller("LogSyslogNgController", ["$scope", "$http", LogSyslogNgController]);
 
-//    $scope.MaterialNameConfig = {
-//        valueField: "Articolo",
-//        labelField: "Articolo",
-//        searchField: ["Articolo"],
-//        persist: false,
-//        create: true,
-//        maxItems: 1
-//    };
+function LogSyslogNgController($scope, $http) {
+    $scope.saveOptions = function (syslogng) {
+        var data = $.param({
+            Threaded: syslogng.Threaded,
+            ChainHostname: syslogng.ChainHostname,
+            StatsFrequency: syslogng.StatsFrequency,
+            MarkFrequency: syslogng.MarkFrequency,
+            CheckHostname: syslogng.CheckHostname,
+            CreateDirectories: syslogng.CreateDirectories,
+            DnsCache: syslogng.DnsCache,
+            KeepHostname: syslogng.KeepHostname,
+            DirAcl: syslogng.DirAcl,
+            Acl: syslogng.Acl,
+            UseDns: syslogng.UseDns,
+            UseFqdn: syslogng.UseFqdn,
+            RootPath: syslogng.RootPath,
+            PortLevelApplication: syslogng.PortLevelApplication,
+            PortLevelSecurity: syslogng.PortLevelSecurity,
+            PortLevelSystem: syslogng.PortLevelSystem
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.HideIfMinor = function (v1, v2) {
-//        return v1 < v2;
-//    }
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.$on("RequestMaterialGenericDashboardSave", function () {
-//        $http.get("/repo/requestmaterialgeneric").success(function (data) {
-//            $scope.files = data;
-//        });
-//    });
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    //get
-//    $http.get("/repo/requestmaterialgeneric").success(function (data) {
-//        $scope.files = data;
-//    });
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.greaterThan = function (prop, val) {
-//        return function (item) {
-//            return item[prop] > val;
-//        }
-//    }
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.smallerThan = function (prop, val) {
-//        return function (item) {
-//            return item[prop] < val;
-//        }
-//    }
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
-//    $scope.GetStatusString = function (index) {
-//        return RequestStatus[parseInt(index + 1)];
-//    }
-
-//    $scope.ExpandRows = function (guid) {
-//        $('[data-icon="' + guid + '"]').toggleClass("mif-chevron-right").toggleClass("mif-expand-more");
-//        $('[data-row="' + guid + '"]').toggle();
-//    };
-
-//    $scope.CompleteTask = function (file) {
-//        var data = $.param({
-//            Guid: file.Guid
-//        });
-//        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//        $http.post("/repo/requestmaterialgeneric/archive", data).then(
-//            function () {
-//                $http.get("/repo/requestmaterialgeneric").success(function (data) {
-//                    $scope.files = data;
-//                });
-//            },
-//        function (response) {
-//            console.log(response);
-//        });
-//    }
-
-//    $scope.GetElementPosition = function (arr, el) {
-//        return arr.indexOf(el) + 1;
-//    }
-
-//    $scope.DeleteFile = function (file) {
-//        var data = $.param({
-//            Guid: file.Guid
-//        });
-//        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//        $http.post("/repo/requestmaterialgeneric/delete", data).then(
-//            function () {
-//                var index = $scope.files.indexOf(file);
-//                $scope.files.splice(index, 1);
-//            },
-//        function (response) {
-//            console.log(response);
-//        });
-//    };
-
-//    $scope.hide = true;
-
-//    $scope.Show = function (el) {
-//        var isChecked = $(el).find("input:checkbox").is(":checked");
-//        if (isChecked) {
-//            $(el).find("span").addClass("bg-anthilla-green");
-//            $scope.hide = false;
-
-//        } else {
-//            $(el).find("span").removeClass("bg-anthilla-green");
-//            $scope.hide = true;
-//        }
-//    }
-
-//    $scope.RejectFile = function () {
-//        var sourceModel = this.file;
-//        sourceModel.Status = -1;
-//        var data = $.param({
-//            Guid: sourceModel.Guid,
-//            Status: sourceModel.Status
-//        });
-//        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-//        $http.post("/repo/requestmaterialgeneric/edit/status", data).then(
-//            function () {
-//                $http.get("/repo/requestmaterialgeneric").success(function (data) {
-//                    $scope.files = data;
-//                });
-//            },
-//        function (response) {
-//            console.log(response);
-//        });
-//    }
-//}
+    $http.get("/syslogng").success(function (data) {
+        $scope.SyslogNg = data;
+    });
+}

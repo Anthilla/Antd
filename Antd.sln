@@ -64,9 +64,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA4989
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"
 	ProjectSection(SolutionItems) = preProject
-		AntdUi\Modules\AntdDhcpdModule.cs = AntdUi\Modules\AntdDhcpdModule.cs
-		AntdUi\Modules\AntdDhcpLeasesModule.cs = AntdUi\Modules\AntdDhcpLeasesModule.cs
-		AntdUi\Modules\AntdDiskUsageModule.cs = AntdUi\Modules\AntdDiskUsageModule.cs
 		AntdUi\Modules\AntdFirewallModule.cs = AntdUi\Modules\AntdFirewallModule.cs
 		AntdUi\Modules\AntdGlusterModule.cs = AntdUi\Modules\AntdGlusterModule.cs
 		AntdUi\Modules\AntdNameServiceModule.cs = AntdUi\Modules\AntdNameServiceModule.cs
@@ -76,25 +73,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A
 		AntdUi\Modules\AntdSchedulerModule.cs = AntdUi\Modules\AntdSchedulerModule.cs
 		AntdUi\Modules\AntdSshdModule.cs = AntdUi\Modules\AntdSshdModule.cs
 		AntdUi\Modules\AntdStorageModule.cs = AntdUi\Modules\AntdStorageModule.cs
-		AntdUi\Modules\AntdVmModule.cs = AntdUi\Modules\AntdVmModule.cs
 		AntdUi\Modules\AntdVpnModule.cs = AntdUi\Modules\AntdVpnModule.cs
 		AntdUi\Modules\AntdZfsModule.cs = AntdUi\Modules\AntdZfsModule.cs
-		AntdUi\Modules\AppsDetectModule.cs = AntdUi\Modules\AppsDetectModule.cs
-		AntdUi\Modules\AppsManagementModule.cs = AntdUi\Modules\AppsManagementModule.cs
-		AntdUi\Modules\AssetDiscoveryModule.cs = AntdUi\Modules\AssetDiscoveryModule.cs
-		AntdUi\Modules\AssetScanModule.cs = AntdUi\Modules\AssetScanModule.cs
-		AntdUi\Modules\AssetSettingModule.cs = AntdUi\Modules\AssetSettingModule.cs
-		AntdUi\Modules\AssetSyncMachineModule.cs = AntdUi\Modules\AssetSyncMachineModule.cs
-		AntdUi\Modules\BootCommandsModule.cs = AntdUi\Modules\BootCommandsModule.cs
-		AntdUi\Modules\BootModulesModule.cs = AntdUi\Modules\BootModulesModule.cs
-		AntdUi\Modules\BootOsParametersModule.cs = AntdUi\Modules\BootOsParametersModule.cs
-		AntdUi\Modules\BootServicesModule.cs = AntdUi\Modules\BootServicesModule.cs
-		AntdUi\Modules\CaModule.cs = AntdUi\Modules\CaModule.cs
-		AntdUi\Modules\LogJournaldModule.cs = AntdUi\Modules\LogJournaldModule.cs
-		AntdUi\Modules\LogJournalModule.cs = AntdUi\Modules\LogJournalModule.cs
-		AntdUi\Modules\LogModule.cs = AntdUi\Modules\LogModule.cs
-		AntdUi\Modules\LogReportModule.cs = AntdUi\Modules\LogReportModule.cs
-		AntdUi\Modules\LogSyslogNgModule.cs = AntdUi\Modules\LogSyslogNgModule.cs
 	EndProjectSection
 EndProject
 Global

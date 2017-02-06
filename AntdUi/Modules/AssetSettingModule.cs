@@ -59,7 +59,6 @@ namespace AntdUi.Modules {
                 string letter = Request.Form.Letter;
                 string number = Request.Form.Number;
                 string label = Request.Form.Label;
-
                 var dict = new Dictionary<string, string> {
                     {"Letter", letter},
                     {"Number", number},

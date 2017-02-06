@@ -177,6 +177,90 @@ function AntdBindController($scope, $http) {
 app.controller("AntdDhcpdController", ["$scope", "$http", AntdDhcpdController]);
 
 function AntdDhcpdController($scope, $http) {
+    $scope.deleteReservation = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/reservation/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addReservation = function (el) {
+        var data = $.param({
+            HostName: el.HostName,
+            MacAddress: el.MacAddress,
+            IpAddress: el.IpAddress
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/reservation", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.deletePool = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/pool/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addPool = function (el) {
+        var data = $.param({
+            Option: el.Option
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/pool", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.deleteClass = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/class/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addClass = function (el) {
+        var data = $.param({
+            Name: el.Name,
+            MacVendor: el.MacVendor
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/class", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveOptions = function (dhcpd) {
+        var data = $.param({
+            Allow: dhcpd.Allow,
+            UpdateStaticLeases: dhcpd.UpdateStaticLeases,
+            UpdateConflictDetection: dhcpd.UpdateConflictDetection,
+            UseHostDeclNames: dhcpd.UseHostDeclNames,
+            DoForwardUpdates: dhcpd.DoForwardUpdates,
+            DoReverseUpdates: dhcpd.DoReverseUpdates,
+            LogFacility: dhcpd.LogFacility,
+            Option: dhcpd.Option,
+            ZoneName: dhcpd.ZoneName,
+            ZonePrimaryAddress: dhcpd.ZonePrimaryAddress,
+            DdnsUpdateStyle: dhcpd.DdnsUpdateStyle,
+            DdnsUpdates: dhcpd.DdnsUpdates,
+            DdnsDomainName: dhcpd.DdnsDomainName,
+            DdnsRevDomainName: dhcpd.DdnsRevDomainName,
+            DefaultLeaseTime: dhcpd.DefaultLeaseTime,
+            MaxLeaseTime: dhcpd.MaxLeaseTime,
+            KeyName: dhcpd.KeyName,
+            KeySecret: dhcpd.KeySecret,
+            IpFamily: dhcpd.IpFamily,
+            IpMask: dhcpd.IpMask,
+            OptionRouters: dhcpd.OptionRouters,
+            NtpServers: dhcpd.NtpServers,
+            DoForTimeServerswardUpdates: dhcpd.DoForTimeServerswardUpdates,
+            DomainNameServers: dhcpd.DomainNameServers,
+            BroadcastAddress: dhcpd.BroadcastAddress,
+            SubnetMask: dhcpd.SubnetMask
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/dhcpd/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/dhcpd/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
@@ -210,13 +294,17 @@ function AntdDhcpdController($scope, $http) {
 app.controller("AntdDhcpLeasesController", ["$scope", "$http", AntdDhcpLeasesController]);
 
 function AntdDhcpLeasesController($scope, $http) {
-
+    $http.get("/dhcpleases").success(function (data) {
+        $scope.DhcpLeases = data;
+    });
 }
 
 app.controller("AntdDiskUsageController", ["$scope", "$http", AntdDiskUsageController]);
 
 function AntdDiskUsageController($scope, $http) {
-
+    $http.get("/diskusage").success(function (data) {
+        $scope.DiskUsage = data;
+    });
 }
 
 app.controller("AntdFirewallController", ["$scope", "$http", AntdFirewallController]);
@@ -276,7 +364,9 @@ function AntdStorageController($scope, $http) {
 app.controller("AntdVmController", ["$scope", "$http", AntdVmController]);
 
 function AntdVmController($scope, $http) {
-
+    $http.get("/vm").success(function (data) {
+        $scope.Vm = data;
+    });
 }
 
 app.controller("AntdVpnController", ["$scope", "$http", AntdVpnController]);
@@ -288,102 +378,6 @@ function AntdVpnController($scope, $http) {
 app.controller("AntdZfsController", ["$scope", "$http", AntdZfsController]);
 
 function AntdZfsController($scope, $http) {
-
-}
-
-app.controller("AppsDetectController", ["$scope", "$http", AppsDetectController]);
-
-function AppsDetectController($scope, $http) {
-
-}
-
-app.controller("AppsManagementController", ["$scope", "$http", AppsManagementController]);
-
-function AppsManagementController($scope, $http) {
-
-}
-
-app.controller("AssetDiscoveryController", ["$scope", "$http", AssetDiscoveryController]);
-
-function AssetDiscoveryController($scope, $http) {
-
-}
-
-app.controller("AssetScanController", ["$scope", "$http", AssetScanController]);
-
-function AssetScanController($scope, $http) {
-
-}
-
-app.controller("AssetSettingController", ["$scope", "$http", AssetSettingController]);
-
-function AssetSettingController($scope, $http) {
-
-}
-
-app.controller("AssetSyncMachineController", ["$scope", "$http", AssetSyncMachineController]);
-
-function AssetSyncMachineController($scope, $http) {
-
-}
-
-app.controller("BootCommandsController", ["$scope", "$http", BootCommandsController]);
-
-function BootCommandsController($scope, $http) {
-
-}
-
-app.controller("BootModulesController", ["$scope", "$http", BootModulesController]);
-
-function BootModulesController($scope, $http) {
-
-}
-
-app.controller("BootOsParametersController", ["$scope", "$http", BootOsParametersController]);
-
-function BootOsParametersController($scope, $http) {
-
-}
-
-app.controller("BootServicesController", ["$scope", "$http", BootServicesController]);
-
-function BootServicesController($scope, $http) {
-
-}
-
-app.controller("CaController", ["$scope", "$http", CaController]);
-
-function CaController($scope, $http) {
-
-}
-
-app.controller("LogJournaldController", ["$scope", "$http", LogJournaldController]);
-
-function LogJournaldController($scope, $http) {
-
-}
-
-app.controller("LogJournalController", ["$scope", "$http", LogJournalController]);
-
-function LogJournalController($scope, $http) {
-
-}
-
-app.controller("LogController", ["$scope", "$http", LogController]);
-
-function LogController($scope, $http) {
-
-}
-
-app.controller("LogReportController", ["$scope", "$http", LogReportController]);
-
-function LogReportController($scope, $http) {
-
-}
-
-app.controller("LogSyslogNgController", ["$scope", "$http", LogSyslogNgController]);
-
-function LogSyslogNgController($scope, $http) {
 
 }
 
