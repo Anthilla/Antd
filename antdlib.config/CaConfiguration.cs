@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
+using antdlib.config.shared;
 using antdlib.models;
 using Newtonsoft.Json;
 using IoDir = System.IO.Directory;

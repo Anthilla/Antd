@@ -84,27 +84,6 @@ $('[data-role="SaveNetscanSetting"]').on("click", function () {
     });
 });
 
-$('[data-role="ToggleAssetContent"]').on("click", function () {
-    var self = $(this);
-    self.toggleClass("icon-arrow-right-5");
-    self.toggleClass("icon-arrow-down-5");
-    var cont = self.parents("div.container").find("div.content");
-    cont.toggle();
-});
-
-$('[data-role="ShareSshKeys"]').on("click", function () {
-    var ip = $(this).attr("data-ip");
-    var port = $(this).attr("data-port");
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/asset/handshake?host=" + ip + "&port=" + port,
-        type: "GET",
-        success: function () {
-            alert("Key shared successfully!");
-        }
-    });
-    _requests.push(aj);
-});
 
 $('[data-role="ShowNmap"]').on("click", function () {
     var ip = $(this).attr("data-ip");
@@ -131,24 +110,8 @@ $('[data-role="ShowNmap"]').on("click", function () {
     _requests.push(aj);
 });
 
-$('[data-role="Wol"]').on("click", function () {
-    var mac = $(this).attr("data-mac");
-    jQuery.support.cors = true;
-    var aj = $.ajax({
-        url: "/asset/wol/" + mac,
-        type: "GET",
-        success: function () {
-        }
-    });
-    _requests.push(aj);
-});
-
 function SetConnectionLink() {
     var host = $("#NoVncHost").val();
     var port = $("#NoVncPort").val();
     $("#NoVncConnect").attr("href", "?host=" + host + "&port=" + port);
 }
-
-$('input[data-role="novnc-setup"]').on("keyup", function () {
-    SetConnectionLink();
-});

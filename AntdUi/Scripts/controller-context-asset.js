@@ -3,6 +3,43 @@
 app.controller("AssetDiscoveryController", ["$scope", "$http", AssetDiscoveryController]);
 
 function AssetDiscoveryController($scope, $http) {
+    $scope.scanPort = function (machine) {
+        $http.get("/scan/" + machine.Ip).success(function (data) {
+            $scope.Discovery = data;
+        });
+    }
+
+    $scope.wol = function (machine) {
+        var data = $.param({
+            MacAddress: machine.MacAddress
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/asset/wol", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.shareKey = function (machine) {
+        var data = $.param({
+            Host: machine.Ip,
+            Port: machine.Port
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/asset/handshake/start", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+ 
+    $scope.sync = function (machine) {
+        var data = $.param({
+            MachineAddress: machine.Ip + ":" + machine.Port
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syncmachine/machine", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.reload = function () {
+        $http.get("/discovery").success(function (data) {
+            $scope.Discovery = data;
+        });
+    }
+
     $http.get("/discovery").success(function (data) {
         $scope.Discovery = data;
     });

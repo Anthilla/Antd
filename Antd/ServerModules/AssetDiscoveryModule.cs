@@ -29,6 +29,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
@@ -70,6 +71,91 @@ namespace Antd.ServerModules {
                     AntdAvahiServices = list
                 };
                 return JsonConvert.SerializeObject(model);
+            };
+
+            Post["/asset/handshake/start"] = x => {
+                var hostIp = Request.Form.Host;
+                var hostPort = Request.Form.Port;
+                const string pathToPrivateKey = "/root/.ssh/id_rsa";
+                const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
+                if(!File.Exists(pathToPublicKey)) {
+                    var bash = new Bash();
+                    var k = bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                    ConsoleLogger.Log(k);
+                }
+                var key = File.ReadAllText(pathToPublicKey);
+                if(string.IsNullOrEmpty(key)) {
+                    return HttpStatusCode.InternalServerError;
+                }
+                var dict = new Dictionary<string, string> { { "ApplePie", key } };
+                var r = new ApiConsumer().Post($"http://{hostIp}:{hostPort}/asset/handshake", dict);
+                var kh = new SshKnownHosts();
+                kh.Add(hostIp);
+                return r;
+            };
+
+            Post["/asset/handshake"] = x => {
+                string apple = Request.Form.ApplePie;
+                var info = apple.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if(info.Length < 2) {
+                    return HttpStatusCode.InternalServerError;
+                }
+                var key = info[0];
+                var remoteUser = info[1];
+                const string user = "root";
+                var model = new AuthorizedKeyModel {
+                    RemoteUser = remoteUser,
+                    User = user,
+                    KeyValue = key
+                };
+                var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+                authorizedKeysConfiguration.AddKey(model);
+                try {
+                    Directory.CreateDirectory("/root/.ssh");
+                    const string authorizedKeysPath = "/root/.ssh/authorized_keys";
+                    if(File.Exists(authorizedKeysPath)) {
+                        var f = File.ReadAllText(authorizedKeysPath);
+                        if(!f.Contains(apple)) {
+                            File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
+                        }
+                    }
+                    else {
+                        File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
+                    }
+                    var bash = new Bash();
+                    bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                    bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
+                    return HttpStatusCode.OK;
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Log(ex);
+                    return HttpStatusCode.InternalServerError;
+                }
+            };
+
+            Post["/asset/wol"] = x => {
+                string mac = Request.Form.MacAddress;
+                var launcher = new CommandLauncher();
+                launcher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
+                return HttpStatusCode.OK;
+            };
+
+            Get["/asset/nmap/{ip}"] = x => {
+                string ip = x.ip;
+                var launcher = new CommandLauncher();
+                var result = launcher.Launch("nmap-ip-fast", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
+                var list = new List<NmapScanStatus>();
+                foreach(var r in result) {
+                    var a = r.SplitToList(" ").ToArray();
+                    var mo = new NmapScanStatus {
+                        Protocol = a[0],
+                        Status = a[1],
+                        Type = a[2]
+                    };
+                    list.Add(mo);
+                }
+                list = list.OrderBy(_ => _.Protocol).ToList();
+                return JsonConvert.SerializeObject(list);
             };
         }
     }

@@ -1069,9 +1069,9 @@
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\antdlib.config\antdlib.config.csproj">
-      <Project>{06b1b8fb-783f-40e1-9b85-2fadba91ea50}</Project>
-      <Name>antdlib.config</Name>
+    <ProjectReference Include="..\antdlib.config.shared\antdlib.config.shared.csproj">
+      <Project>{C7806CEC-63AF-44E5-AE61-E7110A2A1343}</Project>
+      <Name>antdlib.config.shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
       <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>

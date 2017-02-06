@@ -34,6 +34,7 @@ using System.Linq;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.config;
+using antdlib.config.shared;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.Overlay;
@@ -294,7 +295,7 @@ namespace Antd {
             if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
             }
-            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdPort.ToString()));
+            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
             Bash.Execute("chmod 755 /etc/avahi/services", false);
             Bash.Execute($"chmod 644 {avahiServicePath}", false);
             Systemctl.Restart("avahi-daemon.service");

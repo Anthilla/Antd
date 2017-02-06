@@ -43,6 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
 		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
+		AntdUi\Views\Pages\antd\svcs.html = AntdUi\Views\Pages\antd\svcs.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
@@ -51,15 +52,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-F
 		Antd\Views\antd\page-asset-scan.html = Antd\Views\antd\page-asset-scan.html
 		Antd\Views\antd\page-asset-setting.html = Antd\Views\antd\page-asset-setting.html
 		Antd\Views\antd\page-asset-syncmachine.html = Antd\Views\antd\page-asset-syncmachine.html
+		AntdUi\Views\Pages\antd\svcs.html = AntdUi\Views\Pages\antd\svcs.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
 	ProjectSection(SolutionItems) = preProject
 		AntdUi\Views\Pages\asset\assetconfig.html = AntdUi\Views\Pages\asset\assetconfig.html
+		AntdUi\Modules\AssetDiscoveryModule.cs = AntdUi\Modules\AssetDiscoveryModule.cs
 		AntdUi\Views\Pages\asset\assetsync.html = AntdUi\Views\Pages\asset\assetsync.html
 		AntdUi\Views\Pages\asset\discovery.html = AntdUi\Views\Pages\asset\discovery.html
 		AntdUi\Views\Pages\asset\scan.html = AntdUi\Views\Pages\asset\scan.html
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config.shared", "antdlib.config.shared\antdlib.config.shared.csproj", "{C7806CEC-63AF-44E5-AE61-E7110A2A1343}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,6 +115,12 @@ Global
 		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Library|Any CPU.Build.0 = Release|Any CPU
 		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7806CEC-63AF-44E5-AE61-E7110A2A1343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7806CEC-63AF-44E5-AE61-E7110A2A1343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7806CEC-63AF-44E5-AE61-E7110A2A1343}.Library|Any CPU.ActiveCfg = Release|Any CPU
+		{C7806CEC-63AF-44E5-AE61-E7110A2A1343}.Library|Any CPU.Build.0 = Release|Any CPU
+		{C7806CEC-63AF-44E5-AE61-E7110A2A1343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7806CEC-63AF-44E5-AE61-E7110A2A1343}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

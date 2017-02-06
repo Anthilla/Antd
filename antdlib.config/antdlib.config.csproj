@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AclConfiguration.cs" />
-    <Compile Include="AppConfiguration.cs" />
     <Compile Include="AuthorizedKeysConfiguration.cs" />
     <Compile Include="AppsConfiguration.cs" />
     <Compile Include="TimerConfiguration.cs" />
@@ -97,6 +96,10 @@
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
       <Name>antdlib.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\antdlib.config.shared\antdlib.config.shared.csproj">
+      <Project>{C7806CEC-63AF-44E5-AE61-E7110A2A1343}</Project>
+      <Name>antdlib.config.shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
       <Project>{AD9E49CE-4817-4F27-B0B2-94A395FF4229}</Project>

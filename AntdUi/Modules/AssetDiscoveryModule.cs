@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using antdlib.common;
 using antdlib.models;
 using Nancy;
@@ -42,6 +43,38 @@ namespace AntdUi.Modules {
                 var model = _api.Get<PageAssetDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/discovery");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
+            };
+
+            Post["/asset/handshake/start"] = x => {
+                var hostIp = Request.Form.Host;
+                var hostPort = Request.Form.Port;
+                var dict = new Dictionary<string, string> {
+                    { "Host", hostIp },
+                    { "Port", hostPort }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake/start", dict);
+            };
+
+            Post["/asset/handshake"] = x => {
+                string apple = Request.Form.ApplePie;
+                var dict = new Dictionary<string, string> {
+                    { "ApplePie", apple }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake", dict);
+            };
+
+            Post["/asset/wol"] = x => {
+                string mac = Request.Form.MacAddress;
+                var dict = new Dictionary<string, string> {
+                    { "MacAddress", mac }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/wol", dict);
+            };
+
+            Get["/asset/nmap/{ip}"] = x => {
+                string ip = x.ip;
+                var model = _api.Get<List<NmapScanStatus>>($"http://127.0.0.1:{Application.ServerPort}/asset/nmap/" + ip);
+                return JsonConvert.SerializeObject(model);
             };
         }
     }

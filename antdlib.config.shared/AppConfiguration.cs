@@ -4,7 +4,7 @@ using antdlib.common;
 using antdlib.models;
 using Newtonsoft.Json;
 
-namespace antdlib.config {
+namespace antdlib.config.shared {
     public class AppConfiguration {
 
         private AppConfigurationModel _model;
@@ -50,7 +50,7 @@ namespace antdlib.config {
         public void UiSave(AppConfigurationModel model) {
             var savedModel = Get();
             _model = model;
-            _api.Post($"http://localhost:{savedModel.AntdPort}/config", _model.ToDictionary());
+            _api.Post2($"http://localhost:{savedModel.AntdPort}/config", _model.ToDictionary());
         }
     }
 }

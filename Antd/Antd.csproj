@@ -151,7 +151,6 @@
     <Compile Include="Modules\ServiceGlusterModule.cs" />
     <Compile Include="Modules\ServiceBindModule.cs" />
     <Compile Include="Modules\ServiceSambaModule.cs" />
-    <Compile Include="Modules\HandshakeModule.cs" />
     <Compile Include="Modules\AuthorizedKeysModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\MonitorModule.cs" />
@@ -179,9 +178,6 @@
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
-    <Content Include="Scripts\antd.apps.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\antd.service.acl.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -206,16 +202,10 @@
     <Content Include="Scripts\antd.service.ca.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.units.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\antd.cron.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.network.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\antd.log.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.service.ssh.js">
@@ -245,13 +235,7 @@
     <Content Include="Scripts\antd.service.gluster.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\antd.xhr.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\antd.users.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\antd.page.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.cmd.js">
@@ -418,17 +402,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\antd.websocket.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\antd.config.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\antd.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\antd.selectize.js">
@@ -444,6 +422,10 @@
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\antdlib.config.shared\antdlib.config.shared.csproj">
+      <Project>{C7806CEC-63AF-44E5-AE61-E7110A2A1343}</Project>
+      <Name>antdlib.config.shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.config\antdlib.config.csproj">
       <Project>{06b1b8fb-783f-40e1-9b85-2fadba91ea50}</Project>

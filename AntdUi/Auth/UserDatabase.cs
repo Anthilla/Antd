@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
 using antdlib.config;
+using antdlib.config.shared;
 using antdlib.models;
 using Nancy;
 using Nancy.Authentication.Forms;

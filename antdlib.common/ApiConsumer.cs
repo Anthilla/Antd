@@ -96,6 +96,25 @@ namespace antdlib.common {
             #endregion
         }
 
+        public void Post2(string uri, IDictionary<string, string> data) {
+            try {
+                var client = new RestClient(uri);
+                var request = new RestRequest("/", Method.POST);
+                request.AddHeader(InstanceHeader, _instance);
+                foreach(var d in data)
+                    request.AddParameter(d.Key, d.Value);
+                client.Execute(request);
+            }
+            #region Exception
+
+            catch(Exception ex) {
+                Console.WriteLine($"Error requesting {uri}");
+                Console.WriteLine(ex);
+            }
+
+            #endregion
+        }
+
         public string GetString(string uri) {
             try {
                 var client = new RestClient(uri);
