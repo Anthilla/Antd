@@ -46,6 +46,7 @@ namespace AntdUi.Modules {
             };
 
             Post["/storage/print"] = x => {
+                //todo non sono convinto che sia un POST
                 string disk = Request.Form.Disk;
                 var dict = new Dictionary<string, string> {
                     { "Disk", disk }

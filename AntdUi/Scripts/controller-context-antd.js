@@ -310,55 +310,572 @@ function AntdDiskUsageController($scope, $http) {
 app.controller("AntdFirewallController", ["$scope", "$http", AntdFirewallController]);
 
 function AntdFirewallController($scope, $http) {
+    $scope.ipv6NatChain = function (el) {
+        var data = $.param({
+            Chain: el.Chain,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv6/nat/chain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.ipv6NatSet = function (el) {
+        var data = $.param({
+            Set: el.Set,
+            Type: el.Type,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv6/nat/set", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.ipv6FilterChain = function (el) {
+        var data = $.param({
+            Chain: el.Chain,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv6/filter/chain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.ipv6FilterSet = function (el) {
+        var data = $.param({
+            Set: el.Set,
+            Type: el.Type,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv6/filter/set", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.ipv4NatChain = function (el) {
+        var data = $.param({
+            Chain: el.Chain,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv4/nat/chain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.ipv4NatSet = function (el) {
+        var data = $.param({
+            Set: el.Set,
+            Type: el.Type,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv4/nat/set", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.ipv4FilterChain = function (el) {
+        var data = $.param({
+            Chain: el.Chain,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv4/filter/chain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.ipv4FilterSet = function (el) {
+        var data = $.param({
+            Set: el.Set,
+            Type: el.Type,
+            Elements: el.Elements
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/ipv4/filter/set", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/firewall/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/firewall").success(function (data) {
+        $scope.Firewall = data;
+    });
 }
 
 app.controller("AntdGlusterController", ["$scope", "$http", AntdGlusterController]);
 
 function AntdGlusterController($scope, $http) {
+    $scope.deleteNode = function (el) {
+        var data = $.param({
+            Node: el.Node
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/node/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.addNode = function (el) {
+        var data = $.param({
+            Node: el.Node
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/node", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveOptions = function (gluster) {
+        var data = $.param({
+            GlusterNode: gluster.GlusterNode,
+            GlusterVolumeName: gluster.GlusterVolumeName,
+            GlusterVolumeBrick: gluster.GlusterVolumeBrick,
+            GlusterVolumeMountPoint: gluster.GlusterVolumeMountPoint
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/gluster").success(function (data) {
+        $scope.Gluster = data;
+    });
 }
 
 app.controller("AntdNameServiceController", ["$scope", "$http", AntdNameServiceController]);
 
 function AntdNameServiceController($scope, $http) {
+    $scope.saveExtDomain = function (domain) {
+        var data = $.param({
+            Domain: domain
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host/ext/domain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.saveIntDomain = function (domain) {
+        var data = $.param({
+            Domain: domain
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host/int/domain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveSwitch = function (switches) {
+        var data = $.param({
+            Switch: switches
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/nameservice/switch", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveResolv = function (resolv) {
+        var data = $.param({
+            Resolv: resolv
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/nameservice/resolv", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveNetworks = function (networks) {
+        var data = $.param({
+            Networks: networks
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/nameservice/networks", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveHosts = function (hosts) {
+        var data = $.param({
+            Hosts: hosts
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/nameservice/hosts", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/nameservice").success(function (data) {
+        $scope.NameService = data;
+    });
 }
 
 app.controller("AntdNetworkController", ["$scope", "$http", AntdNetworkController]);
 
 function AntdNetworkController($scope, $http) {
+    $scope.deleteInterface = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/network/interface/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.addInterface = function (el) {
+        var data = $.param({
+            Interface: el.Interface,
+            Mode: el.Mode,
+            Status: el.Status,
+            StaticAddres: el.StaticAddres,
+            StaticRange: el.StaticRange,
+            Txqueuelen: el.Txqueuelen,
+            Mtu: el.Mtu
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/network/interface", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/network/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/network").success(function (data) {
+        $scope.Network = data;
+    });
 }
 
 app.controller("AntdRsyncController", ["$scope", "$http", AntdRsyncController]);
 
 function AntdRsyncController($scope, $http) {
+    $scope.deleteDirectory = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/directory/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.addDirectory = function (el) {
+        var data = $.param({
+            Source: el.Source,
+            Destination: el.Destination,
+            Type: el.Type
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/directory", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/rsync/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/rsync").success(function (data) {
+        $scope.Rsync = data;
+    });
 }
 
 app.controller("AntdSambaController", ["$scope", "$http", AntdSambaController]);
 
 function AntdSambaController($scope, $http) {
+    $scope.deleteReservation = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/reservation/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.addReservation = function (el) {
+        var data = $.param({
+            HostName: el.HostName,
+            MacAddress: el.MacAddress,
+            IpAddress: el.IpAddress
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/reservation", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.deletePool = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/pool/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addPool = function (el) {
+        var data = $.param({
+            Option: el.Option
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/pool", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.deleteResource = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/resource/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addResource = function (el) {
+        var data = $.param({
+            Name: el.Name,
+            Path: el.Path,
+            Comment: el.Comment
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/resource", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveOptions = function (el) {
+        var data = $.param({
+            DosCharset: el.DosCharset,
+            Workgroup: el.Workgroup,
+            ServerString: el.ServerString,
+            MapToGuest: el.MapToGuest,
+            ObeyPamRestrictions: el.ObeyPamRestrictions,
+            GuestAccount: el.GuestAccount,
+            PamPasswordChange: el.PamPasswordChange,
+            PasswdProgram: el.PasswdProgram,
+            UnixPasswordSync: el.UnixPasswordSync,
+            ResetOnZeroVc: el.ResetOnZeroVc,
+            HostnameLookups: el.HostnameLookups,
+            LoadPrinters: el.LoadPrinters,
+            PrintcapName: el.PrintcapName,
+            DisableSpoolss: el.DisableSpoolss,
+            TemplateShell: el.TemplateShell,
+            WinbindEnumUsers: el.WinbindEnumUsers,
+            WinbindEnumGroups: el.WinbindEnumGroups,
+            WinbindUseDefaultDomain: el.WinbindUseDefaultDomain,
+            WinbindNssInfo: el.WinbindNssInfo,
+            WinbindRefreshTickets: el.WinbindRefreshTickets,
+            WinbindNormalizeNames: el.WinbindNormalizeNames,
+            RecycleTouch: el.RecycleTouch,
+            RecycleKeeptree: el.RecycleKeeptree,
+            RecycleRepository: el.RecycleRepository,
+            Nfs4Chown: el.Nfs4Chown,
+            Nfs4Acedup: el.Nfs4Acedup,
+            Nfs4Mode: el.Nfs4Mode,
+            ShadowFormat: el.ShadowFormat,
+            ShadowLocaltime: el.ShadowLocaltime,
+            ShadowSort: el.ShadowSort,
+            ShadowSnapdir: el.ShadowSnapdir,
+            RpcServerDefault: el.RpcServerDefault,
+            RpcServerSvcctl: el.RpcServerSvcctl,
+            RpcServerSrvsvc: el.RpcServerSrvsvc,
+            RpcServerEventlog: el.RpcServerEventlog,
+            RpcServerNtsvcs: el.RpcServerNtsvcs,
+            RpcServerWinreg: el.RpcServerWinreg,
+            RpcServerSpoolss: el.RpcServerSpoolss,
+            RpcDaemonSpoolssd: el.RpcDaemonSpoolssd,
+            RpcServerTcpip: el.RpcServerTcpip,
+            IdmapConfigBackend: el.IdmapConfigBackend,
+            ReadOnly: el.ReadOnly,
+            GuestOk: el.GuestOk,
+            AioReadSize: el.AioReadSize,
+            AioWriteSize: el.AioWriteSize,
+            EaSupport: el.EaSupport,
+            DirectoryNameCacheSize: el.DirectoryNameCacheSize,
+            CaseSensitive: el.CaseSensitive,
+            MapReadonly: el.MapReadonly,
+            StoreDosAttributes: el.StoreDosAttributes,
+            WideLinks: el.WideLinks,
+            DosFiletimeResolution: el.DosFiletimeResolution,
+            VfsObjects: el.VfsObjects
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/samba/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/samba").success(function (data) {
+        $scope.Samba = data;
+    });
 }
 
 app.controller("AntdSchedulerController", ["$scope", "$http", AntdSchedulerController]);
 
 function AntdSchedulerController($scope, $http) {
+    $scope.deleteTimer = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/timer/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.addTimer = function (el) {
+        var data = $.param({
+            Alias: el.Alias,
+            Time: el.Time,
+            Command: el.Command
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/timer", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/scheduler").success(function (data) {
+        $scope.Scheduler = data;
+    });
 }
 
 app.controller("AntdSshdController", ["$scope", "$http", AntdSshdController]);
 
 function AntdSshdController($scope, $http) {
+    $scope.saveOptions = function (el) {
+        var data = $.param({
+            Port: el.Port,
+            PermitRootLogin: el.PermitRootLogin,
+            PermitTunnel: el.PermitTunnel,
+            MaxAuthTries: el.MaxAuthTries,
+            MaxSessions: el.MaxSessions,
+            RsaAuthentication: el.RsaAuthentication,
+            PubkeyAuthentication: el.PubkeyAuthentication,
+            UsePam: el.UsePam
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/sshd/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/sshd/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/sshd/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/sshd/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/sshd/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/sshd/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/sshd").success(function (data) {
+        $scope.Sshd = data;
+    });
 }
 
 app.controller("AntdStorageController", ["$scope", "$http", AntdStorageController]);
 
 function AntdStorageController($scope, $http) {
+    $scope.print = function (el) {
+        var data = $.param({
+            Disk: el.Disk
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/storage/print", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.mklabel = function (el) {
+        var data = $.param({
+            Disk: el.Disk,
+            Type: el.Type,
+            Confirm: el.Confirm,
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/storage/mklabel", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/storage").success(function (data) {
+        $scope.Storage = data;
+    });
 }
 
 app.controller("AntdVmController", ["$scope", "$http", AntdVmController]);
@@ -372,13 +889,135 @@ function AntdVmController($scope, $http) {
 app.controller("AntdVpnController", ["$scope", "$http", AntdVpnController]);
 
 function AntdVpnController($scope, $http) {
+    $scope.addReservation = function (el) {
+        var data = $.param({
+            HostName: el.HostName,
+            MacAddress: el.MacAddress,
+            IpAddress: el.IpAddress
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/reservation", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.deletePool = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/pool/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addPool = function (el) {
+        var data = $.param({
+            Option: el.Option
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/pool", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.deleteClass = function (guid) {
+        var data = $.param({
+            Guid: guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/class/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addClass = function (el) {
+        var data = $.param({
+            Name: el.Name,
+            MacVendor: el.MacVendor
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/class", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveOptions = function (el) {
+        var data = $.param({
+            RemoteHost: el.RemoteHost,
+            RemoteAddress: el.RemoteAddress,
+            RemoteRange: el.RemoteRange,
+            LocalAddress: el.LocalAddress,
+            LocalRange: el.LocalRange
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/vpn/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/vpn").success(function (data) {
+        $scope.Vpn = data;
+    });
 }
 
 app.controller("AntdZfsController", ["$scope", "$http", AntdZfsController]);
 
 function AntdZfsController($scope, $http) {
+    $scope.zfsCreate = function (el) {
+        var data = $.param({
+            Altroot: el.Altroot,
+            Name: el.Name,
+            Dataset: el.Dataset
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/zfs/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
 
+    $scope.zpoolCreate = function (el) {
+        var data = $.param({
+            Altroot: el.Altroot,
+            Name: el.Name,
+            Type: el.Type,
+            Id: el.Id
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/zpool/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.snapDisable = function (el) {
+        var data = $.param({
+            Guid: el.Guid
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/zfs/snap/disable", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.snap = function (zfs) {
+        var data = $.param({
+            Pool: zfs.Pool,
+            Interval
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/zfs/snap", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $http.get("/zfs").success(function (data) {
+        $scope.Zfs = data;
+    });
 }
 
 app.controller("AntdTimeController", ["$scope", "$http", AntdTimeController]);

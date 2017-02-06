@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/firewall/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/set", null);
             };
 
             Post["/firewall/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/restart", null);
             };
 
             Post["/firewall/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/stop", null);
             };
 
             Post["/firewall/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/enable", null);
             };
 
             Post["/firewall/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/disable", null);
             };
 
             #region [    IPV4    ]
