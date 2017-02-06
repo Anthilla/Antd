@@ -41,7 +41,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
 	ProjectSection(SolutionItems) = preProject
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
-		AntdUi\Scripts\controller-context-apps.js = AntdUi\Scripts\controller-context-apps.js
 		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
 		AntdUi\Scripts\controller-context-boot.js = AntdUi\Scripts\controller-context-boot.js
 		AntdUi\Scripts\controller-context-ca.js = AntdUi\Scripts\controller-context-ca.js
@@ -50,8 +49,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
 	ProjectSection(SolutionItems) = preProject
-		Antd\Views\antd\part\page-apps-detect.html = Antd\Views\antd\part\page-apps-detect.html
-		Antd\Views\antd\part\page-apps-manage.html = Antd\Views\antd\part\page-apps-manage.html
 		Antd\Views\antd\part\page-asset-discovery.html = Antd\Views\antd\part\page-asset-discovery.html
 		Antd\Views\antd\part\page-asset-scan.html = Antd\Views\antd\part\page-asset-scan.html
 		Antd\Views\antd\part\page-asset-setting.html = Antd\Views\antd\part\page-asset-setting.html
@@ -73,8 +70,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
 	ProjectSection(SolutionItems) = preProject
-		AntdUi\Views\Pages\apps\appsdetect.html = AntdUi\Views\Pages\apps\appsdetect.html
-		AntdUi\Views\Pages\apps\appsmgmt.html = AntdUi\Views\Pages\apps\appsmgmt.html
 		AntdUi\Views\Pages\asset\assetconfig.html = AntdUi\Views\Pages\asset\assetconfig.html
 		AntdUi\Views\Pages\asset\assetsync.html = AntdUi\Views\Pages\asset\assetsync.html
 		AntdUi\Views\Pages\boot\bootcmd.html = AntdUi\Views\Pages\boot\bootcmd.html
