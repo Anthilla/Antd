@@ -1,8 +1,0 @@
-public string Port { get; set; } = "22";
-public string PermitRootLogin { get; set; } = "prohibit-password";
-public string PermitTunnel { get; set; } = "yes";
-public string MaxAuthTries { get; set; } = "6";
-public string MaxSessions { get; set; } = "10";
-public string RsaAuthentication { get; set; } = "yes";
-public string PubkeyAuthentication { get; set; } = "yes";
-public string UsePam { get; set; } = "yes";

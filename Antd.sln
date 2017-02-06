@@ -14,16 +14,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdsh", "antdsh\antdsh.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignorethis_misc", "{1BB31C59-D4CC-4640-BE45-B7857FBA22A1}"
 	ProjectSection(SolutionItems) = preProject
-		_frequentregex.txt = _frequentregex.txt
+		ignorethis_misc\_frequentregex.txt = ignorethis_misc\_frequentregex.txt
 		ignorethis_misc\converter.sh = ignorethis_misc\converter.sh
 		ignorethis_misc\createUserSmartCardCertificate.sh = ignorethis_misc\createUserSmartCardCertificate.sh
-		dump.txt = dump.txt
-		gluster.cnf = gluster.cnf
+		ignorethis_misc\gluster.cnf = ignorethis_misc\gluster.cnf
 		ignorethis_misc\samba-dc.cnf = ignorethis_misc\samba-dc.cnf
 		ignorethis_misc\samba-user.cnf = ignorethis_misc\samba-user.cnf
 		ignorethis_misc\script_domainController_ca.sh = ignorethis_misc\script_domainController_ca.sh
 		ignorethis_misc\setCaStructure.sh = ignorethis_misc\setCaStructure.sh
-		TextFile1.txt = TextFile1.txt
 		ignorethis_misc\todo-ui.txt = ignorethis_misc\todo-ui.txt
 		ignorethis_misc\TODO.txt = ignorethis_misc\TODO.txt
 	EndProjectSection
