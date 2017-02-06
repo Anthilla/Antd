@@ -43,12 +43,58 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 	ProjectSection(SolutionItems) = preProject
 		_frequentregex.txt = _frequentregex.txt
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
-		TextFile1.txt = TextFile1.txt
+		AntdUi\Scripts\controller-context-apps.js = AntdUi\Scripts\controller-context-apps.js
+		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
+		AntdUi\Scripts\controller-context-boot.js = AntdUi\Scripts\controller-context-boot.js
+		AntdUi\Scripts\controller-context-ca.js = AntdUi\Scripts\controller-context-ca.js
+		AntdUi\Scripts\controller-context-log.js = AntdUi\Scripts\controller-context-log.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
+	ProjectSection(SolutionItems) = preProject
+		Antd\Views\antd\part\page-apps-detect.html = Antd\Views\antd\part\page-apps-detect.html
+		Antd\Views\antd\part\page-apps-manage.html = Antd\Views\antd\part\page-apps-manage.html
+		Antd\Views\antd\part\page-asset-discovery.html = Antd\Views\antd\part\page-asset-discovery.html
+		Antd\Views\antd\part\page-asset-scan.html = Antd\Views\antd\part\page-asset-scan.html
+		Antd\Views\antd\part\page-asset-setting.html = Antd\Views\antd\part\page-asset-setting.html
+		Antd\Views\antd\part\page-asset-syncmachine.html = Antd\Views\antd\part\page-asset-syncmachine.html
+		Antd\Views\antd\part\page-boot-cmd.html = Antd\Views\antd\part\page-boot-cmd.html
+		Antd\Views\antd\part\page-boot-mod.html = Antd\Views\antd\part\page-boot-mod.html
+		Antd\Views\antd\part\page-boot-osp.html = Antd\Views\antd\part\page-boot-osp.html
+		Antd\Views\antd\part\page-boot-svc.html = Antd\Views\antd\part\page-boot-svc.html
+		Antd\Views\antd\part\page-ca-cert.html = Antd\Views\antd\part\page-ca-cert.html
+		Antd\Views\antd\part\page-ca-dc.html = Antd\Views\antd\part\page-ca-dc.html
+		Antd\Views\antd\part\page-ca-dcusers.html = Antd\Views\antd\part\page-ca-dcusers.html
+		Antd\Views\antd\part\page-ca-setup.html = Antd\Views\antd\part\page-ca-setup.html
+		Antd\Views\antd\part\page-log-config.html = Antd\Views\antd\part\page-log-config.html
+		Antd\Views\antd\part\page-log-report.html = Antd\Views\antd\part\page-log-report.html
+		Antd\Views\antd\part\page-log-syslog.html = Antd\Views\antd\part\page-log-syslog.html
+		Antd\Views\antd\part\page-log-system.html = Antd\Views\antd\part\page-log-system.html
+		Antd\Views\antd\part\page-log.html = Antd\Views\antd\part\page-log.html
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
+	ProjectSection(SolutionItems) = preProject
+		AntdUi\Views\Pages\apps\appsdetect.html = AntdUi\Views\Pages\apps\appsdetect.html
+		AntdUi\Views\Pages\apps\appsmgmt.html = AntdUi\Views\Pages\apps\appsmgmt.html
+		AntdUi\Views\Pages\asset\assetconfig.html = AntdUi\Views\Pages\asset\assetconfig.html
+		AntdUi\Views\Pages\asset\assetsync.html = AntdUi\Views\Pages\asset\assetsync.html
+		AntdUi\Views\Pages\boot\bootcmd.html = AntdUi\Views\Pages\boot\bootcmd.html
+		AntdUi\Views\Pages\boot\bootmod.html = AntdUi\Views\Pages\boot\bootmod.html
+		AntdUi\Views\Pages\boot\bootparam.html = AntdUi\Views\Pages\boot\bootparam.html
+		AntdUi\Views\Pages\boot\bootsvc.html = AntdUi\Views\Pages\boot\bootsvc.html
+		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
+		AntdUi\Views\Pages\ca\cert.html = AntdUi\Views\Pages\ca\cert.html
+		AntdUi\Views\Pages\ca\dc.html = AntdUi\Views\Pages\ca\dc.html
+		AntdUi\Views\Pages\ca\dcusers.html = AntdUi\Views\Pages\ca\dcusers.html
+		AntdUi\Views\Pages\asset\discovery.html = AntdUi\Views\Pages\asset\discovery.html
+		AntdUi\Views\Pages\log\journal.html = AntdUi\Views\Pages\log\journal.html
+		AntdUi\Views\Pages\log\log.html = AntdUi\Views\Pages\log\log.html
+		AntdUi\Views\Pages\log\logconfig.html = AntdUi\Views\Pages\log\logconfig.html
+		AntdUi\Views\Pages\log\report.html = AntdUi\Views\Pages\log\report.html
+		AntdUi\Views\Pages\asset\scan.html = AntdUi\Views\Pages\asset\scan.html
+		AntdUi\Views\Pages\log\syslogng.html = AntdUi\Views\Pages\log\syslogng.html
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"
 EndProject
