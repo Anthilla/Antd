@@ -40,6 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.c
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
 	ProjectSection(SolutionItems) = preProject
+		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
 		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
 		AntdUi\Scripts\controller-context-boot.js = AntdUi\Scripts\controller-context-boot.js
@@ -47,14 +48,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
 	ProjectSection(SolutionItems) = preProject
-		Antd\Views\antd\part\page-asset-discovery.html = Antd\Views\antd\part\page-asset-discovery.html
-		Antd\Views\antd\part\page-asset-scan.html = Antd\Views\antd\part\page-asset-scan.html
-		Antd\Views\antd\part\page-asset-setting.html = Antd\Views\antd\part\page-asset-setting.html
-		Antd\Views\antd\part\page-asset-syncmachine.html = Antd\Views\antd\part\page-asset-syncmachine.html
-		Antd\Views\antd\part\page-boot-cmd.html = Antd\Views\antd\part\page-boot-cmd.html
-		Antd\Views\antd\part\page-boot-mod.html = Antd\Views\antd\part\page-boot-mod.html
-		Antd\Views\antd\part\page-boot-osp.html = Antd\Views\antd\part\page-boot-osp.html
-		Antd\Views\antd\part\page-boot-svc.html = Antd\Views\antd\part\page-boot-svc.html
+		Antd\Views\antd\page-asset-discovery.html = Antd\Views\antd\page-asset-discovery.html
+		Antd\Views\antd\page-asset-scan.html = Antd\Views\antd\page-asset-scan.html
+		Antd\Views\antd\page-asset-setting.html = Antd\Views\antd\page-asset-setting.html
+		Antd\Views\antd\page-asset-syncmachine.html = Antd\Views\antd\page-asset-syncmachine.html
+		Antd\Views\antd\page-boot-cmd.html = Antd\Views\antd\page-boot-cmd.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
@@ -62,15 +60,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA4989
 		AntdUi\Views\Pages\asset\assetconfig.html = AntdUi\Views\Pages\asset\assetconfig.html
 		AntdUi\Views\Pages\asset\assetsync.html = AntdUi\Views\Pages\asset\assetsync.html
 		AntdUi\Views\Pages\boot\bootcmd.html = AntdUi\Views\Pages\boot\bootcmd.html
-		AntdUi\Views\Pages\boot\bootmod.html = AntdUi\Views\Pages\boot\bootmod.html
-		AntdUi\Views\Pages\boot\bootparam.html = AntdUi\Views\Pages\boot\bootparam.html
-		AntdUi\Views\Pages\boot\bootsvc.html = AntdUi\Views\Pages\boot\bootsvc.html
-		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
 		AntdUi\Views\Pages\asset\discovery.html = AntdUi\Views\Pages\asset\discovery.html
 		AntdUi\Views\Pages\asset\scan.html = AntdUi\Views\Pages\asset\scan.html
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,6 +120,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
 		{EA498959-0DEB-4A9A-97E2-54F099447C64} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
-		{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20} = {DD629971-5632-46EF-AF4C-8B8F27F77455}
 	EndGlobalSection
 EndGlobal
