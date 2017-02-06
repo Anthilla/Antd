@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
-using antdlib.views;
+using antdlib.config;
+using antdlib.models;
 using Antd.Database;
 
 namespace Antd.SystemdTimer {
@@ -115,29 +116,7 @@ namespace Antd.SystemdTimer {
         }
         #endregion TT Target
 
-        public void CleanUp() {
-            var all = TimerRepository.GetAll().ToList();
-            var sorted = all.GroupBy(a => a.Alias);
-            foreach(var group in sorted) {
-                if(group.Count() > 1) {
-                    var old = group.OrderByDescending(_ => _.Timestamp).Skip(1);
-                    foreach(var g in old) {
-                        TimerRepository.Delete(g.Id);
-                    }
-                }
-            }
-        }
-
-        public IEnumerable<TimerSchema> GetAll() {
-            var list = TimerRepository.GetAll().ToList();
-            foreach(var el in list) {
-                el.IsEnabled = IsActive(el.Alias);
-            }
-            return list;
-        }
-
         private static readonly string TargetDirectory = Parameter.TimerUnits;
-        private static readonly TimerRepository TimerRepository = new TimerRepository();
 
         public void Create(string name, string time, string command) {
             var timerFile = $"{TargetDirectory}/{name}.timer";
@@ -177,13 +156,14 @@ namespace Antd.SystemdTimer {
             };
             File.WriteAllLines(serviceFile, serviceText);
 
-            var tryget = TimerRepository.GetByName(name);
+            var schedulerConfiguration = new TimerConfiguration();
+            var tryget = schedulerConfiguration.Get().Timers.FirstOrDefault(_ => _.Alias == name);
             if(tryget == null) {
-                TimerRepository.Create(new Dictionary<string, string> {
-                    {"Guid", Guid.NewGuid().ToString()},
-                    {"Alias", name},
-                    {"Time", time},
-                    {"Command", command}
+                schedulerConfiguration.AddTimer(new TimerModel {
+                    Alias = name,
+                    Command = command,
+                    Time = time,
+                    IsEnabled = true
                 });
             }
             var bash = new Bash();
@@ -206,9 +186,10 @@ namespace Antd.SystemdTimer {
                 File.Delete(serviceFile);
             }
 
-            var tryget = TimerRepository.GetByName(name);
+            var schedulerConfiguration = new TimerConfiguration();
+            var tryget = schedulerConfiguration.Get().Timers.FirstOrDefault(_ => _.Alias == name);
             if(tryget != null) {
-                TimerRepository.Delete(tryget.Id);
+                schedulerConfiguration.RemoveTimer(tryget.Guid);
             }
 
             bash.Execute("systemctl daemon-reload", false);
@@ -220,7 +201,8 @@ namespace Antd.SystemdTimer {
                 var name = Path.GetFileName(file);
                 if(name != null) {
                     var coreName = name.Replace(".timer", "");
-                    var tryget = TimerRepository.GetByName(coreName);
+                    var schedulerConfiguration = new TimerConfiguration();
+                    var tryget = schedulerConfiguration.Get().Timers.FirstOrDefault(_ => _.Alias == coreName);
                     var time = "";
                     if(!File.Exists(file))
                         continue;
@@ -243,11 +225,11 @@ namespace Antd.SystemdTimer {
                     }
 
                     if(tryget == null) {
-                        TimerRepository.Create(new Dictionary<string, string> {
-                            {"Guid", Guid.NewGuid().ToString()},
-                            {"Alias", coreName},
-                            {"Time", time},
-                            {"Command", command}
+                        schedulerConfiguration.AddTimer(new TimerModel {
+                            Alias = coreName,
+                            Command = command,
+                            Time = time,
+                            IsEnabled = true
                         });
                     }
                 }
@@ -255,7 +237,8 @@ namespace Antd.SystemdTimer {
         }
 
         public void Export() {
-            var all = TimerRepository.GetAll();
+            var schedulerConfiguration = new TimerConfiguration();
+            var all = schedulerConfiguration.Get().Timers;
             foreach(var tt in all) {
                 Create(tt.Alias, tt.Time, tt.Command);
             }

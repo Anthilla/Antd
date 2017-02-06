@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.common;
+using antdlib.config;
 using antdlib.models;
 using Antd.Database;
 using Antd.SystemdTimer;
 
 namespace Antd.Storage {
     public class Zpool {
-        private static readonly TimerRepository TimerRepository = new TimerRepository();
         private static readonly Bash Bash = new Bash();
         private readonly Timers _timers = new Timers();
 
@@ -37,13 +37,15 @@ namespace Antd.Storage {
                     Status = Bash.Execute($"zpool status {cells[0]}")
                 };
 
-                var jobs = TimerRepository.GetAll().Where(_ => _.Alias == model.Name).ToList();
+                var schedulerConfiguration = new TimerConfiguration();
+
+                var jobs = schedulerConfiguration.Get().Timers.Where(_ => _.Alias == model.Name).ToList();
                 if(jobs.Any()) {
                     var j = jobs.FirstOrDefault();
                     if(j != null) {
                         model.HasSnapshot = _timers.IsActive(model.Name);
                         model.Snapshot = j.Time;
-                        model.SnapshotGuid = j.Id;
+                        model.SnapshotGuid = j.Guid;
                     }
                 }
 

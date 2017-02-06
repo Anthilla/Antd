@@ -45,14 +45,8 @@ namespace AntdUi.Modules {
                 return json;
             };
 
-            Post["/scheduler"] = x => {
-                string alias = Request.Form.Alias;
-                string command = Request.Form.Command;
-                var dict = new Dictionary<string, string> {
-                    { "Alias", alias },
-                    { "Command", command }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler", dict);
+            Post["/scheduler/set"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/set", null);
             };
 
             Post["/scheduler/enable"] = x => {
@@ -63,22 +57,24 @@ namespace AntdUi.Modules {
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/disable", null);
             };
 
-            Post["/scheduler/delete"] = x => {
+            Post["/scheduler/timer"] = x => {
+                string alias = Request.Form.Alias;
+                string time = Request.Form.Time;
+                string command = Request.Form.Command;
+                var dict = new Dictionary<string, string> {
+                    { "Alias", alias },
+                    { "Time", time },
+                    { "Command", command },
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/timer", dict);
+            };
+
+            Post["/scheduler/timer/del"] = x => {
                 string guid = Request.Form.Guid;
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/delete", dict);
-            };
-
-            Post["/scheduler/edit"] = x => {
-                string id = Request.Form.Guid;
-                string command = Request.Form.Command;
-                var dict = new Dictionary<string, string> {
-                    { "Guid", id },
-                    { "Command", command }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/edit", dict);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/timer/del", dict);
             };
         }
     }

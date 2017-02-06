@@ -158,7 +158,6 @@ namespace Antd {
             Global.SaveIndexToDiskTimerSeconds = 30;
             Database.RegisterView(new ApplicationView());
             Database.RegisterView(new AuthorizedKeysView());
-            Database.RegisterView(new TimerView());
             ConsoleLogger.Log("database ready");
             #endregion
 
@@ -343,7 +342,6 @@ namespace Antd {
             #endregion
 
             #region [    Scheduler    ]
-            Timers.CleanUp();
             Timers.Setup();
             Timers.Import();
             Timers.Export();

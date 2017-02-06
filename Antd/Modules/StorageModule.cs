@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.Linq;
 using antd.commands;
 using antdlib.common;
+using antdlib.config;
 using Antd.Database;
 using Antd.SystemdTimer;
 using Nancy;
@@ -39,7 +40,6 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class StorageModule : NancyModule {
 
-        private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly Bash _bash = new Bash();
         private readonly CommandLauncher _launcher = new CommandLauncher();
         private readonly Timers _timers = new Timers();
@@ -48,7 +48,8 @@ namespace Antd.Modules {
             this.RequiresAuthentication();
 
             Get["/zfs/cron"] = x => {
-                var list = _timerRepository.GetAll();
+                var schedulerConfiguration = new TimerConfiguration();
+                var list = schedulerConfiguration.Get().Timers;
                 return Response.AsJson(list);
             };
 
@@ -59,15 +60,6 @@ namespace Antd.Modules {
                     return HttpStatusCode.InternalServerError;
                 }
                 _timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
-                return HttpStatusCode.OK;
-            };
-
-            Post["/zfs/snap/disable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Disable(tt.Alias);
                 return HttpStatusCode.OK;
             };
 

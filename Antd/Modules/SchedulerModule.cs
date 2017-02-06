@@ -28,7 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Antd.Database;
 using Antd.SystemdTimer;
 using Nancy;
 using Nancy.Security;
@@ -36,7 +35,6 @@ using Nancy.Security;
 namespace Antd.Modules {
     public class SchedulerModule : NancyModule {
 
-        private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly Timers _timers = new Timers();
 
         public SchedulerModule() {
@@ -50,38 +48,6 @@ namespace Antd.Modules {
                     _timers.Create(alias, hi, command);
                 }
                 return Response.AsRedirect("/");
-            };
-
-            Post["/scheduler/enable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if (tt == null) return HttpStatusCode.InternalServerError;
-                _timers.Enable(tt.Alias);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/scheduler/disable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if (tt == null) return HttpStatusCode.InternalServerError;
-                _timers.Disable(tt.Alias);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/scheduler/delete"] = x => {
-                string guid = Request.Form.Guid;
-                _timerRepository.Delete(guid);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/scheduler/edit"] = x => {
-                var id = (string)Request.Form.Guid;
-                var command = (string)Request.Form.Command;
-                _timerRepository.Edit(new Dictionary<string, string> {
-                    { "Id", id },
-                    { "Data", command }
-                });
-                return HttpStatusCode.OK;
             };
         }
     }

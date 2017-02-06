@@ -465,8 +465,8 @@ namespace Antd.Modules {
                 try {
                     dynamic viewModel = new ExpandoObject();
                     var timers = new Timers();
-                    var scheduledJobs = timers.GetAll();
-                    viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
+                    //var scheduledJobs = timers.GetAll();
+                    //viewModel.Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias);
                     return View["antd/part/page-antd-scheduler", viewModel];
                 }
                 catch(Exception ex) {

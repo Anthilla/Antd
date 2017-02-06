@@ -59,6 +59,7 @@
     <Compile Include="CertificateModel.cs" />
     <Compile Include="AvahiServiceViewModel.cs" />
     <Compile Include="AppInfo.cs" />
+    <Compile Include="TimerConfigurationModel.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="NmapScanStatus.cs" />
     <Compile Include="ViewModels\PageBootOsParametersModel.cs" />

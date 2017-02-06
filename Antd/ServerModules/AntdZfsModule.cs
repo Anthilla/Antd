@@ -41,7 +41,6 @@ using Newtonsoft.Json;
 namespace Antd.ServerModules {
     public class AntdZfsModule : NancyModule {
 
-        private readonly TimerRepository _timerRepository = new TimerRepository();
         private readonly CommandLauncher _launcher = new CommandLauncher();
         private readonly Timers _timers = new Timers();
 
@@ -63,10 +62,11 @@ namespace Antd.ServerModules {
                 return JsonConvert.SerializeObject(model);
             };
 
-            Get["/zfs/cron"] = x => {
-                var list = _timerRepository.GetAll();
-                return Response.AsJson(list);
-            };
+            //todo
+            //Get["/zfs/cron"] = x => {
+            //    var list = _timerRepository.GetAll();
+            //    return Response.AsJson(list);
+            //};
 
             Post["/zfs/snap"] = x => {
                 string pool = Request.Form.Pool;
@@ -78,14 +78,14 @@ namespace Antd.ServerModules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/zfs/snap/disable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Disable(tt.Alias);
-                return HttpStatusCode.OK;
-            };
+            //Post["/zfs/snap/disable"] = x => {
+            //    string guid = Request.Form.Guid;
+            //    var tt = _timerRepository.GetByGuid(guid);
+            //    if(tt == null)
+            //        return HttpStatusCode.InternalServerError;
+            //    _timers.Disable(tt.Alias);
+            //    return HttpStatusCode.OK;
+            //};
 
             Post["/zpool/create"] = x => {
                 string altroot = Request.Form.Altroot;

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AclConfiguration.cs" />
     <Compile Include="AppConfiguration.cs" />
+    <Compile Include="TimerConfiguration.cs" />
     <Compile Include="BindConfiguration.cs" />
     <Compile Include="CaConfiguration.cs" />
     <Compile Include="CaConfigurationFiles.cs" />

@@ -27,71 +27,62 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Linq;
+using antdlib.config;
 using antdlib.models;
-using Antd.Database;
-using Antd.SystemdTimer;
 using Nancy;
 using Newtonsoft.Json;
 
 namespace Antd.ServerModules {
     public class AntdSchedulerModule : NancyModule {
 
-        private readonly TimerRepository _timerRepository = new TimerRepository();
-        private readonly Timers _timers = new Timers();
-
         public AntdSchedulerModule() {
             Get["/scheduler"] = x => {
-                var timers = new Timers();
-                var scheduledJobs = timers.GetAll();
+                var schedulerConfiguration = new TimerConfiguration();
+                var scheduledJobs = schedulerConfiguration.Get().Timers;
                 var model = new PageSchedulerModel {
                     Jobs = scheduledJobs?.ToList().OrderBy(_ => _.Alias)
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
-            Post["/scheduler"] = x => {
-                string alias = Request.Form.Alias;
-                string command = Request.Form.Command;
-                string hi = Request.Form.Interval;
-                if(!string.IsNullOrEmpty(command) && !string.IsNullOrEmpty(hi)) {
-                    _timers.Create(alias, hi, command);
-                }
+            Post["/scheduler/set"] = x => {
+                var schedulerConfiguration = new TimerConfiguration();
+                schedulerConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/scheduler/enable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Enable(tt.Alias);
+                var dhcpdConfiguration = new TimerConfiguration();
+                dhcpdConfiguration.Enable();
                 return HttpStatusCode.OK;
             };
 
             Post["/scheduler/disable"] = x => {
-                string guid = Request.Form.Guid;
-                var tt = _timerRepository.GetByGuid(guid);
-                if(tt == null)
-                    return HttpStatusCode.InternalServerError;
-                _timers.Disable(tt.Alias);
+                var dhcpdConfiguration = new TimerConfiguration();
+                dhcpdConfiguration.Disable();
                 return HttpStatusCode.OK;
             };
 
-            Post["/scheduler/delete"] = x => {
-                string guid = Request.Form.Guid;
-                _timerRepository.Delete(guid);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/scheduler/edit"] = x => {
-                string id = Request.Form.Guid;
+            Post["/scheduler/timer"] = x => {
+                string alias = Request.Form.Alias;
+                string time = Request.Form.Time;
                 string command = Request.Form.Command;
-                _timerRepository.Edit(new Dictionary<string, string> {
-                    { "Id", id },
-                    { "Data", command }
-                });
+                var model = new TimerModel{
+                    Alias = alias,
+                    Time = time,
+                    Command = command,
+                    IsEnabled = true
+                };
+                var schedulerConfiguration = new TimerConfiguration();
+                schedulerConfiguration.AddTimer(model);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/scheduler/timer/del"] = x => {
+                string guid = Request.Form.Guid;
+                var schedulerConfiguration = new TimerConfiguration();
+                schedulerConfiguration.RemoveTimer(guid);
                 return HttpStatusCode.OK;
             };
         }
