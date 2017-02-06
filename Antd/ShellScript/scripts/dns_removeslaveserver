@@ -1,7 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-SERVER="$1"
-[ -z "$SERVER" ] && exit 1
-rm -f "$REGISTER/system/dns/SlaveServer/$SERVER"
-$SCRIPTS/dns_start
-

@@ -1,3 +1,0 @@
-#!/bin/sh
-NOTSAVED="`cat /tmp/QoSNotSaved 2>/dev/null`"
-[ -n "$NOTSAVED" ] && echo yes

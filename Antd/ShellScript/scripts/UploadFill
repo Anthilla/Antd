@@ -1,6 +1,0 @@
-#!/bin/sh
-for I in `seq 1 100` ; do
-   echo "<input type=hidden name=Fill$I value='=============================================================================='>"
-
-
-done

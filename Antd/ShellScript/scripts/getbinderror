@@ -1,5 +1,0 @@
-#!/bin/sh
-tail -2 /tmp/bind.log |grep "LDAP sdb zone" |awk -F "failed for" '{print "<font color=#ff0000>The following error has been found in <b>" $2 "</b>  :"}' | tail -1 
-echo 
-tail -2 /tmp/bind.log |grep "dns_rdata_fromtext:" |awk -F ": near " '{print "<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" $2 "</b>"}' | tail -1 
-echo > /tmp/bind.log

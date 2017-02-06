@@ -1,8 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-
-if [ "`cat $REGISTER/system/alerts/Enabled 2>/dev/null`" = yes ] ; then
-  echo "<font color=#00d000>ACTIVE</font>"
-else
-  echo "<font color=#ff4040>DOWN</font>"
-fi

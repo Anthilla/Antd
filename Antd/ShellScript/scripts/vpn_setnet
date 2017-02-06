@@ -1,8 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-NETS="$1"
-if ! [ -z "$NETS" ] ; then
-  echo "$NETS" | tr " " "\n" >$REGISTER/system/openvpn/Nets
-else
-  echo -n > $REGISTER/system/openvpn/Nets
-fi

@@ -1,5 +1,0 @@
-#!/bin/bash
-find /tmp -name "last_output.*" -cmin +10 -exec rm -f {} \;
-find /tmp -name "kerbynet.err.*" -cmin +10 -exec rm -f {} \;
-find /tmp -name "shell_o*" -cmin +10 -exec rm -f {} \;
-

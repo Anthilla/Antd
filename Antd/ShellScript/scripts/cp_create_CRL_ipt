@@ -1,7 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-if [ -f "$REGISTER/system/cp/Auth/FreeCRL.iptables -w" ] ; then
-  iptables -w -F CapPortCRL
-  iptables -w -F CapPortCRL80 -t nat
-  source "$REGISTER/system/cp/Auth/FreeCRL.iptables -w"
-fi

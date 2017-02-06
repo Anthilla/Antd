@@ -1,5 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-if ls $REGISTER/system/dns/SlaveServer/*.*.*.* >/dev/null 2>/dev/null ; then
-  $SCRIPTS/dns_start NOCONFIG
-fi

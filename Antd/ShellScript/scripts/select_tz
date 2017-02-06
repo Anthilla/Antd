@@ -1,5 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-for T in `cat /usr/share/zoneinfo/select_tz` ; do
-  echo "<option value='$T'>$T</option>"
-done

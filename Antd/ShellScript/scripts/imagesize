@@ -1,8 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-IMAGEPATH="$REGISTER$1"
-[ -z "$IMAGEPATH" ] && exit 1
-echo "<table>"
-ls -l -h "$IMAGEPATH/File" | awk '{printf "<tr><td>Size</td><td>:</td><td>%s</td></tr>\n",$5}'
-df -h "$IMAGEPATH" |awk '{getline;printf "<tr><td>Available</td><td>:</td><td>%s (%s%%)</td></tr>\n",$4,100-$5}'
-echo "</table>"

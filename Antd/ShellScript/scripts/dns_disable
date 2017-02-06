@@ -1,6 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-rm -f $REGISTER/system/dns/Enabled
-echo "127.0.0.1" > $REGISTER/system/dns/listen
-$SCRIPTS/dns_start
-

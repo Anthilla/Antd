@@ -1,9 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-FILE="$1"
-[ -z "$FILE" ] && exit 1
-cd "$TEMPLATECFG" || exit 3
-[ -r "$FILE" ] || exit 2
-export QUERY_STRING="onlyrender"
-CFG=`head -1 "$FILE"`
-render "$FILE" | awk 'BEGIN {getline} ; {print}'  > "$CFG"

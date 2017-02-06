@@ -1,9 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-A=""
-DIR=$REGISTER/system/startup/scripts
-cd $DIR
-for A in `ls -d *` ; do
-  TXT="`cat $A/Description 2>/dev/null`"
-  echo "<option value='$A'>$TXT</option>"
-done

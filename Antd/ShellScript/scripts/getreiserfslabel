@@ -1,6 +1,0 @@
-#!/bin/sh
-LABEL=`reiserfstune $1 2>/dev/null | grep "^LABEL: " |cut -f2 -d":"`
-echo ${LABEL:1} 
-
-
- 

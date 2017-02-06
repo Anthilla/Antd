@@ -1,8 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-if [ "`cat $REGISTER/system/time/UTC 2>/dev/null`" == yes ] ; then
-  TYPE="--utc"
-else
-  TYPE="--localtime"
-fi
-hwclock --noadjfile $TYPE $@

@@ -30,6 +30,7 @@ namespace AntdUi {
             conv.StaticContentsConventions.AddDirectory("pages", @"/antdui/Views/Pages");
             conv.StaticContentsConventions.AddDirectory("images", @"/antdui/Images");
             conv.StaticContentsConventions.AddDirectory("file", @"/antdui/Content");
+            conv.StaticContentsConventions.AddDirectory("vnc", @"/antdui/novnc");
 
             conv.ViewLocationConventions.Add((viewName, model, context) => {
                 var path = string.Concat("antdui", "/Views/", viewName);

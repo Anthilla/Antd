@@ -1,3 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-awk -F. '{print $1}' < $REGISTER/system/misc/hostname

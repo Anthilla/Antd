@@ -1,5 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-$SCRIPTS/terminate freshclam 
-( $SCRIPTS/proxy_start ; $SCRIPTS/ClamAV-Update ) &
-sleep 2

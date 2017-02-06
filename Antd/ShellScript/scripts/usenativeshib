@@ -1,6 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-CONFIG=$REGISTER/system/cp/Auth/Shibboleth/
-rm -rf $CONFIG/packages/
-ln -sf "/usr/local/shibboleth-sp" /opt
-$SCRIPTS/cp_auth_start

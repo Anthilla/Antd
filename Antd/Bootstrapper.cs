@@ -38,10 +38,6 @@ namespace Antd {
         protected override void ConfigureConventions(NancyConventions conv) {
             base.ConfigureConventions(conv);
             conv.StaticContentsConventions.Clear();
-            conv.StaticContentsConventions.AddDirectory("Content", @"/Content/");
-            conv.StaticContentsConventions.AddDirectory("Scripts", @"/Scripts/");
-            conv.StaticContentsConventions.AddDirectory("novnc", @"/novnc/");
-            conv.StaticContentsConventions.AddDirectory("Fonts", @"/Fonts/");
             conv.StaticContentsConventions.AddDirectory("repo", @"/Resources/");
             conv.StaticContentsConventions.AddDirectory("repo/ssh", @"/Resources/ssh/");
         }

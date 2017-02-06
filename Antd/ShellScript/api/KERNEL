@@ -1,3 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-echo "Linux Kernel $(uname -r)"

@@ -1,9 +1,0 @@
-#!/bin/bash
-. /etc/kerbynet.conf
-EVENT="$1"
-NAME="$2"
-VALUE="$3"
-DIR="$REGISTER/system/alerts/Events/$EVENT"
-[ -d "$DIR" ] || exit 1
-[ -z "$NAME" ] && exit 2
-echo "$VALUE" > "$DIR/State/$NAME"

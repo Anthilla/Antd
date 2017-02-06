@@ -1,7 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-mkdir $REGISTER/system/dns/SlaveServer 2>/dev/null
-cd $REGISTER/system/dns/SlaveServer
-for SERVER in `ls` ; do
-    echo "<option value=$SERVER>$SERVER</option>"
-done

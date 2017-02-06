@@ -1,2 +1,0 @@
-#!/bin/sh
-echo $SERVER_NAME

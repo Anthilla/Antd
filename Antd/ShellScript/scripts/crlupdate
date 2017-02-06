@@ -1,9 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-while true ; do
-    rm -f /tmp/crl.updated
-    openssl ca -gencrl -out /etc/ssl/certs/crl.pem 2>/dev/null >/dev/null
-    $SCRIPTS/c_rehashCA 2>/dev/null >/dev/null
-    touch /tmp/crl.updated
-    sleep 72000
-done

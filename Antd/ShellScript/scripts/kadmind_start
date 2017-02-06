@@ -1,6 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-$SCRIPTS/rendertemplate kdc.conf
-killall -w kadmind
-kadmind
-

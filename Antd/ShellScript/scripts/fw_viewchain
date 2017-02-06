@@ -1,7 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-CHAIN="$1"
-[ -z "$CHAIN" ] && exit 1
-[ "$CHAIN" == QoS ] && CHAIN="QoS -t mangle"
-[ "$CHAIN" == NetBalancer ] && CHAIN="NetBalancer -t mangle"
-iptables -n -v -L $CHAIN

@@ -1,6 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-VALUE="$1"
-echo $VALUE > /proc/sys/net/ipv4/ip_forward
-echo $VALUE > $REGISTER/system/net/router/ip_forward
-

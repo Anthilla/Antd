@@ -1,5 +1,0 @@
-#!/bin/sh
-. /etc/kerbynet.conf
-brctl addbr DEFAULTBR 2> /dev/null
-
-
