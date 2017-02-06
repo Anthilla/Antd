@@ -38,7 +38,6 @@ using antdlib.config;
 using antdlib.views;
 using Antd.Apps;
 using Antd.Asset;
-using Antd.Database;
 using Antd.Overlay;
 using Antd.Storage;
 using Antd.SystemdTimer;
@@ -56,7 +55,7 @@ namespace Antd {
 
         #region [    private classes init    ]
         private static readonly AclConfiguration AclConfiguration = new AclConfiguration();
-        private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
+        private static readonly AppsConfiguration AppsConfiguration = new AppsConfiguration();
         private static readonly AppTarget AppTarget = new AppTarget();
         private static readonly Bash Bash = new Bash();
         private static readonly BindConfiguration BindConfiguration = new BindConfiguration();
@@ -149,16 +148,6 @@ namespace Antd {
                 Mount.WorkingDirectories();
             }
             ConsoleLogger.Log("working directories ready");
-            #endregion
-
-            #region [    Database    ]
-            Database = RaptorDB.RaptorDB.Open(appConfiguration.DatabasePath);
-            Global.RequirePrimaryView = false;
-            Global.BackupCronSchedule = null;
-            Global.SaveIndexToDiskTimerSeconds = 30;
-            Database.RegisterView(new ApplicationView());
-            Database.RegisterView(new AuthorizedKeysView());
-            ConsoleLogger.Log("database ready");
             #endregion
 
             if(Parameter.IsUnix) {
@@ -273,8 +262,8 @@ namespace Antd {
             if(rk.Exists == false) {
                 rk.Create();
             }
-            var storedKeyRepo = new AuthorizedKeysRepository();
-            var storedKeys = storedKeyRepo.GetAll();
+            var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+            var storedKeys = authorizedKeysConfiguration.Get().Keys;
             foreach(var storedKey in storedKeys) {
                 var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
                 var authorizedKeysPath = $"{home}/authorized_keys";
@@ -385,7 +374,7 @@ namespace Antd {
 
             #region [    Apps    ]
             AppTarget.Setup();
-            var apps = ApplicationRepository.GetAll().Select(_ => new ApplicationModel(_)).ToList();
+            var apps = AppsConfiguration.Get().Apps;
             foreach(var app in apps) {
                 var units = app.UnitLauncher;
                 foreach(var unit in units) {

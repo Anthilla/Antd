@@ -32,7 +32,7 @@ using System.Collections.Generic;
 using System.IO;
 using antdlib.common;
 using antdlib.config;
-using Antd.Database;
+using antdlib.models;
 using Nancy;
 
 namespace Antd.Modules {
@@ -77,8 +77,15 @@ namespace Antd.Modules {
                 var key = info[0];
                 var remoteUser = info[1];
                 const string user = "root";
-                var authorizedKeysRepository = new AuthorizedKeysRepository();
-                var r = authorizedKeysRepository.Create2(remoteUser, user, key);
+
+                var model = new AuthorizedKeyModel {
+                    RemoteUser = remoteUser,
+                    User = user,
+                    KeyValue = key
+                };
+                var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+                authorizedKeysConfiguration.AddKey(model);
+
                 try {
                     Directory.CreateDirectory("/root/.ssh");
                     const string authorizedKeysPath = "/root/.ssh/authorized_keys";
@@ -94,7 +101,7 @@ namespace Antd.Modules {
                     var bash = new Bash();
                     bash.Execute($"chmod 600 {authorizedKeysPath}", false);
                     bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
-                    return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+                    return HttpStatusCode.OK;
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Log(ex);

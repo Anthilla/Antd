@@ -168,8 +168,6 @@
     <Compile Include="Asset\AvahiBrowse.cs" />
     <Compile Include="Asset\AvahiServiceXml.cs" />
     <Compile Include="Auth\UserDatabase.cs" />
-    <Compile Include="Database\AuthorizedKeysRepository.cs" />
-    <Compile Include="Database\ApplicationRepository.cs" />
     <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Modules\ServiceGlusterModule.cs" />

@@ -49,8 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorizedKeysModel.cs" />
-    <Compile Include="ApplicationModel.cs" />
     <Compile Include="_DatabaseHelper.cs" />
     <Compile Include="_EntityStatus.cs" />
     <Compile Include="_EntityModel.cs" />

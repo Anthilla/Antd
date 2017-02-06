@@ -32,7 +32,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using antdlib.common;
-using Antd.Database;
+using antdlib.config;
+using antdlib.models;
 using Nancy;
 using Nancy.Security;
 
@@ -40,7 +41,7 @@ namespace Antd.Modules {
 
     public class AuthorizedKeysModule : NancyModule {
 
-        private readonly AuthorizedKeysRepository _authorizedKeysRepository = new AuthorizedKeysRepository();
+        ////var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
         private readonly Bash _bash = new Bash();
 
         public AuthorizedKeysModule() {
@@ -48,7 +49,7 @@ namespace Antd.Modules {
 
             Get["/page/ak"] = x => {
                 dynamic vmod = new ExpandoObject();
-                vmod.Keys = _authorizedKeysRepository.GetAll();
+                //vmod.Keys = _authorizedKeysRepository.GetAll();
                 return View["page-ak", vmod];
             };
 
@@ -56,7 +57,13 @@ namespace Antd.Modules {
                 string remoteUser = Request.Form.RemoteUser;
                 string user = Request.Form.User;
                 string key = Request.Form.Key;
-                _authorizedKeysRepository.Create2(remoteUser, user, key);
+                var model = new AuthorizedKeyModel {
+                    RemoteUser = remoteUser,
+                    User = user,
+                    KeyValue = key
+                };
+                var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+                authorizedKeysConfiguration.AddKey(model);
                 return Response.AsRedirect("/page/ak");
             };
 
@@ -64,8 +71,13 @@ namespace Antd.Modules {
                 string remoteUser = Request.Form.RemoteUser;
                 string user = Request.Form.User;
                 string key = Request.Form.Key;
-                var r = _authorizedKeysRepository.Create2(remoteUser, user, key);
-
+                var model = new AuthorizedKeyModel {
+                    RemoteUser = remoteUser,
+                    User = user,
+                    KeyValue = key
+                };
+                var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+                authorizedKeysConfiguration.AddKey(model);
                 var home = user == "root" ? "/root/.ssh" : $"/home/{user}/.ssh";
                 var authorizedKeysPath = $"{home}/authorized_keys";
                 if(!File.Exists(authorizedKeysPath)) {
@@ -76,7 +88,7 @@ namespace Antd.Modules {
                 _bash.Execute($"chmod 600 {authorizedKeysPath}", false);
                 _bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
 
-                return r ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+                return HttpStatusCode.OK;
             };
 
             Get["/ak/introduce"] = x => {

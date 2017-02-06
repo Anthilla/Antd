@@ -28,11 +28,9 @@
 //-------------------------------------------------------------------------------------
 
 using System.Dynamic;
-using System.Linq;
 using antdlib.common;
 using antdlib.views;
 using Antd.Apps;
-using Antd.Database;
 using Nancy;
 using Nancy.Security;
 
@@ -52,8 +50,8 @@ namespace Antd.Modules {
             #region [    Partials    ]
             Get["/part/apps/management"] = x => {
                 dynamic vmod = new ExpandoObject();
-                var applicationRepository = new ApplicationRepository();
-                vmod.AppList = applicationRepository.GetAll().Select(_ => new ApplicationModel(_));
+                //var applicationRepository = new ApplicationRepository();
+                //vmod.AppList = applicationRepository.GetAll().Select(_ => new ApplicationModel(_));
                 return View["antd/page-apps-manage", vmod];
             };
             Get["/part/apps/detection"] = x => {

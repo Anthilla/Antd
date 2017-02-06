@@ -54,11 +54,13 @@
     <Compile Include="AntdConfigurationModel.cs" />
     <Compile Include="AosReleaseModel.cs" />
     <Compile Include="AppConfigurationModel.cs" />
+    <Compile Include="AuthorizedKeysConfigurationModel.cs" />
     <Compile Include="BindConfigurationModel.cs" />
     <Compile Include="CaConfigurationModel.cs" />
     <Compile Include="CertificateModel.cs" />
     <Compile Include="AvahiServiceViewModel.cs" />
     <Compile Include="AppInfo.cs" />
+    <Compile Include="AppsConfigurationModel.cs" />
     <Compile Include="TimerConfigurationModel.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="NmapScanStatus.cs" />
@@ -157,10 +159,6 @@
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
       <Name>antdlib.common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\antdlib.views\antdlib.views.csproj">
-      <Project>{cf4e96eb-6cdf-48e4-87a4-0335f856a5fc}</Project>
-      <Name>antdlib.views</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

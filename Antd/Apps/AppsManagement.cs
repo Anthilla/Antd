@@ -35,17 +35,19 @@ using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.config;
 using antdlib.models;
-using Antd.Database;
 
 namespace Antd.Apps {
     public class AppsManagement {
-        private static readonly ApplicationRepository ApplicationRepository = new ApplicationRepository();
 
         public IEnumerable<AppInfo> Detect() {
             var allDetected = Directory.EnumerateFiles(Parameter.RepoApps, "*.appinfo", SearchOption.AllDirectories).Select(MapFromFile).ToArray();
             var notInstalled = new List<AppInfo>();
+
+            var appsConfiguration = new AppsConfiguration();
+            var apps = appsConfiguration.Get().Apps;
+
             foreach(var app in allDetected) {
-                var tryGet = ApplicationRepository.GetByName(app.Name);
+                var tryGet = apps.FirstOrDefault(_ => _.Name == app.Name);
                 if(tryGet == null) {
                     notInstalled.Add(app);
                 }
@@ -120,22 +122,21 @@ namespace Antd.Apps {
                 }
                 ConsoleLogger.Log("working directories created and mounted");
 
-                var tryGet = ApplicationRepository.GetByName(name);
-                if(tryGet == null) {
-                    var dict = new Dictionary<string, string> {
-                        { "Name", name},
-                        { "RepositoryName", repoPath},
-                        { "Exes", exes.JoinToString()},
-                        { "WorkingDirectories", mounts.JoinToString()},
-                        { "UnitPrepare", prepareUnitName},
-                        { "UnitMount", mountUnitName},
-                        { "UnitLauncher", launcherUnitName.JoinToString()}
-                        };
-                    ApplicationRepository.Create(dict);
-                    ConsoleLogger.Log("info recorded in db");
-                }
+                var appsConfiguration = new AppsConfiguration();
+                var tryGet = appsConfiguration.Get().Apps.FirstOrDefault(_ => _.Name == name);
+                if(tryGet != null)
+                    return;
+                var model = new ApplicationModel {
+                    Name = name,
+                    RepositoryName = repoPath,
+                    Exes = exes,
+                    WorkingDirectories = mounts,
+                    UnitPrepare = prepareUnitName,
+                    UnitMount = mountUnitName,
+                    UnitLauncher = launcherUnitName
+                };
+                appsConfiguration.AddApp(model);
             }
-            ConsoleLogger.Log("=========================================");
         }
 
         private static AppInfo MapFromFile(string path) {
@@ -150,12 +151,12 @@ namespace Antd.Apps {
                 dict.Add(kvp);
             }
             var appinfo = new AppInfo { Values = dict };
-            if(appinfo.Values.Any()) {
-                appinfo.Name = appinfo.Values.FirstOrDefault(_ => _.Key == "name").Value.Trim();
-                var repoName = appinfo.Values.FirstOrDefault(_ => _.Key == "repo_name").Value.Trim();
-                var repoPath = $"{Parameter.RepoApps}/{repoName}";
-                appinfo.Repository = repoPath;
-            }
+            if(!appinfo.Values.Any())
+                return appinfo;
+            appinfo.Name = appinfo.Values.FirstOrDefault(_ => _.Key == "name").Value.Trim();
+            var repoName = appinfo.Values.FirstOrDefault(_ => _.Key == "repo_name").Value.Trim();
+            var repoPath = $"{Parameter.RepoApps}/{repoName}";
+            appinfo.Repository = repoPath;
             return appinfo;
         }
     }

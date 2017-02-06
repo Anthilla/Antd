@@ -27,12 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Linq;
 using antdlib.common;
+using antdlib.config;
 using antdlib.models;
 using antdlib.views;
 using Antd.Apps;
-using Antd.Database;
 using Nancy;
 using Newtonsoft.Json;
 
@@ -41,9 +40,10 @@ namespace Antd.ServerModules {
 
         public AppsManagementModule() {
             Get["/apps/management"] = x => {
-                var applicationRepository = new ApplicationRepository();
+                var appsConfiguration = new AppsConfiguration();
+
                 var model = new PageAppsManagementModel {
-                    AppList = applicationRepository.GetAll().Select(_ => new ApplicationModel(_))
+                    AppList = appsConfiguration.Get().Apps
                 };
                 return JsonConvert.SerializeObject(model);
             };

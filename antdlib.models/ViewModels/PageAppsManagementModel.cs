@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using antdlib.views;
 
 namespace antdlib.models {
     public class PageAppsManagementModel {
