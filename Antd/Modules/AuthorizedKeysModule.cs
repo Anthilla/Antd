@@ -35,7 +35,6 @@ using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
 
@@ -45,7 +44,7 @@ namespace Antd.Modules {
         private readonly Bash _bash = new Bash();
 
         public AuthorizedKeysModule() {
-            this.RequiresAuthentication();
+            
 
             Get["/page/ak"] = x => {
                 dynamic vmod = new ExpandoObject();

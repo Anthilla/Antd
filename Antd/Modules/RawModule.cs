@@ -2,7 +2,6 @@
 using antdlib.common;
 using antdlib.common.Directory;
 using Nancy;
-using Nancy.Security;
 using Newtonsoft.Json;
 //-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -36,7 +35,7 @@ using Newtonsoft.Json;
 namespace Antd.Modules {
     public class RawModule : NancyModule {
         public RawModule() {
-            this.RequiresAuthentication();
+            
 
             Get["/rawdata/dir/{path*}"] = x => {
                 var p = x.path;

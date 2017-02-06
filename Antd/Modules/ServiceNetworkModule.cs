@@ -32,13 +32,12 @@ using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceNetworkModule : NancyModule {
 
         public ServiceNetworkModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/network/restart"] = x => {
                 var networkConfiguration = new NetworkConfiguration();

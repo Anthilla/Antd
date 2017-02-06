@@ -60,7 +60,7 @@
 //        private readonly Bash _bash = new Bash();
 
 //        public DomainControllerModule() {
-//            this.RequiresAuthentication();
+//            
 
 //            Post["/dc/setup"] = x => {
 //                foreach(var dir in _directories) {

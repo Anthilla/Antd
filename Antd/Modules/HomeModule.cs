@@ -30,13 +30,12 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class HomeModule : NancyModule {
         
         public HomeModule() {
-            this.RequiresAuthentication();
+            
 
             After += ctx => {
                 if(ctx.Response.ContentType == "text/html") {

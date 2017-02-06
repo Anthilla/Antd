@@ -29,7 +29,6 @@
 
 using Antd.Overlay;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class OverlayModule : NancyModule {
@@ -37,7 +36,7 @@ namespace Antd.Modules {
         private readonly OverlayWatcher _overlayWatcher = new OverlayWatcher();
 
         public OverlayModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/overlay/directory"] = x => {
                 string dir = Request.Form.Directory;

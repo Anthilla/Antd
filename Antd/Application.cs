@@ -35,7 +35,6 @@ using System.Runtime.InteropServices;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.config;
-using antdlib.views;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.Overlay;
@@ -46,7 +45,6 @@ using Antd.Ui;
 using Antd.Users;
 using Nancy;
 using Nancy.Hosting.Self;
-using RaptorDB;
 using HostConfiguration = antdlib.config.HostConfiguration;
 
 namespace Antd {

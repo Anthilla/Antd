@@ -31,13 +31,12 @@ using System.IO;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceSyncMachineModule : NancyModule {
 
         public ServiceSyncMachineModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/syncmachine/set"] = x => {
                 var syncmachineConfiguration = new SyncMachineConfiguration();

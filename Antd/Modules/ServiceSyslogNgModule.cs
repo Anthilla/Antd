@@ -30,13 +30,12 @@
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceSyslogNgModule : NancyModule {
 
         public ServiceSyslogNgModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/syslogng/set"] = x => {
                 var syslogngConfiguration = new SyslogNgConfiguration();

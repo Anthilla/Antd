@@ -29,16 +29,14 @@
 
 using System.Dynamic;
 using antdlib.common;
-using antdlib.views;
 using Antd.Apps;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class AppsModule : NancyModule {
 
         public AppsModule() {
-            this.RequiresAuthentication();
+            
 
             #region [    Home    ]
             Get["/apps"] = x => {

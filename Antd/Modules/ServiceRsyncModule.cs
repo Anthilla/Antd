@@ -30,13 +30,12 @@
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceRsyncModule : NancyModule {
 
         public ServiceRsyncModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/rsync/set"] = x => {
                 var rsyncConfiguration = new RsyncConfiguration();

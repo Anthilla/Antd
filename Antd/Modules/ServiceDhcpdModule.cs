@@ -32,13 +32,12 @@ using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceDhcpdModule : NancyModule {
 
         public ServiceDhcpdModule() {
-            this.RequiresAuthentication();
+            
             Post["/services/dhcpd/set"] = x => {
                 var dhcpdConfiguration = new DhcpdConfiguration();
                 dhcpdConfiguration.Set();

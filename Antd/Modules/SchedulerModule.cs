@@ -29,7 +29,6 @@
 
 using Antd.SystemdTimer;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class SchedulerModule : NancyModule {
@@ -37,7 +36,7 @@ namespace Antd.Modules {
         private readonly Timers _timers = new Timers();
 
         public SchedulerModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/cron"] = x => {
                 var alias = (string)Request.Form.Alias;

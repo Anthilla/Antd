@@ -34,7 +34,6 @@ using antdlib.common;
 using antdlib.config;
 using Antd.SystemdTimer;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class StorageModule : NancyModule {
@@ -44,7 +43,7 @@ namespace Antd.Modules {
         private readonly Timers _timers = new Timers();
 
         public StorageModule() {
-            this.RequiresAuthentication();
+            
 
             Get["/zfs/cron"] = x => {
                 var schedulerConfiguration = new TimerConfiguration();

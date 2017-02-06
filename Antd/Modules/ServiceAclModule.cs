@@ -31,14 +31,13 @@ using System;
 using antdlib.common;
 using antdlib.config;
 using Nancy;
-using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class ServiceAclModule : NancyModule {
 
         public ServiceAclModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/acl/set"] = x => {
                 var aclConfiguration = new AclConfiguration();

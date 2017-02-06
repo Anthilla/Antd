@@ -64,10 +64,6 @@
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Nancy.Authentication.Forms, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.Authentication.Forms.1.4.1\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
       <Private>True</Private>
@@ -101,7 +97,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auth\UserIdentity.cs" />
     <Compile Include="ServerModules\BootOsParametersModule.cs" />
     <Compile Include="ServerModules\BootServicesModule.cs" />
     <Compile Include="ServerModules\BootModulesModule.cs" />
@@ -167,7 +162,6 @@
     <Compile Include="Modules\ServiceRsyncModule.cs" />
     <Compile Include="Asset\AvahiBrowse.cs" />
     <Compile Include="Asset\AvahiServiceXml.cs" />
-    <Compile Include="Auth\UserDatabase.cs" />
     <Compile Include="Info\MachineInfo.cs" />
     <Compile Include="Log\Journalctl.cs" />
     <Compile Include="Modules\ServiceGlusterModule.cs" />
@@ -191,7 +185,6 @@
     <Compile Include="Modules\FeedModule.cs" />
     <Compile Include="Modules\ServiceFirewallModule.cs" />
     <Compile Include="Modules\HomeModule.cs" />
-    <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Modules\ServiceDhcpdModule.cs" />

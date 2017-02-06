@@ -30,13 +30,12 @@
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceVpnModule : NancyModule {
 
         public ServiceVpnModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/vpn/set"] = x => {
                 var vpnConfiguration = new VpnConfiguration();

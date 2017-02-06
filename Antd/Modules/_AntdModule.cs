@@ -42,7 +42,6 @@ using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Users;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class AntdModule : NancyModule {
@@ -55,7 +54,6 @@ namespace Antd.Modules {
         }
 
         public AntdModule() {
-            this.RequiresAuthentication();
 
             #region [    Home    ]
             Get["/"] = x => {

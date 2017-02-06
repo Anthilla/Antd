@@ -32,13 +32,12 @@ using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceBindModule : NancyModule {
 
         public ServiceBindModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/bind/set"] = x => {
                 var bindConfiguration = new BindConfiguration();

@@ -37,13 +37,12 @@ using antdlib.config;
 using antdlib.models;
 using Antd.Asset;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class AssetModule : NancyModule {
 
         public AssetModule() {
-            this.RequiresAuthentication();
+            
 
             #region [    Home    ]
             Get["/asset"] = x => {

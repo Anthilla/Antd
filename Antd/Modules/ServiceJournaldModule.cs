@@ -30,13 +30,12 @@
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceJournaldModule : NancyModule {
 
         public ServiceJournaldModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/journald/set"] = x => {
                 var journaldConfiguration = new JournaldConfiguration();

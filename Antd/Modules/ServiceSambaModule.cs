@@ -30,13 +30,12 @@
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceSambaModule : NancyModule {
 
         public ServiceSambaModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/samba/set"] = x => {
                 var sambaConfiguration = new SambaConfiguration();

@@ -30,13 +30,12 @@
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class ServiceSshdModule : NancyModule {
 
         public ServiceSshdModule() {
-            this.RequiresAuthentication();
+            
 
             Post["/services/sshd/set"] = x => {
                 var sshdConfiguration = new SshdConfiguration();

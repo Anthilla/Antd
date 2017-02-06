@@ -37,14 +37,13 @@ using antdlib.config;
 using antdlib.models;
 using Antd.Log;
 using Nancy;
-using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
     public class LogModule : NancyModule {
 
         public LogModule() {
-            this.RequiresAuthentication();
+            
 
             #region [    Home    ]
             Get["/log"] = x => {

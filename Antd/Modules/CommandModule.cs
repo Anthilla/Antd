@@ -32,7 +32,6 @@ using System.Linq;
 using antd.commands;
 using antdlib.common;
 using Nancy;
-using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
@@ -41,7 +40,7 @@ namespace Antd.Modules {
         private readonly CommandLauncher _launcher = new CommandLauncher();
 
         public CommandModule() {
-            this.RequiresAuthentication();
+            
 
             Get["/cmd/launch/{name}"] = x => {
                 string name = x.name;

@@ -36,13 +36,12 @@ using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Nancy.ModelBinding;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class BootModule : NancyModule {
 
         public BootModule() {
-            this.RequiresAuthentication();
+            
 
             #region [    Home    ]
             Get["/boot"] = x => {

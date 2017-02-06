@@ -33,13 +33,12 @@ using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Security;
 
 namespace Antd.Modules {
     public class CaModule : NancyModule {
 
         public CaModule() {
-            this.RequiresAuthentication();
+            
 
             #region [    Home    ]
             Get["/ca"] = x => {

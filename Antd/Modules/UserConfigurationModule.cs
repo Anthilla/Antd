@@ -2,7 +2,6 @@
 using antdlib.models;
 using Antd.Users;
 using Nancy;
-using Nancy.Security;
 using Newtonsoft.Json;
 
 namespace Antd.Modules {
@@ -24,13 +23,13 @@ namespace Antd.Modules {
             };
 
             Get["/users/system"] = x => {
-                this.RequiresAuthentication();
+                
                 var systemUser = new SystemUser();
                 return JsonConvert.SerializeObject(systemUser.GetAll());
             };
 
             Post["/users/system"] = x => {
-                this.RequiresAuthentication();
+                
                 var user = (string)Request.Form.User;
                 var password = (string)Request.Form.Password;
                 if(string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password)) {
@@ -48,7 +47,7 @@ namespace Antd.Modules {
             };
 
             Post["/master/change/password"] = x => {
-                this.RequiresAuthentication();
+                
                 var password = (string)Request.Form.Password;
                 if(string.IsNullOrEmpty(password)) {
                     return HttpStatusCode.BadRequest;

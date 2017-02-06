@@ -33,13 +33,12 @@ using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Nancy.Responses;
-using Nancy.Security;
 
 namespace Antd.Modules {
 
     public class ServiceCaModule : NancyModule {
         public ServiceCaModule() {
-            this.RequiresAuthentication();
+            
             Post["/services/ca/set"] = x => {
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.Set();
