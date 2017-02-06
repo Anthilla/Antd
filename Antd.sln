@@ -49,16 +49,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
 	ProjectSection(SolutionItems) = preProject
 		Antd\Modules\_AntdModule.cs = Antd\Modules\_AntdModule.cs
-		Antd\ServerModules\AntdNetworkModule.cs = Antd\ServerModules\AntdNetworkModule.cs
-		Antd\ServerModules\AntdTimeModule.cs = Antd\ServerModules\AntdTimeModule.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
-	ProjectSection(SolutionItems) = preProject
-		AntdUi\Modules\AntdHostModule.cs = AntdUi\Modules\AntdHostModule.cs
-		AntdUi\Modules\AntdTimeModule.cs = AntdUi\Modules\AntdTimeModule.cs
-		AntdUi\Views\Pages\antd\time.html = AntdUi\Views\Pages\antd\time.html
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"
 	ProjectSection(SolutionItems) = preProject
