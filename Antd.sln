@@ -14,6 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdsh", "antdsh\antdsh.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignorethis_misc", "{1BB31C59-D4CC-4640-BE45-B7857FBA22A1}"
 	ProjectSection(SolutionItems) = preProject
+		_frequentregex.txt = _frequentregex.txt
 		ignorethis_misc\converter.sh = ignorethis_misc\converter.sh
 		ignorethis_misc\createUserSmartCardCertificate.sh = ignorethis_misc\createUserSmartCardCertificate.sh
 		dump.txt = dump.txt
@@ -41,7 +42,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.c
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
 	ProjectSection(SolutionItems) = preProject
-		_frequentregex.txt = _frequentregex.txt
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
 		AntdUi\Scripts\controller-context-apps.js = AntdUi\Scripts\controller-context-apps.js
 		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
