@@ -3,7 +3,7 @@ using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace Antd.Modules {
+namespace Antd.ServerModules {
 
     public class AppConfigurationModule : NancyModule {
 

@@ -72,14 +72,6 @@
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RaptorDB, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\RaptorDB_doc.3.3.14\lib\net40\RaptorDB.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RaptorDB.Common, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
-      <HintPath>..\packages\RaptorDB_doc.3.3.14\lib\net40\RaptorDB.Common.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -154,7 +146,7 @@
     <Compile Include="Modules\ServiceNetworkModule.cs" />
     <Compile Include="Modules\ServiceVpnModule.cs" />
     <Compile Include="Timer\RemoveUnusedModules.cs" />
-    <Compile Include="Modules\AppConfigurationModule.cs" />
+    <Compile Include="ServerModules\AppConfigurationModule.cs" />
     <Compile Include="Modules\UserConfigurationModule.cs" />
     <Compile Include="Modules\ServiceAclModule.cs" />
     <Compile Include="Modules\ServiceSshdModule.cs" />
@@ -167,24 +159,17 @@
     <Compile Include="Modules\ServiceGlusterModule.cs" />
     <Compile Include="Modules\ServiceBindModule.cs" />
     <Compile Include="Modules\ServiceSambaModule.cs" />
-    <Compile Include="Modules\_AppsModule.cs" />
-    <Compile Include="Modules\_CaModule.cs" />
-    <Compile Include="Modules\_LogModule.cs" />
     <Compile Include="Modules\HandshakeModule.cs" />
-    <Compile Include="Modules\_AssetModule.cs" />
-    <Compile Include="Modules\_BootModule.cs" />
     <Compile Include="Modules\AuthorizedKeysModule.cs" />
     <Compile Include="Modules\CommandModule.cs" />
     <Compile Include="Modules\MonitorModule.cs" />
-    <Compile Include="Modules\_AntdModule.cs" />
     <Compile Include="Modules\renew\DomainControllerModule.cs" />
     <Compile Include="Modules\OverlayModule.cs" />
     <Compile Include="Modules\RedirectModule.cs" />
-    <Compile Include="Modules\AuthenticationModule.cs" />
+    <Compile Include="Modules\renew\AuthenticationModule.cs" />
     <Compile Include="Modules\ServiceCaModule.cs" />
     <Compile Include="Modules\FeedModule.cs" />
     <Compile Include="Modules\ServiceFirewallModule.cs" />
-    <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Modules\RawModule.cs" />
     <Compile Include="Modules\SchedulerModule.cs" />
     <Compile Include="Modules\ServiceDhcpdModule.cs" />
