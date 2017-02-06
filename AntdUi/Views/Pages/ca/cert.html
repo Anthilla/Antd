@@ -1,1 +1,534 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">Certificate</h1>
+
+<div ng-controller="CaController">
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel" ng-init="UserCert">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="title">
+                User Certificate
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed">
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.Name" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Passphrase</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.Passphrase" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Email</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.Email" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Country Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.CountryName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">State Or Province Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.StateOrProvinceName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Locality Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.LocalityName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organization Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.OrganizationName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organizational Unit Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="UserCert.OrganizationalUnitName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="createUserCert(UserCert)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CREATE' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel" ng-init="ServerCert">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="title">
+                Server Certificate
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed">
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.Name" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Passphrase</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.Passphrase" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Email</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.Email" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Country Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.CountryName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">State Or Province Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.StateOrProvinceName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Locality Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.LocalityName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organization Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.OrganizationName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organizational Unit Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ServerCert.OrganizationalUnitName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="createServerCert(ServerCert)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CREATE' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel" ng-init="DcCert">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="title">
+                Domain Controller Certificate
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed">
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.Name" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Passphrase</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.Passphrase" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Guid</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.Guid" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Dns</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.Dns" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Email</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.Email" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Country Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.CountryName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">State Or Province Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.StateOrProvinceName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Locality Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.LocalityName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organization Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.OrganizationName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organizational Unit Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="DcCert.OrganizationalUnitName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="createDcCert(DcCert)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CREATE' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel" ng-init="ScCert">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="title">
+                Smart Card Certificate
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed">
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.Name" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Passphrase</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.Passphrase" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Guid</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.Guid" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Upn</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.Upn" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Country Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.CountryName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">State Or Province Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.StateOrProvinceName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Locality Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.LocalityName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organization Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.OrganizationName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Organizational Unit Name</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="ScCert.OrganizationalUnitName" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="createScCert(ScCert)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CREATE' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

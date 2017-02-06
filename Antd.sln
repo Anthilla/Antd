@@ -43,8 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
 		AntdUi\Scripts\controller-context-asset.js = AntdUi\Scripts\controller-context-asset.js
 		AntdUi\Scripts\controller-context-boot.js = AntdUi\Scripts\controller-context-boot.js
-		AntdUi\Scripts\controller-context-ca.js = AntdUi\Scripts\controller-context-ca.js
-		AntdUi\Scripts\controller-context-log.js = AntdUi\Scripts\controller-context-log.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
@@ -57,15 +55,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-F
 		Antd\Views\antd\part\page-boot-mod.html = Antd\Views\antd\part\page-boot-mod.html
 		Antd\Views\antd\part\page-boot-osp.html = Antd\Views\antd\part\page-boot-osp.html
 		Antd\Views\antd\part\page-boot-svc.html = Antd\Views\antd\part\page-boot-svc.html
-		Antd\Views\antd\part\page-ca-cert.html = Antd\Views\antd\part\page-ca-cert.html
-		Antd\Views\antd\part\page-ca-dc.html = Antd\Views\antd\part\page-ca-dc.html
-		Antd\Views\antd\part\page-ca-dcusers.html = Antd\Views\antd\part\page-ca-dcusers.html
-		Antd\Views\antd\part\page-ca-setup.html = Antd\Views\antd\part\page-ca-setup.html
-		Antd\Views\antd\part\page-log-config.html = Antd\Views\antd\part\page-log-config.html
-		Antd\Views\antd\part\page-log-report.html = Antd\Views\antd\part\page-log-report.html
-		Antd\Views\antd\part\page-log-syslog.html = Antd\Views\antd\part\page-log-syslog.html
-		Antd\Views\antd\part\page-log-system.html = Antd\Views\antd\part\page-log-system.html
-		Antd\Views\antd\part\page-log.html = Antd\Views\antd\part\page-log.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
@@ -77,16 +66,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA4989
 		AntdUi\Views\Pages\boot\bootparam.html = AntdUi\Views\Pages\boot\bootparam.html
 		AntdUi\Views\Pages\boot\bootsvc.html = AntdUi\Views\Pages\boot\bootsvc.html
 		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
-		AntdUi\Views\Pages\ca\cert.html = AntdUi\Views\Pages\ca\cert.html
-		AntdUi\Views\Pages\ca\dc.html = AntdUi\Views\Pages\ca\dc.html
-		AntdUi\Views\Pages\ca\dcusers.html = AntdUi\Views\Pages\ca\dcusers.html
 		AntdUi\Views\Pages\asset\discovery.html = AntdUi\Views\Pages\asset\discovery.html
-		AntdUi\Views\Pages\log\journal.html = AntdUi\Views\Pages\log\journal.html
-		AntdUi\Views\Pages\log\log.html = AntdUi\Views\Pages\log\log.html
-		AntdUi\Views\Pages\log\logconfig.html = AntdUi\Views\Pages\log\logconfig.html
-		AntdUi\Views\Pages\log\report.html = AntdUi\Views\Pages\log\report.html
 		AntdUi\Views\Pages\asset\scan.html = AntdUi\Views\Pages\asset\scan.html
-		AntdUi\Views\Pages\log\syslogng.html = AntdUi\Views\Pages\log\syslogng.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__todo__", "__todo__", "{8A9D36B1-0098-4F29-A7D2-BA7DEA1ECE20}"

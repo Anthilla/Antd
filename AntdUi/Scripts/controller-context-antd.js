@@ -68,7 +68,8 @@ function AntdAclController($scope, $http) {
     }
 
     $http.get("/acl").success(function (data) {
-        $scope.Acl = data;
+        $scope.isActive = data.IsActive;
+        $scope.Acl = data.Settings;
     });
 }
 
@@ -170,7 +171,9 @@ function AntdBindController($scope, $http) {
     }
 
     $http.get("/bind").success(function (data) {
-        $scope.Bind = data;
+        $scope.isActive = data.BindIsActive;
+        $scope.Bind = data.BindOptions;
+        $scope.BindZones = data.BindZones;
     });
 }
 
@@ -287,7 +290,11 @@ function AntdDhcpdController($scope, $http) {
     }
 
     $http.get("/dhcpd").success(function (data) {
-        $scope.Dhcpd = data;
+        $scope.isActive = data.DhcpdIsActive;
+        $scope.Dhcpd = data.DhcpdOptions;
+        $scope.DhcpdClass = data.DhcpdClass;
+        $scope.DhcpdPools = data.DhcpdPools;
+        $scope.DhcpdReservation = data.DhcpdReservation;
     });
 }
 
@@ -412,7 +419,12 @@ function AntdFirewallController($scope, $http) {
     }
 
     $http.get("/firewall").success(function (data) {
-        $scope.Firewall = data;
+        $scope.isActive = data.FirewallIsActive;
+        $scope.Firewall = data.FirewallOptions;
+        $scope.FwIp4Filter = data.FwIp4Filter;
+        $scope.FwIp4Nat = data.FwIp4Nat;
+        $scope.FwIp6Filter = data.FwIp6Filter;
+        $scope.FwIp6Nat = data.FwIp6Nat;
     });
 }
 
@@ -472,7 +484,9 @@ function AntdGlusterController($scope, $http) {
     }
 
     $http.get("/gluster").success(function (data) {
-        $scope.Gluster = data;
+        $scope.isActive = data.GlusterIsActive;
+        $scope.GlusterNodes = data.Nodes;
+        $scope.GlusterVolumes = data.Volumes;
     });
 }
 
@@ -614,7 +628,8 @@ function AntdRsyncController($scope, $http) {
     }
 
     $http.get("/rsync").success(function (data) {
-        $scope.Rsync = data;
+        $scope.isActive = data.RsyncIsActive;
+        $scope.Rsync = data.RsyncDirectories;
     });
 }
 
@@ -759,7 +774,9 @@ function AntdSambaController($scope, $http) {
     }
 
     $http.get("/samba").success(function (data) {
-        $scope.Samba = data;
+        $scope.isActive = data.SambaIsActive;
+        $scope.Samba = data.SambaOptions;
+        $scope.SambaResources = data.SambaResources;
     });
 }
 
@@ -800,7 +817,7 @@ function AntdSchedulerController($scope, $http) {
     }
 
     $http.get("/scheduler").success(function (data) {
-        $scope.Scheduler = data;
+        $scope.Scheduler = data.Jobs;
     });
 }
 
@@ -848,7 +865,8 @@ function AntdSshdController($scope, $http) {
     }
 
     $http.get("/sshd").success(function (data) {
-        $scope.Sshd = data;
+        $scope.isActive = data.SshdIsActive;
+        $scope.Sshd = data.SshdOptions;
     });
 }
 
@@ -867,7 +885,7 @@ function AntdStorageController($scope, $http) {
         var data = $.param({
             Disk: el.Disk,
             Type: el.Type,
-            Confirm: el.Confirm,
+            Confirm: el.Confirm
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/storage/mklabel", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
@@ -970,7 +988,10 @@ function AntdVpnController($scope, $http) {
     }
 
     $http.get("/vpn").success(function (data) {
-        $scope.Vpn = data;
+        $scope.isActive = data.VpnIsActive;
+        $scope.VpnLocalPoint = data.VpnLocalPoint;
+        $scope.VpnRemoteHost = data.VpnRemoteHost;
+        $scope.VpnRemotePoint = data.VpnRemotePoint;
     });
 }
 

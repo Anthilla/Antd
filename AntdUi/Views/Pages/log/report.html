@@ -1,1 +1,11 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">report</h1>
+
+<div ng-controller="LogReportController">
+    <button ng-click="create()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-green"></span>&nbsp;Create</button>
+
+    <div class="padding20 bd-anthilla-gray2 fg-white" style="border: 2px solid; font-size: 90%;">
+        <div ng-repeat="report in Report ">
+            <div class="bg-hover-anthilla-gray-2 width100pc">{{ report }}</div>
+        </div>
+    </div>
+</div>

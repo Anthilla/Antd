@@ -61,7 +61,8 @@ function LogJournaldController($scope, $http) {
     }
 
     $http.get("/journald").success(function (data) {
-        $scope.Journald = data;
+        $scope.isActive = data.JournaldIsActive;
+        $scope.Journald = data.JournaldOptions;
     });
 }
 
@@ -69,7 +70,7 @@ app.controller("LogJournalController", ["$scope", "$http", LogJournalController]
 
 function LogJournalController($scope, $http) {
     $http.get("/journal").success(function (data) {
-        $scope.Journal = data;
+        $scope.Logs = data.Logs;
     });
 }
 
@@ -77,7 +78,7 @@ app.controller("LogController", ["$scope", "$http", LogController]);
 
 function LogController($scope, $http) {
     $http.get("/log").success(function (data) {
-        $scope.Log = data;
+        $scope.Logs = data.Logs;
     });
 }
 
@@ -90,7 +91,7 @@ function LogReportController($scope, $http) {
     }
 
     $http.get("/report").success(function (data) {
-        $scope.Report = data;
+        $scope.Report = data.LogReports;
     });
 }
 
@@ -146,6 +147,7 @@ function LogSyslogNgController($scope, $http) {
     }
 
     $http.get("/syslogng").success(function (data) {
-        $scope.SyslogNg = data;
+        $scope.isActive = data.SyslogNgIsActive;
+        $scope.SyslogNg = data.SyslogNgOptions;
     });
 }

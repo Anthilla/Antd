@@ -40,7 +40,7 @@ namespace AntdUi.Modules {
 
         public LogSyslogNgModule() {
             Get["/syslogng"] = x => {
-                var model = _api.Get<PageCaModel>($"http://127.0.0.1:{Application.ServerPort}/syslogng");
+                var model = _api.Get<PageSyslogNgModel>($"http://127.0.0.1:{Application.ServerPort}/syslogng");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

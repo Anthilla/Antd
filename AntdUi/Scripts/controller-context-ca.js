@@ -97,6 +97,7 @@ function CaController($scope, $http) {
     }
 
     $http.get("/ca").success(function (data) {
-        $scope.Ca = data;
+        $scope.isActive = data.JournaldIsActive;
+        $scope.Ca = data.CaOptions;
     });
 }

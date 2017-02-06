@@ -257,160 +257,139 @@
     <Content Include="Scripts\antd.cmd.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-acl.html">
+    <Content Include="Views\antd\page-antd-acl.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-asset-syncmachine.html">
+    <Content Include="Views\antd\page-asset-syncmachine.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-log-syslog.html">
+    <Content Include="Views\antd\page-antd-net-vpn.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-net-vpn.html">
+    <Content Include="Views\antd\page-antd-sshd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-sshd.html">
+    <Content Include="Views\antd\page-antd-bind.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-log-config.html">
+    <Content Include="Views\antd\page-antd-rsync.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-bind.html">
+    <Content Include="Views\antd\page-asset-scan.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-rsync.html">
+    <Content Include="Views\antd\page-antd-dhcp-leases.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-asset-scan.html">
+    <Content Include="Views\antd\page-antd-info-modules.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-ca-setup.html">
+    <Content Include="Views\antd\page-antd-info-services.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-dhcp-leases.html">
+    <Content Include="Views\antd\page-antd-info-resources.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-info-modules.html">
+    <Content Include="Views\antd\page-antd-samba.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-info-services.html">
+    <Content Include="Views\antd\page-antd-info-cpu.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-info-resources.html">
+    <Content Include="Views\antd\page-antd-info-memory.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-samba.html">
+    <Content Include="Views\antd\page-antd-storage-zfs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-info-cpu.html">
+    <Content Include="Views\antd\page-antd-storage-usage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-info-memory.html">
+    <Content Include="Views\antd\page-antd-storage-overlay.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-storage-zfs.html">
+    <Content Include="Views\antd\page-antd-storage-mounts.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-storage-usage.html">
+    <Content Include="Views\antd\page-antd-system-losetup.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-storage-overlay.html">
+    <Content Include="Views\antd\page-antd-system-update.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-storage-mounts.html">
+    <Content Include="Views\antd\page-antd-system.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-system-losetup.html">
+    <Content Include="Views\antd\page-antd-time.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-system-update.html">
+    <Content Include="Views\antd\page-antd-gluster.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-system.html">
+    <Content Include="Views\antd\page-asset-setting.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-time.html">
+    <Content Include="Views\antd\page-asset-discovery.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-gluster.html">
+    <Content Include="Views\antd\page-antd-dhcp.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-asset-setting.html">
+    <Content Include="Views\antd\page-boot-svc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-asset-discovery.html">
+    <Content Include="Views\antd\page-boot-mod.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-dhcp.html">
+    <Content Include="Views\antd\page-boot-osp.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-boot-svc.html">
+    <Content Include="Views\antd\page-boot-cmd.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-boot-mod.html">
+    <Content Include="Views\todo\page-ca-dcusers.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-boot-osp.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-boot-cmd.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-ca-dcusers.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-ca-cert.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-antd-storage.html">
+    <Content Include="Views\antd\page-antd-storage.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-ssh-authkey.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-ssh.html">
+    <Content Include="Views\antd\page-antd-ssh.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-scheduler.html">
+    <Content Include="Views\antd\page-antd-scheduler.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-host.html">
+    <Content Include="Views\antd\page-antd-host.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-ns.html">
+    <Content Include="Views\antd\page-antd-ns.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-firewall.html">
+    <Content Include="Views\antd\page-antd-firewall.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-vm.html">
+    <Content Include="Views\antd\page-antd-vm.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-info.html">
+    <Content Include="Views\antd\page-antd-info.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-network.html">
+    <Content Include="Views\antd\page-antd-network.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-antd-users.html">
+    <Content Include="Views\antd\page-antd-users.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-ca-dc.html">
+    <Content Include="Views\todo\page-ca-dc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-log.html">
+    <Content Include="Views\antd\page-apps-anthillasp.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\antd\part\page-log-report.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\part\page-log-system.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\apps\page-apps-anthillasp.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\antd\page-vnc.html">
+    <Content Include="Views\todo\page-vnc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\_partial\part-mount-units.html">
