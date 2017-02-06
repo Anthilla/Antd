@@ -23,24 +23,33 @@
                 <!--<i data-hint="|Open VNC" data-hint-position="bottom" id="NoVncConnect" class="fg-orange icon-monitor-2" style="margin-left: -2px; float: right; cursor: pointer; border: 2px solid #FA6800; padding: 5px; margin-top: 5px;"></i>-->
                 <!--<input id="NoVncPort" data-role="novnc-setup" type="text" style="float: right; width: 75px; margin-left: 8px; margin-top: 5px !important; border: 2px solid #FA6800 !important; height: 27px; text-align: center;" value="5900" />-->
                 <!--<input id="NoVncHost" type="hidden" data-role="novnc-setup" value="@Current.Ip" />-->
-                <!--<i data-hint="|Scan ports" data-hint-position="bottom" data-role="ShowNmap" data-ip="@Current.Ip" class="icon-search fg-anthilla-blu" style="margin-left: 8px; float: right; cursor: pointer; border: 2px solid #60A1E4; padding: 5px; margin-top: 5px;"></i>-->
 
                 <table class="table fg-white" style="table-layout: fixed">
                     <thead>
                         <tr>
                             <td>
-                                <label>Port/Protocol</label>
+                                <p class="fg-anthilla-green uppercase">Port/Protocol</p>
                             </td>
                             <td>
-                                <label>Status</label>
+                                <p class="fg-anthilla-green uppercase">Status</p>
                             </td>
                             <td>
-                                <label>Type</label>
+                                <p class="fg-anthilla-green uppercase">Type</p>
                             </td>
                         </tr>
                     </thead>
                     <tbody ng-repeat="port in el.Ports">
-                    
+                        <tr>
+                            <td>
+                                <p>{{port.Protocol}}</p>
+                            </td>
+                            <td>
+                                <p>{{port.Status}}</p>
+                            </td>
+                            <td>
+                                <p>{{port.Type}}</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

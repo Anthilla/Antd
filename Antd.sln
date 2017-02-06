@@ -48,19 +48,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD62
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
 	ProjectSection(SolutionItems) = preProject
-		Antd\Views\antd\page-asset-discovery.html = Antd\Views\antd\page-asset-discovery.html
 		Antd\Views\antd\page-asset-scan.html = Antd\Views\antd\page-asset-scan.html
 		Antd\Views\antd\page-asset-setting.html = Antd\Views\antd\page-asset-setting.html
 		Antd\Views\antd\page-asset-syncmachine.html = Antd\Views\antd\page-asset-syncmachine.html
-		AntdUi\Views\Pages\antd\svcs.html = AntdUi\Views\Pages\antd\svcs.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antdui", "antdui", "{EA498959-0DEB-4A9A-97E2-54F099447C64}"
 	ProjectSection(SolutionItems) = preProject
 		AntdUi\Views\Pages\asset\assetconfig.html = AntdUi\Views\Pages\asset\assetconfig.html
-		AntdUi\Modules\AssetDiscoveryModule.cs = AntdUi\Modules\AssetDiscoveryModule.cs
 		AntdUi\Views\Pages\asset\assetsync.html = AntdUi\Views\Pages\asset\assetsync.html
-		AntdUi\Views\Pages\asset\discovery.html = AntdUi\Views\Pages\asset\discovery.html
 		AntdUi\Views\Pages\asset\scan.html = AntdUi\Views\Pages\asset\scan.html
 	EndProjectSection
 EndProject

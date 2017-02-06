@@ -5,7 +5,7 @@ app.controller("AssetDiscoveryController", ["$scope", "$http", AssetDiscoveryCon
 function AssetDiscoveryController($scope, $http) {
     $scope.scanPort = function (machine) {
         $http.get("/scan/" + machine.Ip).success(function (data) {
-            $scope.Discovery = data;
+            machine.Ports = data;
         });
     }
 
