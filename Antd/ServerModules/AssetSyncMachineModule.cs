@@ -44,6 +44,7 @@ namespace Antd.ServerModules {
                 var set = settings.Get();
                 var syncedMachines = set.Machines.Any() ? set.Machines : new List<SyncMachineModel>();
                 var model = new PageAssetSyncMachineModel {
+                    IsActive = set.IsActive,
                     SyncedMachines = syncedMachines.OrderBy(_ => _.MachineAddress)
                 };
                 return JsonConvert.SerializeObject(model);

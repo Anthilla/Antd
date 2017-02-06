@@ -42,9 +42,14 @@ namespace Antd.ServerModules {
             Get["/scan"] = x => {
                 var settings = new NetscanConfiguration();
                 var set = settings.Get();
-                var values = set.Values.Where(_ => !string.IsNullOrEmpty(_.Label)).ToList();
+                var values = set.Values.Where(_ => !string.IsNullOrEmpty(_.Label))
+                    .Select(_ => new ScanModel {
+                        Name = _.Label,
+                        Subnet = set.Subnet + _.Number + ".0"
+                    })
+                    .ToList();
                 var model = new PageAssetScanModel {
-                    Values = values
+                    Subnets = values
                 };
                 return JsonConvert.SerializeObject(model);
             };

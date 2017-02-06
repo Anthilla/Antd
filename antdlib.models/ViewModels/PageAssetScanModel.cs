@@ -2,6 +2,6 @@
 
 namespace antdlib.models {
     public class PageAssetScanModel {
-        public IEnumerable<NetscanLabelModel> Values { get; set; }
+        public IEnumerable<ScanModel> Subnets { get; set; }
     }
 }

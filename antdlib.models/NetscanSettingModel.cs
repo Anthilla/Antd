@@ -12,4 +12,9 @@ namespace antdlib.models {
         public string Letter { get; set; }
         public string Label { get; set; }
     }
+
+    public class ScanModel {
+        public string Name { get; set; }
+        public string Subnet { get; set; }
+    }
 }

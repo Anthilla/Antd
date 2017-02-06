@@ -25,7 +25,7 @@ function AssetDiscoveryController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/asset/handshake/start", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
     }
- 
+
     $scope.sync = function (machine) {
         var data = $.param({
             MachineAddress: machine.Ip + ":" + machine.Port
@@ -48,41 +48,83 @@ function AssetDiscoveryController($scope, $http) {
 app.controller("AssetScanController", ["$scope", "$http", AssetScanController]);
 
 function AssetScanController($scope, $http) {
-    $scope.Scan = function (subnet) {
-        $http.get("/scan/" + subnet).success(function (data) {
-            return data;
+    $scope.scanPort = function (machine) {
+        $http.get("/scan/" + machine.Ip).success(function (data) {
+            machine.Ports = data;
         });
     }
 
+    $scope.wol = function (machine) {
+        var data = $.param({
+            MacAddress: machine.MacAddress
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/asset/wol", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.shareKey = function (machine) {
+        var data = $.param({
+            Host: machine.Ip,
+            Port: machine.Port
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/asset/handshake/start", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.scan = function () {
+        if ($scope.NetScan.length > 0) {
+            $http.get("/scan/" + $scope.NetScan)
+                .success(function(data) {
+                    $scope.AssetScan = data;
+                });
+        } else {
+            alert("Value not valid!");
+        }
+    }
+
     $http.get("/scan").success(function (data) {
-        $scope.AssetScan = data;
+        $scope.ScanSettings = data.Subnets;
     });
 }
 
 app.controller("AssetSettingController", ["$scope", "$http", AssetSettingController]);
 
 function AssetSettingController($scope, $http) {
-    $scope.setLabel = function (el) {
-        var data = $.param({
-            Letter: el.Letter,
-            Subnet: el.Subnet,
-            Label: el.Label
+    $scope.saveLabels = function () {
+        angular.forEach($scope.ScanSettings, function (el) {
+            if (el.IsChanged && el.Label.length > 0) {
+                var data = $.param({
+                    Letter: el.Letter,
+                    Number: el.Number,
+                    Label: el.Label
+                });
+                $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+                $http.post("/netscan/setlabel", data).then(function () { }, function (r) { console.log(r); });
+            }
         });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/netscan/setlabel", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
     }
 
-    $scope.setSubnet = function (el) {
+    $scope.checkElement = function (el) {
+        if (el.Label !== el.OriginLabel) {
+            el.IsChanged = true;
+        } else {
+            el.IsChanged = false;
+        }
+    }
+
+    $scope.saveSubnet = function () {
         var data = $.param({
-            Subnet: el.Subnet,
-            Label: el.Label
+            Subnet: $scope.Subnet,
+            Label: $scope.Label
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/netscan/setsubnet", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
     }
 
     $http.get("/assetsetting").success(function (data) {
-        $scope.AssetSetting = data;
+        $scope.Subnet = data.SettingsSubnet;
+        $scope.Label = data.SettingsSubnetLabel;
+        $scope.ScanSettings = data.Settings;
     });
 }
 
@@ -131,6 +173,7 @@ function AssetSyncMachineController($scope, $http) {
     }
 
     $http.get("/syncmachine").success(function (data) {
-        $scope.SyncMachine = data;
+        $scope.isActive = data.IsActive;
+        $scope.SyncedMachines = data.SyncedMachines;
     });
 }

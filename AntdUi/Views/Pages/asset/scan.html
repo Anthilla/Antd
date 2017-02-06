@@ -1,1 +1,56 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">scan</h1>
+
+<div ng-controller="AssetScanController">
+    <div class="input-control select width50pc">
+        <select name="singleSelect" ng-model="NetScan" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+            <option value="" selected="selected" disabled="disabled">Search filters are configured in Scan Settings</option>
+            <option ng-repeat="option in ScanSettings" value="{{option.Subnet}}">{{option.Name}}</option>
+        </select>
+    </div>
+    <button ng-click="scan()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-eye fg-anthilla-blue"></span>&nbsp;Scan</button>
+    <br />
+    <div ng-repeat="el in AssetScan">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-display fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{el}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;" ng-init="el.Ports=[]">
+                <button ng-click="shareKey(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-key fg-anthilla-green"></span>&nbsp;Share Key</button>
+                <button ng-click="wol(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-power fg-yellow"></span>&nbsp;W O L</button>
+                <button ng-click="scanPort(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-search fg-anthilla-blue"></span>&nbsp;Scan</button>
+
+                <table class="table fg-white" style="table-layout: fixed">
+                    <thead>
+                        <tr>
+                            <td>
+                                <p class="fg-anthilla-green uppercase">Port/Protocol</p>
+                            </td>
+                            <td>
+                                <p class="fg-anthilla-green uppercase">Status</p>
+                            </td>
+                            <td>
+                                <p class="fg-anthilla-green uppercase">Type</p>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="port in el.Ports">
+                        <tr>
+                            <td>
+                                <p>{{port.Protocol}}</p>
+                            </td>
+                            <td>
+                                <p>{{port.Status}}</p>
+                            </td>
+                            <td>
+                                <p>{{port.Type}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

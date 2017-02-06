@@ -40,7 +40,7 @@ namespace AntdUi.Modules {
 
         public AssetSettingModule() {
             Get["/assetsetting"] = x => {
-                var model = _api.Get<PageAssetSettingModel>($"http://127.0.0.1:{Application.ServerPort}/host/info");
+                var model = _api.Get<PageAssetSettingModel>($"http://127.0.0.1:{Application.ServerPort}/assetsetting");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
