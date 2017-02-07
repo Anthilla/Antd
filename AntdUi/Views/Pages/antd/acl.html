@@ -1,1 +1,88 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">acl</h1>
+
+<div ng-controller="AntdAclController">
+    <div ng-switch="isActive">
+        <div ng-switch-when="false">
+            <button ng-click="enable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-green"></span>&nbsp;Enable</button>
+        </div>
+        <div ng-switch-when="true">
+            <button ng-click="set()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-anthilla-green"></span>&nbsp;Apply Settings</button>
+            <button ng-click="start()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-anthilla-green"></span>&nbsp;Start</button>
+            <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+            <button ng-click="stop()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-stop fg-anthilla-orange"></span>&nbsp;Stop</button>
+            <button ng-click="disable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-eject fg-anthilla-orange"></span>&nbsp;Disable</button>
+        </div>
+        <div ng-switch-default> </div>
+    </div>
+    <br />
+    <div class="panel margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Add ACL for Path
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid fg-white">
+                <div class="row cells4 bg-hover-anthilla-gray-2">
+                    <div class="cell uppercase fg-anthilla-green">
+                        <p>Path</p>
+                    </div>
+                    <div class="cell colspan3">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="AclPath" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <button ng-click="AclAdd(AclPath)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Update</button>
+        </div>
+    </div>
+    <br />
+    <div class="panel margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Add ACL for User
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid fg-white">
+                <div class="row cells4 bg-hover-anthilla-gray-2">
+                    <div class="cell uppercase fg-anthilla-green">
+                        <p>User</p>
+                    </div>
+                    <div class="cell colspan3">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="AclUser" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <button ng-click="AclApplyScript(AclUser)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Update</button>
+        </div>
+    </div>
+    <br />
+    <h4 class="fg-white">List</h4>
+    <br />
+    <div ng-repeat="acl in Acl">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{acl.Path}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;" ng-init="acl.Hide = true;">
+                <button ng-click="AclCreate(acl)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-upload fg-green"></span>&nbsp;Update</button>
+
+                <button ng-click="GetDetails(acl)" class="button bg-anthilla-blue bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-search"></span>&nbsp;Show Details</button>
+                <div ng-hide="acl.Hide" ng-bind-html="acl.HtmlData" class="width100pc padding10 bd-focus-anthilla-gray-3" style="border: 2px solid;"></div>
+            </div>
+        </div>
+    </div>
+</div>

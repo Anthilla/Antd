@@ -40,7 +40,7 @@ namespace AntdUi.Modules {
 
         public AntdAclModule() {
             Get["/acl"] = x => {
-                var model = _api.Get<AclPersistentSettingModel>($"http://127.0.0.1:{Application.ServerPort}/acl");
+                var model = _api.Get<PageAclModel>($"http://127.0.0.1:{Application.ServerPort}/acl");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

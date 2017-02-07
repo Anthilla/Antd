@@ -1,1 +1,730 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">network</h1>
+
+<div ng-controller="AntdServicesController">
+    <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+    <br />
+    <h4 class="fg-anthilla-green">Physical Interfaces</h4>
+    <div ng-repeat="nif in NetworkPhysicalIf">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{nif.Interface}}&nbsp;-&nbsp;
+                    {{nif.Status}}&nbsp;-&nbsp;
+                    {{nif.Mtu}}&nbsp;-&nbsp;
+                    {{nif.Txqueuelen}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <button ng-click="saveInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                <button ng-click="deleteInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-bin fg-red"></span>&nbsp;Remove</button>
+                <br />
+                <div class="grid fg-white">
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Txqueuelen</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Txqueuelen }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Txqueuelen" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mtu</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mtu }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Mtu" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Status</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Status }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="" selected="selected" disabled="disabled">Select a status...</option>
+                                    <option value="Down">Down</option>
+                                    <option value="Up">Up</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mode</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mode }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="Null">Null</option>
+                                    <option value="Static">Static</option>
+                                    <option value="Dynamic">Dynamic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Address</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticAddress }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.StaticAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Range</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticRange }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.StaticRange" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16" selected="selected">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                    <option value="32">32</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <h4 class="fg-anthilla-green">Physical Interfaces</h4>
+    <div ng-repeat="nif in NetworkPhysicalIf">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{nif.Interface}}&nbsp;-&nbsp;
+                    {{nif.Status}}&nbsp;-&nbsp;
+                    {{nif.Mtu}}&nbsp;-&nbsp;
+                    {{nif.Txqueuelen}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <button ng-click="saveInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                <button ng-click="deleteInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-bin fg-red"></span>&nbsp;Remove</button>
+                <br />
+                <div class="grid fg-white">
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Txqueuelen</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Txqueuelen }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Txqueuelen" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mtu</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mtu }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Mtu" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Status</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Status }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="" selected="selected" disabled="disabled">Select a status...</option>
+                                    <option value="Down">Down</option>
+                                    <option value="Up">Up</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mode</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mode }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="Null">Null</option>
+                                    <option value="Static">Static</option>
+                                    <option value="Dynamic">Dynamic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Address</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticAddress }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.StaticAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Range</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticRange }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.StaticRange" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16" selected="selected">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                    <option value="32">32</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <h4 class="fg-anthilla-green">Bridge Interfaces</h4>
+    <div ng-repeat="nif in NetworkBridgeIf">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{nif.Interface}}&nbsp;-&nbsp;
+                    {{nif.Status}}&nbsp;-&nbsp;
+                    {{nif.Mtu}}&nbsp;-&nbsp;
+                    {{nif.Txqueuelen}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <button ng-click="saveInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                <button ng-click="deleteInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-bin fg-red"></span>&nbsp;Remove</button>
+                <br />
+                <div class="grid fg-white">
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Txqueuelen</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Txqueuelen }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Txqueuelen" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mtu</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mtu }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Mtu" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Status</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Status }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="" selected="selected" disabled="disabled">Select a status...</option>
+                                    <option value="Down">Down</option>
+                                    <option value="Up">Up</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mode</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mode }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="Null">Null</option>
+                                    <option value="Static">Static</option>
+                                    <option value="Dynamic">Dynamic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Address</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticAddress }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.StaticAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Range</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticRange }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.StaticRange" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16" selected="selected">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                    <option value="32">32</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <h4 class="fg-anthilla-green">Bond Interfaces</h4>
+    <div ng-repeat="nif in NetworkBondIf">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{nif.Interface}}&nbsp;-&nbsp;
+                    {{nif.Status}}&nbsp;-&nbsp;
+                    {{nif.Mtu}}&nbsp;-&nbsp;
+                    {{nif.Txqueuelen}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <button ng-click="saveInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                <button ng-click="deleteInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-bin fg-red"></span>&nbsp;Remove</button>
+                <br />
+                <div class="grid fg-white">
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Txqueuelen</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Txqueuelen }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Txqueuelen" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mtu</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mtu }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Mtu" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Status</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Status }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="" selected="selected" disabled="disabled">Select a status...</option>
+                                    <option value="Down">Down</option>
+                                    <option value="Up">Up</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mode</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mode }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="Null">Null</option>
+                                    <option value="Static">Static</option>
+                                    <option value="Dynamic">Dynamic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Address</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticAddress }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.StaticAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Range</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticRange }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.StaticRange" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16" selected="selected">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                    <option value="32">32</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <h4 class="fg-anthilla-green">Virtual Interfaces</h4>
+    <div ng-repeat="nif in NetworkVirtualIf">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{nif.Interface}}&nbsp;-&nbsp;
+                    {{nif.Status}}&nbsp;-&nbsp;
+                    {{nif.Mtu}}&nbsp;-&nbsp;
+                    {{nif.Txqueuelen}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <button ng-click="saveInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                <button ng-click="deleteInterface(unit)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-bin fg-red"></span>&nbsp;Remove</button>
+                <br />
+                <div class="grid fg-white">
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Txqueuelen</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Txqueuelen }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Txqueuelen" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mtu</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mtu }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.Mtu" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Status</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Status }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="" selected="selected" disabled="disabled">Select a status...</option>
+                                    <option value="Down">Down</option>
+                                    <option value="Up">Up</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Mode</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.Mode }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="Null">Null</option>
+                                    <option value="Static">Static</option>
+                                    <option value="Dynamic">Dynamic</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Address</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticAddress }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="nif.StaticAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cells6 bg-hover-anthilla-gray-2">
+                        <div class="cell colspan2 uppercase fg-anthilla-green">
+                            <p>Range</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <p>{{ nif.StaticRange }}</p>
+                        </div>
+                        <div class="cell colspan2">
+                            <div class="input-control select width50pc">
+                                <select name="singleSelect" ng-model="nif.StaticRange" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16" selected="selected">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                    <option value="32">32</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

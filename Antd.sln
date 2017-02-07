@@ -39,11 +39,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.config\antdlib.config.csproj", "{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{DD629971-5632-46EF-AF4C-8B8F27F77455}"
-	ProjectSection(SolutionItems) = preProject
-		AntdUi\Views\Pages\ca\ca.html = AntdUi\Views\Pages\ca\ca.html
-		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
-		AntdUi\Views\Pages\antd\svcs.html = AntdUi\Views\Pages\antd\svcs.html
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "antd", "antd", "{4C2195C9-FDD3-4B0A-AB6D-F696D88357EF}"
 EndProject

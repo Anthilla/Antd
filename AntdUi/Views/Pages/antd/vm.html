@@ -1,1 +1,28 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">VM</h1>
+
+<div ng-controller="AntdVmController">
+    <div ng-repeat="vm in Vm">
+        <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+            <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                <span class="title">
+                    {{vm.Id}}&nbsp;-&nbsp;
+                    {{vm.Domain}}&nbsp;-&nbsp;
+                    {{vm.State}}
+                </span>
+            </div>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <button ng-click="virsh-destroy(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;destroy</button>
+                <button ng-click="virsh-reboot(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;reboot</button>
+                <button ng-click="virsh-reset(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;reset</button>
+                <button ng-click="virsh-restore(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;restore</button>
+                <button ng-click="virsh-resume(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;resume</button>
+                <button ng-click="virsh-shutdown(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;shutdown</button>
+                <button ng-click="virsh-start(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;start</button>
+                <button ng-click="virsh-suspend(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;suspend</button>
+                <button ng-click="virsh-dompmsuspend(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;dompmsuspend</button>
+                <button ng-click="virsh-dompmwakeup(vm)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-green"></span>&nbsp;dompmwakeup</button>
+            </div>
+        </div>
+    </div>
+</div>

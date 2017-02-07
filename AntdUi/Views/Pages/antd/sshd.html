@@ -1,1 +1,141 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">sshd</h1>
+
+<div ng-controller="AntdSshdController">
+    <div ng-switch="isActive">
+        <div ng-switch-when="false">
+            <button ng-click="enable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-green"></span>&nbsp;Enable</button>
+        </div>
+        <div ng-switch-when="true">
+            <button ng-click="set()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-anthilla-green"></span>&nbsp;Apply Settings</button>
+            <button ng-click="start()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-anthilla-green"></span>&nbsp;Start</button>
+            <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+            <button ng-click="stop()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-stop fg-anthilla-orange"></span>&nbsp;Stop</button>
+            <button ng-click="disable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-eject fg-anthilla-orange"></span>&nbsp;Disable</button>
+        </div>
+        <div ng-switch-default> </div>
+    </div>
+    <br />
+    <div class="panel margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Options
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed">
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">Port</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.Port" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">PermitRootLogin</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.PermitRootLogin" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">PermitTunnel</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.PermitTunnel" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">MaxAuthTries</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.MaxAuthTries" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">MaxSessions</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.MaxSessions" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">RsaAuthentication</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.RsaAuthentication" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">PubkeyAuthentication</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.PubkeyAuthentication" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                        <h5 class="uppercase fg-anthilla-green">UsePam</h5>
+                    </div>
+                    <div class="cell colspan2">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="Sshd.UsePam" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell padding-left20" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row cells4">
+                    <div class="cell padding-left20">
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="saveOptions(Sshd)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -90,15 +90,16 @@ namespace Antd.ServerModules {
                 string altroot = Request.Form.Altroot;
                 string poolname = Request.Form.Name;
                 string pooltype = Request.Form.Type;
-                string diskid = Request.Form.Id;
-                if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(pooltype) || string.IsNullOrEmpty(diskid)) {
+                string disk = Request.Form.Disk;
+                if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(pooltype) || string.IsNullOrEmpty(disk)) {
                     return HttpStatusCode.BadRequest;
                 }
-                ConsoleLogger.Log($"[zpool] create => altroot:{altroot} poolname:{poolname} pooltype:{pooltype} diskid:{diskid} ");
+                ConsoleLogger.Log($"[zpool] create => altroot:{altroot} poolname:{poolname} pooltype:{pooltype} disk:{disk} ");
                 _launcher.Launch("zpool-create", new Dictionary<string, string> {
                     { "$pool_altroot", altroot },
-                    { "$pool_name", poolname.Replace("/dev/", "") },
-                    { "$disk_byid", diskid }
+                    { "$pool_name", poolname },
+                    { "$pool_type", poolname },
+                    { "$disk", disk }
                 });
                 return HttpStatusCode.OK;
             };

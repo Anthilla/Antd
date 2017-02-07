@@ -1,1 +1,133 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">firewall</h1>
+
+<div ng-controller="AntdFirewallController">
+    <div ng-switch="isActive">
+        <div ng-switch-when="false">
+            <button ng-click="enable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-green"></span>&nbsp;Enable</button>
+        </div>
+        <div ng-switch-when="true">
+            <button ng-click="set()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-anthilla-green"></span>&nbsp;Apply Settings</button>
+            <button ng-click="start()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-anthilla-green"></span>&nbsp;Start</button>
+            <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+            <button ng-click="stop()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-stop fg-anthilla-orange"></span>&nbsp;Stop</button>
+            <button ng-click="disable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-eject fg-anthilla-orange"></span>&nbsp;Disable</button>
+        </div>
+        <div ng-switch-default> </div>
+    </div>
+    <br />
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Table - IPV4 Filter
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <h4 class="fg-anthilla-green">Sets</h4>
+            <br />
+            <div ng-repeat="set in FwIp4Filter.Sets">
+                <h5 class="fg-white">{{set.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="set.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <br />
+            <h4 class="fg-white">Chains</h4>
+            <br />
+            <div ng-repeat="chain in FwIp4Filter.Chains">
+                <h5 class="fg-white">{{chain.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="chain.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <button ng-click="saveFwIp4Filter(FwIp4Filter)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+        </div>
+    </div>
+    <br />
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Table - IPV4 Nat
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <h4 class="fg-anthilla-green">Sets</h4>
+            <br />
+            <div ng-repeat="set in FwIp4Nat.Sets">
+                <h5 class="fg-white">{{set.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="set.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <br />
+            <h4 class="fg-white">Chains</h4>
+            <br />
+            <div ng-repeat="chain in FwIp4Nat.Chains">
+                <h5 class="fg-white">{{chain.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="chain.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <button ng-click="saveFwIp4Nat(FwIp4Nat)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+        </div>
+    </div>
+    <br />
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Table - IPV6 Filter
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <h4 class="fg-anthilla-green">Sets</h4>
+            <br />
+            <div ng-repeat="set in FwIp6Filter.Sets">
+                <h5 class="fg-white">{{set.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="set.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <br />
+            <h4 class="fg-white">Chains</h4>
+            <br />
+            <div ng-repeat="chain in FwIp6Filter.Chains">
+                <h5 class="fg-white">{{chain.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="chain.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <button ng-click="saveFwIp6Filter(FwIp6Filter)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+        </div>
+    </div>
+    <br />
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Table - IPV6 Nat
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <h4 class="fg-anthilla-green">Sets</h4>
+            <br />
+            <div ng-repeat="set in FwIp6Nat.Sets">
+                <h5 class="fg-white">{{set.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="set.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <br />
+            <h4 class="fg-white">Chains</h4>
+            <br />
+            <div ng-repeat="chain in FwIp6Nat.Chains">
+                <h5 class="fg-white">{{chain.Name}}</h5>
+                <div class="input-control textarea width80pc" data-role="input" data-text-auto-resize="true">
+                    <textarea ng-model="chain.Elements" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                </div>
+            </div>
+            <button ng-click="saveFwIp6Nat(FwIp6Nat)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+        </div>
+    </div>
+</div>

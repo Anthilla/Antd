@@ -72,12 +72,12 @@ namespace AntdUi.Modules {
                 string altroot = Request.Form.Altroot;
                 string poolname = Request.Form.Name;
                 string pooltype = Request.Form.Type;
-                string diskid = Request.Form.Id;
+                string disk = Request.Form.Disk;
                 var dict = new Dictionary<string, string> {
                     { "Altroot", altroot },
                     { "Name", poolname },
                     { "Type", pooltype },
-                    { "Id", diskid },
+                    { "Disk", disk }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zpool/create", dict);
             };
