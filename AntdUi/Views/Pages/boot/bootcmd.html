@@ -7,7 +7,7 @@
     <br />
     <div class="grid condensed">
         <div ng-repeat="cmd in Commands | orderBy: 'Index'">
-            <div class="row cells4">
+            <div class="row cells6">
                 <div class="cell padding-right10">
                     <div class="input-control number width100pc fg-white">
                         <input placeholder="Index" type="number" ng-model="cmd.Index" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
@@ -17,6 +17,9 @@
                     <div class="input-control text width100pc fg-white">
                         <input placeholder="Command" type="text" ng-model="cmd.FirstCommand" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
                     </div>
+                </div>
+                <div class="cell colspan2">
+                    <button ng-click="remove(cmd)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 place-right"><span class="mif-bin fg-anthilla-orange"></span></button>
                 </div>
             </div>
         </div>

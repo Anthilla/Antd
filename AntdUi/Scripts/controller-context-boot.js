@@ -3,6 +3,17 @@
 app.controller("BootCommandsController", ["$scope", "$http", BootCommandsController]);
 
 function BootCommandsController($scope, $http) {
+    $scope.remove = function (cmd) {
+        var index = $scope.Commands.indexOf(cmd);
+        if (index > -1) {
+            $scope.Commands.splice(index, 1);
+        }
+        angular.forEach($scope.Commands, function (v, i) {
+            v.Index = i;
+        });
+    }
+
+
     $scope.refreshIndex = function () {
         angular.forEach($scope.Commands, function (v, i) {
             v.Index = i;
