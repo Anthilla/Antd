@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/firewall/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/set");
             };
 
             Post["/firewall/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/restart");
             };
 
             Post["/firewall/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/stop");
             };
 
             Post["/firewall/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/enable");
             };
 
             Post["/firewall/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/disable");
             };
 
             #region [    IPV4    ]

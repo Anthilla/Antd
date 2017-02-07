@@ -74,13 +74,16 @@ namespace antdlib.common {
             #endregion
         }
 
-        public HttpStatusCode Post(string uri, IDictionary<string, string> data) {
+        public HttpStatusCode Post(string uri, IDictionary<string, string> data = null) {
             try {
                 var client = new RestClient(uri);
                 var request = new RestRequest("/", Method.POST);
                 request.AddHeader(InstanceHeader, _instance);
-                foreach(var d in data)
-                    request.AddParameter(d.Key, d.Value);
+                if(data != null) {
+                    foreach(var d in data) {
+                        request.AddParameter(d.Key, d.Value);
+                    }
+                }
                 var response = client.Execute(request);
                 var code = response.StatusCode;
                 return (HttpStatusCode)code;
@@ -96,13 +99,16 @@ namespace antdlib.common {
             #endregion
         }
 
-        public void Post2(string uri, IDictionary<string, string> data) {
+        public void Post2(string uri, IDictionary<string, string> data = null) {
             try {
                 var client = new RestClient(uri);
                 var request = new RestRequest("/", Method.POST);
                 request.AddHeader(InstanceHeader, _instance);
-                foreach(var d in data)
-                    request.AddParameter(d.Key, d.Value);
+                if(data != null) {
+                    foreach(var d in data) {
+                        request.AddParameter(d.Key, d.Value);
+                    }
+                }
                 client.Execute(request);
             }
             #region Exception

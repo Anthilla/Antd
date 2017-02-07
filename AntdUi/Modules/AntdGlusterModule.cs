@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/gluster/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set");
             };
 
             Post["/gluster/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart");
             };
 
             Post["/gluster/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop");
             };
 
             Post["/gluster/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable");
             };
 
             Post["/gluster/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable");
             };
 
             Post["/gluster/options"] = x => {

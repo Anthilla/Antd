@@ -127,6 +127,7 @@
     <Compile Include="Modules\AntdServicesModule.cs" />
     <Compile Include="Modules\AntdModulesStatusModule.cs" />
     <Compile Include="Modules\AntdMemoryStatusModule.cs" />
+    <Compile Include="Modules\HomeModule.cs" />
     <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Ui\UiService.cs" />
     <Compile Include="Apps\AppsManagement.cs" />

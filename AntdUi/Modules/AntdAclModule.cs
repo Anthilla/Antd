@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/acl/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/set");
             };
 
             Post["/acl/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/restart");
             };
 
             Post["/acl/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/stop");
             };
 
             Post["/acl/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/enable");
             };
 
             Post["/acl/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/disable");
             };
 
             Post["/acl/add"] = x => {

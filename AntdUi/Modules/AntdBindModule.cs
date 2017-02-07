@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/bind/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/set");
             };
 
             Post["/bind/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/restart");
             };
 
             Post["/bind/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/stop");
             };
 
             Post["/bind/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/enable");
             };
 
             Post["/bind/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/disable");
             };
 
             Post["/bind/options"] = x => {

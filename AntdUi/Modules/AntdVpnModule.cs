@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/vpn/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/set");
             };
 
             Post["/vpn/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/restart");
             };
 
             Post["/vpn/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/stop");
             };
 
             Post["/vpn/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/enable");
             };
 
             Post["/vpn/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/disable");
             };
 
             Post["/vpn/options"] = x => {

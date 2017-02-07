@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/dhcpd/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set");
             };
 
             Post["/dhcpd/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart");
             };
 
             Post["/dhcpd/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop");
             };
 
             Post["/dhcpd/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable");
             };
 
             Post["/dhcpd/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable");
             };
 
             Post["/dhcpd/options"] = x => {

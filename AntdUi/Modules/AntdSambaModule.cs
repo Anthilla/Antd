@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/samba/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/set");
             };
 
             Post["/samba/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/restart");
             };
 
             Post["/samba/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/stop");
             };
 
             Post["/samba/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/enable");
             };
 
             Post["/samba/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/disable");
             };
 
             Post["/samba/options"] = x => {

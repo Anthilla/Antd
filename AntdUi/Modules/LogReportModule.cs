@@ -45,7 +45,7 @@ namespace AntdUi.Modules {
             };
 
             Post["/report"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/report", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/report");
             };
         }
     }

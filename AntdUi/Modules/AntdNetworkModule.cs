@@ -47,7 +47,7 @@ namespace AntdUi.Modules {
             };
 
             Post["/network/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/restart");
             };
 
             Post["/network/interface"] = x => {

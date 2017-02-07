@@ -46,27 +46,27 @@ namespace AntdUi.Modules {
             };
 
             Post["/rsync/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/set");
             };
 
             Post["/rsync/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/restart");
             };
 
             Post["/rsync/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/stop");
             };
 
             Post["/rsync/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/enable");
             };
 
             Post["/rsync/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/disable");
             };
 
             Post["/rsync/options"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/options", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/options");
             };
 
             Post["/rsync/directory"] = x => {

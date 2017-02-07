@@ -1,4 +1,8 @@
-﻿//-------------------------------------------------------------------------------------
+﻿using System.IO;
+using Nancy;
+using Newtonsoft.Json;
+
+//-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
 //     All rights reserved.
 //
@@ -27,48 +31,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using antdlib.common;
-using antdlib.models;
-using Nancy;
-using Newtonsoft.Json;
+namespace Antd.Modules {
+    public class HomeModule : NancyModule {
 
-namespace AntdUi.Modules {
-    public class AntdTimeModule : NancyModule {
+        public HomeModule() {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
-        public AntdTimeModule() {
-            Get["/time"] = x => {
-                var model = _api.Get<PageTimeModel>($"http://127.0.0.1:{Application.ServerPort}/time/info");
-                var json = JsonConvert.SerializeObject(model);
-                return json;
-            };
-
-            Post["/time/timezone"] = x => {
-                string timezone = Request.Form.Timezone;
-                var dict = new Dictionary<string, string> {
-                    {"Timezone", timezone}
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/timezone", dict);
-            };
-
-            Post["/time/synctime"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/synctime");
-
-            Post["/time/ntpdate"] = x => {
-                string ntpdate = Request.Form.Ntpdate;
-                var dict = new Dictionary<string, string> {
-                    {"Ntpdate", ntpdate}
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpdate", dict);
-            };
-
-            Post["/time/ntpd"] = x => {
-                string ntpd = Request.Form.Ntpd;
-                var dict = new Dictionary<string, string> {
-                    {"Ntpd", ntpd}
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpd", dict);
+            Get["/"] = x => {
+                var hostname = File.ReadAllText("/etc/hostname");
+                return JsonConvert.SerializeObject(hostname);
             };
         }
     }

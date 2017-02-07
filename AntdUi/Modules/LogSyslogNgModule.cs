@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/syslogng/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/set");
             };
 
             Post["/syslogng/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/restart");
             };
 
             Post["/syslogng/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/stop");
             };
 
             Post["/syslogng/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/enable");
             };
 
             Post["/syslogng/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/disable");
             };
 
             Post["/syslogng/options"] = x => {
@@ -100,7 +100,7 @@ namespace AntdUi.Modules {
                     { "PortLevelSecurity", portLevelSecurity },
                     { "PortLevelSystem", portLevelSystem }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/options", dict);
             };
         }
     }

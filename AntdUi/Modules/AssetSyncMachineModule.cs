@@ -46,23 +46,23 @@ namespace AntdUi.Modules {
             };
 
             Post["/syncmachine/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/set");
             };
 
             Post["/syncmachine/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/restart", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/restart");
             };
 
             Post["/syncmachine/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/stop", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/stop");
             };
 
             Post["/syncmachine/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/enable");
             };
 
             Post["/syncmachine/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/disable");
             };
 
             Post["/syncmachine/machine"] = x => {

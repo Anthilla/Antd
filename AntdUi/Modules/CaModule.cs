@@ -48,15 +48,15 @@ namespace AntdUi.Modules {
             };
 
             Post["/ca/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/set");
             };
 
             Post["/ca/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/enable");
             };
 
             Post["/ca/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/disable");
             };
 
             Post["/ca/options"] = x => {

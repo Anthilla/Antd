@@ -46,15 +46,15 @@ namespace AntdUi.Modules {
             };
 
             Post["/scheduler/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/set", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/set");
             };
 
             Post["/scheduler/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/enable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/enable");
             };
 
             Post["/scheduler/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/disable", null);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/disable");
             };
 
             Post["/scheduler/timer"] = x => {

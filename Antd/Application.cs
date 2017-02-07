@@ -185,11 +185,6 @@ namespace Antd {
                 HostConfiguration.ApplyHostRemoveModules();
                 ConsoleLogger.Log("modules ready");
                 #endregion
-
-                #region [    Import Commands    ]
-                File.Copy($"{Parameter.RootFrameworkAntdShellScript}/var/kerbynet.conf", "/etc/kerbynet.conf", true);
-                ConsoleLogger.Log("commands and scripts configuration imported");
-                #endregion
             }
 
             #region [    Users    ]
