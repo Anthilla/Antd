@@ -3,29 +3,29 @@ using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 
-namespace AntdUi.Modules {
+namespace Antd.Modules {
 
-    public class AntdAppConfigurationModule : NancyModule {
+    public class AppConfigurationModule : NancyModule {
 
         private readonly AppConfiguration _appConfiguration = new AppConfiguration();
 
-        public AntdAppConfigurationModule() {
+        public AppConfigurationModule() {
 
             Get["/config"] = _ => {
-                var list = _appConfiguration.UiGet();
+                var list = _appConfiguration.Get();
                 return JsonConvert.SerializeObject(list);
             };
 
             Post["/config"] = _ => {
-                int antdPort = Request.Form.AntdPort;
-                int antdUiPort = Request.Form.AntdUiPort;
-                string databasePath = Request.Form.DatabasePath;
+                var antdPort = Request.Form.AntdPort;
+                var antdUiPort = Request.Form.AntdUiPort;
+                var databasePath = Request.Form.DatabasePath;
                 var model = new AppConfigurationModel {
                     AntdPort = antdPort,
                     AntdUiPort = antdUiPort,
                     DatabasePath = databasePath
                 };
-                _appConfiguration.UiSave(model);
+                _appConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
         }

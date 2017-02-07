@@ -27,51 +27,61 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using antdlib.common;
-using antdlib.config.shared;
+using antdlib.config;
 using antdlib.models;
+using Antd.Users;
 using Nancy;
-using Nancy.Authentication.Forms;
-using Nancy.Security;
+using Newtonsoft.Json;
 
-namespace AntdUi.Auth {
-    public class UserDatabase : IUserMapper {
+namespace Antd.Modules {
+    public class AntdUsersModule : NancyModule {
 
-        private static readonly ApiConsumer Api = new ApiConsumer();
-        private static readonly AppConfiguration AppConfiguration = new AppConfiguration();
+        public AntdUsersModule() {
 
-        private static IEnumerable<UserIdentity> Users() {
-            var config = AppConfiguration.Get();
-            var users = Api.Get<List<User>>($"http://127.0.0.1:{config.AntdPort}/users");
-            return (from user in users
-                    let guid = Guid.Parse("4B640B85-1DCD-4C70-8981-2F3FD03E3013")
-                    select new UserIdentity {
-                        UserGuid = guid,
-                        UserName = user.Name,
-                        Claims = new List<string> { user.Password, guid.ToString() }
-                    }).ToList();
-        }
+            Get["/users"] = _ => {
+                var userConfiguration = new UserConfiguration();
+                var list = userConfiguration.Get();
+                var manageMaster = new ManageMaster();
+                list.Add(new User {
+                    Name = manageMaster.Name,
+                    Password = manageMaster.Password
+                });
+                return JsonConvert.SerializeObject(list);
+            };
 
-        public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
-            var userRecord = Users().FirstOrDefault(u => u.UserGuid == identifier);
-            return userRecord == null
-                       ? null
-                       : new UserIdentity { UserName = userRecord.UserName };
-        }
+            Get["/users/list"] = x => {
+                var master = new ManageMaster().Name;
+                var systemUser = new SystemUser();
+                var users = systemUser.GetAll()
+                    .Select(_ => new User { Name = _, Password = "" });
+                var model = new PageUsersModel {
+                    Master = master,
+                    Users = users
+                };
+                return JsonConvert.SerializeObject(model);
+            };
 
-        public static Guid? ValidateUser(string userIdentity, string password) {
-            try {
-                var hash = Encryption.XHash(password);
-                var user = Users().FirstOrDefault(_ => _.UserName == userIdentity && _.Claims.Contains(hash));
-                return user?.UserGuid;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex);
-                return null;
-            }
+            Post["/users"] = x => {
+                string user = Request.Form.User;
+                string password = Request.Form.Password;
+                var systemUser = new SystemUser();
+                var hpwd = systemUser.HashPasswd(password);
+                var mo = new User {
+                    Name = user,
+                    Password = hpwd
+                };
+                var userConfiguration = new UserConfiguration();
+                userConfiguration.AddUser(mo);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/users/master/password"] = x => {
+                string password = Request.Form.Password;
+                var masterManager = new ManageMaster();
+                masterManager.ChangePassword(password);
+                return HttpStatusCode.OK;
+            };
         }
     }
 }

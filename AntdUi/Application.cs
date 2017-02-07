@@ -1,6 +1,5 @@
 ﻿using System;
 using antdlib.common;
-using antdlib.config;
 using antdlib.config.shared;
 using Nancy.Hosting.Self;
 

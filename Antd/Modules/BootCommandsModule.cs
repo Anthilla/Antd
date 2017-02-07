@@ -30,48 +30,40 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using antdlib.common;
-using antdlib.config.shared;
+using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Authentication.Forms;
-using Nancy.Security;
+using Newtonsoft.Json;
 
-namespace AntdUi.Auth {
-    public class UserDatabase : IUserMapper {
+namespace Antd.Modules {
+    public class BootCommandsModule : NancyModule {
 
-        private static readonly ApiConsumer Api = new ApiConsumer();
-        private static readonly AppConfiguration AppConfiguration = new AppConfiguration();
+        public BootCommandsModule() {
+            Get["/boot/commands"] = x => {
+                var setupConfiguration = new SetupConfiguration();
+                var model = new PageBootCommandsModel {
+                    HasConfiguration = setupConfiguration.Get().Any(),
+                    Controls = setupConfiguration.Get().OrderBy(_ => _.Index)
+                };
+                return JsonConvert.SerializeObject(model);
+            };
 
-        private static IEnumerable<UserIdentity> Users() {
-            var config = AppConfiguration.Get();
-            var users = Api.Get<List<User>>($"http://127.0.0.1:{config.AntdPort}/users");
-            return (from user in users
-                    let guid = Guid.Parse("4B640B85-1DCD-4C70-8981-2F3FD03E3013")
-                    select new UserIdentity {
-                        UserGuid = guid,
-                        UserName = user.Name,
-                        Claims = new List<string> { user.Password, guid.ToString() }
-                    }).ToList();
-        }
-
-        public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
-            var userRecord = Users().FirstOrDefault(u => u.UserGuid == identifier);
-            return userRecord == null
-                       ? null
-                       : new UserIdentity { UserName = userRecord.UserName };
-        }
-
-        public static Guid? ValidateUser(string userIdentity, string password) {
-            try {
-                var hash = Encryption.XHash(password);
-                var user = Users().FirstOrDefault(_ => _.UserName == userIdentity && _.Claims.Contains(hash));
-                return user?.UserGuid;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex);
-                return null;
-            }
+            Post["/boot/commands"] = x => {
+                string data = Request.Form.Data;
+                var dataArr = data.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                var controls = new List<Control>();
+                foreach(var ctrl in dataArr) {
+                    var ctrlArr = ctrl.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    var control = new Control {
+                        Index = Convert.ToInt32(ctrlArr[0]),
+                        FirstCommand = ctrlArr[1]
+                    };
+                    controls.Add(control);
+                }
+                var setupConfiguration = new SetupConfiguration();
+                setupConfiguration.Export(controls);
+                return HttpStatusCode.OK;
+            };
         }
     }
 }

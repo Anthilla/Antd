@@ -31,47 +31,38 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
-using antdlib.config.shared;
+using antdlib.config;
 using antdlib.models;
 using Nancy;
-using Nancy.Authentication.Forms;
-using Nancy.Security;
+using Newtonsoft.Json;
 
-namespace AntdUi.Auth {
-    public class UserDatabase : IUserMapper {
+namespace Antd.Modules {
+    public class BootOsParametersModule : NancyModule {
 
-        private static readonly ApiConsumer Api = new ApiConsumer();
-        private static readonly AppConfiguration AppConfiguration = new AppConfiguration();
+        public BootOsParametersModule() {
+            Get["/boot/osparameter"] = x => {
+                var hostcfg = new HostConfiguration();
+                var model = new PageBootOsParametersModel {
+                    OsParameters = string.Join(Environment.NewLine, hostcfg.GetHostOsParameters().Select(_ => $"{_.Key} {_.Value}").ToList())
+                };
+                return JsonConvert.SerializeObject(model);
+            };
 
-        private static IEnumerable<UserIdentity> Users() {
-            var config = AppConfiguration.Get();
-            var users = Api.Get<List<User>>($"http://127.0.0.1:{config.AntdPort}/users");
-            return (from user in users
-                    let guid = Guid.Parse("4B640B85-1DCD-4C70-8981-2F3FD03E3013")
-                    select new UserIdentity {
-                        UserGuid = guid,
-                        UserName = user.Name,
-                        Claims = new List<string> { user.Password, guid.ToString() }
-                    }).ToList();
-        }
-
-        public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context) {
-            var userRecord = Users().FirstOrDefault(u => u.UserGuid == identifier);
-            return userRecord == null
-                       ? null
-                       : new UserIdentity { UserName = userRecord.UserName };
-        }
-
-        public static Guid? ValidateUser(string userIdentity, string password) {
-            try {
-                var hash = Encryption.XHash(password);
-                var user = Users().FirstOrDefault(_ => _.UserName == userIdentity && _.Claims.Contains(hash));
-                return user?.UserGuid;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex);
-                return null;
-            }
+            Post["/boot/osparameter"] = x => {
+                string osparamText = Request.Form.Config;
+                var osparameter = osparamText.SplitToList(Environment.NewLine).Where(_ => !string.IsNullOrEmpty(_));
+                var dict = new Dictionary<string, string>();
+                foreach(var serv in osparameter) {
+                    var kvp = serv.Split(new[] { " " }, 2, StringSplitOptions.None);
+                    if(!dict.ContainsKey(kvp[0])) {
+                        dict.Add(kvp[0], kvp[1]);
+                    }
+                }
+                var hostcfg = new HostConfiguration();
+                hostcfg.SetHostOsParameters(dict);
+                hostcfg.ApplyHostOsParameters();
+                return Response.AsRedirect("/boot");
+            };
         }
     }
 }
