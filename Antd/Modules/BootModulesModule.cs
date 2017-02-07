@@ -55,7 +55,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostModprobes(modules);
                 hostcfg.ApplyHostModprobes();
-                return Response.AsRedirect("/boot");
+                return HttpStatusCode.OK;
             };
 
             Post["/boot/rmmodules"] = x => {
@@ -64,7 +64,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostRemoveModules(modules);
                 hostcfg.ApplyHostRemoveModules();
-                return Response.AsRedirect("/boot");
+                return HttpStatusCode.OK;
             };
 
             Post["/boot/modblacklist"] = x => {
@@ -73,7 +73,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostBlacklistModules(modules);
                 hostcfg.ApplyHostBlacklistModules();
-                return Response.AsRedirect("/boot");
+                return HttpStatusCode.OK;
             };
         }
     }

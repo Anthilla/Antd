@@ -53,7 +53,7 @@ namespace Antd.Modules {
                 var hostcfg = new HostConfiguration();
                 hostcfg.SetHostServices(services);
                 hostcfg.ApplyHostServices();
-                return Response.AsRedirect("/boot");
+                return HttpStatusCode.OK;
             };
         }
     }

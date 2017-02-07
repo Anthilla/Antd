@@ -88,7 +88,7 @@ namespace Antd.Modules {
                 };
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.Save(model);
-                return Response.AsRedirect("/ca");
+                return HttpStatusCode.OK;
             };
 
             Get["/ca/crl"] = x => {
@@ -113,7 +113,7 @@ namespace Antd.Modules {
                 string ou = Request.Form.OrganizationalUnitName;
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.CreateUserCertificate(name, passphrase, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/certificate/server"] = x => {
@@ -127,7 +127,7 @@ namespace Antd.Modules {
                 string ou = Request.Form.OrganizationalUnitName;
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.CreateServerCertificate(name, passphrase, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/certificate/dc"] = x => {
@@ -143,7 +143,7 @@ namespace Antd.Modules {
                 string ou = Request.Form.OrganizationalUnitName;
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.CreateDomainControllerCertificate(name, passphrase, dcGuid, dcDns, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                return HttpStatusCode.OK;
             };
 
             Post["/ca/certificate/sc"] = x => {
@@ -158,7 +158,7 @@ namespace Antd.Modules {
                 string ou = Request.Form.OrganizationalUnitName;
                 var caConfiguration = new CaConfiguration();
                 caConfiguration.CreateSmartCardCertificate(name, passphrase, upn, email, c, st, l, o, ou);
-                return Response.AsRedirect("/ca");
+                return HttpStatusCode.OK;
             };
         }
     }
