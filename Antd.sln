@@ -41,12 +41,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config.shared", "antdlib.config.shared\antdlib.config.shared.csproj", "{C7806CEC-63AF-44E5-AE61-E7110A2A1343}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{83B009BD-5589-4158-AFB5-1F0F63348DFE}"
-	ProjectSection(SolutionItems) = preProject
-		ignorethis_misc\_frequentregex.txt = ignorethis_misc\_frequentregex.txt
-		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
-		Antd\Modules\WizardModule.cs = Antd\Modules\WizardModule.cs
-		AntdUi\Modules\WizardModule.cs = AntdUi\Modules\WizardModule.cs
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

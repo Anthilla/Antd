@@ -73,7 +73,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                _timers.Create(pool.ToLower() + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
+                _timers.Create(pool + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
                 return HttpStatusCode.OK;
             };
 

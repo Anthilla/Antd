@@ -35,6 +35,7 @@ using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.config;
 using antdlib.config.shared;
+using antdlib.models;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.Overlay;
@@ -83,7 +84,10 @@ namespace Antd {
             CheckConfiguration();
             CoreProcedures();
             if(_isConfigured) {
-                Procedure();
+                Procedures();
+            }
+            else {
+                FallbackProcedures();
             }
             var app = new AppConfiguration().Get();
             var port = app.AntdPort;
@@ -107,9 +111,6 @@ namespace Antd {
             _isConfigured = host.IsConfigured;
         }
 
-        /// <summary>
-        /// Procedure mandatorie per il funzionamento corretto minimale
-        /// </summary>
         private static void CoreProcedures() {
             #region [    Remove Limits    ]
             if(Parameter.IsUnix) {
@@ -150,11 +151,7 @@ namespace Antd {
             #endregion
         }
 
-        /// <summary>
-        /// Procedure che necessitano una configurazione da parte dell'utente
-        /// Queste azioni verranno effettuate al riavvio di Antd successivo alla prima configurazione
-        /// </summary>
-        private static void Procedure() {
+        private static void Procedures() {
             var appConfiguration = new AppConfiguration().Get();
 
             if(Parameter.IsUnix) {
@@ -392,6 +389,83 @@ namespace Antd {
             #region [    AntdUI    ]
             UiService.Setup();
             ConsoleLogger.Log("antduisetup");
+            #endregion
+        }
+
+        private static void FallbackProcedures() {
+            const string localNetwork = "10.11.0.0";
+            const string localIp = "10.11.254.254";
+            const string localRange = "16";
+            const string localHostname = "www";
+            const string localDomain = "install.local";
+
+            #region [    Host Configuration    ]
+            HostConfiguration.SetHostInfoName(localHostname);
+            HostConfiguration.ApplyHostInfo();
+            ConsoleLogger.Log("host configured");
+            #endregion
+
+            #region [    Network    ]
+            var npi = NetworkConfiguration.InterfacePhysical;
+            NetworkConfiguration.AddInterfaceSetting(new NetworkInterfaceConfigurationModel {
+                Interface = "br0",
+                Mode = NetworkInterfaceMode.Static,
+                Status = NetworkInterfaceStatus.Up,
+                StaticAddress = localIp,
+                StaticRange = localRange,
+                Type = NetworkInterfaceType.Bridge,
+                InterfaceList = npi.ToList()
+            });
+            NetworkConfiguration.ApplyDefaultInterfaceSetting();
+            #endregion
+
+            #region [    Name Service    ]
+            HostConfiguration.SetNsHosts(new[] {
+                "127.0.0.1 localhost",
+                $"{localIp} {localHostname}.{localDomain} {localHostname}"
+            });
+            HostConfiguration.ApplyNsHosts();
+            HostConfiguration.SetNsNetworks(new[] {
+                "loopback 127.0.0.0",
+                "link-local 169.254.0.0",
+                $"{localDomain} {localNetwork}"
+
+            });
+            HostConfiguration.ApplyNsNetworks();
+            HostConfiguration.SetNsResolv(new[] {
+                $"nameserver {localIp}",
+                $"search {localDomain}",
+                $"domain {localDomain}"
+            });
+            HostConfiguration.ApplyNsResolv();
+            HostConfiguration.SetNsSwitch(new[] {
+                "passwd: compat db files nis",
+                "shadow: compat db files nis",
+                "group: compat db files nis",
+                "hosts: files dns",
+                "networks: files dns",
+                "services: db files",
+                "protocols: db files",
+                "rpc: db files",
+                "ethers: db files",
+                "netmasks: files",
+                "netgroup: files",
+                "bootparams: files",
+                "automount: files",
+                "aliases: files"
+            });
+            HostConfiguration.ApplyNsSwitch();
+            ConsoleLogger.Log("name service ready");
+            #endregion
+
+            #region [    Dhcpd    ]
+            DhcpdConfiguration.Save(new DhcpdConfigurationModel());
+            DhcpdConfiguration.Set();
+            #endregion
+
+            #region [    Bind    ]
+            BindConfiguration.Save(new BindConfigurationModel());
+            BindConfiguration.Set();
             #endregion
         }
 

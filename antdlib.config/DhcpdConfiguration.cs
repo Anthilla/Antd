@@ -32,7 +32,6 @@ namespace antdlib.config {
                 catch(Exception) {
                     _serviceModel = new DhcpdConfigurationModel();
                 }
-
             }
         }
 
@@ -117,6 +116,10 @@ namespace antdlib.config {
             File.WriteAllLines(MainFilePath, lines);
             #endregion
             Start();
+        }
+
+        public void DefaultSet() {
+          
         }
 
         public bool IsActive() {
