@@ -18,6 +18,15 @@ namespace antdlib.models {
         public string Path => $"{common.Parameter.AntdCfg}/host.conf";
 
         /// <summary>
+        /// Is this configuration created by a user?
+        /// If not Antd knows that its parameters are just defaults
+        /// In this way Antd can lead the user to a wizard configurator
+        /// 
+        /// So this parameter will be set to True as the last step of the first machine configuration
+        /// </summary>
+        public bool IsConfigured { get; set; } = false;
+
+        /// <summary>
         /// First configuration steps
         /// For each configurable aspect add one HostParameter to Preparation[]
         /// </summary>

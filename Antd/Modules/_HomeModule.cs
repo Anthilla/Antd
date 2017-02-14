@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using antdlib.common;
 using Nancy;
 using Newtonsoft.Json;
 
@@ -35,6 +36,11 @@ namespace Antd.Modules {
     public class HomeModule : NancyModule {
 
         public HomeModule() {
+            Before += ctx => {
+                var req = Request.Headers.UserAgent;
+                ConsoleLogger.Log(req);
+                return null;
+            };
 
             Get["/"] = x => {
                 var hostname = File.ReadAllText("/etc/hostname");

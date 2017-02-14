@@ -75,11 +75,17 @@ namespace Antd {
         private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
         #endregion
 
+        private static bool _isConfigured;
+
         private static void Main() {
             ConsoleLogger.Log("");
             ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
-            Procedure();
+            CheckConfiguration();
+            CoreProcedures();
+            if(_isConfigured) {
+                Procedure();
+            }
             var app = new AppConfiguration().Get();
             var port = app.AntdPort;
             var uri = $"http://localhost:{app.AntdPort}/";
@@ -97,9 +103,15 @@ namespace Antd {
             Console.WriteLine("host shutdown");
         }
 
-        private static void Procedure() {
-            var appConfiguration = new AppConfiguration().Get();
+        private static void CheckConfiguration() {
+            var host = HostConfiguration.Host;
+            _isConfigured = host.IsConfigured;
+        }
 
+        /// <summary>
+        /// Procedure mandatorie per il funzionamento corretto minimale
+        /// </summary>
+        private static void CoreProcedures() {
             #region [    Remove Limits    ]
             if(Parameter.IsUnix) {
                 const string limitsFile = "/etc/security/limits.conf";
@@ -131,7 +143,15 @@ namespace Antd {
                 Mount.WorkingDirectories();
             }
             ConsoleLogger.Log("working directories ready");
-            #endregion
+            #endregion   
+        }
+
+        /// <summary>
+        /// Procedure che necessitano una configurazione da parte dell'utente
+        /// Queste azioni verranno effettuate al riavvio di Antd successivo alla prima configurazione
+        /// </summary>
+        private static void Procedure() {
+            var appConfiguration = new AppConfiguration().Get();
 
             if(Parameter.IsUnix) {
                 #region [    Mounts    ]

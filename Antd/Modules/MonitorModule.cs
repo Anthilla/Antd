@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using antdlib.common;
+using antdlib.config;
 using antdlib.models;
 using Antd.Info;
 using Antd.Storage;
@@ -73,6 +74,12 @@ namespace Antd.Modules {
                     DiskUsage = du?.UsePercentage
                 };
                 return JsonConvert.SerializeObject(model);
+            };
+
+            Get["/configured"] = x => {
+                var hostConfiguration = new HostConfiguration();
+                var host = hostConfiguration.Host;
+                return JsonConvert.SerializeObject(host.IsConfigured);
             };
         }
     }

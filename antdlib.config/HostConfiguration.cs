@@ -39,6 +39,25 @@ namespace antdlib.config {
             File.WriteAllText(FilePath, JsonConvert.SerializeObject(model, Formatting.Indented));
         }
 
+        #region [    repo - Confirm Configuration    ]
+        public bool IsHostConfiguredByUser() {
+            try {
+                Host = LoadHostModel();
+                return Host.IsConfigured;
+            }
+            catch(Exception) {
+                return false;
+            }
+
+        }
+
+        public void SetHostAsConfigured() {
+            Host = LoadHostModel();
+            Host.IsConfigured = true;
+            Export(Host);
+        }
+        #endregion
+
         #region [    repo - Modules    ]
 
         public string[] GetHostModprobes() {

@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="{{ lang }}" ng-app="templataApp">
+<head>
+    <meta charset="utf-8" />
+    <title>Antd</title>
+
+    <link href="/Style/metro.css" rel="stylesheet">
+    <link href="/Style/metro-icons.css" rel="stylesheet">
+    <link href="/Style/template.css" rel="stylesheet">
+    <link href="/Style/template-colors.css" rel="stylesheet">
+    <link href="/Style/template.metro.css" rel="stylesheet">
+    <link href="/Style/trumbowyg.min.css" rel="stylesheet">
+    <link href="/Style/selectize.anthilla.css" rel="stylesheet">
+</head>
+<body class="bg-anthilla-gray-1">
+    <div class="bg-anthilla-gray-1" style="z-index: -2; position: fixed; width: 100%; height: 100%; top: 0; left:0;"></div>
+    <!--Static Content-->
+    <div class="width100pc" style="position: fixed; top: 0; z-index: 99;">
+        @Partial['Partials/navbar-wizard.html'];
+    </div>
+    <!--Page Content-->
+    <div class="padding-left10 padding-right10" style="margin-top: 147px;">
+        @Partial['Pages/wizard/wizard.html'];
+    </div>
+    <!--Scripts-->
+    <script src="/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="/Scripts/metro.min.js"></script>
+    <script src="/Scripts/selectize.sa.min.js"></script>
+    <script src="/Scripts/angular.min.js"></script>
+    <script src="/Scripts/angular-mocks.js"></script>
+    <script src="/Scripts/angular-route.min.js"></script>
+    <script src="/Scripts/angular-animate.min.js"></script>
+    <script src="/Scripts/angular-resource.min.js"></script>
+    <script src="/Scripts/angular-selectize.js"></script>
+    <script src="/Scripts/angular-ui-router.min.js"></script>
+    <script src="/Scripts/angular-aria.min.js"></script>
+    <script src="/Scripts/angular-messages.min.js"></script>
+    <script src="/Scripts/angular-translate.min.js"></script>
+    <script src="/Scripts/angular-material/angular-material.min.js"></script>
+    <script src="/Scripts/angular-translate-loader-url.min.js"></script>
+    <script src="/Scripts/template.js"></script>
+    <script src="/Scripts/trumbowyg.min.js"></script>
+    <script src="/Scripts/trumbowyg-ng.min.js"></script>
+    <script src="/Scripts/controller-wizard.js"></script>
+</html>
