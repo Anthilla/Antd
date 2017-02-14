@@ -9,6 +9,7 @@ namespace antdlib.models {
     }
 
     public class NetworkInterfaceConfigurationModel {
+        public NetworkInterfaceType Type { get; set; }
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string Interface { get; set; }
         public NetworkInterfaceMode Mode { get; set; } = NetworkInterfaceMode.Dynamic;
@@ -17,5 +18,6 @@ namespace antdlib.models {
         public string StaticRange { get; set; } = "";
         public string Txqueuelen { get; set; } = "10000";
         public string Mtu { get; set; } = "6000";
+        public List<string> InterfaceList { get; set; } = new List<string>();
     }
 }

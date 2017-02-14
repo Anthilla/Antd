@@ -77,6 +77,53 @@ namespace AntdUi.Modules {
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/del", dict);
             };
+
+            Post["/network/interface/bridge"] = x => {
+                string Interface = Request.Form.Interface;
+                string mode = Request.Form.Mode;
+                string status = Request.Form.Status;
+                string staticAddres = Request.Form.StaticAddres;
+                string staticRange = Request.Form.StaticRange;
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                string ifs = Request.Form.InterfaceList;
+                ConsoleLogger.Log("");
+                ConsoleLogger.Log(ifs);
+                ConsoleLogger.Log("");
+                var dict = new Dictionary<string, string> {
+                    { "Interface", Interface },
+                    { "Mode", mode },
+                    { "Status", status },
+                    { "StaticAddres", staticAddres },
+                    { "StaticRange", staticRange },
+                    { "Txqueuelen", txqueuelen },
+                    { "Mtu", mtu },
+                    { "InterfaceList", ifs }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bridge", dict);
+            };
+
+            Post["/network/interface/bond"] = x => {
+                string Interface = Request.Form.Interface;
+                string mode = Request.Form.Mode;
+                string status = Request.Form.Status;
+                string staticAddres = Request.Form.StaticAddres;
+                string staticRange = Request.Form.StaticRange;
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                string ifs = Request.Form.InterfaceList;
+                var dict = new Dictionary<string, string> {
+                    { "Interface", Interface },
+                    { "Mode", mode },
+                    { "Status", status },
+                    { "StaticAddres", staticAddres },
+                    { "StaticRange", staticRange },
+                    { "Txqueuelen", txqueuelen },
+                    { "Mtu", mtu },
+                    { "InterfaceList", ifs }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bond", dict);
+            };
         }
     }
 }

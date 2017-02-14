@@ -157,7 +157,6 @@
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
-    <None Include="Views\antd.network.js" />
     <None Include="Views\antd.service.ssh.js" />
     <None Include="Views\antd.storage.js" />
     <None Include="Views\antd.service.firewall.js" />
@@ -167,7 +166,6 @@
     <None Include="Views\todo\part-ssh-authkey.html" />
     <None Include="Views\todo\page-antd-ssh.html" />
     <None Include="Views\check\page-antd-host.html" />
-    <None Include="Views\check\page-antd-network.html" />
     <None Include="Views\todo\page-ca-dc.html" />
     <None Include="Views\todo\page-apps-anthillasp.html" />
     <None Include="Views\todo\page-vnc.html" />

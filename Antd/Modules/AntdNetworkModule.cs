@@ -28,7 +28,9 @@
 //-------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using antd.commands;
 using antdlib.common;
 using antdlib.config;
 using antdlib.models;
@@ -57,7 +59,8 @@ namespace Antd.Modules {
                     NetworkPhysicalIf = physicalInterfaces,
                     NetworkBridgeIf = bridgeInterfaces,
                     NetworkBondIf = bondInterfaces,
-                    NetworkVirtualIf = virtualInterfaces
+                    NetworkVirtualIf = virtualInterfaces,
+                    NetworkIfList = networkConfiguration.NetworkInterfaces
                 };
                 return JsonConvert.SerializeObject(model);
             };
@@ -83,7 +86,8 @@ namespace Antd.Modules {
                     StaticAddress = staticAddres,
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
-                    Mtu = mtu
+                    Mtu = mtu,
+                    Type = NetworkInterfaceType.Physical
                 };
                 var networkConfiguration = new NetworkConfiguration();
                 networkConfiguration.AddInterfaceSetting(model);
@@ -94,6 +98,68 @@ namespace Antd.Modules {
                 string guid = Request.Form.Guid;
                 var networkConfiguration = new NetworkConfiguration();
                 networkConfiguration.RemoveInterfaceSetting(guid);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network/interface/bridge"] = x => {
+                string Interface = Request.Form.Interface;
+                string mode = Request.Form.Mode;
+                string status = Request.Form.Status;
+                string staticAddres = Request.Form.StaticAddres;
+                string staticRange = Request.Form.StaticRange;
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                string ifs = Request.Form.InterfaceList;
+                var ifList = ifs.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var launcher = new CommandLauncher();
+                launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", Interface } });
+                foreach(var nif in ifList) {
+                    launcher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", Interface }, { "$net_if", nif } });
+                }
+                var model = new NetworkInterfaceConfigurationModel {
+                    Interface = Interface,
+                    Mode = (NetworkInterfaceMode)Enum.Parse(typeof(NetworkInterfaceMode), mode),
+                    Status = (NetworkInterfaceStatus)Enum.Parse(typeof(NetworkInterfaceStatus), status),
+                    StaticAddress = staticAddres,
+                    StaticRange = staticRange,
+                    Txqueuelen = txqueuelen,
+                    Mtu = mtu,
+                    Type = NetworkInterfaceType.Bridge,
+                    InterfaceList = ifList
+                };
+                var networkConfiguration = new NetworkConfiguration();
+                networkConfiguration.AddInterfaceSetting(model);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network/interface/bond"] = x => {
+                string Interface = Request.Form.Interface;
+                string mode = Request.Form.Mode;
+                string status = Request.Form.Status;
+                string staticAddres = Request.Form.StaticAddres;
+                string staticRange = Request.Form.StaticRange;
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                string ifs = Request.Form.InterfaceList;
+                var ifList = ifs.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var launcher = new CommandLauncher();
+                launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", Interface } });
+                foreach(var nif in ifList) {
+                    launcher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", Interface }, { "$net_if", nif } });
+                }
+                var model = new NetworkInterfaceConfigurationModel {
+                    Interface = Interface,
+                    Mode = (NetworkInterfaceMode)Enum.Parse(typeof(NetworkInterfaceMode), mode),
+                    Status = (NetworkInterfaceStatus)Enum.Parse(typeof(NetworkInterfaceStatus), status),
+                    StaticAddress = staticAddres,
+                    StaticRange = staticRange,
+                    Txqueuelen = txqueuelen,
+                    Mtu = mtu,
+                    Type = NetworkInterfaceType.Bond,
+                    InterfaceList = ifList
+                };
+                var networkConfiguration = new NetworkConfiguration();
+                networkConfiguration.AddInterfaceSetting(model);
                 return HttpStatusCode.OK;
             };
         }

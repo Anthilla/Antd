@@ -143,7 +143,12 @@ namespace Antd {
                 Mount.WorkingDirectories();
             }
             ConsoleLogger.Log("working directories ready");
-            #endregion   
+            #endregion
+
+            #region [    Host Prepare Configuration    ]
+            var tmpHost = HostConfiguration.Host;
+            HostConfiguration.Export(tmpHost);
+            #endregion
         }
 
         /// <summary>

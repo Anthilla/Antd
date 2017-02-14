@@ -577,6 +577,58 @@ function AntdNameServiceController($scope, $http) {
 app.controller("AntdNetworkController", ["$scope", "$http", AntdNetworkController]);
 
 function AntdNetworkController($scope, $http) {
+
+    $scope.SelectInterfaceConfig = {
+        valueField: "text",
+        labelField: "text",
+        searchField: ["text"],
+        persist: false,
+        create: function (input) {
+            return {
+                value: input,
+                text: input
+            }
+        },
+        //onChange: function (value) {
+        //    $scope.RecipientsData = "";
+        //    angular.forEach(value, function (v) {
+        //        $scope.RecipientsData += v + ",";
+        //    });
+        //},
+        delimiter: ",",
+        maxItems: 5
+    };
+
+    $scope.saveBond = function (el) {
+        var data = $.param({
+            Interface: el.Interface,
+            Mode: el.Mode,
+            Status: el.Status,
+            StaticAddres: el.StaticAddres,
+            StaticRange: el.StaticRange,
+            Txqueuelen: el.Txqueuelen,
+            Mtu: el.Mtu,
+            InterfaceList: el.InterfaceList
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/network/interface/bond", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveBridge = function (el) {
+        var data = $.param({
+            Interface: el.Interface,
+            Mode: el.Mode,
+            Status: el.Status,
+            StaticAddres: el.StaticAddres,
+            StaticRange: el.StaticRange,
+            Txqueuelen: el.Txqueuelen,
+            Mtu: el.Mtu,
+            InterfaceList: el.InterfaceList
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/network/interface/bridge", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+    }
+
     $scope.deleteInterface = function (guid) {
         var data = $.param({
             Guid: guid
@@ -605,6 +657,7 @@ function AntdNetworkController($scope, $http) {
     }
 
     $http.get("/network").success(function (data) {
+        $scope.NetworkIfList = data.NetworkIfList;
         $scope.NetworkPhysicalIf = data.NetworkPhysicalIf;
         $scope.NetworkBridgeIf = data.NetworkBridgeIf;
         $scope.NetworkBondIf = data.NetworkBondIf;

@@ -17,6 +17,7 @@ namespace antdlib.config {
 
         public NetworkConfiguration() {
             _networkInterfaces = GetAllNames();
+            NetworkInterfaces = GetAllNames();
             InterfacePhysical = GetPhysicalInterfaces();
             InterfaceVirtual = GetVirtualInterfaces();
             InterfaceBond = GetBondInterfaces();
@@ -42,6 +43,7 @@ namespace antdlib.config {
         }
 
         private readonly IEnumerable<string> _networkInterfaces;
+        public IEnumerable<string> NetworkInterfaces;
         public IEnumerable<string> InterfacePhysical;
         public IEnumerable<string> InterfaceVirtual;
         public IEnumerable<string> InterfaceBond;
