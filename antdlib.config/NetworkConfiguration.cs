@@ -386,8 +386,29 @@ namespace antdlib.config {
         public void ApplyInterfaceSetting(NetworkInterfaceConfigurationModel model) {
             var launcher = new CommandLauncher();
             var netif = model.Interface;
-            var mode = model.Mode;
-            switch(mode) {
+
+            switch(model.Type) {
+                case NetworkInterfaceType.Physical:
+                    break;
+                case NetworkInterfaceType.Virtual:
+                    break;
+                case NetworkInterfaceType.Bond:
+                    launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", netif } });
+                    foreach(var nif in model.InterfaceList) {
+                        launcher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", netif }, { "$net_if", nif } });
+                    }
+                    break;
+                case NetworkInterfaceType.Bridge:
+                    launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", netif } });
+                    foreach(var nif in model.InterfaceList) {
+                        launcher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", netif }, { "$net_if", nif } });
+                    }
+                    break;
+                case NetworkInterfaceType.Other:
+                    break;
+            }
+
+            switch(model.Mode) {
                 case NetworkInterfaceMode.Null:
                     return;
                 case NetworkInterfaceMode.Static:

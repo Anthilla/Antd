@@ -43,22 +43,19 @@ namespace Antd.Modules {
             Get["/nameservice"] = x => {
                 var launcher = new CommandLauncher();
                 var hostConfiguration = new HostConfiguration();
-                var model = new PageNameServiceModel();
                 var hosts = launcher.Launch("cat-etc-hosts").ToArray();
                 var networks = launcher.Launch("cat-etc-networks").ToArray();
                 var resolv = launcher.Launch("cat-etc-resolv").ToArray();
                 var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
-                model.Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />");
-                model.DomainInt = hostConfiguration.Host.InternalDomain;
-                model.DomainExt = hostConfiguration.Host.ExternalDomain;
-                model.Hosts = hosts.JoinToString("<br />");
-                model.HostsEdit = hosts.JoinToString(Environment.NewLine);
-                model.Networks = networks.JoinToString("<br />");
-                model.NetworksEdit = networks.JoinToString(Environment.NewLine);
-                model.Resolv = resolv.JoinToString("<br />");
-                model.ResolvEdit = resolv.JoinToString(Environment.NewLine);
-                model.Nsswitch = nsswitch.JoinToString("<br />");
-                model.NsswitchEdit = nsswitch.JoinToString(Environment.NewLine);
+                var model = new PageNameServiceModel {
+                    Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />"),
+                    DomainInt = hostConfiguration.Host.InternalDomain,
+                    DomainExt = hostConfiguration.Host.ExternalDomain,
+                    Hosts = hosts.JoinToString("<br />"),
+                    Networks = networks.JoinToString("<br />"),
+                    Resolv = resolv.JoinToString("<br />"),
+                    Nsswitch = nsswitch.JoinToString("<br />")
+                };
                 return JsonConvert.SerializeObject(model);
             };
 

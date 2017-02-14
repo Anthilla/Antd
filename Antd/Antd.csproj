@@ -26,16 +26,18 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\..\framework\antd\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DocumentationFile>
     </DocumentationFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Antd.Application</StartupObject>
@@ -127,6 +129,7 @@
     <Compile Include="Modules\AntdServicesModule.cs" />
     <Compile Include="Modules\AntdModulesStatusModule.cs" />
     <Compile Include="Modules\AntdMemoryStatusModule.cs" />
+    <Compile Include="Modules\WizardModule.cs" />
     <Compile Include="Modules\_HomeModule.cs" />
     <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Ui\UiService.cs" />
@@ -165,7 +168,6 @@
     <None Include="Views\todo\page-ca-dcusers.html" />
     <None Include="Views\todo\part-ssh-authkey.html" />
     <None Include="Views\todo\page-antd-ssh.html" />
-    <None Include="Views\check\page-antd-host.html" />
     <None Include="Views\todo\page-ca-dc.html" />
     <None Include="Views\todo\page-apps-anthillasp.html" />
     <None Include="Views\todo\page-vnc.html" />
@@ -226,8 +228,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>del *.pdb
+del *.xml</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

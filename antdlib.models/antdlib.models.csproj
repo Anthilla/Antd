@@ -71,6 +71,7 @@
     <Compile Include="ViewModels\PageAssetSyncModel.cs" />
     <Compile Include="ViewModels\PageAssetScanModel.cs" />
     <Compile Include="ViewModels\PageJournaldModel.cs" />
+    <Compile Include="ViewModels\PageWizardModel.cs" />
     <Compile Include="VirtualMachineInfo.cs" />
     <Compile Include="CpuinfoModel.cs" />
     <Compile Include="DhcpdConfigurationModel.cs" />

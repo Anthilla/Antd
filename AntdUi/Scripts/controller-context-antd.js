@@ -1139,6 +1139,7 @@ function AntdTimeController($scope, $http) {
 
     $http.get("/time").success(function (data) {
         $scope.Time = data;
+        $scope.Timezones = data;
     });
 }
 

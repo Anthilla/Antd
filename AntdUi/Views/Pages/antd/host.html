@@ -35,9 +35,18 @@
                 <p>{{ Host.Chassis }}</p>
             </div>
             <div class="cell colspan2">
-                <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                    <input type="text" ng-model="Chassis" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
-                    <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                <div class="input-control select width100pc">
+                    <select name="singleSelect" ng-model="Chassis" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-focus-anthilla-green fg-white">
+                        <option value="desktop">Desktop</option>
+                        <option value="laptop">Laptop</option>
+                        <option value="server">Server</option>
+                        <option value="tablet">Tablet</option>
+                        <option value="handset">Handset</option>
+                        <option value="watch">Watch</option>
+                        <option value="embedded">Embedded</option>
+                        <option value="vm">Vm</option>
+                        <option value="container">Container</option>
+                    </select>
                 </div>
                 <button ng-click="SaveHostChassis(Chassis)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Update</button>
             </div>
