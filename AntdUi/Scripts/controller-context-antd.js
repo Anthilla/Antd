@@ -583,12 +583,7 @@ function AntdNetworkController($scope, $http) {
         labelField: "text",
         searchField: ["text"],
         persist: false,
-        create: function (input) {
-            return {
-                value: input,
-                text: input
-            }
-        },
+        create: false,
         //onChange: function (value) {
         //    $scope.RecipientsData = "";
         //    angular.forEach(value, function (v) {

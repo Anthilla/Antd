@@ -45,16 +45,14 @@ namespace Antd.Modules {
                 var launcher = new CommandLauncher();
                 var hostnamectl = launcher.Launch("hostnamectl").ToList();
                 var model = new PageHostModel {
-                    StaticHostname =
-                        hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, ssoree)[1],
+                    StaticHostname = hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, ssoree)[1],
                     IconName = hostnamectl.First(_ => _.Contains("Icon name:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Chassis = hostnamectl.First(_ => _.Contains("Chassis:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Deployment = hostnamectl.First(_ => _.Contains("Deployment:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Location = hostnamectl.First(_ => _.Contains("Location:")).Split(new[] { ":" }, 2, ssoree)[1],
                     MachineId = hostnamectl.First(_ => _.Contains("Machine ID:")).Split(new[] { ":" }, 2, ssoree)[1],
                     BootId = hostnamectl.First(_ => _.Contains("Boot ID:")).Split(new[] { ":" }, 2, ssoree)[1],
-                    Virtualization =
-                        hostnamectl.First(_ => _.Contains("Virtualization:")).Split(new[] { ":" }, 2, ssoree)[1],
+                    Virtualization = hostnamectl.First(_ => _.Contains("Virtualization:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Os = hostnamectl.First(_ => _.Contains("Operating System:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Kernel = hostnamectl.First(_ => _.Contains("Kernel:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Architecture = hostnamectl.First(_ => _.Contains("Architecture:")).Split(new[] { ":" }, 2, ssoree)[1]

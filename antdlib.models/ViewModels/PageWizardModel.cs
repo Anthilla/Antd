@@ -10,5 +10,9 @@ namespace antdlib.models {
         public string Networks { get; set; }
         public string Resolv { get; set; }
         public string Nsswitch { get; set; }
+        public string StaticHostname { get; set; }
+        public string Chassis { get; set; }
+        public string Deployment { get; set; }
+        public string Location { get; set; }
     }
 }

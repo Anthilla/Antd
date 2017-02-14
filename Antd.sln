@@ -44,7 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{83B0
 	ProjectSection(SolutionItems) = preProject
 		ignorethis_misc\_frequentregex.txt = ignorethis_misc\_frequentregex.txt
 		AntdUi\Scripts\controller-context-antd.js = AntdUi\Scripts\controller-context-antd.js
-		AntdUi\Views\Pages\antd\network.html = AntdUi\Views\Pages\antd\network.html
+		Antd\Modules\WizardModule.cs = Antd\Modules\WizardModule.cs
+		AntdUi\Modules\WizardModule.cs = AntdUi\Modules\WizardModule.cs
 	EndProjectSection
 EndProject
 Global

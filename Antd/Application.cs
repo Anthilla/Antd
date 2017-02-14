@@ -78,7 +78,6 @@ namespace Antd {
         private static bool _isConfigured;
 
         private static void Main() {
-            ConsoleLogger.Log("");
             ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
             CheckConfiguration();

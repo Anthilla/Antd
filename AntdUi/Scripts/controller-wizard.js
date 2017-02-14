@@ -24,7 +24,6 @@ app.controller("CurrentDateTimeController", ["$scope", function ($scope) { $scop
 app.controller("AuthenticationController", ["$rootScope", "$scope", "$http", "$window", AuthenticationController]);
 
 function AuthenticationController($rootScope, $scope, $http, $window) {
-
     $scope.UserName = "user";
 
     $http.get("/auth/user").success(function (data) {
@@ -36,13 +35,55 @@ function AuthenticationController($rootScope, $scope, $http, $window) {
     });
 }
 
-app.controller("WizardController", ["$rootScope", "$scope", "$http", WizardController]);
+app.controller("WizardController", ["$rootScope", "$scope", "$http", "$window", "$interval", WizardController]);
 
-function WizardController($rootScope, $scope, $http) {
+function WizardController($rootScope, $scope, $http, $window, $interval) {
+
+    $scope.hideSaveButton = true;
+    $scope.hideFakeSaveButton = false;
+    $interval(function () {
+        var confirmed = [];
+        $("[ng-required]").each(function () {
+            if ($(this).is("input")) {
+                var tv1 = $(this).val();
+                if (tv1 !== null && tv1 !== undefined && tv1.length > 0) {
+                    confirmed.push(0);
+                }
+            }
+            if ($(this).is("select")) {
+                var tv2 = $(this).find("option:selected").val();
+                if (tv2 !== null && tv2 !== undefined && tv2.length > 0) {
+                    confirmed.push(0);
+                }
+            }
+            if ($(this).is("textarea")) {
+                var tv3 = $(this).val();
+                if (tv3 !== null && tv3 !== undefined && tv3.length > 0) {
+                    confirmed.push(0);
+                }
+            }
+        });
+        var elements = $("[ng-required]").length;
+        $scope.test = confirmed.length + "/" + elements;
+        if (confirmed.length === elements) {
+            $scope.hideSaveButton = false;
+            $scope.hideFakeSaveButton = true;
+        } else {
+            $scope.hideSaveButton = true;
+            $scope.hideFakeSaveButton = false;
+        }
+        var perc = (confirmed.length * 100) / elements;
+        $("#ProgressBar").find("div").css({ "width": perc + "%" });
+    }, 500);
+
+    $scope.SelectInterfaceConfig = {
+        persist: false,
+        create: false,
+        delimiter: ",",
+        maxItems: 1
+    };
 
     $scope.checkPassword = function () {
-        console.log($scope.Password);
-        console.log($scope.PasswordCheck);
         var el = $('[ng-role="passwordCheck"]');
         if ($scope.Password !== $scope.PasswordCheck) {
             el.addClass("fg-anthilla-orange");
@@ -75,7 +116,9 @@ function WizardController($rootScope, $scope, $http) {
 
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/wizard", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/wizard", data).then(function () {
+            $window.location.href = "/logout";
+        }, function (r) { console.log(r); });
     }
 
     $scope.NtpServer = "0.it.pool.ntp.org";
@@ -90,6 +133,10 @@ function WizardController($rootScope, $scope, $http) {
         $scope.Resolv = data.Resolv;
         $scope.Nsswitch = data.Nsswitch;
         $scope.Timezones = data.Timezones;
-        $scope.NetworkInterfaceList = data.NetworkInterfaceList;
+        $scope.NetworkIfList = data.NetworkInterfaceList;
+        $scope.Hostname = data.StaticHostname;
+        $scope.Location = data.Location;
+        $scope.Chassis = data.Chassis;
+        $scope.Deployment = data.Deployment;
     });
 }

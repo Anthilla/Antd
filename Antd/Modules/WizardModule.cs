@@ -51,27 +51,39 @@ namespace Antd.Modules {
                 var networks = launcher.Launch("cat-etc-networks").ToArray();
                 var resolv = launcher.Launch("cat-etc-resolv").ToArray();
                 var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
+                var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
                 var model = new PageWizardModel {
                     Timezones = timezones,
                     NetworkInterfaceList = networkConfiguration.InterfacePhysical,
                     DomainInt = hostConfiguration.Host.InternalDomain,
                     DomainExt = hostConfiguration.Host.ExternalDomain,
-                    Hosts = hosts.JoinToString("<br />"),
-                    Networks = networks.JoinToString("<br />"),
-                    Resolv = resolv.JoinToString("<br />"),
-                    Nsswitch = nsswitch.JoinToString("<br />")
+                    Hosts = hosts.JoinToString(Environment.NewLine),
+                    Networks = networks.JoinToString(Environment.NewLine),
+                    Resolv = resolv.JoinToString(Environment.NewLine),
+                    Nsswitch = nsswitch.JoinToString(Environment.NewLine),
+                    StaticHostname = hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, ssoree)[1],
+                    Chassis = hostnamectl.First(_ => _.Contains("Chassis:")).Split(new[] { ":" }, 2, ssoree)[1],
+                    Deployment = hostnamectl.First(_ => _.Contains("Deployment:")).Split(new[] { ":" }, 2, ssoree)[1],
+                    Location = hostnamectl.First(_ => _.Contains("Location:")).Split(new[] { ":" }, 2, ssoree)[1],
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/wizard"] = x => {
+                ConsoleLogger.Log("[wizard] start basic configuration");
                 string password = Request.Form.Password;
                 var masterManager = new ManageMaster();
                 masterManager.ChangePassword(password);
+                ConsoleLogger.Log("[wizard] changed master password");
                 string hostname = Request.Form.Hostname;
                 string location = Request.Form.Location;
                 string chassis = Request.Form.Chassis;
                 string deployment = Request.Form.Deployment;
+                ConsoleLogger.Log($"[wizard] host info:\t{hostname}");
+                ConsoleLogger.Log($"[wizard] host info:\t{location}");
+                ConsoleLogger.Log($"[wizard] host info:\t{chassis}");
+                ConsoleLogger.Log($"[wizard] host info:\t{deployment}");
                 var hostConfiguration = new HostConfiguration();
                 hostConfiguration.SetHostInfoName(hostname);
                 hostConfiguration.SetHostInfoChassis(chassis);
@@ -108,6 +120,7 @@ namespace Antd.Modules {
                 hostConfiguration.ApplyNsSwitch();
                 hostConfiguration.SetInternalDomain(domainInt);
                 hostConfiguration.SetExtenalDomain(domainExt);
+                ConsoleLogger.Log("[wizard] name services configured");
                 string Interface = Request.Form.Interface;
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
@@ -127,7 +140,9 @@ namespace Antd.Modules {
                 };
                 networkConfiguration.AddInterfaceSetting(model);
                 networkConfiguration.ApplyInterfaceSetting(model);
+                ConsoleLogger.Log($"[wizard] network configured at {Interface}");
                 hostConfiguration.SetHostAsConfigured();
+                //todo schedule restart?
                 return HttpStatusCode.OK;
             };
         }

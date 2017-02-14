@@ -42,7 +42,7 @@
             <div class="cell colspan2">
                 <div class="input-control select width100pc">
                     <select name="singleSelect" ng-model="Chassis" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-focus-anthilla-green fg-white">
-                        <option ng-repeat="tz in Timezones" value="tz" class="capitalize">{{tz}}</option>
+                        <option ng-repeat="tz in Timezones" value="{{tz}}" class="capitalize">{{tz}}</option>
                     </select>
                 </div>
                 <button ng-click="SaveTimeTimezone(Timezone)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Update</button>

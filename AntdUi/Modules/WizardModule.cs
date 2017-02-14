@@ -66,7 +66,7 @@ namespace AntdUi.Modules {
                 string staticAddress = Request.Form.StaticAddress;
                 string staticRange = Request.Form.StaticRange;
                 var dict = new Dictionary<string, string> {
-                    {"Password", password},
+                    { "Password", password},
                     { "Hostname", hostname },
                     { "Location", location },
                     { "Chassis", chassis },
@@ -88,7 +88,6 @@ namespace AntdUi.Modules {
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/wizard", dict);
             };
-
         }
     }
 }

@@ -19,7 +19,6 @@ namespace antdlib.config {
                 if(File.Exists(backupConfigFile)) {
                     var lines = File.ReadAllLines(backupConfigFile).ToArray();
                     var importControls = new List<Control>();
-
                     for(var i = 0; i < lines.Length; i++) {
                         Bash.Execute(lines[i], false);
                         importControls.Add(new Control {
@@ -35,10 +34,10 @@ namespace antdlib.config {
                         Path = $"{Parameter.RepoConfig}/setup.conf",
                         Controls = importControls
                     };
-                    if(!File.Exists(importFlow.Path)) {
-                        File.WriteAllText(importFlow.Path, JsonConvert.SerializeObject(importFlow, Formatting.Indented));
-                        ConsoleLogger.Log("a setup configuration file template has been created");
-                    }
+                    if(File.Exists(importFlow.Path))
+                        return;
+                    File.WriteAllText(importFlow.Path, JsonConvert.SerializeObject(importFlow, Formatting.Indented));
+                    ConsoleLogger.Log("a setup configuration file template has been created");
                     return;
                 }
                 ConsoleLogger.Log("setup configuration file does not exist");
