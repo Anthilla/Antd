@@ -10,7 +10,7 @@ namespace antdlib.models {
         public string MaxCacheSize { get; set; } = "128M";
         public string MaxCacheTtl { get; set; } = "108000";
         public string MaxNcacheTtl { get; set; } = "3";
-        public List<string> Forwarders { get; set; } = new List<string> { "8.8.8.8", "4.4.4.4" };
+        public List<string> Forwarders { get; set; } = new List<string> { "8.8.8.8", "8.8.4.4" };
         public List<string> AllowNotify { get; set; } = new List<string> { "iif", "inet" };
         public List<string> AllowTransfer { get; set; } = new List<string> { "iif", "inet" };
         public string Recursion { get; set; } = "yes";
@@ -30,7 +30,7 @@ namespace antdlib.models {
         public string KeyName { get; set; } = "";
         public string KeySecret { get; set; } = "";
         public string ControlAcl { get; set; } = "inet";
-        public string ControlIp { get; set; } = "10.1.19.1";
+        public string ControlIp { get; set; } = "10.11.19.1";
         public string ControlPort { get; set; } = "953";
         public List<string> ControlAllow { get; set; } = new List<string> { "loif", "iif", "oif" };
         public string LoggingChannel { get; set; } = "syslog";
@@ -41,10 +41,10 @@ namespace antdlib.models {
         public string LoggingPrintTime { get; set; } = "yes";
         public string TrustedKeys { get; set; } = "";
         public List<string> AclLocalInterfaces { get; set; } = new List<string> { "127.0.0.1" };
-        public List<string> AclInternalInterfaces { get; set; } = new List<string> { "10.1.19.1", "10.99.19.1" };
+        public List<string> AclInternalInterfaces { get; set; } = new List<string> { "10.11.19.1", "10.99.19.1" };
         public List<string> AclExternalInterfaces { get; set; } = new List<string> { "192.168.111.2", "192.168.222.2" };
         public List<string> AclLocalNetworks { get; set; } = new List<string> { "127.0.0.0/8" };
-        public List<string> AclInternalNetworks { get; set; } = new List<string> { "10.1.0.0/16", "10.99.0.0/16" };
+        public List<string> AclInternalNetworks { get; set; } = new List<string> { "10.11.0.0/16", "10.99.0.0/16" };
         public List<string> AclExternalNetworks { get; set; } = new List<string> { "192.168.111.2/32", "192.168.222.2/32" };
 
         [JsonIgnore]

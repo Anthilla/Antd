@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ApiConsumer.cs" />
     <Compile Include="Dfp.cs" />
+    <Compile Include="Enum\LicenseStatus.cs" />
     <Compile Include="Enum\Gender.cs" />
     <Compile Include="Enum\NetworkInterfaceMode.cs" />
     <Compile Include="Enum\NetworkInterfaceStatus.cs" />

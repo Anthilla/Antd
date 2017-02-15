@@ -53,6 +53,7 @@
     <Compile Include="AvahiServiceViewModel.cs" />
     <Compile Include="AppInfo.cs" />
     <Compile Include="AppsConfigurationModel.cs" />
+    <Compile Include="CheckStatusModel.cs" />
     <Compile Include="TimerConfigurationModel.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="NmapScanStatus.cs" />

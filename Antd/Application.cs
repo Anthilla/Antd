@@ -38,6 +38,7 @@ using antdlib.config.shared;
 using antdlib.models;
 using Antd.Apps;
 using Antd.Asset;
+using Antd.License;
 using Antd.Overlay;
 using Antd.Storage;
 using Antd.SystemdTimer;
@@ -112,8 +113,8 @@ namespace Antd {
         }
 
         private static void CoreProcedures() {
-            #region [    Remove Limits    ]
             if(Parameter.IsUnix) {
+                #region [    Remove Limits    ]
                 const string limitsFile = "/etc/security/limits.conf";
                 if(File.Exists(limitsFile)) {
                     if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
@@ -121,92 +122,94 @@ namespace Antd {
                     }
                 }
                 Bash.Execute("ulimit -n 1024000", false);
+                #endregion
+
+                #region [    Overlay Watcher    ]
+                new OverlayWatcher().StartWatching();
+                ConsoleLogger.Log("overlay watcher ready");
+                #endregion
+
+                #region [    Check OS    ]
+                Bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
+                ConsoleLogger.Log("os checked");
+                #endregion
+
+                #region [    Working Directories    ]
+                Directory.CreateDirectory("/cfg/antd");
+                Directory.CreateDirectory("/cfg/antd/database");
+                Directory.CreateDirectory("/cfg/antd/services");
+                Directory.CreateDirectory("/mnt/cdrom/DIRS");
+                if(Parameter.IsUnix) {
+                    Mount.WorkingDirectories();
+                }
+                ConsoleLogger.Log("working directories ready");
+                #endregion
+
+                #region [    Host Prepare Configuration    ]
+                var tmpHost = HostConfiguration.Host;
+                HostConfiguration.Export(tmpHost);
+                #endregion
             }
-            #endregion
 
-            #region [    Overlay Watcher    ]
-            new OverlayWatcher().StartWatching();
-            ConsoleLogger.Log("overlay watcher ready");
-            #endregion
-
-            #region [    Check OS    ]
-            Bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
-            ConsoleLogger.Log("os checked");
-            #endregion
-
-            #region [    Working Directories    ]
-            Directory.CreateDirectory("/cfg/antd");
-            Directory.CreateDirectory("/cfg/antd/database");
-            Directory.CreateDirectory("/cfg/antd/services");
-            Directory.CreateDirectory("/mnt/cdrom/DIRS");
-            if(Parameter.IsUnix) {
-                Mount.WorkingDirectories();
-            }
-            ConsoleLogger.Log("working directories ready");
-            #endregion
-
-            #region [    Host Prepare Configuration    ]
-            var tmpHost = HostConfiguration.Host;
-            HostConfiguration.Export(tmpHost);
+            #region [    License Management    ]
+            var machineId = Machine.MachineId.Get;
+            var licenseManagement = new LicenseManagement();
+            licenseManagement.Download("Antd", machineId);
+            ConsoleLogger.Log($"[machineid] {machineId}");
             #endregion
         }
 
         private static void Procedures() {
-            var appConfiguration = new AppConfiguration().Get();
+            if(!Parameter.IsUnix)
+                return;
 
-            if(Parameter.IsUnix) {
-                #region [    Mounts    ]
-                if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                    Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
-                }
-                var kernelRelease = Bash.Execute("uname -r").Trim();
-                var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
-                if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
-                    linkedRelease.Contains(kernelRelease)) {
-                    var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                    Directory.CreateDirectory(moduleDir);
-                    Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
-                }
-                Bash.Execute("systemctl restart systemd-modules-load.service", false);
-                Mount.AllDirectories();
-                ConsoleLogger.Log("mounts ready");
-                #endregion
-
-                #region [    JournalD    ]
-                if(JournaldConfiguration.IsActive()) {
-                    JournaldConfiguration.Set();
-                }
-                #endregion
-
-                #region [    MachineID    ]
-                ConsoleLogger.Log($"[machineid] {Machine.MachineId.Get}");
-                #endregion
-
-                #region [    Host Configuration    ]
-                HostConfiguration.ApplyHostInfo();
-                ConsoleLogger.Log("host configured");
-                #endregion
-
-                #region [    Name Service    ]
-                HostConfiguration.ApplyNsHosts();
-                HostConfiguration.ApplyNsNetworks();
-                HostConfiguration.ApplyNsResolv();
-                HostConfiguration.ApplyNsSwitch();
-                ConsoleLogger.Log("name service ready");
-                #endregion
-
-                #region [    OS Parameters    ]
-                HostConfiguration.ApplyHostOsParameters();
-                ConsoleLogger.Log("os parameters ready");
-                #endregion
-
-                #region [    Modules    ]
-                HostConfiguration.ApplyHostBlacklistModules();
-                HostConfiguration.ApplyHostModprobes();
-                HostConfiguration.ApplyHostRemoveModules();
-                ConsoleLogger.Log("modules ready");
-                #endregion
+            #region [    Mounts    ]
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
             }
+            var kernelRelease = Bash.Execute("uname -r").Trim();
+            var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
+                linkedRelease.Contains(kernelRelease)) {
+                var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                Directory.CreateDirectory(moduleDir);
+                Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
+            }
+            Bash.Execute("systemctl restart systemd-modules-load.service", false);
+            Mount.AllDirectories();
+            ConsoleLogger.Log("mounts ready");
+            #endregion
+
+            #region [    JournalD    ]
+            if(JournaldConfiguration.IsActive()) {
+                JournaldConfiguration.Set();
+            }
+            #endregion
+
+            #region [    Host Configuration    ]
+            HostConfiguration.ApplyHostInfo();
+            ConsoleLogger.Log("host configured");
+            #endregion
+
+            #region [    Name Service    ]
+            HostConfiguration.ApplyNsHosts();
+            HostConfiguration.ApplyNsNetworks();
+            HostConfiguration.ApplyNsResolv();
+            HostConfiguration.ApplyNsSwitch();
+            ConsoleLogger.Log("name service ready");
+            #endregion
+
+            #region [    OS Parameters    ]
+            HostConfiguration.ApplyHostOsParameters();
+            ConsoleLogger.Log("os parameters ready");
+            #endregion
+
+            #region [    Modules    ]
+            HostConfiguration.ApplyHostBlacklistModules();
+            HostConfiguration.ApplyHostModprobes();
+            HostConfiguration.ApplyHostRemoveModules();
+            ConsoleLogger.Log("modules ready");
+            #endregion
 
             #region [    Users    ]
             var manageMaster = new ManageMaster();
@@ -217,9 +220,6 @@ namespace Antd {
             }
             ConsoleLogger.Log("users config ready");
             #endregion
-
-            if(!Parameter.IsUnix)
-                return;
 
             #region [    Time & Date    ]
             HostConfiguration.ApplyNtpdate();
@@ -311,6 +311,7 @@ namespace Antd {
             if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
             }
+            var appConfiguration = new AppConfiguration().Get();
             File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
             Bash.Execute("chmod 755 /etc/avahi/services", false);
             Bash.Execute($"chmod 644 {avahiServicePath}", false);
@@ -393,6 +394,9 @@ namespace Antd {
         }
 
         private static void FallbackProcedures() {
+            if(!Parameter.IsUnix)
+                return;
+
             const string localNetwork = "10.11.0.0";
             const string localIp = "10.11.254.254";
             const string localRange = "16";
@@ -459,12 +463,42 @@ namespace Antd {
             #endregion
 
             #region [    Dhcpd    ]
-            DhcpdConfiguration.Save(new DhcpdConfigurationModel());
+            DhcpdConfiguration.Save(new DhcpdConfigurationModel {
+                ZoneName = localDomain,
+                ZonePrimaryAddress = localIp,
+                DdnsDomainName = $"{localDomain}.",
+                Option = new List<string> { $"domain-name \"{localDomain}\"", "routers eth0", "local-proxy-config code 252 = text" },
+                KeySecret = "ND991KFHCCA9tUrafsf29uxDM3ZKfnrVR4f1I2J27Ow=",
+                SubnetNtpServers = localIp,
+                SubnetTimeServers = localIp,
+                SubnetOptionRouters = localIp,
+                SubnetDomainNameServers = localIp,
+                SubnetIpMask = "255.255.0.0",
+                SubnetMask = "255.255.0.0",
+                SubnetBroadcastAddress = "10.11.255.255",
+                SubnetIpFamily = localNetwork
+            });
             DhcpdConfiguration.Set();
             #endregion
 
             #region [    Bind    ]
-            BindConfiguration.Save(new BindConfigurationModel());
+            BindConfiguration.Save(new BindConfigurationModel {
+                ControlIp = localIp,
+                AclInternalInterfaces = new List<string> { localIp },
+                AclInternalNetworks = new List<string> { $"{localNetwork}/{localRange}" },
+                Zones = new List<BindConfigurationZoneModel> {
+                    new BindConfigurationZoneModel {
+                        Name = "11.10.in-addr.arpa",
+                        Type = "master",
+                        File = "" //todo crea e gestisci file della zona
+                    },
+                    new BindConfigurationZoneModel {
+                        Name = localDomain,
+                        Type = "master",
+                        File = "" //todo crea e gestisci file della zona
+                    },
+                }
+            });
             BindConfiguration.Set();
             #endregion
         }

@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="License\LicenseManagement.cs" />
     <Compile Include="Modules\BootOsParametersModule.cs" />
     <Compile Include="Modules\BootServicesModule.cs" />
     <Compile Include="Modules\BootModulesModule.cs" />
