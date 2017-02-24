@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using antd.commands;
 using antdlib.common;
+using anthilla.commands;
 
 namespace antdlib.config {
     public class LanConfiguration {
