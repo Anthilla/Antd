@@ -36,6 +36,7 @@ using antdlib.common.Helpers;
 using antdlib.config;
 using antdlib.config.shared;
 using antdlib.models;
+using anthilla.crypto;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.License;
@@ -78,6 +79,8 @@ namespace Antd {
         #endregion
 
         private static bool _isConfigured;
+
+        public static string KeyName = "antd";
 
         private static void Main() {
             ConsoleLogger.Log("starting antd");
@@ -151,11 +154,18 @@ namespace Antd {
                 #endregion
             }
 
+            #region [    Application Keys    ]
+            var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
+            var pub = ak.PublicKey;
+            #endregion
+
             #region [    License Management    ]
             var machineId = Machine.MachineId.Get;
             var licenseManagement = new LicenseManagement();
-            licenseManagement.Download("Antd", machineId);
+            licenseManagement.Download("Antd", machineId, pub);
             ConsoleLogger.Log($"[machineid] {machineId}");
+            var licenseStatus = licenseManagement.Check("Antd", machineId, pub);
+            ConsoleLogger.Log($"[license] {licenseStatus.Status} - {licenseStatus.Message}");
             #endregion
         }
 

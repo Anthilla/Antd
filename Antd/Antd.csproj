@@ -210,6 +210,10 @@
       <Project>{3E77920A-6201-48D8-A9CE-8D01A477E0F9}</Project>
       <Name>anthilla.commands</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\_shared\anthilla.crypto\anthilla.crypto.csproj">
+      <Project>{87063138-EEB6-46EC-AA88-21E2A4BAC550}</Project>
+      <Name>anthilla.crypto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
