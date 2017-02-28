@@ -83,6 +83,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cloud\UpdateCloudInfo.cs" />
+    <Compile Include="Cloud\WhatIsMyIp.cs" />
     <Compile Include="License\LicenseManagement.cs" />
     <Compile Include="Modules\BootOsParametersModule.cs" />
     <Compile Include="Modules\BootServicesModule.cs" />

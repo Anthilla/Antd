@@ -35,18 +35,21 @@ namespace antdlib.common {
             #endregion
         }
 
-        public void Get(string uri) {
+        public string Get(string uri) {
             try {
                 var client = new RestClient(uri);
                 var request = new RestRequest("/", Method.GET);
                 request.AddHeader(InstanceHeader, _instance);
-                client.Execute(request);
+                var response = client.Execute(request);
+                var result = response.Content;
+                return result;
             }
             #region Exception
 
             catch(Exception ex) {
                 Console.WriteLine($"Error requesting {uri}");
                 Console.WriteLine(ex);
+                return null;
             }
 
             #endregion

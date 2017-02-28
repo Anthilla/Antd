@@ -39,6 +39,7 @@ using antdlib.models;
 using anthilla.crypto;
 using Antd.Apps;
 using Antd.Asset;
+using Antd.Cloud;
 using Antd.License;
 using Antd.Overlay;
 using Antd.Storage;
@@ -103,7 +104,7 @@ namespace Antd {
             ConsoleLogger.Log($"http port: {port}");
             ConsoleLogger.Log("antd is running");
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-
+            WorkingProcedures();
             KeepAlive();
             ConsoleLogger.Log("antd is closing");
             host.Stop();
@@ -165,7 +166,12 @@ namespace Antd {
             licenseManagement.Download("Antd", machineId, pub);
             ConsoleLogger.Log($"[machineid] {machineId}");
             var licenseStatus = licenseManagement.Check("Antd", machineId, pub);
-            ConsoleLogger.Log($"[license] {licenseStatus.Status} - {licenseStatus.Message}");
+            if(licenseStatus == null) {
+                ConsoleLogger.Log("[license] license results null");
+            }
+            else {
+                ConsoleLogger.Log($"[license] {licenseStatus.Status} - {licenseStatus.Message}");
+            }
             #endregion
         }
 
@@ -510,6 +516,13 @@ namespace Antd {
                 }
             });
             BindConfiguration.Set();
+            #endregion
+        }
+
+        private static void WorkingProcedures() {
+            #region [    Cloud Send Uptime    ]
+            var csuTimer = new UpdateCloudInfo();
+            csuTimer.Start(TimeSpan.FromSeconds(5));
             #endregion
         }
 

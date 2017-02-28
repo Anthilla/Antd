@@ -25,14 +25,14 @@ namespace Antd.License {
             }
         }
 
-        public CheckStatusModel Check(string appName, string machineUid, byte[] publicKey) {
+        public ResponseLicenseStatusModel Check(string appName, string machineUid, byte[] publicKey) {
             var pk = Encoding.ASCII.GetString(publicKey);
             var dict = new Dictionary<string, string> {
                 { "AppName", appName },
-                { "Uid", machineUid },
-                { "PublicKey", pk}
+                { "MachineUid", machineUid },
+                { "KeyValue", pk }
             };
-            var status = _api.Post<CheckStatusModel>($"{Parameter.Cloud}license/check", dict);
+            var status = _api.Post<ResponseLicenseStatusModel>($"{Parameter.Cloud}license/check", dict);
             return status;
         }
     }
