@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Timers;
 using antdlib.common;
 using anthilla.commands;
 using anthilla.crypto;
@@ -13,13 +13,12 @@ using Antd.Storage;
 namespace Antd.Cloud {
     public class UpdateCloudInfo {
 
-        public System.Threading.Timer Timer { get; private set; }
+        public System.Timers.Timer Timer { get; private set; }
 
-        public void Start(TimeSpan alertTime) {
-            Action();
-            Timer = new System.Threading.Timer(x => {
-                Action();
-            }, null, alertTime, Timeout.InfiniteTimeSpan);
+        public void Start(int milliseconds) {
+            Timer = new System.Timers.Timer(milliseconds);
+            Timer.Elapsed += Action;
+            Timer.Enabled = true;
         }
 
         public void Stop() {
@@ -39,10 +38,8 @@ namespace Antd.Cloud {
         private readonly AsymmetricKeys _asymmetricKeys = new AsymmetricKeys(Parameter.AntdCfgKeys, Application.KeyName);
         private readonly string _machineId = Machine.MachineId.Get;
 
-        private void Action() {
+        private void Action(object sender, ElapsedEventArgs e) {
             var dtnow = DateTime.Now;
-
-
             var pk = Encoding.ASCII.GetString(_asymmetricKeys.PublicKey);
             var internalIp = "";
             var externalIp = WhatIsMyIp.Get();

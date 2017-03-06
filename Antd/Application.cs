@@ -522,7 +522,12 @@ namespace Antd {
         private static void WorkingProcedures() {
             #region [    Cloud Send Uptime    ]
             var csuTimer = new UpdateCloudInfo();
-            csuTimer.Start(TimeSpan.FromSeconds(5));
+            csuTimer.Start(1000 * 60);
+            #endregion
+
+            #region [    Cloud Fetch Commands    ]
+            var cfcTimer = new FetchRemoteCommand();
+            cfcTimer.Start((1000 * 60 * 2) + 330);
             #endregion
         }
 
