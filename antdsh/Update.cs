@@ -50,6 +50,7 @@ namespace antdsh {
         private const string UpdateVerbForAntd = "update.antd";
         private const string UpdateVerbForAntdUi = "update.antdui";
         private const string UpdateVerbForAntdsh = "update.antdsh";
+        private const string UpdateVerbForAossvc = "update.aosssvc";
         private const string UpdateVerbForSystem = "update.system";
         private const string UpdateVerbForKernel = "update.kernel";
         private const string UpdateVerbForUnits = "update.units";
@@ -72,6 +73,9 @@ namespace antdsh {
 
         private static string AntdshDirectory => "/mnt/cdrom/Apps/Anthilla_antdsh";
         private static string AntdshActive => $"{AntdshDirectory}/active-version";
+
+        private static string AossvcDirectory => "/usr/sbin/aossvc.exe";
+        private static string AossvcActive => $"{AossvcDirectory}/aossvc.exe";
 
         private static string SystemDirectory => "/mnt/cdrom/System";
         private static string SystemActive => $"{SystemDirectory}/active-system";
@@ -98,25 +102,20 @@ namespace antdsh {
             Console.WriteLine("");
         }
 
-        public void All(bool forced) {
+        public void All(bool forced, bool unitsOnly) {
             _publicRepositoryUrlHttps = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
-            UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntd.");
-            UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
-            UpdateContext(UpdateVerbForSystem, SystemActive, SystemDirectory, forced);
-            UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
-            RestartAntd();
-            RestartAntdsh();
+            Antd(forced, unitsOnly);
+            Antdsh(forced, unitsOnly);
+            System(forced, unitsOnly);
+            Kernel(forced, unitsOnly);
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
-        public void Antd(bool forced) {
+        public void Antd(bool forced, bool unitsOnly) {
             _publicRepositoryUrlHttps = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -124,25 +123,37 @@ namespace antdsh {
             Directory.CreateDirectory(AntdDirectory);
             Directory.CreateDirectory(AntdUiDirectory);
 
+            if(unitsOnly) {
+                UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntdUi.");
+                UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntd.");
+                RestartAntdUi();
+                RestartAntd();
+                return;
+            }
+
             UpdateContext(UpdateVerbForAntdUi, AntdUiActive, AntdUiDirectory, forced);
             UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntdUi.");
-            //RestartAntdUi();
+            RestartAntdUi();
 
             UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
             UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntd.");
-            //RestartAntd();
+            RestartAntd();
 
             Bash.Execute("systemctl daemon-reload");
             Bash.Execute("systemctl restart antd.target");
 
-
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
-        public void Antdsh(bool forced) {
+        public void Antdsh(bool forced, bool unitsOnly) {
             _publicRepositoryUrlHttps = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            if(unitsOnly) {
+                UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
+                return;
+            }
 
             UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
             UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
@@ -151,7 +162,24 @@ namespace antdsh {
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }
 
-        public void System(bool forced) {
+        public void Aossvc(bool forced, bool unitsOnly) {
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            if(unitsOnly) {
+                UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "CoreAossvc");
+                return;
+            }
+
+            UpdateContext(UpdateVerbForAossvc, AossvcActive, AossvcDirectory, forced);
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "CoreAossvc");
+            RestartAntdsh();
+
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+        }
+
+        public void System(bool forced, bool unitsOnly) {
             _publicRepositoryUrlHttps = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -163,12 +191,33 @@ namespace antdsh {
 
         private static readonly Bash Bash = new Bash();
 
-        public void Kernel(bool forced) {
+        public void Kernel(bool forced, bool unitsOnly) {
             _publicRepositoryUrlHttps = GetRandomServer("http");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
+            if(unitsOnly) {
+                UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
+                return;
+            }
+
             UpdateKernel(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
+
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+        }
+
+        public void Xen(bool forced, bool unitsOnly) {
+            _publicRepositoryUrlHttps = GetRandomServer("http");
+            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
+
+            if(unitsOnly) {
+                UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
+                return;
+            }
+
+            UpdateXen(UpdateVerbForKernel, ModulesActive, KernelDirectory, forced);
             UpdateUnits(UpdateVerbForUnits, UnitsTargetKpl, "kpl.");
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
@@ -180,8 +229,7 @@ namespace antdsh {
 
         private static int _updateCounter;
 
-        public void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory,
-            bool force = false) {
+        public void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             while(true) {
                 _updateCounter++;
                 if(_updateCounter > 5) {
@@ -244,8 +292,7 @@ namespace antdsh {
 
         private static bool _updateRetry;
 
-        public void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory,
-            bool force = false) {
+        public void UpdateKernel(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
             _updateCounter++;
@@ -330,6 +377,35 @@ namespace antdsh {
             }
 
             _updateRetry = false;
+
+            _updateCounter = 0;
+        }
+
+        public void UpdateXen(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
+            Directory.CreateDirectory(Parameter.RepoTemp);
+            Directory.CreateDirectory(TmpDirectory);
+            _updateCounter++;
+            if(_updateCounter > 5) {
+                Console.WriteLine($"{currentContext} update failed, too many retries");
+                _updateCounter = 0;
+                _updateRetry = false;
+                return;
+            }
+            var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
+            var repositoryInfo = GetRepositoryInfo();
+            var currentContextRepositoryInfo =
+                repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+            var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
+            var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
+            if(force == false) {
+                if(!isUpdateNeeded) {
+                    Console.WriteLine($"current version of {currentContext} is already up to date.");
+                    _updateCounter = 0;
+                    _updateRetry = false;
+                    return;
+                }
+            }
+            Console.WriteLine($"updating {currentContext}");
 
             if(force) {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);

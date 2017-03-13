@@ -100,14 +100,17 @@ namespace antdsh {
                 Console.WriteLine("update options:");
                 Console.WriteLine("\t-h\t--help\tshow this message");
                 Console.WriteLine("\t-f\t--force\tforce the update");
+                Console.WriteLine("\t-u\t--unit\tdownload only the context units");
                 Console.WriteLine("");
                 Console.WriteLine("update verbs:");
                 Console.WriteLine("\tcheck");
                 Console.WriteLine("\tall");
                 Console.WriteLine("\tantd");
                 Console.WriteLine("\tantdsh");
+                Console.WriteLine("\taossvc");
                 Console.WriteLine("\tsystem");
                 Console.WriteLine("\tkernel");
+                Console.WriteLine("\txen");
                 Console.WriteLine("");
                 return;
             }
@@ -120,39 +123,49 @@ namespace antdsh {
                 Console.WriteLine("update options:");
                 Console.WriteLine("\t-h\t--help\tshow this message");
                 Console.WriteLine("\t-f\t--force\tforce the update");
+                Console.WriteLine("\t-u\t--unit\tdownload only the context units");
                 Console.WriteLine("");
                 Console.WriteLine("update verbs:");
                 Console.WriteLine("\tcheck");
                 Console.WriteLine("\tall");
                 Console.WriteLine("\tantd");
                 Console.WriteLine("\tantdsh");
+                Console.WriteLine("\taossvc");
                 Console.WriteLine("\tsystem");
                 Console.WriteLine("\tkernel");
+                Console.WriteLine("\txen");
                 Console.WriteLine("");
                 return;
             }
             var verb = args.Last();
 
             var forced = args.Contains("-f") || args.Contains("--force");
+            var unitsOnly = args.Contains("-u") || args.Contains("--units");
 
             switch(verb) {
                 case "check":
                     Update.Check();
                     break;
                 case "all":
-                    Update.All(forced);
+                    Update.All(forced, unitsOnly);
                     break;
                 case "antd":
-                    Update.Antd(forced);
+                    Update.Antd(forced, unitsOnly);
                     break;
                 case "antdsh":
-                    Update.Antdsh(forced);
+                    Update.Antdsh(forced, unitsOnly);
+                    break;
+                case "aossvc":
+                    Update.Aossvc(forced, unitsOnly);
                     break;
                 case "system":
-                    Update.System(forced);
+                    Update.System(forced, unitsOnly);
                     break;
                 case "kernel":
-                    Update.Kernel(forced);
+                    Update.Kernel(forced, unitsOnly);
+                    break;
+                case "xen":
+                    Update.Xen(forced, unitsOnly);
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
