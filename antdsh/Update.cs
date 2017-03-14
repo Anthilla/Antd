@@ -167,14 +167,16 @@ namespace antdsh {
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
-            if(unitsOnly) {
-                UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "CoreAossvc");
-                return;
-            }
+            _publicRepositoryUrlHttps = GetRandomServer("http");
 
-            UpdateContext(UpdateVerbForAossvc, AossvcActive, AossvcDirectory, forced);
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "CoreAossvc");
-            RestartAntdsh();
+            var exeUrl = $"{_publicRepositoryUrlHttps}/aossvc.exe";
+            const string exeBin = "/usr/sbin/aossvc.exe";
+            new ApiConsumer().GetFile(exeUrl, exeBin);
+            var svcUrl = $"{_publicRepositoryUrlHttps}/aossvc.service";
+            const string svcBin = "/usr/lib/systemd/system/aossvc.service";
+            new ApiConsumer().GetFile(svcUrl, svcBin);
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl start aossvc.service");
 
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
         }

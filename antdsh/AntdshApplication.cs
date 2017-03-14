@@ -13,7 +13,7 @@ namespace antdsh {
         private static void Main(string[] args) {
             if(args.Length < 1) {
                 while(true) {
-                    Console.Write($"{DateTime.Now.ToString("[dd-MM-yyyy] HH:mm")} > antdsh > ");
+                    Console.Write($"{DateTime.Now:[dd-MM-yyyy] HH:mm} > antdsh > ");
                     var command = Console.ReadLine();
                     if(!string.IsNullOrEmpty(command)) {
                         AddCommand(command);
@@ -59,7 +59,7 @@ namespace antdsh {
                 { "update" , UpdateFunc },
                 { "start", StartFunc },
                 { "stop", StopFunc },
-                { "status", StatusFunc },
+                { "status", StatusFunc }
             };
 
         private static void HelpFunc(string[] args) {
