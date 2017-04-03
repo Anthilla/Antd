@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthilla.commands", "..\_sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthilla.crypto", "..\_shared\anthilla.crypto\anthilla.crypto.csproj", "{87063138-EEB6-46EC-AA88-21E2A4BAC550}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthilla.logger", "..\_shared\anthilla.logger\anthilla.logger.csproj", "{3165C749-FE75-4C8A-80B6-47B8ED286E37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,12 @@ Global
 		{87063138-EEB6-46EC-AA88-21E2A4BAC550}.Library|Any CPU.Build.0 = Release|Any CPU
 		{87063138-EEB6-46EC-AA88-21E2A4BAC550}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87063138-EEB6-46EC-AA88-21E2A4BAC550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3165C749-FE75-4C8A-80B6-47B8ED286E37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3165C749-FE75-4C8A-80B6-47B8ED286E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3165C749-FE75-4C8A-80B6-47B8ED286E37}.Library|Any CPU.ActiveCfg = Release|Any CPU
+		{3165C749-FE75-4C8A-80B6-47B8ED286E37}.Library|Any CPU.Build.0 = Release|Any CPU
+		{3165C749-FE75-4C8A-80B6-47B8ED286E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3165C749-FE75-4C8A-80B6-47B8ED286E37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
