@@ -30,7 +30,7 @@ namespace Antd.Cloud {
         private static readonly string MachineId = Machine.MachineId.Get;
 
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e) {
-            Console.WriteLine("Scheduled action: Watch ControlUnit Events table");
+            //ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
             var cmds = Api.Get<List<RemoteCommand>>($"{Parameter.Cloud}repo/assetinfo/fetchcommand/Antd/" + MachineId);
             if(!cmds.Any())
                 return;

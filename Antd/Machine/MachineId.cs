@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.common;
@@ -8,17 +7,6 @@ namespace Antd.Machine {
     public class MachineId {
 
         public static string Get => GetMachineId();
-
-        private static string EmptyUid() {
-            var list = new List<string> {
-                string.Join("", new byte[]{ 0, 0, 0, 0, 0, 0 }.Select(_=>_.ToString("D1"))),
-                string.Join("", new byte[]{ 0, 0, 0, 0, 0, 0 }.Select(_=>_.ToString("D1"))),
-                string.Join("", new byte[]{ 0, 0, 0, 0 }.Select(_=>_.ToString("D1"))),
-                string.Join("", new byte[]{ 0, 0, 0, 0 }.Select(_=>_.ToString("D1")))
-            };
-            var emptyid = string.Join("-", list);
-            return emptyid;
-        }
 
         private static string VirtualUid() {
             var g1 = Guid.NewGuid().ToString().Substring(0, 6);
@@ -63,6 +51,9 @@ namespace Antd.Machine {
                         throw new Exception();
                     }
                     machineUuid = cpuId + "-" + mem;
+                    if(machineUuid.EndsWith("-")) {
+                        machineUuid = machineUuid.TrimEnd('-');
+                    }
                 }
                 catch(Exception) {
                     File.WriteAllText(IdPath, machineUuid);

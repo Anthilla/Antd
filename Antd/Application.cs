@@ -129,13 +129,10 @@ namespace Antd {
                 #endregion
 
                 #region [    Overlay Watcher    ]
-                new OverlayWatcher().StartWatching();
-                ConsoleLogger.Log("overlay watcher ready");
-                #endregion
-
-                #region [    Check OS    ]
-                Bash.Execute($"{Parameter.Aossvc} reporemountrw", false);
-                ConsoleLogger.Log("os checked");
+                if(Directory.Exists(Parameter.Overlay)) {
+                    new OverlayWatcher().StartWatching();
+                    ConsoleLogger.Log("overlay watcher ready");
+                }
                 #endregion
 
                 #region [    Working Directories    ]
@@ -416,7 +413,7 @@ namespace Antd {
             const string localNetwork = "10.11.0.0";
             const string localIp = "10.11.254.254";
             const string localRange = "16";
-            const string localHostname = "www";
+            const string localHostname = "box01";
             const string localDomain = "install.local";
 
             #region [    Host Configuration    ]
@@ -522,7 +519,7 @@ namespace Antd {
         private static void WorkingProcedures() {
             #region [    Cloud Send Uptime    ]
             var csuTimer = new UpdateCloudInfo();
-            csuTimer.Start(1000 * 60);
+            csuTimer.Start(1000 * 60 * 5);
             #endregion
 
             #region [    Cloud Fetch Commands    ]

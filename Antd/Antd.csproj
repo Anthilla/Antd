@@ -136,6 +136,7 @@
     <Compile Include="Modules\_HomeModule.cs" />
     <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Cloud\FetchRemoteCommand.cs" />
+    <Compile Include="Networkd\NetworkdConfiguration.cs" />
     <Compile Include="Ui\UiService.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
