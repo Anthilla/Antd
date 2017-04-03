@@ -16,6 +16,8 @@ namespace antdlib.config.shared {
         public AppConfiguration() {
             if(!File.Exists(_file)) {
                 _model = new AppConfigurationModel();
+                var text = JsonConvert.SerializeObject(_model, Formatting.Indented);
+                File.WriteAllText(_file, text);
             }
             else {
                 try {
