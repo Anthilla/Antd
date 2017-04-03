@@ -18,6 +18,8 @@ namespace antdlib.config {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);
             if(!File.Exists(_cfgFile)) {
                 _serviceModel = new AppsConfigurationModel();
+                var text = JsonConvert.SerializeObject(_serviceModel, Formatting.Indented);
+                File.WriteAllText(_cfgFile, text);
             }
             else {
                 try {

@@ -105,10 +105,18 @@ namespace Antd {
             ConsoleLogger.Log("antd is running");
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             WorkingProcedures();
+
+#if DEBUG
+            Test();
+#endif
+
             KeepAlive();
             ConsoleLogger.Log("antd is closing");
             host.Stop();
             Console.WriteLine("host shutdown");
+        }
+
+        private static void Test() {
         }
 
         private static void CheckConfiguration() {
