@@ -122,9 +122,11 @@ namespace Antd {
         private static void CheckConfiguration() {
             var host = HostConfiguration.Host;
             _isConfigured = host.IsConfigured;
+            ConsoleLogger.Log($"[config] antd is {(_isConfigured == false? "not ": "")}configured");
         }
 
         private static void CoreProcedures() {
+            ConsoleLogger.Log("[config] core procedures");
             if(Parameter.IsUnix) {
                 #region [    Remove Limits    ]
                 const string limitsFile = "/etc/security/limits.conf";
@@ -181,6 +183,7 @@ namespace Antd {
         }
 
         private static void Procedures() {
+            ConsoleLogger.Log("[config] procedures");
             if(!Parameter.IsUnix)
                 return;
 
@@ -415,6 +418,7 @@ namespace Antd {
         }
 
         private static void FallbackProcedures() {
+            ConsoleLogger.Log("[config] fallback procedures");
             if(!Parameter.IsUnix)
                 return;
 
@@ -525,6 +529,7 @@ namespace Antd {
         }
 
         private static void WorkingProcedures() {
+            ConsoleLogger.Log("[config] working procedures");
             #region [    Cloud Send Uptime    ]
             var csuTimer = new UpdateCloudInfo();
             csuTimer.Start(1000 * 60 * 5);

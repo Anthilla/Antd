@@ -86,7 +86,8 @@ namespace AntdUi.Modules {
                     { "StaticAddress", staticAddress },
                     { "StaticRange", staticRange }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/wizard", dict);
+                _api.Post($"http://127.0.0.1:{Application.ServerPort}/wizard", dict);
+                return Response.AsRedirect("/logout");
             };
         }
     }
