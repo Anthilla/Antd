@@ -143,6 +143,7 @@ namespace Antd.Modules {
                 ConsoleLogger.Log($"[wizard] network configured at {Interface}");
                 hostConfiguration.SetHostAsConfigured();
                 //todo schedule restart?
+                ConsoleLogger.Log("[wizard] configuration complete");
                 return HttpStatusCode.OK;
             };
         }

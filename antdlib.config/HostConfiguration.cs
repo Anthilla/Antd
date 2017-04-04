@@ -34,7 +34,7 @@ namespace antdlib.config {
 
         public void Export(HostModel model) {
             if(File.Exists(FilePath)) {
-                File.Copy(FilePath, FilePathBackup, true);
+                return;
             }
             File.WriteAllText(FilePath, JsonConvert.SerializeObject(model, Formatting.Indented));
         }

@@ -79,21 +79,29 @@ namespace Antd {
         private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
         #endregion
 
-        private static bool _isConfigured;
-
         public static string KeyName = "antd";
 
         private static void Main() {
             ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
-            CheckConfiguration();
             CoreProcedures();
-            if(_isConfigured) {
+
+            var isConfigured = HostConfiguration.Host.IsConfigured;
+            ConsoleLogger.Log($"[config] antd is {(isConfigured == false ? "not " : "")}configured");
+
+            if(isConfigured) {
                 Procedures();
             }
             else {
                 FallbackProcedures();
             }
+
+            PostProcedures();
+
+            if(isConfigured) {
+                ManagedProcedures();
+            }
+
             var app = new AppConfiguration().Get();
             var port = app.AntdPort;
             var uri = $"http://localhost:{app.AntdPort}/";
@@ -119,48 +127,59 @@ namespace Antd {
         private static void Test() {
         }
 
-        private static void CheckConfiguration() {
-            var host = HostConfiguration.Host;
-            _isConfigured = host.IsConfigured;
-            ConsoleLogger.Log($"[config] antd is {(_isConfigured == false? "not ": "")}configured");
-        }
-
         private static void CoreProcedures() {
             ConsoleLogger.Log("[config] core procedures");
-            if(Parameter.IsUnix) {
-                #region [    Remove Limits    ]
-                const string limitsFile = "/etc/security/limits.conf";
-                if(File.Exists(limitsFile)) {
-                    if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
-                        File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
-                    }
+            if(!Parameter.IsUnix)
+                return;
+            #region [    Remove Limits    ]
+            const string limitsFile = "/etc/security/limits.conf";
+            if(File.Exists(limitsFile)) {
+                if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
+                    File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
                 }
-                Bash.Execute("ulimit -n 1024000", false);
-                #endregion
-
-                #region [    Overlay Watcher    ]
-                if(Directory.Exists(Parameter.Overlay)) {
-                    new OverlayWatcher().StartWatching();
-                    ConsoleLogger.Log("overlay watcher ready");
-                }
-                #endregion
-
-                #region [    Working Directories    ]
-                Directory.CreateDirectory("/cfg/antd");
-                Directory.CreateDirectory("/cfg/antd/database");
-                Directory.CreateDirectory("/cfg/antd/services");
-                Directory.CreateDirectory("/mnt/cdrom/DIRS");
-                if(Parameter.IsUnix) {
-                    Mount.WorkingDirectories();
-                }
-                ConsoleLogger.Log("working directories ready");
-                #endregion
-
-                #region [    Host Prepare Configuration    ]
-                var tmpHost = HostConfiguration.Host;
-                HostConfiguration.Export(tmpHost);
-                #endregion
             }
+            Bash.Execute("ulimit -n 1024000", false);
+            #endregion
+
+            #region [    Overlay Watcher    ]
+            if(Directory.Exists(Parameter.Overlay)) {
+                new OverlayWatcher().StartWatching();
+                ConsoleLogger.Log("overlay watcher ready");
+            }
+            #endregion
+
+            #region [    Working Directories    ]
+            Directory.CreateDirectory("/cfg/antd");
+            Directory.CreateDirectory("/cfg/antd/database");
+            Directory.CreateDirectory("/cfg/antd/services");
+            Directory.CreateDirectory("/mnt/cdrom/DIRS");
+            if(Parameter.IsUnix) {
+                Mount.WorkingDirectories();
+            }
+            ConsoleLogger.Log("working directories ready");
+            #endregion
+
+            #region [    Host Prepare Configuration    ]
+            var tmpHost = HostConfiguration.Host;
+            HostConfiguration.Export(tmpHost);
+            #endregion
+
+            #region [    Mounts    ]
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
+            }
+            var kernelRelease = Bash.Execute("uname -r").Trim();
+            var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
+                linkedRelease.Contains(kernelRelease)) {
+                var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                Directory.CreateDirectory(moduleDir);
+                Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
+            }
+            Bash.Execute("systemctl restart systemd-modules-load.service", false);
+            Mount.AllDirectories();
+            ConsoleLogger.Log("mounts ready");
+            #endregion
 
             #region [    Application Keys    ]
             var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
@@ -180,6 +199,31 @@ namespace Antd {
                 ConsoleLogger.Log($"[license] {licenseStatus.Status} - {licenseStatus.Message}");
             }
             #endregion
+
+            #region [    OS Parameters    ]
+            HostConfiguration.ApplyHostOsParameters();
+            ConsoleLogger.Log("os parameters ready");
+            #endregion
+
+            #region [    Modules    ]
+            HostConfiguration.ApplyHostBlacklistModules();
+            HostConfiguration.ApplyHostModprobes();
+            HostConfiguration.ApplyHostRemoveModules();
+            ConsoleLogger.Log("modules ready");
+            #endregion
+
+            #region [    Time & Date    ]
+            HostConfiguration.ApplyNtpdate();
+            HostConfiguration.ApplyTimezone();
+            HostConfiguration.ApplyNtpd();
+            ConsoleLogger.Log("time and date configured");
+            #endregion
+
+            #region [    JournalD    ]
+            if(JournaldConfiguration.IsActive()) {
+                JournaldConfiguration.Set();
+            }
+            #endregion
         }
 
         private static void Procedures() {
@@ -187,27 +231,14 @@ namespace Antd {
             if(!Parameter.IsUnix)
                 return;
 
-            #region [    Mounts    ]
-            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
+            #region [    Users    ]
+            var manageMaster = new ManageMaster();
+            manageMaster.Setup();
+            if(Parameter.IsUnix) {
+                UserConfiguration.Import();
+                UserConfiguration.Set();
             }
-            var kernelRelease = Bash.Execute("uname -r").Trim();
-            var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
-            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
-                linkedRelease.Contains(kernelRelease)) {
-                var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                Directory.CreateDirectory(moduleDir);
-                Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
-            }
-            Bash.Execute("systemctl restart systemd-modules-load.service", false);
-            Mount.AllDirectories();
-            ConsoleLogger.Log("mounts ready");
-            #endregion
-
-            #region [    JournalD    ]
-            if(JournaldConfiguration.IsActive()) {
-                JournaldConfiguration.Set();
-            }
+            ConsoleLogger.Log("users config ready");
             #endregion
 
             #region [    Host Configuration    ]
@@ -223,81 +254,9 @@ namespace Antd {
             ConsoleLogger.Log("name service ready");
             #endregion
 
-            #region [    OS Parameters    ]
-            HostConfiguration.ApplyHostOsParameters();
-            ConsoleLogger.Log("os parameters ready");
-            #endregion
-
-            #region [    Modules    ]
-            HostConfiguration.ApplyHostBlacklistModules();
-            HostConfiguration.ApplyHostModprobes();
-            HostConfiguration.ApplyHostRemoveModules();
-            ConsoleLogger.Log("modules ready");
-            #endregion
-
-            #region [    Users    ]
-            var manageMaster = new ManageMaster();
-            manageMaster.Setup();
-            if(Parameter.IsUnix) {
-                UserConfiguration.Import();
-                UserConfiguration.Set();
-            }
-            ConsoleLogger.Log("users config ready");
-            #endregion
-
-            #region [    Time & Date    ]
-            HostConfiguration.ApplyNtpdate();
-            HostConfiguration.ApplyTimezone();
-            HostConfiguration.ApplyNtpd();
-            ConsoleLogger.Log("time and date configured");
-            #endregion
-
             #region [    Network    ]
             NetworkConfiguration.Start();
             NetworkConfiguration.ApplyDefaultInterfaceSetting();
-            #endregion
-
-            #region [    Apply Setup Configuration    ]
-            SetupConfiguration.Set();
-            ConsoleLogger.Log("machine configured");
-            #endregion
-
-            #region [    Services    ]
-            HostConfiguration.ApplyHostServices();
-            ConsoleLogger.Log("services ready");
-            #endregion
-
-            #region [    Ssh    ]
-            if(SshdConfiguration.IsActive()) {
-                SshdConfiguration.Set();
-            }
-            if(!Directory.Exists(Parameter.RootSsh)) {
-                Directory.CreateDirectory(Parameter.RootSsh);
-            }
-            if(!Directory.Exists(Parameter.RootSshMntCdrom)) {
-                Directory.CreateDirectory(Parameter.RootSshMntCdrom);
-            }
-            if(!MountHelper.IsAlreadyMounted(Parameter.RootSsh)) {
-                var mnt = new MountManagement();
-                mnt.Dir(Parameter.RootSsh);
-            }
-            var rk = new RootKeys();
-            if(rk.Exists == false) {
-                rk.Create();
-            }
-            var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
-            var storedKeys = authorizedKeysConfiguration.Get().Keys;
-            foreach(var storedKey in storedKeys) {
-                var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
-                var authorizedKeysPath = $"{home}/authorized_keys";
-                if(!File.Exists(authorizedKeysPath)) {
-                    File.Create(authorizedKeysPath);
-                }
-                File.AppendAllLines(authorizedKeysPath, new List<string> { $"{storedKey.KeyValue} {storedKey.RemoteUser}" });
-                Bash.Execute($"chmod 600 {authorizedKeysPath}");
-                Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
-            }
-            ConsoleLogger.Log("ssh ready");
             #endregion
 
             #region [    Firewall    ]
@@ -317,6 +276,12 @@ namespace Antd {
                 BindConfiguration.Set();
             }
             #endregion
+        }
+
+        private static void ManagedProcedures() {
+            ConsoleLogger.Log("[config] procedures");
+            if(!Parameter.IsUnix)
+                return;
 
             #region [    Samba    ]
             if(SambaConfiguration.IsActive()) {
@@ -328,20 +293,6 @@ namespace Antd {
             if(SyslogNgConfiguration.IsActive()) {
                 SyslogNgConfiguration.Set();
             }
-            #endregion
-
-            #region [    Avahi    ]
-            const string avahiServicePath = "/etc/avahi/services/antd.service";
-            if(File.Exists(avahiServicePath)) {
-                File.Delete(avahiServicePath);
-            }
-            var appConfiguration = new AppConfiguration().Get();
-            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
-            Bash.Execute("chmod 755 /etc/avahi/services", false);
-            Bash.Execute($"chmod 644 {avahiServicePath}", false);
-            Systemctl.Restart("avahi-daemon.service");
-            Systemctl.Restart("avahi-daemon.socket");
-            ConsoleLogger.Log("avahi ready");
             #endregion
 
             #region [    Storage    ]
@@ -410,11 +361,6 @@ namespace Antd {
             //AppTarget.StartAll();
             ConsoleLogger.Log("apps ready");
             #endregion
-
-            #region [    AntdUI    ]
-            UiService.Setup();
-            ConsoleLogger.Log("antduisetup");
-            #endregion
         }
 
         private static void FallbackProcedures() {
@@ -432,20 +378,6 @@ namespace Antd {
             HostConfiguration.SetHostInfoName(localHostname);
             HostConfiguration.ApplyHostInfo();
             ConsoleLogger.Log("host configured");
-            #endregion
-
-            #region [    Network    ]
-            var npi = NetworkConfiguration.InterfacePhysical;
-            NetworkConfiguration.AddInterfaceSetting(new NetworkInterfaceConfigurationModel {
-                Interface = "br0",
-                Mode = NetworkInterfaceMode.Static,
-                Status = NetworkInterfaceStatus.Up,
-                StaticAddress = localIp,
-                StaticRange = localRange,
-                Type = NetworkInterfaceType.Bridge,
-                InterfaceList = npi.ToList()
-            });
-            NetworkConfiguration.ApplyDefaultInterfaceSetting();
             #endregion
 
             #region [    Name Service    ]
@@ -485,6 +417,25 @@ namespace Antd {
             });
             HostConfiguration.ApplyNsSwitch();
             ConsoleLogger.Log("name service ready");
+            #endregion
+
+            #region [    Network    ]
+            var npi = NetworkConfiguration.InterfacePhysical;
+            var nifs = NetworkConfiguration.Get().Interfaces;
+            const string nifName = "br0";
+            var tryget = nifs?.FirstOrDefault(_ => _.Interface == nifName);
+            if(tryget == null) {
+                NetworkConfiguration.AddInterfaceSetting(new NetworkInterfaceConfigurationModel {
+                    Interface = nifName,
+                    Mode = NetworkInterfaceMode.Static,
+                    Status = NetworkInterfaceStatus.Up,
+                    StaticAddress = localIp,
+                    StaticRange = localRange,
+                    Type = NetworkInterfaceType.Bridge,
+                    InterfaceList = npi.ToList()
+                });
+            }
+            NetworkConfiguration.ApplyDefaultInterfaceSetting();
             #endregion
 
             #region [    Dhcpd    ]
@@ -539,6 +490,72 @@ namespace Antd {
             var cfcTimer = new FetchRemoteCommand();
             cfcTimer.Start((1000 * 60 * 2) + 330);
             #endregion
+        }
+
+        private static void PostProcedures() {
+            ConsoleLogger.Log("[config] post procedures");
+            #region [    Apply Setup Configuration    ]
+            SetupConfiguration.Set();
+            ConsoleLogger.Log("machine configured");
+            #endregion
+
+            #region [    Services    ]
+            HostConfiguration.ApplyHostServices();
+            ConsoleLogger.Log("services ready");
+            #endregion
+
+            #region [    Ssh    ]
+            if(SshdConfiguration.IsActive()) {
+                SshdConfiguration.Set();
+            }
+            if(!Directory.Exists(Parameter.RootSsh)) {
+                Directory.CreateDirectory(Parameter.RootSsh);
+            }
+            if(!Directory.Exists(Parameter.RootSshMntCdrom)) {
+                Directory.CreateDirectory(Parameter.RootSshMntCdrom);
+            }
+            if(!MountHelper.IsAlreadyMounted(Parameter.RootSsh)) {
+                var mnt = new MountManagement();
+                mnt.Dir(Parameter.RootSsh);
+            }
+            var rk = new RootKeys();
+            if(rk.Exists == false) {
+                rk.Create();
+            }
+            var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+            var storedKeys = authorizedKeysConfiguration.Get().Keys;
+            foreach(var storedKey in storedKeys) {
+                var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
+                var authorizedKeysPath = $"{home}/authorized_keys";
+                if(!File.Exists(authorizedKeysPath)) {
+                    File.Create(authorizedKeysPath);
+                }
+                File.AppendAllLines(authorizedKeysPath, new List<string> { $"{storedKey.KeyValue} {storedKey.RemoteUser}" });
+                Bash.Execute($"chmod 600 {authorizedKeysPath}");
+                Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
+            }
+            ConsoleLogger.Log("ssh ready");
+            #endregion
+
+            #region [    Avahi    ]
+            const string avahiServicePath = "/etc/avahi/services/antd.service";
+            if(File.Exists(avahiServicePath)) {
+                File.Delete(avahiServicePath);
+            }
+            var appConfiguration = new AppConfiguration().Get();
+            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
+            Bash.Execute("chmod 755 /etc/avahi/services", false);
+            Bash.Execute($"chmod 644 {avahiServicePath}", false);
+            Systemctl.Restart("avahi-daemon.service");
+            Systemctl.Restart("avahi-daemon.socket");
+            ConsoleLogger.Log("avahi ready");
+            #endregion
+
+            #region [    AntdUI    ]
+            UiService.Setup();
+            ConsoleLogger.Log("antduisetup");
+            #endregion
+
         }
 
         #region [    Shutdown Management    ]
