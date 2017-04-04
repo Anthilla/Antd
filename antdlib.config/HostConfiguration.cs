@@ -34,7 +34,7 @@ namespace antdlib.config {
 
         public void Export(HostModel model) {
             if(File.Exists(FilePath)) {
-                return;
+                File.Copy(FilePath, $"{FilePath}.bck", true);
             }
             File.WriteAllText(FilePath, JsonConvert.SerializeObject(model, Formatting.Indented));
         }
@@ -48,13 +48,12 @@ namespace antdlib.config {
             catch(Exception) {
                 return false;
             }
-
         }
 
         public void SetHostAsConfigured() {
-            Host = LoadHostModel();
-            Host.IsConfigured = true;
-            Export(Host);
+            var host = Host;
+            host.IsConfigured = true;
+            Export(host);
         }
         #endregion
 

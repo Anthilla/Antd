@@ -7,6 +7,7 @@ using anthilla.commands;
 using Antd.Users;
 using Nancy;
 using Newtonsoft.Json;
+using antdlib.config.shared;
 
 //-------------------------------------------------------------------------------------
 //     Copyright (c) 2014, Anthilla S.r.l. (http://www.anthilla.com)
@@ -142,7 +143,6 @@ namespace Antd.Modules {
                 networkConfiguration.ApplyInterfaceSetting(model);
                 ConsoleLogger.Log($"[wizard] network configured at {Interface}");
                 hostConfiguration.SetHostAsConfigured();
-                //todo schedule restart?
                 ConsoleLogger.Log("[wizard] configuration complete");
                 return HttpStatusCode.OK;
             };

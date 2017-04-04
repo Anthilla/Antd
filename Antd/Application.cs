@@ -87,7 +87,7 @@ namespace Antd {
             CoreProcedures();
 
             var isConfigured = HostConfiguration.Host.IsConfigured;
-            ConsoleLogger.Log($"[config] antd is {(isConfigured == false ? "not " : "")}configured");
+            ConsoleLogger.Log($"[config] antd is {(isConfigured == false ? "NOT " : "")}configured");
 
             if(isConfigured) {
                 Procedures();
