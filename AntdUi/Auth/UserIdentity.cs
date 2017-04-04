@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nancy.Security;
+using System;
 using System.Collections.Generic;
-using Nancy.Security;
 
 namespace AntdUi.Auth {
     public class UserIdentity : IUserIdentity {

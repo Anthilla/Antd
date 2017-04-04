@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using antdlib.common;
+﻿using antdlib.common;
 using antdlib.models;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace antdlib.config.shared {
     public class AppConfiguration {

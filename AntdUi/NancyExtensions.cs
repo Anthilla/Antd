@@ -27,15 +27,15 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using ICSharpCode.SharpZipLib.GZip;
+using Nancy;
+using Nancy.Bootstrapper;
+using Nancy.Conventions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Xml;
-using ICSharpCode.SharpZipLib.GZip;
-using Nancy;
-using Nancy.Bootstrapper;
-using Nancy.Conventions;
 
 namespace AntdUi {
 

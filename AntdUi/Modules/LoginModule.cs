@@ -27,15 +27,15 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Dynamic;
-using System.Linq;
 using antdlib.common;
 using AntdUi.Auth;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Cookies;
 using Nancy.Extensions;
+using System;
+using System.Dynamic;
+using System.Linq;
 
 namespace AntdUi.Modules {
     public class LoginModule : NancyModule {

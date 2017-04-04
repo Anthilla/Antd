@@ -27,16 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using antdlib.common;
-using antdlib.common.Helpers;
-using antdlib.config;
-using antdlib.config.shared;
-using antdlib.models;
-using anthilla.crypto;
 using Antd.Apps;
 using Antd.Asset;
 using Antd.Cloud;
@@ -47,8 +37,18 @@ using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Ui;
 using Antd.Users;
+using antdlib.common;
+using antdlib.common.Helpers;
+using antdlib.config;
+using antdlib.config.shared;
+using antdlib.models;
+using anthilla.crypto;
 using Nancy;
 using Nancy.Hosting.Self;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using HostConfiguration = antdlib.config.HostConfiguration;
 
 namespace Antd {
@@ -279,7 +279,7 @@ namespace Antd {
         }
 
         private static void ManagedProcedures() {
-            ConsoleLogger.Log("[config] procedures");
+            ConsoleLogger.Log("[config] managed procedures");
             if(!Parameter.IsUnix)
                 return;
 
@@ -496,7 +496,7 @@ namespace Antd {
             ConsoleLogger.Log("[config] post procedures");
             #region [    Apply Setup Configuration    ]
             SetupConfiguration.Set();
-            ConsoleLogger.Log("machine configured");
+            ConsoleLogger.Log("machine configured (apply setup.conf)");
             #endregion
 
             #region [    Services    ]

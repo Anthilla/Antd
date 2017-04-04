@@ -27,12 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.IO;
+using Antd.Info;
 using antdlib.common;
 using antdlib.models;
-using Antd.Info;
 using Nancy;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Antd.Modules {
     public class AntdInfoModule : NancyModule {

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using antdlib.common;
+using System;
 using System.IO;
 using System.Linq;
-using antdlib.common;
 
 namespace Antd.Machine {
     public class MachineId {

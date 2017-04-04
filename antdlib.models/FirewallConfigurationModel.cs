@@ -1,6 +1,6 @@
-﻿using System;
-using antdlib.common;
+﻿using antdlib.common;
 using Newtonsoft.Json;
+using System;
 
 namespace antdlib.models {
     public class FirewallConfigurationModel {

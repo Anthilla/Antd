@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using Antd.Info;
 using antdlib.models;
-using Antd.Info;
 using Nancy;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Antd.Modules {
     public class AntdCpuStatusModule : NancyModule {

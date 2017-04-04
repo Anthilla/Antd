@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace antdlib.common {
     public static class StringExtensions {

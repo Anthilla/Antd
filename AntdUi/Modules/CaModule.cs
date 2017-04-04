@@ -27,13 +27,13 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.IO;
 using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Nancy.Responses;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
 
 namespace AntdUi.Modules {
     public class CaModule : NancyModule {

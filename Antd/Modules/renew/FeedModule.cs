@@ -27,11 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using Nancy;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using Nancy;
-using Newtonsoft.Json;
 
 namespace Antd.Modules {
 

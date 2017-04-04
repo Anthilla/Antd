@@ -27,12 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Linq;
 using antdlib.common;
 using anthilla.commands;
 using Nancy;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
 
 namespace Antd.Modules {
 

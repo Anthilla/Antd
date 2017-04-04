@@ -27,12 +27,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Linq;
 using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Antd.Modules {
     public class AntdBindModule : NancyModule {

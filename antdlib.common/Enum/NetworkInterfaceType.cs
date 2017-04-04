@@ -1,5 +1,4 @@
-﻿namespace antdlib.common
-{
+﻿namespace antdlib.common {
     public enum NetworkInterfaceType {
         Physical = 1,
         Virtual = 2,

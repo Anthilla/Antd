@@ -1,6 +1,6 @@
-﻿using System;
+﻿using antdlib.common;
+using System;
 using System.IO;
-using antdlib.common;
 
 namespace Antd.Users {
     public class ManageMaster {

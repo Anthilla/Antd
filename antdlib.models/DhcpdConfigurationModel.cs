@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using antdlib.common;
+﻿using antdlib.common;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace antdlib.models {
     public class DhcpdConfigurationModel {

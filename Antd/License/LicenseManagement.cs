@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using antdlib.common;
+using antdlib.models;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using antdlib.common;
-using antdlib.models;
 
 namespace Antd.License {
     public class LicenseManagement {

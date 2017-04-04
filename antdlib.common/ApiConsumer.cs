@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Nancy;
+﻿using Nancy;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace antdlib.common {
     public class ApiConsumer {

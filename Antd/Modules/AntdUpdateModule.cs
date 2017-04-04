@@ -27,14 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using antdlib.common;
 using antdlib.models;
 using anthilla.commands;
 using Nancy;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Antd.Modules {
     public class AntdUpdateModule : NancyModule {

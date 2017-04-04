@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using Newtonsoft.Json;
-using RestSharp;
 
 namespace antdsh {
     public class ApiConsumer {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using antdlib.config;
+using System;
 using System.Threading;
-using antdlib.config;
 
 namespace Antd.Timer {
     public class SyncTime {

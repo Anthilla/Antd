@@ -27,10 +27,10 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using antdlib.common;
 using System;
 using System.IO;
 using System.Linq;
-using antdlib.common;
 
 namespace antdsh {
     public class SystemShellMgmt {

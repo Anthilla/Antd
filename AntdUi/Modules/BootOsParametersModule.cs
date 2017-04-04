@@ -27,11 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
 using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace AntdUi.Modules {
     public class BootOsParametersModule : NancyModule {

@@ -27,17 +27,17 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using Antd.Asset;
 using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using anthilla.commands;
-using Antd.Asset;
 using Nancy;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Antd.Modules {
     public class AssetDiscoveryModule : NancyModule {

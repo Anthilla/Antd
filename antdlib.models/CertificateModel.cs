@@ -31,7 +31,7 @@ using System;
 using System.Collections.Generic;
 
 namespace antdlib.models {
- public enum CertificateAuthorityLevel : byte {
+    public enum CertificateAuthorityLevel : byte {
         Root = 1,
         Intermediate = 2,
         Common = 3,

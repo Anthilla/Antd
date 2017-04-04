@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using antdlib.common;
+﻿using antdlib.common;
+using System.Linq;
 
 namespace Antd.Wifi {
     public class AccessPoint {

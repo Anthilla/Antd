@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Antd.Storage;
+using System;
 using System.Threading;
-using Antd.Storage;
 
 namespace Antd.Timer {
     public class SnapshotCleanup {
