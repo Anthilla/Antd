@@ -80,14 +80,17 @@ namespace Antd {
         #endregion
 
         public static string KeyName = "antd";
+        public static anthilla.logger.Logger Logger;
 
         private static void Main() {
-            ConsoleLogger.Log("starting antd");
+            Logger = new anthilla.logger.Logger(KeyName, $"{Parameter.AntdCfg}/log.txt");
+
+            Logger.Info("starting antd");
             var startTime = DateTime.Now;
             CoreProcedures();
 
             var isConfigured = HostConfiguration.Host.IsConfigured;
-            ConsoleLogger.Log($"[config] antd is {(isConfigured == false ? "NOT " : "")}configured");
+            Logger.Info($"[config] antd is {(isConfigured == false ? "NOT " : "")}configured");
 
             if(isConfigured) {
                 Procedures();
@@ -107,11 +110,11 @@ namespace Antd {
             var uri = $"http://localhost:{app.AntdPort}/";
             var host = new NancyHost(new Uri(uri));
             host.Start();
-            ConsoleLogger.Log("host ready");
+            Logger.Info("host ready");
             StaticConfiguration.DisableErrorTraces = false;
-            ConsoleLogger.Log($"http port: {port}");
-            ConsoleLogger.Log("antd is running");
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+            Logger.Info($"http port: {port}");
+            Logger.Info("antd is running");
+            Logger.Info($"loaded in: {DateTime.Now - startTime}");
             WorkingProcedures();
 
 #if DEBUG
@@ -119,7 +122,7 @@ namespace Antd {
 #endif
 
             KeepAlive();
-            ConsoleLogger.Log("antd is closing");
+            Logger.Info("antd is closing");
             host.Stop();
             Console.WriteLine("host shutdown");
         }
@@ -128,7 +131,7 @@ namespace Antd {
         }
 
         private static void CoreProcedures() {
-            ConsoleLogger.Log("[config] core procedures");
+            Logger.Info("[config] core procedures");
             if(!Parameter.IsUnix)
                 return;
             #region [    Remove Limits    ]
@@ -144,7 +147,7 @@ namespace Antd {
             #region [    Overlay Watcher    ]
             if(Directory.Exists(Parameter.Overlay)) {
                 new OverlayWatcher().StartWatching();
-                ConsoleLogger.Log("overlay watcher ready");
+                Logger.Info("overlay watcher ready");
             }
             #endregion
 
@@ -156,7 +159,7 @@ namespace Antd {
             if(Parameter.IsUnix) {
                 Mount.WorkingDirectories();
             }
-            ConsoleLogger.Log("working directories ready");
+            Logger.Info("working directories ready");
             #endregion
 
             #region [    Host Prepare Configuration    ]
@@ -178,7 +181,7 @@ namespace Antd {
             }
             Bash.Execute("systemctl restart systemd-modules-load.service", false);
             Mount.AllDirectories();
-            ConsoleLogger.Log("mounts ready");
+            Logger.Info("mounts ready");
             #endregion
 
             #region [    Application Keys    ]
@@ -190,33 +193,33 @@ namespace Antd {
             var machineId = Machine.MachineId.Get;
             var licenseManagement = new LicenseManagement();
             licenseManagement.Download("Antd", machineId, pub);
-            ConsoleLogger.Log($"[machineid] {machineId}");
+            Logger.Info($"[machineid] {machineId}");
             var licenseStatus = licenseManagement.Check("Antd", machineId, pub);
             if(licenseStatus == null) {
-                ConsoleLogger.Log("[license] license results null");
+                Logger.Info("[license] license results null");
             }
             else {
-                ConsoleLogger.Log($"[license] {licenseStatus.Status} - {licenseStatus.Message}");
+                Logger.Info($"[license] {licenseStatus.Status} - {licenseStatus.Message}");
             }
             #endregion
 
             #region [    OS Parameters    ]
             HostConfiguration.ApplyHostOsParameters();
-            ConsoleLogger.Log("os parameters ready");
+            Logger.Info("os parameters ready");
             #endregion
 
             #region [    Modules    ]
             HostConfiguration.ApplyHostBlacklistModules();
             HostConfiguration.ApplyHostModprobes();
             HostConfiguration.ApplyHostRemoveModules();
-            ConsoleLogger.Log("modules ready");
+            Logger.Info("modules ready");
             #endregion
 
             #region [    Time & Date    ]
             HostConfiguration.ApplyNtpdate();
             HostConfiguration.ApplyTimezone();
             HostConfiguration.ApplyNtpd();
-            ConsoleLogger.Log("time and date configured");
+            Logger.Info("time and date configured");
             #endregion
 
             #region [    JournalD    ]
@@ -227,7 +230,7 @@ namespace Antd {
         }
 
         private static void Procedures() {
-            ConsoleLogger.Log("[config] procedures");
+            Logger.Info("[config] procedures");
             if(!Parameter.IsUnix)
                 return;
 
@@ -238,12 +241,12 @@ namespace Antd {
                 UserConfiguration.Import();
                 UserConfiguration.Set();
             }
-            ConsoleLogger.Log("users config ready");
+            Logger.Info("users config ready");
             #endregion
 
             #region [    Host Configuration    ]
             HostConfiguration.ApplyHostInfo();
-            ConsoleLogger.Log("host configured");
+            Logger.Info("host configured");
             #endregion
 
             #region [    Name Service    ]
@@ -251,7 +254,7 @@ namespace Antd {
             HostConfiguration.ApplyNsNetworks();
             HostConfiguration.ApplyNsResolv();
             HostConfiguration.ApplyNsSwitch();
-            ConsoleLogger.Log("name service ready");
+            Logger.Info("name service ready");
             #endregion
 
             #region [    Network    ]
@@ -279,7 +282,7 @@ namespace Antd {
         }
 
         private static void ManagedProcedures() {
-            ConsoleLogger.Log("[config] managed procedures");
+            Logger.Info("[config] managed procedures");
             if(!Parameter.IsUnix)
                 return;
 
@@ -299,10 +302,10 @@ namespace Antd {
             foreach(var pool in Zpool.ImportList().ToList()) {
                 if(string.IsNullOrEmpty(pool))
                     continue;
-                ConsoleLogger.Log($"pool {pool} imported");
+                Logger.Info($"pool {pool} imported");
                 Zpool.Import(pool);
             }
-            ConsoleLogger.Log("storage ready");
+            Logger.Info("storage ready");
             #endregion
 
             #region [    Scheduler    ]
@@ -316,7 +319,7 @@ namespace Antd {
             new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
             new SyncTime().Start(new TimeSpan(0, 42, 00));
             new RemoveUnusedModules().Start(new TimeSpan(2, 15, 00));
-            ConsoleLogger.Log("scheduled events ready");
+            Logger.Info("scheduled events ready");
             #endregion
 
             #region [    Acl    ]
@@ -359,12 +362,12 @@ namespace Antd {
                 }
             }
             //AppTarget.StartAll();
-            ConsoleLogger.Log("apps ready");
+            Logger.Info("apps ready");
             #endregion
         }
 
         private static void FallbackProcedures() {
-            ConsoleLogger.Log("[config] fallback procedures");
+            Logger.Info("[config] fallback procedures");
             if(!Parameter.IsUnix)
                 return;
 
@@ -377,7 +380,7 @@ namespace Antd {
             #region [    Host Configuration    ]
             HostConfiguration.SetHostInfoName(localHostname);
             HostConfiguration.ApplyHostInfo();
-            ConsoleLogger.Log("host configured");
+            Logger.Info("host configured");
             #endregion
 
             #region [    Name Service    ]
@@ -416,7 +419,7 @@ namespace Antd {
                 "aliases: files"
             });
             HostConfiguration.ApplyNsSwitch();
-            ConsoleLogger.Log("name service ready");
+            Logger.Info("name service ready");
             #endregion
 
             #region [    Network    ]
@@ -480,7 +483,7 @@ namespace Antd {
         }
 
         private static void WorkingProcedures() {
-            ConsoleLogger.Log("[config] working procedures");
+            Logger.Info("[config] working procedures");
             #region [    Cloud Send Uptime    ]
             var csuTimer = new UpdateCloudInfo();
             csuTimer.Start(1000 * 60 * 5);
@@ -493,15 +496,15 @@ namespace Antd {
         }
 
         private static void PostProcedures() {
-            ConsoleLogger.Log("[config] post procedures");
+            Logger.Info("[config] post procedures");
             #region [    Apply Setup Configuration    ]
             SetupConfiguration.Set();
-            ConsoleLogger.Log("machine configured (apply setup.conf)");
+            Logger.Info("machine configured (apply setup.conf)");
             #endregion
 
             #region [    Services    ]
             HostConfiguration.ApplyHostServices();
-            ConsoleLogger.Log("services ready");
+            Logger.Info("services ready");
             #endregion
 
             #region [    Ssh    ]
@@ -534,7 +537,7 @@ namespace Antd {
                 Bash.Execute($"chmod 600 {authorizedKeysPath}");
                 Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
-            ConsoleLogger.Log("ssh ready");
+            Logger.Info("ssh ready");
             #endregion
 
             #region [    Avahi    ]
@@ -548,12 +551,12 @@ namespace Antd {
             Bash.Execute($"chmod 644 {avahiServicePath}", false);
             Systemctl.Restart("avahi-daemon.service");
             Systemctl.Restart("avahi-daemon.socket");
-            ConsoleLogger.Log("avahi ready");
+            Logger.Info("avahi ready");
             #endregion
 
             #region [    AntdUI    ]
             UiService.Setup();
-            ConsoleLogger.Log("antduisetup");
+            Logger.Info("antduisetup");
             #endregion
 
         }

@@ -28,19 +28,12 @@
 //-------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace antdlib.common {
     public class ConsoleLogger {
 
         public static string Method() => new StackTrace().GetFrame(1).GetMethod().Name;
-
-        public static IEnumerable<string> GetAll() {
-            var logs = File.ReadAllLines("/cfg/antd/antd.log");
-            return logs;
-        }
 
         public static void Log(dynamic message, string source = "") {
             var src = source.Length > 0 ? $" src={source}" : "";

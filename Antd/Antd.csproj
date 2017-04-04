@@ -215,6 +215,10 @@
       <Project>{87063138-EEB6-46EC-AA88-21E2A4BAC550}</Project>
       <Name>anthilla.crypto</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\_shared\anthilla.logger\anthilla.logger.csproj">
+      <Project>{3165c749-fe75-4c8a-80b6-47b8ed286e37}</Project>
+      <Name>anthilla.logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>

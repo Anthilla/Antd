@@ -6,6 +6,7 @@ using System;
 namespace AntdUi {
     internal class Application {
 
+        public static string KeyName = "antdui";
         public static int Port;
         public static int ServerPort;
 
