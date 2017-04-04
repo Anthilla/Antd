@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.bck.cs" />
     <Compile Include="Cloud\UpdateCloudInfo.cs" />
     <Compile Include="Cloud\WhatIsMyIp.cs" />
     <Compile Include="License\LicenseManagement.cs" />

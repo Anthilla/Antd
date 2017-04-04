@@ -40,20 +40,21 @@ namespace antdlib.config {
         }
 
         #region [    repo - Confirm Configuration    ]
+        private string isConfiguredPath = $"{Parameter.AntdCfg}/configured";
+
         public bool IsHostConfiguredByUser() {
-            try {
-                Host = LoadHostModel();
-                return Host.IsConfigured;
-            }
-            catch(Exception) {
+            if(!File.Exists(isConfiguredPath)) {
                 return false;
             }
+            var text = File.ReadAllBytes(isConfiguredPath);
+            return text.Length > 0;
         }
 
         public void SetHostAsConfigured() {
-            var host = Host;
-            host.IsConfigured = true;
-            Export(host);
+            if(File.Exists(isConfiguredPath)) {
+                return;
+            }
+            File.WriteAllBytes(isConfiguredPath, new[] { (byte)0 });
         }
         #endregion
 
