@@ -84,8 +84,7 @@ namespace Antd {
         public static anthilla.logger.Logger Logger;
 
         private static void Main() {
-            Logger = new anthilla.logger.Logger(KeyName, $"{Parameter.AntdCfg}/log.txt");
-
+            Logger = new anthilla.logger.Logger(KeyName, $"{Parameter.AntdCfg}/log.txt", true);
             Logger.Info("starting antd");
             var startTime = DateTime.Now;
 
@@ -102,6 +101,7 @@ namespace Antd {
 
                 var isConfigured = HostConfiguration.IsHostConfiguredByUser();
                 Logger.Info($"[config] antd is {(isConfigured == false ? "NOT " : "")}configured");
+                Logger.ConsoleOnly = false;
 
                 if(isConfigured) {
                     Procedures();

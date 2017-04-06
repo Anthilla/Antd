@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="AppKeys" Bounds="-566.156526489258,29.4374475585937,66.6399999999999,25.96" Label="app keys" UseManualLocation="True" />
+    <Node Id="Bind" Bounds="-156.89825021108,526.058940429687,50,25.96" Label="bind" UseManualLocation="True" />
+    <Node Id="Bind1" Bounds="240.585342407227,501.490825195312,50,25.96" Label="bind" UseManualLocation="True" />
+    <Node Id="CheckConfig" Bounds="-300.08830038234,149.620342156431,124.36,25.96" Label="check configuration" UseManualLocation="True" />
+    <Node Id="CoreProcedures" Bounds="-379.310205444069,-234.251075913502,105.786666666667,25.96" Label="core procedures" UseManualLocation="True" />
+    <Node Id="Dhcp" Bounds="-236.89825021108,526.264110107422,50,25.96" Label="dhcp" UseManualLocation="True" />
+    <Node Id="Dhcp1" Bounds="160.585342407227,499.890834350586,50,25.96" Label="dhcp" UseManualLocation="True" />
+    <Node Id="FallbackProcedures" Bounds="-4.41969148826867,337.565632794851,123.106666666667,25.96" Label="fallback procedures" UseManualLocation="True" />
+    <Node Id="False" Bounds="-161.572257772287,224.061511448275,50,25.96" Label="false" UseManualLocation="True" />
+    <Node Id="Firewall" Bounds="-324.604916877747,523.064097900391,57.7066666666667,25.96" Label="firewall" UseManualLocation="True" />
+    <Node Id="HostConfiguration" Bounds="-483.261191643609,447.467830200195,117.223333333333,25.96" Label="host configuration" UseManualLocation="True" />
+    <Node Id="HostConfiguration1" Bounds="-49.8146531823559,432.753984488205,117.223333333333,25.96" Label="host configuration" UseManualLocation="True" />
+    <Node Id="HostPrepareConfig" Bounds="-216.312975616455,-105.233032684326,123.76,25.96" Label="host prepare config" UseManualLocation="True" />
+    <Node Id="JournalD" Bounds="-80.0089504565832,20.1515130120923,65.1166666666667,25.96" Label="journalD" UseManualLocation="True" />
+    <Node Id="LicenseManagement" Bounds="-609.003064982096,91.7975475585938,129.233333333333,25.96" Label="license management" UseManualLocation="True" />
+    <Node Id="Modules" Bounds="-312.008950456583,30.5515130120923,65.5,25.96" Label="modules" UseManualLocation="True" />
+    <Node Id="Mounts" Bounds="-19.5529761110941,-105.285267333984,60.1066666666667,25.96" Label="mounts" UseManualLocation="True" />
+    <Node Id="NameService" Bounds="-336.037858310276,446.667811889648,88.8133333333333,25.96" Label="name service" UseManualLocation="True" />
+    <Node Id="NameService1" Bounds="117.785346817644,435.090845408004,88.8133333333333,25.96" Label="name service" UseManualLocation="True" />
+    <Node Id="Network" Bounds="-417.57825021108,520.869243164062,62.9733333333334,25.96" Label="network" UseManualLocation="True" />
+    <Node Id="Network1" Bounds="60.9853468176442,499.890845408004,62.9733333333333,25.96" Label="network" UseManualLocation="True" />
+    <Node Id="OsParameters" Bounds="-442.408950456583,29.7515130120922,95.0733333333333,25.96" Label="os parameters" UseManualLocation="True" />
+    <Node Id="OverlayWatcher" Bounds="-500.679642283122,-103.134132843018,102.963333333333,25.96" Label="overlay watcher" UseManualLocation="True" />
+    <Node Id="Procedures" Bounds="-429.701300252279,358.627920914981,79.4766666666667,25.96" Label="procedures" UseManualLocation="True" />
+    <Node Id="RemoveLimits" Bounds="-622.022975616455,-104.222481231689,91.3433333333334,25.96" Label="remove limits" UseManualLocation="True" />
+    <Node Id="Start" Bounds="-365.019251414074,-327.596900028779,50,25.96" Label="start" UseManualLocation="True" />
+    <Node Id="Step1" Bounds="-335.22608601888,-163.894225665283,52.2466666666667,25.96" Label="step 1" UseManualLocation="True" />
+    <Node Id="Step2" Bounds="-337.711936300566,-29.6199543494139,52.2466666666667,25.96" Label="step 2" UseManualLocation="True" />
+    <Node Id="Time&amp;Date" Bounds="-204.808950456583,26.5515130120923,83.28,25.96" Label="time &amp; date" UseManualLocation="True" />
+    <Node Id="True" Bounds="-345.693160922978,222.984481122322,50,25.96" Label="true" UseManualLocation="True" />
+    <Node Id="Users" Bounds="-563.261191643609,449.342174072266,50,25.96" Label="users" UseManualLocation="True" />
+    <Node Id="WorkingDirectories" Bounds="-367.716308949788,-101.534126739502,121.403333333333,25.96" Label="working directories" UseManualLocation="True" />
+  </Nodes>
+  <Links>
+    <Link Source="AppKeys" Target="LicenseManagement" Bounds="-540.343310001562,55.3974461364746,5.10270810984935,27.5506083306336" />
+    <Link Source="CheckConfig" Target="False" Bounds="-220.23875212576,175.580342156431,58.7436750763603,43.1529369862195" />
+    <Link Source="CheckConfig" Target="True" Bounds="-299.310720760134,175.580342156431,46.7556563213879,41.4349829569472" />
+    <Link Source="CoreProcedures" Target="Step1" Bounds="-323.222609418809,-208.291072387695,8.77496771745365,35.6575858451174" />
+    <Link Source="FallbackProcedures" Target="HostConfiguration1" Bounds="19.4631719716804,363.525639038086,31.0792230705117,61.2036927476488" />
+    <Link Source="FallbackProcedures" Target="NameService1" Bounds="71.1162544993902,363.525639038086,70.4970910574098,65.4421253804884" />
+    <Link Source="False" Target="FallbackProcedures" Bounds="-114.426660549072,250.017968349868,141.64354407133,82.9976154188479" />
+    <Link Source="JournalD" Target="CheckConfig" Bounds="-211.370705676738,46.1115130120923,144.82560268348,98.4491719561989" />
+    <Link Source="LicenseManagement" Target="CheckConfig" Bounds="-480.586092192901,116.814663918121,172.153092931553,32.4798823241594" />
+    <Link Source="Modules" Target="CheckConfig" Bounds="-274.751209498511,56.5115130120923,29.3825973776338,84.6069278401394" />
+    <Link Source="Mounts" Target="Step2" Bounds="-276.703775506986,-85.2451217895662,257.150799801522,60.4100068809544" />
+    <Link Source="NameService" Target="Bind" Bounds="-265.515769381657,472.627811889648,101.363428902179,50.3800680320069" />
+    <Link Source="NameService" Target="Dhcp" Bounds="-278.628918088418,472.627811889648,47.3589663077297,47.2777977981633" />
+    <Link Source="NameService" Target="Firewall" Bounds="-294.566811915407,472.627811889648,2.23554189524225,41.4493476146494" />
+    <Link Source="NameService" Target="Network" Bounds="-362.490201104155,472.627811889648,54.3351157489995,42.6818452445325" />
+    <Link Source="NameService1" Target="Bind1" Bounds="182.40354667598,461.050846557617,55.3974187778228,35.5766415196914" />
+    <Link Source="NameService1" Target="Dhcp1" Bounds="166.877899757128,461.050846557617,10.9655258831991,30.3747245435432" />
+    <Link Source="NameService1" Target="Network1" Bounds="113.02984400411,461.050846557617,35.1966501561791,32.7128931794799" />
+    <Link Source="OsParameters" Target="CheckConfig" Bounds="-377.875433823383,55.7115130120923,115.817492366442,88.4464505997537" />
+    <Link Source="OverlayWatcher" Target="Step2" Bounds="-424.901027964489,-77.1741328430176,81.3414638661422,43.4545345995665" />
+    <Link Source="Procedures" Target="HostConfiguration" Bounds="-416.308326234142,384.587925415039,21.2774619026361,54.4962600883999" />
+    <Link Source="Procedures" Target="NameService" Bounds="-375.46560107509,384.587925415039,62.6318653915656,56.0765053140407" />
+    <Link Source="Procedures" Target="Users" Bounds="-509.364150534053,384.587925415039,98.1816836918101,60.0578834999073" />
+    <Link Source="RemoveLimits" Target="Step2" Bounds="-532.032928717205,-78.7548322447003,185.658311883915,52.3131785482839" />
+    <Link Source="Start" Target="CoreProcedures" Bounds="-338.127806632855,-301.636897583008,8.52170792591426,58.479881191388" />
+    <Link Source="Step1" Target="HostPrepareConfig" Bounds="-282.979419352214,-141.006498350271,85.9074586452873,32.5818938847721" />
+    <Link Source="Step1" Target="Mounts" Bounds="-282.979419352214,-146.123717358569,254.574058601404,46.6839023505367" />
+    <Link Source="Step1" Target="OverlayWatcher" Bounds="-411.012960111774,-139.699665272099,76.0526720821455,32.9844771660925" />
+    <Link Source="Step1" Target="RemoveLimits" Bounds="-521.903723552266,-145.081360420563,186.677637533386,41.681721472566" />
+    <Link Source="Step1" Target="WorkingDirectories" Bounds="-308.668120723185,-137.934225665283,0.917654073152676,27.4051402128736" />
+    <Link Source="Step2" Target="AppKeys" Bounds="-490.821000644499,-9.666890512516,153.109074781869,40.8691866442496" />
+    <Link Source="Step2" Target="JournalD" Bounds="-285.465259195964,-11.7175399234045,196.611952171056,37.0475520912582" />
+    <Link Source="Step2" Target="Modules" Bounds="-304.6145436821,-3.65995456695557,14.1218364507071,26.283360089146" />
+    <Link Source="Step2" Target="OsParameters" Bounds="-369.336046353048,-3.65995456695557,39.539679001214,28.1871364534073" />
+    <Link Source="Step2" Target="Time&amp;Date" Bounds="-285.465259195964,-6.75321753607733,79.5824310895383,30.1190724177716" />
+    <Link Source="Time&amp;Date" Target="CheckConfig" Bounds="-225.35391285848,52.5115130120923,54.3022453176343,89.4162681076096" />
+    <Link Source="True" Target="Procedures" Bounds="-379.241162375579,248.944485168457,51.9194448540431,101.668114585099" />
+    <Link Source="WorkingDirectories" Target="Step2" Bounds="-310.191761817076,-75.574126739502,2.35155315701206,36.9723214216759" />
+  </Links>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="Label" Label="Etichetta" Description="Etichetta visualizzabile di un oggetto Annotatable" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+  </Properties>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Commento" ValueLabel="Con commento">
+      <Condition Expression="HasCategory('Comment')" />
+      <Setter Property="Background" Value="#FFFFFACD" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="NodeRadius" Value="2" />
+      <Setter Property="MaxWidth" Value="250" />
+    </Style>
+  </Styles>
+</DirectedGraph>

@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config.shared", "an
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{83B009BD-5589-4158-AFB5-1F0F63348DFE}"
 	ProjectSection(SolutionItems) = preProject
-		antd_procedures.xsd = antd_procedures.xsd
+		boot_procedure.dgml = boot_procedure.dgml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthilla.commands", "..\_shared\anthilla.commands\anthilla.commands.csproj", "{3E77920A-6201-48D8-A9CE-8D01A477E0F9}"
