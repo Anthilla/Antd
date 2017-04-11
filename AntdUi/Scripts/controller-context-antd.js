@@ -1442,7 +1442,8 @@ function AntdHostParamController($scope, $http) {
         var data = $.param({
             AntdPort: $scope.AntdPort,
             AntdUiPort: $scope.AntdUiPort,
-            DatabasePath: $scope.DatabasePath
+            DatabasePath: $scope.DatabasePath,
+            CloudAddress: $scope.CloudAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/config", data).then(
@@ -1458,6 +1459,7 @@ function AntdHostParamController($scope, $http) {
         $scope.AntdPort = data.AntdPort;
         $scope.AntdUiPort = data.AntdUiPort;
         $scope.DatabasePath = data.DatabasePath;
+        $scope.CloudAddress = data.CloudAddress;
     });
 
     $scope.Show = function (el) {

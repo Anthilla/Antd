@@ -79,6 +79,8 @@ app.controller("LogController", ["$scope", "$http", LogController]);
 function LogController($scope, $http) {
     $http.get("/log").success(function (data) {
         $scope.Logs = data.Logs;
+        console.log(data.Logs.length);
+        console.log($scope.Logs.length);
     });
 }
 

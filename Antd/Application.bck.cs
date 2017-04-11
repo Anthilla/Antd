@@ -88,17 +88,18 @@ namespace Antd {
             Logger.Info("starting antd");
             var startTime = DateTime.Now;
 
-            if(Parameter.IsUnix) {
-                Logger.Info("[config] core procedures");
-                List<Task> storedCoreProcedureTasks = new List<Task>();
-                foreach(var action in StoredCoreProcedures()) {
-                    Task t = Task.Run(() => {
-                        action.Invoke();
-                    });
-                    storedCoreProcedureTasks.Add(t);
-                }
-                Task.WaitAll(storedCoreProcedureTasks.ToArray());
+            Logger.Info("[config] core procedures");
+            //List<Task> storedCoreProcedureTasks = new List<Task>();
+            //foreach(var action in StoredCoreProcedures()) {
+            //    Task t = Task.Run(() => {
+            //        action.Invoke();
+            //    });
+            //    storedCoreProcedureTasks.Add(t);
+            //}
+            //Task.WaitAll(storedCoreProcedureTasks.ToArray());
+            CoreProcedures();
 
+            if(Parameter.IsUnix) {
                 var isConfigured = HostConfiguration.IsHostConfiguredByUser();
                 Logger.Info($"[config] antd is {(isConfigured == false ? "NOT " : "")}configured");
                 Logger.ConsoleOnly = false;
@@ -150,57 +151,57 @@ namespace Antd {
         #region [    Core Procedures    ]
         private static void CoreProcedures() {
             Logger.Info("[config] core procedures");
-            if(!Parameter.IsUnix)
-                return;
-            #region [    Remove Limits    ]
-            const string limitsFile = "/etc/security/limits.conf";
-            if(File.Exists(limitsFile)) {
-                if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
-                    File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
-                }
-            }
-            Bash.Execute("ulimit -n 1024000", false);
-            #endregion
-
-            #region [    Overlay Watcher    ]
-            if(Directory.Exists(Parameter.Overlay)) {
-                new OverlayWatcher().StartWatching();
-                Logger.Info("overlay watcher ready");
-            }
-            #endregion
-
-            #region [    Working Directories    ]
-            Directory.CreateDirectory("/cfg/antd");
-            Directory.CreateDirectory("/cfg/antd/database");
-            Directory.CreateDirectory("/cfg/antd/services");
-            Directory.CreateDirectory("/mnt/cdrom/DIRS");
             if(Parameter.IsUnix) {
-                Mount.WorkingDirectories();
-            }
-            Logger.Info("working directories ready");
-            #endregion
+                #region [    Remove Limits    ]
+                const string limitsFile = "/etc/security/limits.conf";
+                if(File.Exists(limitsFile)) {
+                    if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
+                        File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
+                    }
+                }
+                Bash.Execute("ulimit -n 1024000", false);
+                #endregion
 
-            #region [    Host Prepare Configuration    ]
-            var tmpHost = HostConfiguration.Host;
-            HostConfiguration.Export(tmpHost);
-            #endregion
+                #region [    Overlay Watcher    ]
+                if(Directory.Exists(Parameter.Overlay)) {
+                    new OverlayWatcher().StartWatching();
+                    Logger.Info("overlay watcher ready");
+                }
+                #endregion
 
-            #region [    Mounts    ]
-            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
+                #region [    Working Directories    ]
+                Directory.CreateDirectory("/cfg/antd");
+                Directory.CreateDirectory("/cfg/antd/database");
+                Directory.CreateDirectory("/cfg/antd/services");
+                Directory.CreateDirectory("/mnt/cdrom/DIRS");
+                if(Parameter.IsUnix) {
+                    Mount.WorkingDirectories();
+                }
+                Logger.Info("working directories ready");
+                #endregion
+
+                #region [    Host Prepare Configuration    ]
+                var tmpHost = HostConfiguration.Host;
+                HostConfiguration.Export(tmpHost);
+                #endregion
+
+                #region [    Mounts    ]
+                if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+                    Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
+                }
+                var kernelRelease = Bash.Execute("uname -r").Trim();
+                var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
+                if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
+                    linkedRelease.Contains(kernelRelease)) {
+                    var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                    Directory.CreateDirectory(moduleDir);
+                    Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
+                }
+                Bash.Execute("systemctl restart systemd-modules-load.service", false);
+                Mount.AllDirectories();
+                Logger.Info("mounts ready");
+                #endregion
             }
-            var kernelRelease = Bash.Execute("uname -r").Trim();
-            var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
-            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
-                linkedRelease.Contains(kernelRelease)) {
-                var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                Directory.CreateDirectory(moduleDir);
-                Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
-            }
-            Bash.Execute("systemctl restart systemd-modules-load.service", false);
-            Mount.AllDirectories();
-            Logger.Info("mounts ready");
-            #endregion
 
             #region [    Application Keys    ]
             var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
@@ -221,30 +222,32 @@ namespace Antd {
             }
             #endregion
 
-            #region [    OS Parameters    ]
-            HostConfiguration.ApplyHostOsParameters();
-            Logger.Info("os parameters ready");
-            #endregion
+            if(Parameter.IsUnix) {
+                #region [    OS Parameters    ]
+                HostConfiguration.ApplyHostOsParameters();
+                Logger.Info("os parameters ready");
+                #endregion
 
-            #region [    Modules    ]
-            HostConfiguration.ApplyHostBlacklistModules();
-            HostConfiguration.ApplyHostModprobes();
-            HostConfiguration.ApplyHostRemoveModules();
-            Logger.Info("modules ready");
-            #endregion
+                #region [    Modules    ]
+                HostConfiguration.ApplyHostBlacklistModules();
+                HostConfiguration.ApplyHostModprobes();
+                HostConfiguration.ApplyHostRemoveModules();
+                Logger.Info("modules ready");
+                #endregion
 
-            #region [    Time & Date    ]
-            HostConfiguration.ApplyNtpdate();
-            HostConfiguration.ApplyTimezone();
-            HostConfiguration.ApplyNtpd();
-            Logger.Info("time and date configured");
-            #endregion
+                #region [    Time & Date    ]
+                HostConfiguration.ApplyNtpdate();
+                HostConfiguration.ApplyTimezone();
+                HostConfiguration.ApplyNtpd();
+                Logger.Info("time and date configured");
+                #endregion
 
-            #region [    JournalD    ]
-            if(JournaldConfiguration.IsActive()) {
-                JournaldConfiguration.Set();
+                #region [    JournalD    ]
+                if(JournaldConfiguration.IsActive()) {
+                    JournaldConfiguration.Set();
+                }
+                #endregion
             }
-            #endregion
         }
 
         private static List<Action> StoredCoreProcedures() {
@@ -1080,13 +1083,16 @@ namespace Antd {
         private static void WorkingProcedures() {
             Logger.Info("[config] working procedures");
             #region [    Cloud Send Uptime    ]
-            var csuTimer = new UpdateCloudInfo();
-            csuTimer.Start(1000 * 60 * 5);
+            if(Parameter.IsUnix) {
+                var csuTimer = new UpdateCloudInfo();
+                csuTimer.Start(1000 * 60 * 5);
+            }
             #endregion
 
             #region [    Cloud Fetch Commands    ]
             var cfcTimer = new FetchRemoteCommand();
             cfcTimer.Start((1000 * 60 * 2) + 330);
+            //cfcTimer.Start((1000 * 2) + 330);
             #endregion
         }
 

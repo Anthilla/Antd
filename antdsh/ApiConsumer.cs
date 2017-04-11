@@ -25,7 +25,7 @@ namespace antdsh {
                 return result != null ? JsonConvert.DeserializeObject<T>(result) : default(T);
             }
             #region Exception
-            catch (Exception ex) {
+            catch(Exception ex) {
 #if DEBUG
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine(uri);
@@ -46,7 +46,7 @@ namespace antdsh {
                 client.Execute(request);
             }
             #region Exception
-            catch (Exception ex) {
+            catch(Exception ex) {
 #if DEBUG
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine(uri);
@@ -63,7 +63,7 @@ namespace antdsh {
                 var client = new RestClient(uri);
                 var request = new RestRequest("/", Method.POST);
                 request.AddHeader(InstanceHeader, _instance);
-                foreach (var d in data) {
+                foreach(var d in data) {
                     request.AddParameter(d.Key, d.Value);
                 }
                 var response = client.Execute(request);
@@ -71,7 +71,7 @@ namespace antdsh {
                 return result != null ? JsonConvert.DeserializeObject<T>(result) : default(T);
             }
             #region Exception
-            catch (Exception ex) {
+            catch(Exception ex) {
 #if DEBUG
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine(uri);
@@ -89,7 +89,7 @@ namespace antdsh {
                 var client = new RestClient(uri);
                 var request = new RestRequest("/", Method.POST);
                 request.AddHeader(InstanceHeader, _instance);
-                foreach (var d in data) {
+                foreach(var d in data) {
                     request.AddParameter(d.Key, d.Value);
                 }
                 var response = client.Execute(request);
@@ -97,7 +97,7 @@ namespace antdsh {
                 return code;
             }
             #region Exception
-            catch (Exception ex) {
+            catch(Exception ex) {
 #if DEBUG
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine(uri);
@@ -120,7 +120,7 @@ namespace antdsh {
                 return result;
             }
             #region Exception
-            catch (Exception ex) {
+            catch(Exception ex) {
 #if DEBUG
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine(uri);
@@ -141,7 +141,7 @@ namespace antdsh {
                 //client.DownloadData(request).SaveAs(destination);
                 //var finfo = new FileInfo(destination);
                 //return finfo;
-                using (var writer = File.OpenWrite(destination)) {
+                using(var writer = File.OpenWrite(destination)) {
                     var client = new RestClient(uri);
                     var request = new RestRequest("/", Method.GET) {
                         ResponseWriter = responseStream => responseStream.CopyTo(writer)
@@ -152,7 +152,7 @@ namespace antdsh {
                 }
             }
             #region Exception
-            catch (Exception ex) {
+            catch(Exception ex) {
 #if DEBUG
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine(uri);

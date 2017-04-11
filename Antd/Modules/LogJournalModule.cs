@@ -39,8 +39,11 @@ namespace Antd.Modules {
         public LogJournalModule() {
             Get["/journal"] = x => {
                 var journalctl = new Journalctl();
+                var data = journalctl.GetAllLogSinceHour("4").ToList();
+                var skip = data.Count() - 50;
+                var d = data.Skip(skip);
                 var model = new PageLogModel {
-                    Logs = journalctl.GetAllLogSinceHour("4").ToList()
+                    Logs = d
                 };
                 return JsonConvert.SerializeObject(model);
             };

@@ -20,10 +20,12 @@ namespace AntdUi.Modules {
                 int antdPort = Request.Form.AntdPort;
                 int antdUiPort = Request.Form.AntdUiPort;
                 string databasePath = Request.Form.DatabasePath;
+                string cloudAddress = Request.Form.CloudAddress;
                 var model = new AppConfigurationModel {
                     AntdPort = antdPort,
                     AntdUiPort = antdUiPort,
-                    DatabasePath = databasePath
+                    DatabasePath = databasePath,
+                    CloudAddress = cloudAddress
                 };
                 _appConfiguration.UiSave(model);
                 return HttpStatusCode.OK;

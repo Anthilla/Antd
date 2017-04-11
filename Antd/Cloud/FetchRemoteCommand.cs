@@ -1,4 +1,5 @@
 ﻿using antdlib.common;
+using antdlib.config.shared;
 using antdlib.models;
 using anthilla.commands;
 using System.Collections.Generic;
@@ -29,8 +30,15 @@ namespace Antd.Cloud {
         private static readonly string MachineId = Machine.MachineId.Get;
 
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e) {
-            //ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
-            var cmds = Api.Get<List<RemoteCommand>>($"{Parameter.Cloud}repo/assetinfo/fetchcommand/Antd/" + MachineId);
+            ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
+            var cloudaddress = new AppConfiguration().Get().CloudAddress;
+            if(string.IsNullOrEmpty(cloudaddress)) {
+                return;
+            }
+            if(!cloudaddress.EndsWith("/")) {
+                cloudaddress = cloudaddress + "/";
+            }
+            var cmds = Api.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetinfo/fetchcommand/Antd/" + MachineId);
             if(!cmds.Any())
                 return;
             foreach(var cmd in cmds.OrderBy(_ => _.Date)) {

@@ -58,12 +58,13 @@ namespace antdsh {
         private const string UnitsTargetApp = "/mnt/cdrom/Units/antd.target.wants";
         private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
 
-        private static string _officialRepo = "https://srv.anthilla.com/";
+        private static string _officialRepo = "https://srv.anthilla.com/repo/";
         private static string _publicRepositoryUrlHttps = _officialRepo;
         private static string _publicRepositoryUrlHttp = _officialRepo.Replace("https", "http");
         private const string RepositoryFileNameZip = "repo.txt.xz";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
-        private static string TmpDirectory => $"{Parameter.RepoTemp}/update";
+        private static string AppsDirectoryTmp => $"{AppsDirectory}/tmp";
+        private static string TmpDirectory => $"{AppsDirectoryTmp}/update";
 
         private static string AntdDirectory => $"{AppsDirectory}/Anthilla_Antd";
         private static string AntdActive => $"{AntdDirectory}/active-version";
@@ -90,20 +91,21 @@ namespace antdsh {
         #endregion Parameters
 
         #region Public Medhod
-
         public void Check() {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
             var info = GetRepositoryInfo().OrderBy(_ => _.FileContext);
             Console.WriteLine("");
             foreach(var i in info) {
                 Console.WriteLine($"{i.FileContext}\t{i.FileDate}\t{i.FileName}");
             }
+            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
             Console.WriteLine("");
         }
 
         public void All(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
@@ -116,7 +118,7 @@ namespace antdsh {
         }
 
         public void Antd(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
@@ -146,7 +148,7 @@ namespace antdsh {
         }
 
         public void Antdsh(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
@@ -163,11 +165,11 @@ namespace antdsh {
         }
 
         public void Aossvc(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
 
             var exeUrl = $"{_publicRepositoryUrlHttps}/aossvc.exe";
             const string exeBin = "/usr/sbin/aossvc.exe";
@@ -182,7 +184,7 @@ namespace antdsh {
         }
 
         public void System(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
@@ -194,7 +196,7 @@ namespace antdsh {
         private static readonly Bash Bash = new Bash();
 
         public void Kernel(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
@@ -210,7 +212,7 @@ namespace antdsh {
         }
 
         public void Xen(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetRandomServer("http");
+            _publicRepositoryUrlHttps = GetRandomServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
 
@@ -383,6 +385,13 @@ namespace antdsh {
             _updateCounter = 0;
         }
 
+        /// <summary>
+        /// deprecated
+        /// </summary>
+        /// <param name="currentContext"></param>
+        /// <param name="activeVersionPath"></param>
+        /// <param name="contextDestinationDirectory"></param>
+        /// <param name="force"></param>
         public void UpdateXen(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool force = false) {
             Directory.CreateDirectory(Parameter.RepoTemp);
             Directory.CreateDirectory(TmpDirectory);
@@ -460,9 +469,12 @@ namespace antdsh {
         }
 
         private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
-            new ApiConsumer().GetFile($"{_publicRepositoryUrlHttps}/{RepositoryFileNameZip}",
-                $"{TmpDirectory}/{RepositoryFileNameZip}");
+            //curl https://srv.anthilla.com/repo/repo.txt.xz > /mnt/cdrom/Apps/tmp/tmp/update/repo.txt.xz
+            Console.WriteLine($"curl {_publicRepositoryUrlHttps}/{RepositoryFileNameZip} > {TmpDirectory}/{RepositoryFileNameZip}");
+            Bash.Execute($"curl {_publicRepositoryUrlHttps}/{RepositoryFileNameZip} > {TmpDirectory}/{RepositoryFileNameZip}", false);
+            //new ApiConsumer().GetFile($"{_publicRepositoryUrlHttps}/{RepositoryFileNameZip}", $"{TmpDirectory}/{RepositoryFileNameZip}");
             if(!File.Exists($"{TmpDirectory}/{RepositoryFileNameZip}")) {
+                Console.WriteLine("GetRepositoryInfo - download error");
                 return new List<FileInfoModel>();
             }
             var tmpRepoListText = Bash.Execute($"xzcat {TmpDirectory}/{RepositoryFileNameZip}");
@@ -494,13 +506,18 @@ namespace antdsh {
         }
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
-            var latestFileDownloadUrl = $"{_publicRepositoryUrlHttps}/{latestFileInfo.FileName}";
+            var latestFileDownloadUrl = $"{_publicRepositoryUrlHttps}{latestFileInfo.FileName}";
             Console.WriteLine($"downloading file from {latestFileDownloadUrl}");
             var latestFile = $"{TmpDirectory}/{latestFileInfo.FileName}";
             if(File.Exists(latestFile)) {
                 File.Delete(latestFile);
             }
-            new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
+
+            Console.WriteLine($"curl {latestFileDownloadUrl} > {latestFile}");
+            Bash.Execute($"curl {latestFileDownloadUrl} > {latestFile}", false);
+
+            //new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
+
             Console.WriteLine($"repository file hash: {latestFileInfo.FileHash}");
             Console.WriteLine($"downloaded file hash: {GetFileHash(latestFile)}");
             return latestFileInfo.FileHash == GetFileHash(latestFile);

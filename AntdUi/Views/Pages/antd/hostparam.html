@@ -43,6 +43,19 @@
         </div>
         <div class="row cells4">
             <div class="cell padding-left20">
+                <h5 class="uppercase fg-anthilla-green">{{ 'Cloud Address' | translate }}</h5>
+            </div>
+            <div class="cell colspan2">
+                <div class="input-control text width100pc fg-white">
+                    <input type="text" ng-model="CloudAddress" ng-change="Show('#Alert3')" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                </div>
+            </div>
+            <div class="cell padding-left20" style="display: none;" id="Alert3">
+                <h5 class="fg-anthilla-orange">{{ 'APP_RESTART_REQUIRED' | translate }}</h5>
+            </div>
+        </div>
+        <div class="row cells4">
+            <div class="cell padding-left20">
             </div>
             <div class="cell colspan2">
                 <button ng-click="Save()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
