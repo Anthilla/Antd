@@ -306,10 +306,10 @@ namespace antdsh {
                 _updateRetry = false;
                 return;
             }
+
             var currentVersionDate = GetVersionDateFromFile(activeVersionPath);
             var repositoryInfo = GetRepositoryInfo();
-            var currentContextRepositoryInfo =
-                repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
+            var currentContextRepositoryInfo = repositoryInfo.Where(_ => _.FileContext == currentContext).OrderByDescending(_ => _.FileDate);
             var latestFileInfo = currentContextRepositoryInfo.LastOrDefault();
             var isUpdateNeeded = IsUpdateNeeded(currentVersionDate, latestFileInfo?.FileDate);
             if(force == false) {
@@ -326,8 +326,8 @@ namespace antdsh {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
             else if(
-                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive,
-                    contextDestinationDirectory) == false && _updateRetry == false) {
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "system.map", SystemMapActive, contextDestinationDirectory) == false
+                && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
@@ -338,8 +338,8 @@ namespace antdsh {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
             else if(
-                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive,
-                    contextDestinationDirectory) == false && _updateRetry == false) {
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "lib64_firmware", FirmwareActive, contextDestinationDirectory) == false
+                    && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
@@ -362,8 +362,8 @@ namespace antdsh {
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
             else if(
-                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive,
-                    contextDestinationDirectory) == false && _updateRetry == false) {
+                DownloadAndInstallSingleFile(currentContextRepositoryInfo, "kernel", KernelActive, contextDestinationDirectory) == false
+                && _updateRetry == false) {
                 _updateRetry = true;
                 UpdateKernel(currentContext, activeVersionPath, contextDestinationDirectory);
             }
@@ -515,9 +515,6 @@ namespace antdsh {
 
             Console.WriteLine($"curl {latestFileDownloadUrl} > {latestFile}");
             Bash.Execute($"curl {latestFileDownloadUrl} > {latestFile}", false);
-
-            //new ApiConsumer().GetFile(latestFileDownloadUrl, latestFile);
-
             Console.WriteLine($"repository file hash: {latestFileInfo.FileHash}");
             Console.WriteLine($"downloaded file hash: {GetFileHash(latestFile)}");
             return latestFileInfo.FileHash == GetFileHash(latestFile);
@@ -529,8 +526,7 @@ namespace antdsh {
             }
         }
 
-        private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath,
-            string activeVersionPath) {
+        private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
             File.Copy(latestTmpFilePath, newVersionPath, true);
             File.Delete(activeVersionPath);
             Bash.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
@@ -538,9 +534,8 @@ namespace antdsh {
             Bash.Execute($"chmod 775 {newVersionPath}");
         }
 
-        private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query,
-            string activePath, string contextDestinationDirectory) {
-            var latestFileInfo = repositoryInfo.FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
+        private static bool DownloadAndInstallSingleFile(IEnumerable<FileInfoModel> repositoryInfo, string query, string activePath, string contextDestinationDirectory) {
+            var latestFileInfo = repositoryInfo.OrderByDescending(_ => _.FileName).FirstOrDefault(_ => _.FileName.ToLower().Contains(query));
             var isDownloadValid = DownloadLatestFile(latestFileInfo);
             if(isDownloadValid == false) {
                 Console.WriteLine($"{latestFileInfo?.FileName}: downloaded file is not valid");
