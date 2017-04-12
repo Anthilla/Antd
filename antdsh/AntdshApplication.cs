@@ -3,15 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace antdsh {
     internal class AntdshApplication {
 
         private static readonly IDictionary<string, string> CommandList = new Dictionary<string, string>();
 
+        private static bool TrustCertificate(object sender, X509Certificate x509Certificate, X509Chain x509Chain, SslPolicyErrors sslPolicyErrors) {
+            return true;
+        }
+
         private static void Main(string[] args) {
+            ServicePointManager.ServerCertificateValidationCallback = TrustCertificate;
             if(args.Length < 1) {
                 while(true) {
                     Console.Write($"{DateTime.Now:[dd-MM-yyyy] HH:mm} > antdsh > ");
@@ -62,7 +69,8 @@ namespace antdsh {
                 { "hash" , HashFunc },
                 { "start", StartFunc },
                 { "stop", StopFunc },
-                { "status", StatusFunc }
+                { "status", StatusFunc },
+                { "download", DownloadFunc }
             };
 
         private static void HelpFunc(string[] args) {
@@ -103,8 +111,20 @@ namespace antdsh {
             if(File.Exists(verb)) {
                 Console.WriteLine($"{verb} does not exist");
             }
-            var h = Update.GetFileHash(verb);
+            var h = Update2.GetFileHash(verb);
             Console.WriteLine(h);
+        }
+
+        public static void DownloadFunc(string[] args) {
+            if(args.Length != 2) {
+                return;
+            }
+            var verb = args.FirstOrDefault();
+            var filename = args.LastOrDefault();
+            var success = new FileDownloader(verb, filename).DownloadFile();
+            if(success == false) {
+                throw new Exception("Download failed");
+            }
         }
 
         private static void UpdateFunc(string[] args) {
@@ -156,34 +176,42 @@ namespace antdsh {
 
             var forced = args.Contains("-f") || args.Contains("--force");
             var unitsOnly = args.Contains("-u") || args.Contains("--units");
-            var update = new Update2();
 
             switch(verb) {
                 case "check":
-                    update.Check();
+                    Update2.Check();
                     break;
                 case "all":
-                    update.All(forced, unitsOnly);
+                    Update2.Antd(forced, unitsOnly);
+                    Update2.AntdUi(forced, unitsOnly);
+                    Update2.Antdsh(forced, unitsOnly);
+                    Update2.Aossvc(forced, unitsOnly);
+                    Update2.KernelSystemMap(forced, unitsOnly);
+                    Update2.KernelFirmware(forced, unitsOnly);
+                    Update2.KernelInitrd(forced, unitsOnly);
+                    Update2.KernelKernel(forced, unitsOnly);
+                    Update2.KernelModules(forced, unitsOnly);
+                    Update2.System(forced, unitsOnly);
                     break;
                 case "antd":
-                    update.Antd(forced, unitsOnly);
-                    update.AntdUi(forced, unitsOnly);
+                    Update2.Antd(forced, unitsOnly);
+                    Update2.AntdUi(forced, unitsOnly);
                     break;
                 case "antdsh":
-                    update.Antdsh(forced, unitsOnly);
+                    Update2.Antdsh(forced, unitsOnly);
                     break;
                 case "aossvc":
-                    update.Aossvc(forced, unitsOnly);
+                    Update2.Aossvc(forced, unitsOnly);
                     break;
                 case "system":
-                    update.System(forced, unitsOnly);
+                    Update2.System(forced, unitsOnly);
                     break;
                 case "kernel":
-                    update.KernelSystemMap(forced, unitsOnly);
-                    update.KernelFirmware(forced, unitsOnly);
-                    update.KernelInitrd(forced, unitsOnly);
-                    update.KernelKernel(forced, unitsOnly);
-                    update.KernelModules(forced, unitsOnly);
+                    Update2.KernelSystemMap(forced, unitsOnly);
+                    Update2.KernelFirmware(forced, unitsOnly);
+                    Update2.KernelInitrd(forced, unitsOnly);
+                    Update2.KernelKernel(forced, unitsOnly);
+                    Update2.KernelModules(forced, unitsOnly);
                     break;
                 case "xen":
                     //Update.Xen(forced, unitsOnly);

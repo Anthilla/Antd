@@ -99,7 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiConsumer.cs" />
-    <Compile Include="DownloadManager.cs" />
+    <Compile Include="FileDownloader.cs" />
     <Compile Include="Execute.cs" />
     <Compile Include="AntdshApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

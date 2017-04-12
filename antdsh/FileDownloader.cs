@@ -21,7 +21,7 @@ namespace antdsh {
             _fullPathWhereToSave = fullPathWhereToSave;
         }
 
-        public bool StartDownload(int timeout) {
+        private bool StartDownload(int timeout) {
             try {
                 var filename = Path.GetFileName(_fullPathWhereToSave);
                 Directory.CreateDirectory(Path.GetDirectoryName(_fullPathWhereToSave));
@@ -29,12 +29,12 @@ namespace antdsh {
                     File.Delete(_fullPathWhereToSave);
                 }
                 using(WebClient client = new WebClient()) {
-                    var ur = new Uri(_url);
+                    client.Proxy = null;
                     // client.Credentials = new NetworkCredential("username", "password");
                     client.DownloadProgressChanged += WebClientDownloadProgressChanged;
                     client.DownloadFileCompleted += WebClientDownloadCompleted;
                     Console.WriteLine($"Downloading file {filename}:");
-                    client.DownloadFileAsync(ur, _fullPathWhereToSave);
+                    client.DownloadFileAsync(new Uri(_url), _fullPathWhereToSave);
                     _semaphore.Wait(timeout);
                     return _result && File.Exists(_fullPathWhereToSave);
                 }
@@ -58,12 +58,13 @@ namespace antdsh {
             if(!_result) {
                 Console.Write(args.Error.ToString());
             }
-            Console.WriteLine(Environment.NewLine + "Download finished!");
+            Console.WriteLine("Download finished!");
             _semaphore.Release();
         }
 
-        public static bool DownloadFile(string url, string fullPathWhereToSave, int timeoutInMilliSec) {
-            return new FileDownloader(url, fullPathWhereToSave).StartDownload(timeoutInMilliSec);
+        public bool DownloadFile() {
+            var timeoutInMilliSec = 1000 * 60 * 60;
+            return StartDownload(timeoutInMilliSec);
         }
     }
 }

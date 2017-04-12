@@ -117,7 +117,7 @@ namespace antdsh {
 
         private static int _getServerRetry;
 
-        private string GetReferenceServer(string filter = "") {
+        private static string GetReferenceServer(string filter = "") {
             try {
                 var server = _publicRepositoryUrlHttps;
                 while(_getServerRetry < 5) {
@@ -133,8 +133,8 @@ namespace antdsh {
             }
         }
 
-        private void CleanTmp() {
-            while(Directory.Exists(TmpDirectory)) {
+        private static void CleanTmp() {
+            if(Directory.Exists(TmpDirectory)) {
                 Directory.Delete(TmpDirectory, true);
             }
             Directory.CreateDirectory(TmpDirectory);
@@ -146,28 +146,28 @@ namespace antdsh {
             }
         }
 
-        private bool DownloadFile(string url, string path) {
-            try {
-                var success = FileDownloader.DownloadFile(url, path, 1000 * 60 * 60);
-                if(success == false) {
-                    throw new Exception("Download failed");
-                }
-                return success;
-            }
-            catch(Exception ex) {
-                Console.WriteLine(ex.Message);
-                throw;
-            }
-        }
+        //private bool DownloadFile(string url, string path) {
+        //    try {
+        //        var success = FileDownloader.DownloadFile(url, path, 1000 * 60 * 60);
+        //        if(success == false) {
+        //            throw new Exception("Download failed");
+        //        }
+        //        return success;
+        //    }
+        //    catch(Exception ex) {
+        //        Console.WriteLine(ex.Message);
+        //        throw;
+        //    }
+        //}
 
-        private bool DownloadLatestFile(FileInfoModel latestFileInfo) {
+        private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
             var sourceUrl = $"{_publicRepositoryUrlHttps}{latestFileInfo.FileName}";
             Console.WriteLine($"downloading file from {sourceUrl}");
             var destinationPath = $"{TmpDirectory}/{latestFileInfo.FileName}";
             if(File.Exists(destinationPath)) {
                 File.Delete(destinationPath);
             }
-            var download = DownloadFile(sourceUrl, destinationPath);
+            var download = new FileDownloader(sourceUrl, destinationPath).DownloadFile();
             if(download != true) {
                 Console.WriteLine($"An error occurred downloading {sourceUrl}, download process error");
                 return false;
@@ -178,10 +178,10 @@ namespace antdsh {
             return latestFileInfo.FileHash == downloadedFileHash;
         }
 
-        private IEnumerable<FileInfoModel> GetRepositoryInfo() {
+        private static IEnumerable<FileInfoModel> GetRepositoryInfo() {
             var sourceUrl = $"{_publicRepositoryUrlHttps}/{RepositoryFileNameZip}";
             var destinationPath = $"{TmpDirectory}/{RepositoryFileNameZip}";
-            var download = DownloadFile(sourceUrl, destinationPath);
+            var download = new FileDownloader(sourceUrl, destinationPath).DownloadFile();
             if(download != true) {
                 Console.WriteLine($"An error occurred downloading {sourceUrl}, download process error");
                 return new List<FileInfoModel>();
@@ -211,9 +211,9 @@ namespace antdsh {
             return files.OrderBy(_ => _.FileContext).ThenBy(_ => _.FileName);
         }
 
-        private int _updateCounter;
+        private static int _updateCounter;
 
-        private void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool forced, string query = "") {
+        private static void UpdateContext(string currentContext, string activeVersionPath, string contextDestinationDirectory, bool forced, string query = "") {
             while(true) {
                 _updateCounter++;
                 if(_updateCounter > 5) {
@@ -275,7 +275,7 @@ namespace antdsh {
             }
         }
 
-        private void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
+        private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
             Console.WriteLine("");
             Console.WriteLine($"Updating units for {currentContext}");
 
@@ -346,7 +346,7 @@ namespace antdsh {
         #endregion
 
         #region [    Public Medhods    ]
-        public void Check() {
+        public static void Check() {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -359,20 +359,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void All(bool forced, bool unitsOnly) {
-            _publicRepositoryUrlHttps = GetReferenceServer("https");
-            Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
-            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
-
-            Antd(forced, unitsOnly);
-            Antdsh(forced, unitsOnly);
-            System(forced, unitsOnly);
-            Kernel(forced, unitsOnly);
-
-            Bash.Execute($"rm -fR {TmpDirectory}; mkdir -p {TmpDirectory}");
-        }
-
-        public void Antd(bool forced, bool unitsOnly) {
+        public static void Antd(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -387,7 +374,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void AntdUi(bool forced, bool unitsOnly) {
+        public static void AntdUi(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -402,7 +389,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void Antdsh(bool forced, bool unitsOnly) {
+        public static void Antdsh(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -418,7 +405,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void Aossvc(bool forced, bool unitsOnly) {
+        public static void Aossvc(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -426,14 +413,14 @@ namespace antdsh {
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             var sourceUrl = $"{_publicRepositoryUrlHttps}/aossvc.exe";
             const string destinationPath = "/usr/sbin/aossvc.exe";
-            var download = DownloadFile(sourceUrl, destinationPath);
+            var download = new FileDownloader(sourceUrl, destinationPath).DownloadFile();
             if(download != true) {
                 Console.WriteLine($"An error occurred downloading {sourceUrl}, download process error");
                 return;
             }
             var svcUrl = $"{_publicRepositoryUrlHttps}/aossvc.service";
             const string svcBin = "/usr/lib/systemd/system/aossvc.service";
-            var download2 = DownloadFile(svcUrl, svcBin);
+            var download2 = new FileDownloader(svcUrl, svcBin).DownloadFile();
             if(download2 != true) {
                 Console.WriteLine($"An error occurred downloading {svcUrl}, download process error");
                 return;
@@ -444,7 +431,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void System(bool forced, bool unitsOnly) {
+        public static void System(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -454,15 +441,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void Kernel(bool forced, bool unitsOnly) {
-            KernelSystemMap(forced, unitsOnly);
-            KernelFirmware(forced, unitsOnly);
-            KernelInitrd(forced, unitsOnly);
-            KernelKernel(forced, unitsOnly);
-            KernelModules(forced, unitsOnly);
-        }
-
-        public void KernelSystemMap(bool forced, bool unitsOnly) {
+        public static void KernelSystemMap(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -472,7 +451,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void KernelFirmware(bool forced, bool unitsOnly) {
+        public static void KernelFirmware(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -482,7 +461,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void KernelInitrd(bool forced, bool unitsOnly) {
+        public static void KernelInitrd(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -492,7 +471,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void KernelKernel(bool forced, bool unitsOnly) {
+        public static void KernelKernel(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
@@ -502,7 +481,7 @@ namespace antdsh {
             Console.WriteLine();
         }
 
-        public void KernelModules(bool forced, bool unitsOnly) {
+        public static void KernelModules(bool forced, bool unitsOnly) {
             Console.WriteLine();
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
