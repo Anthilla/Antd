@@ -143,6 +143,7 @@ namespace antdsh {
                 //return finfo;
                 using(var writer = File.OpenWrite(destination)) {
                     var client = new RestClient(uri);
+                    client.Timeout = 1000 * 60 * 60;
                     var request = new RestRequest("/", Method.GET) {
                         ResponseWriter = responseStream => responseStream.CopyTo(writer)
                     };

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace antdsh {
     internal class AntdshApplication {
@@ -19,6 +20,7 @@ namespace antdsh {
                         AddCommand(command);
                         var commandMain = command.Split(' ').First();
                         var arguments = command.Split(' ').Skip(1).ToArray();
+
                         if(LCommands.ContainsKey(commandMain)) {
                             Action<string[]> functionToExecute;
                             LCommands.TryGetValue(commandMain, out functionToExecute);
@@ -57,6 +59,7 @@ namespace antdsh {
                 { "history", HistoryFunc },
                 { "exit", ExitFunc },
                 { "update" , UpdateFunc },
+                { "hash" , HashFunc },
                 { "start", StartFunc },
                 { "stop", StopFunc },
                 { "status", StatusFunc }
@@ -90,7 +93,19 @@ namespace antdsh {
         }
 
         private static readonly Units Units = new Units();
-        private static readonly Update Update = new Update();
+
+        private static void HashFunc(string[] args) {
+            Units.CreateRemountUnits();
+            if(args.Length != 1) {
+                return;
+            }
+            var verb = args.FirstOrDefault();
+            if(File.Exists(verb)) {
+                Console.WriteLine($"{verb} does not exist");
+            }
+            var h = Update.GetFileHash(verb);
+            Console.WriteLine(h);
+        }
 
         private static void UpdateFunc(string[] args) {
             Units.CreateRemountUnits();
@@ -141,31 +156,37 @@ namespace antdsh {
 
             var forced = args.Contains("-f") || args.Contains("--force");
             var unitsOnly = args.Contains("-u") || args.Contains("--units");
+            var update = new Update2();
 
             switch(verb) {
                 case "check":
-                    Update.Check();
+                    update.Check();
                     break;
                 case "all":
-                    Update.All(forced, unitsOnly);
+                    update.All(forced, unitsOnly);
                     break;
                 case "antd":
-                    Update.Antd(forced, unitsOnly);
+                    update.Antd(forced, unitsOnly);
+                    update.AntdUi(forced, unitsOnly);
                     break;
                 case "antdsh":
-                    Update.Antdsh(forced, unitsOnly);
+                    update.Antdsh(forced, unitsOnly);
                     break;
                 case "aossvc":
-                    Update.Aossvc(forced, unitsOnly);
+                    update.Aossvc(forced, unitsOnly);
                     break;
                 case "system":
-                    Update.System(forced, unitsOnly);
+                    update.System(forced, unitsOnly);
                     break;
                 case "kernel":
-                    Update.Kernel(forced, unitsOnly);
+                    update.KernelSystemMap(forced, unitsOnly);
+                    update.KernelFirmware(forced, unitsOnly);
+                    update.KernelInitrd(forced, unitsOnly);
+                    update.KernelKernel(forced, unitsOnly);
+                    update.KernelModules(forced, unitsOnly);
                     break;
                 case "xen":
-                    Update.Xen(forced, unitsOnly);
+                    //Update.Xen(forced, unitsOnly);
                     break;
                 default:
                     Console.WriteLine("Nothing to update...");
