@@ -12,7 +12,7 @@ Antd is:
 - implemented as web service with REST API service and rendered web interface
 - released under the BSD 3 license
 - self hosted, no external webserver is needed
-- IMPORTANT: WE CHANGED THE DB, from DensoDB v3, to RaptorDB
+- IMPORTANT: WE CHANGED THE DB, from DensoDB v3, to RaptorDB, to LiteDB
 
 Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, integration with systemd become deeper and deeper.
 
@@ -20,11 +20,11 @@ Antd is a single daemon to maintain the entire Linux/Unix appliance system (proc
 - Complete administration capabilities
 - Easy to use for inspecting logs and managing services
 - Swiss Knife all-in-one for administration, configuration and monitoring
-- Scales from one machine to big cluster environments.
-- Orchestrated execution and management of processes and applications in distributed environments
-- Full machine administration and monitoring
+- Scales from one machine to big cluster environments (WIP)
+- Orchestrated execution and management of processes and applications in distributed environments (WIP)
+- Full machine administration and monitoring (WIP)
 - Unique interface throughout the application
-- Hardware/OS/architecture independent
+- Hardware/OS/architecture independent 
 
 ### Antd is inspired by:
 - [Webmin](http://www.webmin.com/)
@@ -37,12 +37,13 @@ Antd is a single daemon to maintain the entire Linux/Unix appliance system (proc
 
 ### Dependencies:
 - [C5](https://github.com/sestoft/C5/)
-- [RaptorDB](https://raptordb.codeplex.com/)
+- [LiteDB](https://github.com/mbdavid/LiteDB)
 - [jQuery](https://github.com/jquery/jquery)
 - [Owin](https://github.com/owin/owin)
 - [Nancy](https://github.com/NancyFx/Nancy)
 - [Newtonsoft Json](https://github.com/JamesNK/Newtonsoft.Json)
 - [Metro UI](https://github.com/olton/Metro-UI-CSS) 
+- [AngularJS](https://github.com/angular/angular.js/) 
 
 Getting Started (Development)
 ---------------
@@ -57,8 +58,6 @@ On <b>Linux</b> for Development
 
 1. Install mono (4.x or higher)
 2. open from an IDE
-
-The Antd API uses JSON over HTTP.
 
 <b>Binaries</b>: Refer to AnthillaOS for Binary version.
 
@@ -75,8 +74,6 @@ Email: osdev@anthilla.com
 ### IM
 
 Freenode IRC channel: #anthilla
-
-Gitter: [![Join the chat at https://gitter.im/Anthilla/Antd](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Anthilla/Antd?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### Getting Started
 
@@ -104,7 +101,7 @@ Specific components of Antd use code derivative from software distributed under 
 
 >
 >
-> Copyright (c) 2014, [Anthilla S.r.l.] (http://www.anthilla.com)
+> Copyright (c) 2017, [Anthilla S.r.l.] (http://www.anthilla.com)
 >
 > All rights reserved.
 >
