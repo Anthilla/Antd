@@ -15,7 +15,7 @@ function AntdAclController($scope, $http, $sce) {
             User: user
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/apply/script", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/apply/script", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.AclDelete = function (guid) {
@@ -23,7 +23,7 @@ function AntdAclController($scope, $http, $sce) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/delete", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/delete", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.AclCreate = function (guid, acl) {
@@ -32,7 +32,7 @@ function AntdAclController($scope, $http, $sce) {
             Acl: acl.HtmlData
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/create", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.AclAdd = function (path) {
@@ -40,32 +40,32 @@ function AntdAclController($scope, $http, $sce) {
             Path: path
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/add", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/add", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/acl/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/acl/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/acl").success(function (data) {
@@ -86,7 +86,7 @@ function AntdBindController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/zone/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/zone/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addZone = function (el) {
@@ -100,7 +100,7 @@ function AntdBindController($scope, $http) {
             AllowTransfer: el.AllowTransfer
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/zone", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/zone", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveOptions = function (bind) {
@@ -147,32 +147,32 @@ function AntdBindController($scope, $http) {
             AclExternalNetworks: bind.AclExternalNetworks
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/bind/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/bind/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/bind").success(function (data) {
@@ -194,7 +194,7 @@ function AntdDhcpdController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/reservation/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/reservation/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addReservation = function (el) {
@@ -204,7 +204,7 @@ function AntdDhcpdController($scope, $http) {
             IpAddress: el.IpAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/reservation", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/reservation", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.deletePool = function (guid) {
@@ -212,7 +212,7 @@ function AntdDhcpdController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/pool/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/pool/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addPool = function (el) {
@@ -220,7 +220,7 @@ function AntdDhcpdController($scope, $http) {
             Option: el.Option
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/pool", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/pool", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.deleteClass = function (guid) {
@@ -228,7 +228,7 @@ function AntdDhcpdController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/class/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/class/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addClass = function (el) {
@@ -237,7 +237,7 @@ function AntdDhcpdController($scope, $http) {
             MacVendor: el.MacVendor
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/class", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/class", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveOptions = function (dhcpd) {
@@ -270,32 +270,32 @@ function AntdDhcpdController($scope, $http) {
             SubnetMask: dhcpd.SubnetMask
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/dhcpd/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/dhcpd/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/dhcpd").success(function (data) {
@@ -336,7 +336,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: s.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv6/nat/set", set).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv6/nat/set", set).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
         angular.forEach(el.Chains, function (c) {
             var chain = $.param({
@@ -344,7 +344,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: c.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv6/nat/chain", chain).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv6/nat/chain", chain).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
     }
 
@@ -356,7 +356,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: s.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv6/filter/set", set).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv6/filter/set", set).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
         angular.forEach(el.Chains, function (c) {
             var chain = $.param({
@@ -364,7 +364,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: c.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv6/filter/chain", chain).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv6/filter/chain", chain).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
     }
 
@@ -376,7 +376,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: s.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv4/nat/set", set).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv4/nat/set", set).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
         angular.forEach(el.Chains, function (c) {
             var chain = $.param({
@@ -384,7 +384,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: c.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv4/nat/chain", chain).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv4/nat/chain", chain).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
     }
 
@@ -396,7 +396,7 @@ function AntdFirewallController($scope, $http) {
                 Elements: s.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv4/filter/set", set).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv4/filter/set", set).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
         angular.forEach(el.Chains, function (c) {
             var chain = $.param({
@@ -404,33 +404,33 @@ function AntdFirewallController($scope, $http) {
                 Elements: c.Elements
             });
             $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            $http.post("/firewall/ipv4/filter/chain", chain).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+            $http.post("/firewall/ipv4/filter/chain", chain).then(function () { console.log(1); }, function (r) { console.log(r); });
         });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/firewall/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/firewall/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/firewall/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/firewall/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/firewall/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/firewall/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/firewall/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/firewall/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/firewall/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/firewall/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/firewall").success(function (data) {
@@ -454,7 +454,7 @@ function AntdGlusterController($scope, $http) {
             Node: el.Node
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/node/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/node/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addNode = function (el) {
@@ -462,7 +462,7 @@ function AntdGlusterController($scope, $http) {
             Node: el.Node
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/node", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/node", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveOptions = function (gluster) {
@@ -473,32 +473,32 @@ function AntdGlusterController($scope, $http) {
             GlusterVolumeMountPoint: gluster.GlusterVolumeMountPoint
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/gluster/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/gluster").success(function (data) {
@@ -516,7 +516,7 @@ function AntdNameServiceController($scope, $http) {
             Domain: domain
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/host/ext/domain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/host/ext/domain", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveIntDomain = function (domain) {
@@ -524,7 +524,7 @@ function AntdNameServiceController($scope, $http) {
             Domain: domain
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/host/int/domain", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/host/int/domain", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveSwitch = function (switches) {
@@ -532,7 +532,7 @@ function AntdNameServiceController($scope, $http) {
             Switch: switches
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/nameservice/switch", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/nameservice/switch", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveResolv = function (resolv) {
@@ -540,7 +540,7 @@ function AntdNameServiceController($scope, $http) {
             Resolv: resolv
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/nameservice/resolv", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/nameservice/resolv", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveNetworks = function (networks) {
@@ -548,7 +548,7 @@ function AntdNameServiceController($scope, $http) {
             Networks: networks
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/nameservice/networks", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/nameservice/networks", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveHosts = function (hosts) {
@@ -556,7 +556,7 @@ function AntdNameServiceController($scope, $http) {
             Hosts: hosts
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/nameservice/hosts", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/nameservice/hosts", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/nameservice").success(function (data) {
@@ -606,7 +606,7 @@ function AntdNetworkController($scope, $http) {
             InterfaceList: el.InterfaceList
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/interface/bond", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/network/interface/bond", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveBridge = function (el) {
@@ -621,7 +621,7 @@ function AntdNetworkController($scope, $http) {
             InterfaceList: el.InterfaceList
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/interface/bridge", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/network/interface/bridge", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.deleteInterface = function (guid) {
@@ -629,7 +629,7 @@ function AntdNetworkController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/interface/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/network/interface/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveInterface = function (el) {
@@ -643,12 +643,12 @@ function AntdNetworkController($scope, $http) {
             Mtu: el.Mtu
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/interface", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/network/interface", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/network/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/network").success(function (data) {
@@ -672,7 +672,7 @@ function AntdRsyncController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/directory/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/directory/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addDirectory = function (el) {
@@ -682,32 +682,32 @@ function AntdRsyncController($scope, $http) {
             Type: el.Type
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/directory", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/directory", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/rsync/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/rsync/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/rsync").success(function (data) {
@@ -728,7 +728,7 @@ function AntdSambaController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/resource/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/resource/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addResource = function (el) {
@@ -738,7 +738,7 @@ function AntdSambaController($scope, $http) {
             Comment: el.Comment
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/resource", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/resource", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.saveOptions = function (el) {
@@ -798,32 +798,32 @@ function AntdSambaController($scope, $http) {
             VfsObjects: el.VfsObjects
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/samba/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/samba/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/samba").success(function (data) {
@@ -841,7 +841,7 @@ function AntdSchedulerController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/scheduler/timer/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/scheduler/timer/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addTimer = function (el) {
@@ -851,22 +851,22 @@ function AntdSchedulerController($scope, $http) {
             Command: el.Command
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/scheduler/timer", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/scheduler/timer", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/scheduler/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/scheduler/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/scheduler/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/scheduler/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/scheduler/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/scheduler/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/scheduler").success(function (data) {
@@ -889,32 +889,32 @@ function AntdSshdController($scope, $http) {
             UsePam: el.UsePam
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/sshd/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/sshd/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/sshd/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/sshd/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/sshd/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/sshd/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/sshd/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/sshd/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/sshd/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/sshd/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/sshd/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/sshd/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/sshd").success(function (data) {
@@ -935,7 +935,7 @@ function AntdStorageController($scope, $http) {
             PartitionName: el.PartitionName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/zpool/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/zpool/create", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.createPool = function (el) {
@@ -946,7 +946,7 @@ function AntdStorageController($scope, $http) {
             Name: el.PoolName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/zpool/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/zpool/create", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.print = function (el) {
@@ -954,7 +954,7 @@ function AntdStorageController($scope, $http) {
             Disk: el.Disk
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/storage/print", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/storage/print", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.mklabel = function (el) {
@@ -964,7 +964,7 @@ function AntdStorageController($scope, $http) {
             Confirm: ""
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/storage/mklabel", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/storage/mklabel", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/storage").success(function (data) {
@@ -992,32 +992,32 @@ function AntdVpnController($scope, $http) {
             LocalRange: el.LocalRange
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/vpn/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/vpn/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/vpn/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/vpn/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/vpn/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/vpn/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/vpn/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/vpn/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/vpn/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/vpn/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/vpn/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/vpn/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/vpn").success(function (data) {
@@ -1042,7 +1042,7 @@ function AntdZfsController($scope, $http) {
             Dataset: el.Dataset
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/zfs/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/zfs/create", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.zpoolCreate = function (el) {
@@ -1053,7 +1053,7 @@ function AntdZfsController($scope, $http) {
             Name: el.PoolName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/zpool/create", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/zpool/create", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.snapDisable = function (el) {
@@ -1061,7 +1061,7 @@ function AntdZfsController($scope, $http) {
             Guid: el.Guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/zfs/snap/disable", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/zfs/snap/disable", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.snap = function (el) {
@@ -1070,7 +1070,7 @@ function AntdZfsController($scope, $http) {
             Interval: el.Timer
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/zfs/snap", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/zfs/snap", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/zfs").success(function (data) {
@@ -1090,7 +1090,7 @@ function AntdTimeController($scope, $http) {
             Ntp: ntp
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/time/ntpd", data).then(function () { alert("Ok!"); }, function (response) { console.log(response); });
+        $http.post("/time/ntpd", data).then(function () { console.log(1); }, function (response) { console.log(response); });
     }
 
     $scope.SaveTimeNtpdate = function (ntpdate) {
@@ -1100,7 +1100,7 @@ function AntdTimeController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/time/ntpdate", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1111,7 +1111,7 @@ function AntdTimeController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/time/synctime").then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1125,7 +1125,7 @@ function AntdTimeController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/time/timezone", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1148,7 +1148,7 @@ function AntdHostController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/location", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1162,7 +1162,7 @@ function AntdHostController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/deployment", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1176,7 +1176,7 @@ function AntdHostController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/chassis", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1190,7 +1190,7 @@ function AntdHostController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/name", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1212,7 +1212,7 @@ function AntdUpdateController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/update", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1235,7 +1235,7 @@ function AntdUsersController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/users/master/password", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1250,7 +1250,7 @@ function AntdUsersController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/users", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1272,7 +1272,7 @@ function AntdOverlayController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/overlay/setdirectory", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1338,7 +1338,7 @@ function AntdServicesController($scope, $http, $sce) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/start", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1352,7 +1352,7 @@ function AntdServicesController($scope, $http, $sce) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/restart", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1366,7 +1366,7 @@ function AntdServicesController($scope, $http, $sce) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/stop", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1380,7 +1380,7 @@ function AntdServicesController($scope, $http, $sce) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/enable", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1394,7 +1394,7 @@ function AntdServicesController($scope, $http, $sce) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/disable", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -1448,7 +1448,7 @@ function AntdHostParamController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/config", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);

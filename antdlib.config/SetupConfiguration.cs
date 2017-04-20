@@ -77,34 +77,48 @@ namespace antdlib.config {
 
         private static int _counter;
         private static void Launch(Control control) {
-            var firstCommand = control.FirstCommand.SplitToList(Environment.NewLine);
-            var controlCommand = control.ControlCommand.SplitToList(Environment.NewLine);
-            if(_counter > 5) {
-                ConsoleLogger.Log($"{control.FirstCommand} - failed, too many retry...");
-                _counter = 0;
+            if(control?.FirstCommand == null) {
                 return;
             }
-            if(string.IsNullOrEmpty(control.ControlCommand)) {
+            try {
+                if(_counter > 5) {
+                    ConsoleLogger.Log($"{control.FirstCommand} - failed, too many retry...");
+                    _counter = 0;
+                    return;
+                }
+
+                var firstCommand = control.FirstCommand;
+                if(string.IsNullOrEmpty(control.ControlCommand)) {
+                    ConsoleLogger.Log($"[setup.conf] {control.FirstCommand}");
+                    Bash.Execute(firstCommand, false);
+                    _counter = 0;
+                    return;
+                }
+
+                var controlCommand = control.ControlCommand?.SplitToList(Environment.NewLine);
+                var controlResult = Bash.Execute(controlCommand);
+                var firstCheck = controlResult.Contains(control.Check);
+                if(firstCheck) {
+                    _counter = 0;
+                    return;
+                }
                 Bash.Execute(firstCommand, false);
-                _counter = 0;
-                return;
+                controlResult = Bash.Execute(controlCommand);
+                var secondCheck = controlResult.Contains(control.Check);
+                if(secondCheck) {
+                    _counter = 0;
+                    return;
+                }
+                ConsoleLogger.Log($"{control.FirstCommand} - failed, retry");
+                _counter = _counter + 1;
+                Launch(control);
             }
-            var controlResult = Bash.Execute(controlCommand);
-            var firstCheck = controlResult.Contains(control.Check);
-            if(firstCheck) {
-                _counter = 0;
-                return;
+            catch(NullReferenceException nrex) {
+                ConsoleLogger.Warn(nrex.Message + " " + nrex.Source + " c: " + control.FirstCommand);
             }
-            Bash.Execute(firstCommand, false);
-            controlResult = Bash.Execute(controlCommand);
-            var secondCheck = controlResult.Contains(control.Check);
-            if(secondCheck) {
-                _counter = 0;
-                return;
+            catch(Exception ex) {
+                ConsoleLogger.Warn(ex.Message + " c: " + control.FirstCommand);
             }
-            ConsoleLogger.Log($"{control.FirstCommand} - failed, retry");
-            _counter = _counter + 1;
-            Launch(control);
         }
 
         public List<Control> Get() {

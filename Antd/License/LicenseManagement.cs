@@ -18,6 +18,9 @@ namespace Antd.License {
             if(string.IsNullOrEmpty(cloudaddress)) {
                 return;
             }
+            if(cloudaddress.Contains("localhost"))  {
+                return;
+            }
             if(!cloudaddress.EndsWith("/")) {
                 cloudaddress = cloudaddress + "/";
             }
@@ -36,6 +39,9 @@ namespace Antd.License {
         public ResponseLicenseStatusModel Check(string appName, string machineUid, byte[] publicKey) {
             var cloudaddress = new AppConfiguration().Get().CloudAddress;
             if(string.IsNullOrEmpty(cloudaddress)) {
+                return null;
+            }
+            if(cloudaddress.Contains("localhost")) {
                 return null;
             }
             if(!cloudaddress.EndsWith("/")) {

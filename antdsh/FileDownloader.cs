@@ -8,14 +8,14 @@ namespace antdsh {
     public class FileDownloader {
         private readonly string _url;
         private readonly string _fullPathWhereToSave;
-        private bool _result = false;
+        private bool _result;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
 
         public FileDownloader(string url, string fullPathWhereToSave) {
             if(string.IsNullOrEmpty(url))
-                throw new ArgumentNullException("url");
+                throw new ArgumentNullException(nameof(url));
             if(string.IsNullOrEmpty(fullPathWhereToSave))
-                throw new ArgumentNullException("fullPathWhereToSave");
+                throw new ArgumentNullException(nameof(fullPathWhereToSave));
 
             _url = url;
             _fullPathWhereToSave = fullPathWhereToSave;
@@ -24,11 +24,15 @@ namespace antdsh {
         private bool StartDownload(int timeout) {
             try {
                 var filename = Path.GetFileName(_fullPathWhereToSave);
-                Directory.CreateDirectory(Path.GetDirectoryName(_fullPathWhereToSave));
+                var dirName = Path.GetDirectoryName(_fullPathWhereToSave);
+                if(dirName == null) {
+                    throw new NullReferenceException(nameof(dirName));
+                }
+                Directory.CreateDirectory(dirName);
                 if(File.Exists(_fullPathWhereToSave)) {
                     File.Delete(_fullPathWhereToSave);
                 }
-                using(WebClient client = new WebClient()) {
+                using(var client = new WebClient()) {
                     client.Proxy = null;
                     // client.Credentials = new NetworkCredential("username", "password");
                     client.DownloadProgressChanged += WebClientDownloadProgressChanged;
@@ -49,7 +53,7 @@ namespace antdsh {
             }
         }
 
-        private void WebClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+        private static void WebClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
             Console.Write($"\r\t\t-->\t\t{e.ProgressPercentage}%.");
         }
 
@@ -63,8 +67,7 @@ namespace antdsh {
         }
 
         public bool DownloadFile() {
-            var timeoutInMilliSec = 1000 * 60 * 60;
-            return StartDownload(timeoutInMilliSec);
+            return StartDownload(1000 * 60 * 60);
         }
     }
 }

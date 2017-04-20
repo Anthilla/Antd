@@ -14,7 +14,7 @@ function AssetDiscoveryController($scope, $http) {
             MacAddress: machine.MacAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/asset/wol", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/asset/wol", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.shareKey = function (machine) {
@@ -23,7 +23,7 @@ function AssetDiscoveryController($scope, $http) {
             Port: machine.Port
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/asset/handshake/start", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/asset/handshake/start", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.sync = function (machine) {
@@ -31,7 +31,7 @@ function AssetDiscoveryController($scope, $http) {
             MachineAddress: machine.Ip + ":" + machine.Port
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/machine", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/machine", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.reload = function () {
@@ -59,7 +59,7 @@ function AssetScanController($scope, $http) {
             MacAddress: machine.MacAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/asset/wol", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/asset/wol", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.shareKey = function (machine) {
@@ -68,7 +68,7 @@ function AssetScanController($scope, $http) {
             Port: machine.Port
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/asset/handshake/start", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/asset/handshake/start", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.scan = function () {
@@ -118,7 +118,7 @@ function AssetSettingController($scope, $http) {
             Label: $scope.Label
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/netscan/setsubnet", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/netscan/setsubnet", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/assetsetting").success(function (data) {
@@ -136,7 +136,7 @@ function AssetSyncMachineController($scope, $http) {
             Guid: guid
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/machine/del", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/machine/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.addMachine = function (el) {
@@ -144,32 +144,32 @@ function AssetSyncMachineController($scope, $http) {
             MachineAddress: el.MachineAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/machine", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/machine", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syncmachine/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/syncmachine").success(function (data) {

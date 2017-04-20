@@ -24,7 +24,7 @@ namespace antdlib.models {
         /// 
         /// So this parameter will be set to True as the last step of the first machine configuration
         /// </summary>
-        public bool IsConfigured { get; set; } = false;
+        //public bool IsConfigured { get; set; } = false;
 
         /// <summary>
         /// First configuration steps

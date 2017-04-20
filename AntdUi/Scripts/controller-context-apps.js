@@ -8,7 +8,7 @@ function AppsDetectController($scope, $http) {
             AppName: appName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/apps/setup", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/apps/setup", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/apps/detect").success(function (data) {
@@ -33,7 +33,7 @@ function AppsManagementController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/start", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -47,7 +47,7 @@ function AppsManagementController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/restart", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -61,7 +61,7 @@ function AppsManagementController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/stop", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -75,7 +75,7 @@ function AppsManagementController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/enable", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);
@@ -89,7 +89,7 @@ function AppsManagementController($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/services/disable", data).then(
             function () {
-                alert("Ok!");
+                console.log(1);
             },
         function (response) {
             console.log(response);

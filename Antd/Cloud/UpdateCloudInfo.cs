@@ -39,37 +39,44 @@ namespace Antd.Cloud {
         private readonly string _machineId = Machine.MachineId.Get;
 
         private void Action(object sender, ElapsedEventArgs e) {
-            var dtnow = DateTime.Now;
-            var pk = Encoding.ASCII.GetString(_asymmetricKeys.PublicKey);
-            var internalIp = "";
-            var externalIp = WhatIsMyIp.Get();
-            var machineInfo = new MachineInfo();
-            var ut = machineInfo.GetUptime();
-            var uptime = ut.Uptime;
-            var loadAverage = ut.LoadAverage;
-            var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
-            var diskUsage = du?.UsePercentage;
-            var hostnamectl = _launcher.Launch("hostnamectl").ToList();
-            var hostname = hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
-            var antdVersion = GetVersionDateFromFile(_bash.Execute("file /mnt/cdrom/Apps/Anthilla_Antd/active-version"));
-            var systemVersion = GetVersionDateFromFile(_bash.Execute("file /mnt/cdrom/System/active-system"));
-            var kernelVersion = GetVersionDateFromFile(_bash.Execute("file /mnt/cdrom/Kernel/active-kernel"));
-            var dict = new Dictionary<string, string> {
-                { "AppName", "Antd" },
-                { "MachineUid", _machineId },
-                { "KeyValue", pk },
-                { "InternalIp", internalIp },
-                { "ExternalIp", externalIp },
-                { "Uptime", uptime },
-                { "DiskUsage", diskUsage },
-                { "LoadAverage", loadAverage },
-                { "Hostname", hostname },
-                { "AntdVersion", antdVersion },
-                { "SystemVersion", systemVersion },
-                { "KernelVersion", kernelVersion }
-            };
-            _api.Post($"{Parameter.Cloud}repo/assetinfo/save", dict);
-            ConsoleLogger.Log($"[cloud-uptime] info sent to cloud - data gathered in {DateTime.Now - dtnow}");
+            try {
+                var dtnow = DateTime.Now;
+                var pk = Encoding.ASCII.GetString(_asymmetricKeys.PublicKey);
+                var internalIp = "";
+                var externalIp = WhatIsMyIp.Get();
+                var machineInfo = new MachineInfo();
+                var ut = machineInfo.GetUptime();
+                var uptime = ut.Uptime;
+                var loadAverage = ut.LoadAverage;
+                var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
+                var diskUsage = du?.UsePercentage;
+                var hostnamectl = _launcher.Launch("hostnamectl").ToList();
+                var hostname = hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+                var antdVersion = GetVersionDateFromFile(_bash.Execute("file /mnt/cdrom/Apps/Anthilla_Antd/active-version"));
+                var systemVersion = GetVersionDateFromFile(_bash.Execute("file /mnt/cdrom/System/active-system"));
+                var kernelVersion = GetVersionDateFromFile(_bash.Execute("file /mnt/cdrom/Kernel/active-kernel"));
+                var dict = new Dictionary<string, string> {
+                    { "AppName", "Antd" },
+                    { "MachineUid", _machineId },
+                    { "KeyValue", pk },
+                    { "InternalIp", internalIp },
+                    { "ExternalIp", externalIp },
+                    { "Uptime", uptime },
+                    { "DiskUsage", diskUsage },
+                    { "LoadAverage", loadAverage },
+                    { "Hostname", hostname },
+                    { "AntdVersion", antdVersion },
+                    { "SystemVersion", systemVersion },
+                    { "KernelVersion", kernelVersion }
+                };
+                if(Parameter.Cloud.Contains("localhost")) {
+                    return;
+                }
+                _api.Post($"{Parameter.Cloud}repo/assetinfo/save", dict);
+                //ConsoleLogger.Log($"[cloud-uptime] info sent to cloud - data gathered in {DateTime.Now - dtnow}");
+            }
+            catch(Exception) {
+            }
         }
     }
 }

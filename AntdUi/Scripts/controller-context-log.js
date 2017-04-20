@@ -32,32 +32,32 @@ function LogJournaldController($scope, $http) {
             MaxLevelWall: journald.MaxLevelWall
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/journald/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/journald/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/journald/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/journald/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/journald/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/journald/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/journald/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/journald/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/journald/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/journald/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/journald/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/journald/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/journald").success(function (data) {
@@ -89,7 +89,7 @@ app.controller("LogReportController", ["$scope", "$http", LogReportController]);
 function LogReportController($scope, $http) {
     $scope.create = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/report").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/report").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/report").success(function (data) {
@@ -120,32 +120,32 @@ function LogSyslogNgController($scope, $http) {
             PortLevelSystem: syslogng.PortLevelSystem
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syslogng/options", data).then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syslogng/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syslogng/restart").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syslogng/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.stop = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syslogng/stop").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syslogng/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.enable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syslogng/enable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syslogng/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.disable = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syslogng/disable").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syslogng/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $scope.set = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syslogng/set").then(function () { alert("Ok!"); }, function (r) { console.log(r); });
+        $http.post("/syslogng/set").then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
     $http.get("/syslogng").success(function (data) {
