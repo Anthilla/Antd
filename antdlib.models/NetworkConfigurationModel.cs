@@ -18,6 +18,7 @@ namespace antdlib.models {
         public string StaticRange { get; set; } = "";
         public string Txqueuelen { get; set; } = "10000";
         public string Mtu { get; set; } = "6000";
+        public string Route { get; set; } = "";
         public List<string> InterfaceList { get; set; } = new List<string>();
     }
 }
