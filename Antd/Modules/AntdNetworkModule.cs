@@ -79,6 +79,8 @@ namespace Antd.Modules {
                 string staticRange = Request.Form.StaticRange;
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
+                string route = Request.Form.Route;
+                string gateway = Request.Form.Gateway;
                 var model = new NetworkInterfaceConfigurationModel {
                     Interface = Interface,
                     Mode = (NetworkInterfaceMode)Enum.Parse(typeof(NetworkInterfaceMode), mode),
@@ -87,7 +89,9 @@ namespace Antd.Modules {
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
-                    Type = NetworkInterfaceType.Physical
+                    Type = NetworkInterfaceType.Physical,
+                    Route = route,
+                    Gateway = gateway
                 };
                 var networkConfiguration = new NetworkConfiguration();
                 networkConfiguration.AddInterfaceSetting(model);
@@ -110,6 +114,8 @@ namespace Antd.Modules {
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
                 string ifs = Request.Form.InterfaceList;
+                string route = Request.Form.Route;
+                string gateway = Request.Form.Gateway;
                 var ifList = ifs.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 var launcher = new CommandLauncher();
                 launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", Interface } });
@@ -125,7 +131,9 @@ namespace Antd.Modules {
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
                     Type = NetworkInterfaceType.Bridge,
-                    InterfaceList = ifList
+                    InterfaceList = ifList,
+                    Route = route,
+                    Gateway = gateway
                 };
                 var networkConfiguration = new NetworkConfiguration();
                 networkConfiguration.AddInterfaceSetting(model);
@@ -141,6 +149,8 @@ namespace Antd.Modules {
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
                 string ifs = Request.Form.InterfaceList;
+                string route = Request.Form.Route;
+                string gateway = Request.Form.Gateway;
                 var ifList = ifs.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 var launcher = new CommandLauncher();
                 launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", Interface } });
@@ -156,7 +166,9 @@ namespace Antd.Modules {
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
                     Type = NetworkInterfaceType.Bond,
-                    InterfaceList = ifList
+                    InterfaceList = ifList,
+                    Route = route,
+                    Gateway =  gateway
                 };
                 var networkConfiguration = new NetworkConfiguration();
                 networkConfiguration.AddInterfaceSetting(model);

@@ -214,12 +214,26 @@ namespace antdlib.config {
 
         #region [    Script    ]
         public void ScriptSetup() {
-            File.Copy("/framework/antd/Resources/.010_Home_SKEL.acl", $"{Parameter.AntdCfgServices}/acls/.010_Home_SKEL.acl", true);
-            File.Copy("/framework/antd/Resources/.011_Shared_SKEL.acl", $"{Parameter.AntdCfgServices}/acls/.011_Shared_SKEL.acl", true);
-            File.Copy("/framework/antd/Resources/.000_define_user_acl.sh", $"{Parameter.AntdCfgServices}/acls/.000_define_user_acl.sh", true);
+            const string file1 = "/framework/antd/Resources/.010_Home_SKEL.acl";
+            if(File.Exists(file1)) {
+                File.Copy(file1, $"{Parameter.AntdCfgServices}/acls/.010_Home_SKEL.acl", true);
+            }
+
+            const string file2 = "/framework/antd/Resources/.011_Shared_SKEL.acl";
+            if(File.Exists(file2)) {
+                File.Copy(file2, $"{Parameter.AntdCfgServices}/acls/.011_Shared_SKEL.acl", true);
+            }
+
+            const string file3 = "/framework/antd/Resources/.000_define_user_acl.sh";
+            if(File.Exists(file3)) {
+                File.Copy(file3, $"{Parameter.AntdCfgServices}/acls/.000_define_user_acl.sh", true);
+            }
         }
 
         public void ApplyAclScript(string user) {
+            const string file3 = "/framework/antd/Resources/.000_define_user_acl.sh";
+            if(!File.Exists(file3))
+                return;
             var bash = new Bash();
             bash.Execute($"./.000_define_user_acl.sh {user}", $"{Parameter.AntdCfgServices}/acls");
         }

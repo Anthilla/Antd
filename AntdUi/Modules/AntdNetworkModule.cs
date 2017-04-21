@@ -58,6 +58,8 @@ namespace AntdUi.Modules {
                 string staticRange = Request.Form.StaticRange;
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
+                string route = Request.Form.Route;
+                string gateway = Request.Form.Gateway;
                 var dict = new Dictionary<string, string> {
                     { "Interface", Interface },
                     { "Mode", mode },
@@ -66,6 +68,8 @@ namespace AntdUi.Modules {
                     { "StaticRange", staticRange },
                     { "Txqueuelen", txqueuelen },
                     { "Mtu", mtu },
+                    { "Route", route },
+                    { "Gateway", gateway }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface", dict);
             };
@@ -87,6 +91,8 @@ namespace AntdUi.Modules {
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
                 string ifs = Request.Form.InterfaceList;
+                string route = Request.Form.Route;
+                string gateway = Request.Form.Gateway;
                 ConsoleLogger.Log("");
                 ConsoleLogger.Log(ifs);
                 ConsoleLogger.Log("");
@@ -98,7 +104,9 @@ namespace AntdUi.Modules {
                     { "StaticRange", staticRange },
                     { "Txqueuelen", txqueuelen },
                     { "Mtu", mtu },
-                    { "InterfaceList", ifs }
+                    { "InterfaceList", ifs },
+                    { "Route", route },
+                    { "Gateway", gateway }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bridge", dict);
             };
@@ -112,6 +120,8 @@ namespace AntdUi.Modules {
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
                 string ifs = Request.Form.InterfaceList;
+                string route = Request.Form.Route;
+                string gateway = Request.Form.Gateway;
                 var dict = new Dictionary<string, string> {
                     { "Interface", Interface },
                     { "Mode", mode },
@@ -120,7 +130,9 @@ namespace AntdUi.Modules {
                     { "StaticRange", staticRange },
                     { "Txqueuelen", txqueuelen },
                     { "Mtu", mtu },
-                    { "InterfaceList", ifs }
+                    { "InterfaceList", ifs },
+                    { "Route", route },
+                    { "Gateway", gateway }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bond", dict);
             };

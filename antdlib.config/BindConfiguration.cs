@@ -185,13 +185,13 @@ namespace antdlib.config {
 
         public void Enable() {
             _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            //Save(_serviceModel);
             ConsoleLogger.Log("[bind] enabled");
         }
 
         public void Disable() {
             _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            //Save(_serviceModel);
             ConsoleLogger.Log("[bind] disabled");
         }
 

@@ -603,7 +603,9 @@ function AntdNetworkController($scope, $http) {
             StaticRange: el.StaticRange,
             Txqueuelen: el.Txqueuelen,
             Mtu: el.Mtu,
-            InterfaceList: el.InterfaceList
+            InterfaceList: el.InterfaceList,
+            Route: el.Route,
+            Gateway: el.Gateway
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/interface/bond", data).then(function () { console.log(1); }, function (r) { console.log(r); });
@@ -618,7 +620,9 @@ function AntdNetworkController($scope, $http) {
             StaticRange: el.StaticRange,
             Txqueuelen: el.Txqueuelen,
             Mtu: el.Mtu,
-            InterfaceList: el.InterfaceList
+            InterfaceList: el.InterfaceList,
+            Route: el.Route,
+            Gateway: el.Gateway
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/interface/bridge", data).then(function () { console.log(1); }, function (r) { console.log(r); });
@@ -640,7 +644,9 @@ function AntdNetworkController($scope, $http) {
             StaticAddres: el.StaticAddres,
             StaticRange: el.StaticRange,
             Txqueuelen: el.Txqueuelen,
-            Mtu: el.Mtu
+            Mtu: el.Mtu,
+            Route: el.Route,
+            Gateway: el.Gateway
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/interface", data).then(function () { console.log(1); }, function (r) { console.log(r); });

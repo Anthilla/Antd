@@ -138,7 +138,7 @@ namespace antdlib.models {
             GetCmd = "cat-etc-networks",
             StoredValues = new Dictionary<string, string> {
                 {"$file", "/etc/networks"},
-                {"$value", ""}
+                {"$value", "loopback 127.0.0.0"}
             }
         };
 
@@ -249,8 +249,8 @@ namespace antdlib.models {
         public HostParameter[] EtcNetworks { get; set; } = {
             new HostParameter { SetCmd = "echo-write", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "# /etc/networks" } } },
             new HostParameter { SetCmd = "echo-append", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "" } } },
-            new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "loopback 127.0.0.0" } } },
-            new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/proc/sys/vm/swappiness" }, { "$value", "link-local 169.254.0.0" } } }
+            new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "loopback 127.0.0.0" } } },
+            new HostParameter { SetCmd = "echo-append-rm", StoredValues = new Dictionary<string, string> { { "$file", "/etc/networks" }, { "$value", "link-local 169.254.0.0" } } }
         };
 
         /// <summary>

@@ -437,6 +437,10 @@ namespace antdlib.config {
             }
             launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netif }, { "$mtu", model.Mtu } });
             launcher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", netif }, { "$txqueuelen", model.Txqueuelen } });
+
+            if(!string.IsNullOrEmpty(model.Route) && !string.IsNullOrEmpty(model.Gateway)) {
+                launcher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", netif }, { "$gateway", model.Gateway }, { "$ip_address", model.Route } });
+            }
             var status = model.Status;
             switch(status) {
                 case NetworkInterfaceStatus.Down:

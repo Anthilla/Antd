@@ -49,7 +49,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using HostConfiguration = antdlib.config.HostConfiguration;
 
 namespace Antd {
@@ -194,10 +193,10 @@ namespace Antd {
                 Logger.Info("mounts ready");
                 #endregion
 
-                #region [    Host Prepare Configuration    ]
-                var tmpHost = HostConfiguration.Host;
-                HostConfiguration.Export(tmpHost);
-                #endregion
+                //#region [    Host Prepare Configuration    ]
+                //var tmpHost = HostConfiguration.Host;
+                //HostConfiguration.Export(tmpHost);
+                //#endregion
             }
 
             try {
@@ -475,30 +474,40 @@ namespace Antd {
             #endregion
 
             #region [    Dhcpd    ]
-            DhcpdConfiguration.Save(new DhcpdConfigurationModel {
-                ZoneName = localDomain,
-                ZonePrimaryAddress = localIp,
-                DdnsDomainName = $"{localDomain}.",
-                Option = new List<string> { $"domain-name \"{localDomain}\"", "routers eth0", "local-proxy-config code 252 = text" },
-                KeySecret = "ND991KFHCCA9tUrafsf29uxDM3ZKfnrVR4f1I2J27Ow=",
-                SubnetNtpServers = localIp,
-                SubnetTimeServers = localIp,
-                SubnetOptionRouters = localIp,
-                SubnetDomainNameServers = localIp,
-                SubnetIpMask = "255.255.0.0",
-                SubnetMask = "255.255.0.0",
-                SubnetBroadcastAddress = "10.11.255.255",
-                SubnetIpFamily = localNetwork
-            });
-            DhcpdConfiguration.Set();
+            if(DhcpdConfiguration.IsActive() == false) {
+                DhcpdConfiguration.Save(new DhcpdConfigurationModel {
+                    ZoneName = localDomain,
+                    ZonePrimaryAddress = localIp,
+                    DdnsDomainName = $"{localDomain}.",
+                    Option =
+                        new List<string>
+                        {
+                            $"domain-name \"{localDomain}\"",
+                            "routers eth0",
+                            "local-proxy-config code 252 = text"
+                        },
+                    KeySecret = "ND991KFHCCA9tUrafsf29uxDM3ZKfnrVR4f1I2J27Ow=",
+                    SubnetNtpServers = localIp,
+                    SubnetTimeServers = localIp,
+                    SubnetOptionRouters = localIp,
+                    SubnetDomainNameServers = localIp,
+                    SubnetIpMask = "255.255.0.0",
+                    SubnetMask = "255.255.0.0",
+                    SubnetBroadcastAddress = "10.11.255.255",
+                    SubnetIpFamily = localNetwork
+                });
+                DhcpdConfiguration.Set();
+            }
+
             #endregion
 
             #region [    Bind    ]
-            BindConfiguration.Save(new BindConfigurationModel {
-                ControlIp = localIp,
-                AclInternalInterfaces = new List<string> { localIp },
-                AclInternalNetworks = new List<string> { $"{localNetwork}/{localRange}" },
-                Zones = new List<BindConfigurationZoneModel> {
+            if(BindConfiguration.IsActive() == false) {
+                BindConfiguration.Save(new BindConfigurationModel {
+                    ControlIp = localIp,
+                    AclInternalInterfaces = new List<string> { localIp },
+                    AclInternalNetworks = new List<string> { $"{localNetwork}/{localRange}" },
+                    Zones = new List<BindConfigurationZoneModel> {
                     new BindConfigurationZoneModel {
                         Name = "11.10.in-addr.arpa",
                         Type = "master",
@@ -510,8 +519,9 @@ namespace Antd {
                         File = "" //todo crea e gestisci file della zona
                     },
                 }
-            });
-            BindConfiguration.Set();
+                });
+                BindConfiguration.Set();
+            }
             #endregion
         }
         #endregion
@@ -587,7 +597,6 @@ namespace Antd {
         }
         #endregion
 
-
         private static void WorkingProcedures() {
             Logger.Info("[config] working procedures");
             #region [    Cloud Send Uptime    ]
@@ -599,8 +608,7 @@ namespace Antd {
 
             #region [    Cloud Fetch Commands    ]
             var cfcTimer = new FetchRemoteCommand();
-            cfcTimer.Start((1000 * 60 * 2) + 330);
-            //cfcTimer.Start((1000 * 2) + 330);
+            cfcTimer.Start(1000 * 60 * 2 + 330);
             #endregion
         }
 
