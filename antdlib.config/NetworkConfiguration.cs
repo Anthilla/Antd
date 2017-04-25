@@ -192,7 +192,7 @@ namespace antdlib.config {
         }
 
         public void SetupResolvD() {
-            if(!File.Exists("/etc/resolv.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/resolv.conf"))) {
+            if(!File.Exists("/etc/systemd/resolved.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/systemd/resolved.conf"))) {
                 var lines = new List<string> {
                     "[Resolve]",
                     "DNS=10.1.19.1 10.99.19.1",
@@ -388,23 +388,23 @@ namespace antdlib.config {
             var netif = model.Interface;
 
             switch(model.Type) {
-                case NetworkInterfaceType.Physical:
+                case NetworkAdapterType.Physical:
                     break;
-                case NetworkInterfaceType.Virtual:
+                case NetworkAdapterType.Virtual:
                     break;
-                case NetworkInterfaceType.Bond:
+                case NetworkAdapterType.Bond:
                     launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", netif } });
                     foreach(var nif in model.InterfaceList) {
                         launcher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", netif }, { "$net_if", nif } });
                     }
                     break;
-                case NetworkInterfaceType.Bridge:
+                case NetworkAdapterType.Bridge:
                     launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", netif } });
                     foreach(var nif in model.InterfaceList) {
                         launcher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", netif }, { "$net_if", nif } });
                     }
                     break;
-                case NetworkInterfaceType.Other:
+                case NetworkAdapterType.Other:
                     break;
             }
 

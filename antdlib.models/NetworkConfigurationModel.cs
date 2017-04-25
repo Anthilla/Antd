@@ -9,7 +9,7 @@ namespace antdlib.models {
     }
 
     public class NetworkInterfaceConfigurationModel {
-        public NetworkInterfaceType Type { get; set; }
+        public NetworkAdapterType Type { get; set; }
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public string Interface { get; set; }
         public NetworkInterfaceMode Mode { get; set; } = NetworkInterfaceMode.Dynamic;

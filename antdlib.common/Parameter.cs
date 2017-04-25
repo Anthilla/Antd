@@ -63,6 +63,7 @@ namespace antdlib.common {
         public static string AntdCfgServices => $"{AntdCfg}/services";
         public static string AntdCfgDatabase => $"{AntdCfg}/database";
         public static string AntdCfgNetworkd => $"{AntdCfg}/networkd";
+        public static string AntdCfgNetwork => $"{AntdCfg}/network";
         public static string AntdCfgKeys => $"{AntdCfg}/keys";
         public static string AntdCfgReport => $"{AntdCfg}/report";
         public static string AntdCfgCommands => $"{AntdCfg}/commands";

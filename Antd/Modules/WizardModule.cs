@@ -136,7 +136,7 @@ namespace Antd.Modules {
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
-                    Type = NetworkInterfaceType.Physical
+                    Type = NetworkAdapterType.Physical
                 };
                 networkConfiguration.AddInterfaceSetting(model);
                 networkConfiguration.ApplyInterfaceSetting(model);

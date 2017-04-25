@@ -89,7 +89,7 @@ namespace Antd.Modules {
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
-                    Type = NetworkInterfaceType.Physical,
+                    Type = NetworkAdapterType.Physical,
                     Route = route,
                     Gateway = gateway
                 };
@@ -130,7 +130,7 @@ namespace Antd.Modules {
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
-                    Type = NetworkInterfaceType.Bridge,
+                    Type = NetworkAdapterType.Bridge,
                     InterfaceList = ifList,
                     Route = route,
                     Gateway = gateway
@@ -165,7 +165,7 @@ namespace Antd.Modules {
                     StaticRange = staticRange,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
-                    Type = NetworkInterfaceType.Bond,
+                    Type = NetworkAdapterType.Bond,
                     InterfaceList = ifList,
                     Route = route,
                     Gateway =  gateway

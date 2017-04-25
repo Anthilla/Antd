@@ -77,6 +77,7 @@ namespace Antd {
         private static readonly Zpool Zpool = new Zpool();
         private static readonly JournaldConfiguration JournaldConfiguration = new JournaldConfiguration();
         private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
+        private static readonly VariablesConfiguration VariablesConfiguration = new VariablesConfiguration();
         #endregion
 
         public static string KeyName = "antd";
@@ -193,10 +194,7 @@ namespace Antd {
                 Logger.Info("mounts ready");
                 #endregion
 
-                //#region [    Host Prepare Configuration    ]
-                //var tmpHost = HostConfiguration.Host;
-                //HostConfiguration.Export(tmpHost);
-                //#endregion
+
             }
 
             try {
@@ -249,10 +247,32 @@ namespace Antd {
                     JournaldConfiguration.Set();
                 }
                 #endregion
+
+                #region [    Host Prepare Var Configuration    ]
+                var tmpHost = HostConfiguration.Host;
+                var varsFile = VariablesConfiguration.FilePath;
+                if(File.Exists(varsFile) && !string.IsNullOrEmpty(File.ReadAllText(varsFile))) {
+                    var vars = new VariablesModel {
+                        HostName = tmpHost.HostName.StoredValues.FirstOrDefault().Value,
+                        HostChassis = tmpHost.HostChassis.StoredValues.FirstOrDefault().Value,
+                        HostDeployment = tmpHost.HostDeployment.StoredValues.FirstOrDefault().Value,
+                        InternalDomainPrimary = tmpHost.InternalDomain,
+                        ExternalDomainPrimary = tmpHost.ExternalDomain,
+                        InternalNetPrimary = "",
+                        ExternalNetPrimary = "",
+                        InternalHostIpPrimary = "",
+                        ExternalHostIpPrimary = "",
+                        Timezone = tmpHost.Timezone.StoredValues.FirstOrDefault().Value,
+                        NtpdateServer = tmpHost.NtpdateServer.StoredValues.FirstOrDefault().Value,
+                        MachineUid = Machine.MachineId.Get,
+                        Cloud = Parameter.Cloud
+                    };
+                    VariablesConfiguration.Export(vars);
+                    #endregion
+                }
             }
         }
         #endregion
-
 
         #region [    Procedures    ]
         private static void Procedures() {
@@ -307,7 +327,6 @@ namespace Antd {
             #endregion
         }
         #endregion
-
 
         #region [    Managed Procedures    ]
         private static void ManagedProcedures() {
@@ -396,7 +415,6 @@ namespace Antd {
         }
         #endregion
 
-
         #region [    Fallback Procedures    ]
         private static void FallbackProcedures() {
             Logger.Info("[config] fallback procedures");
@@ -466,7 +484,7 @@ namespace Antd {
                     Status = NetworkInterfaceStatus.Up,
                     StaticAddress = localIp,
                     StaticRange = localRange,
-                    Type = NetworkInterfaceType.Bridge,
+                    Type = NetworkAdapterType.Bridge,
                     InterfaceList = npi.ToList()
                 });
             }
@@ -525,7 +543,6 @@ namespace Antd {
             #endregion
         }
         #endregion
-
 
         #region [    Post Procedures    ]
         private static void PostProcedures() {
