@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using antdlib.common;
 using LukeSkywalker.IPNetwork;
 
 namespace antdlib.models {
@@ -33,7 +34,7 @@ namespace antdlib.models {
         public string ResolvNameserver { get; set; } = string.Empty; //ip address
         public string ResolvDomain { get; set; } = string.Empty; //può essere il domain interno o esterno
 
-        public string Secret { get; set; }
+        public string Secret => File.ReadAllText(Parameter.AntdCfgSecret);
 
         #endregion
 

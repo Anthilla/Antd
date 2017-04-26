@@ -47,7 +47,7 @@ namespace Antd {
                 { "$dnsDomain", Dns?.Domain },
                 { "$dnsIp", Dns?.Ip },
 
-                { "$secret", "" }
+                { "$secret", Host.Secret }
             };
         }
 

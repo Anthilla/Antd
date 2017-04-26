@@ -218,6 +218,16 @@ namespace Antd {
                 catch(Exception) { }
 
                 #endregion
+
+                #region [    Secret    ]
+                if(!File.Exists(Parameter.AntdCfgSecret)) {
+                    File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+                }
+
+                if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
+                    File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+                }
+                #endregion
             }
             catch(Exception) { }
 
