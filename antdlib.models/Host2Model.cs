@@ -1,7 +1,7 @@
 ﻿using LukeSkywalker.IPNetwork;
 
 namespace antdlib.models {
-    public class VariablesModel {
+    public class Host2Model {
         #region [    Host Var    ]
         public string HostName { get; set; } = string.Empty; //srv01
         public string HostChassis { get; set; } = string.Empty;

@@ -40,11 +40,10 @@ using Random = anthilla.core.Random;
 namespace Antd.Modules {
     public class AntdNetwork2Module : NancyModule {
 
-        private readonly VariablesConfiguration _variablesConfiguration = new VariablesConfiguration();
+        private readonly Host2Configuration _variablesConfiguration = new Host2Configuration();
         private readonly Network2Configuration _network2Configuration = new Network2Configuration();
 
         public AntdNetwork2Module() {
-
 
             Get["/network2"] = x => {
                 var physicalInterfaces = _network2Configuration.InterfacePhysical.ToList();
@@ -64,7 +63,8 @@ namespace Antd.Modules {
                     BondIf = bondInterfaces,
                     VirtualIf = virtualInterfaces,
                     InterfaceConfigurationList = _network2Configuration.InterfaceConfigurationList,
-                    GatewayConfigurationList = _network2Configuration.GatewayConfigurationList
+                    GatewayConfigurationList = _network2Configuration.GatewayConfigurationList,
+                    Variables = _variablesConfiguration.Host
                 };
                 return JsonConvert.SerializeObject(model);
             };
@@ -166,6 +166,40 @@ namespace Antd.Modules {
             Post["/network2/gatewayconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
                 _network2Configuration.RemoveGatewayConfiguration(guid);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/interface"] = x => {
+                string dev = Request.Form.Device;
+                string conf = Request.Form.Configuration;
+
+                var cc = _network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == conf)?.IsUsed;
+                if(cc == true || cc == null) {
+                    return HttpStatusCode.InternalServerError;
+                }
+
+                string confs = Request.Form.AdditionalConfigurations;
+                string gwConf = Request.Form.GatewayConfiguration;
+
+                var cc2 = _network2Configuration.GatewayConfigurationList.FirstOrDefault(_ => _.Id == gwConf)?.IsUsed;
+
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                var model = new NetworkInterface {
+                    Device = dev,
+                    Configuration = conf,
+                    AdditionalConfigurations = confs == null ? new List<string>() : confs.SplitToList(),
+                    GatewayConfiguration = cc2 == true || cc2 == null ? "" : gwConf,
+                    Txqueuelen = txqueuelen,
+                    Mtu = mtu
+                };
+                _network2Configuration.AddInterfaceSetting(model);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/interface/del"] = x => {
+                string dev = Request.Form.Device;
+                _network2Configuration.RemoveInterfaceSetting(dev);
                 return HttpStatusCode.OK;
             };
         }

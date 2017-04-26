@@ -82,12 +82,13 @@
     <Compile Include="TimerConfigurationModel.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="NmapScanStatus.cs" />
-    <Compile Include="VariablesModel.cs" />
+    <Compile Include="Host2Model.cs" />
     <Compile Include="ViewModels\PageBootOsParametersModel.cs" />
     <Compile Include="ViewModels\PageBootServicesModel.cs" />
     <Compile Include="ViewModels\PageBootModulesModel.cs" />
     <Compile Include="ViewModels\PageBootCommandsModel.cs" />
     <Compile Include="ViewModels\PageCaModel.cs" />
+    <Compile Include="ViewModels\PageHost2Model.cs" />
     <Compile Include="ViewModels\PageNetwork2Model.cs" />
     <Compile Include="ViewModels\PageSyslogNgModel.cs" />
     <Compile Include="ViewModels\PageDhcpdModel.cs" />

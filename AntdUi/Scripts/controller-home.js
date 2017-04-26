@@ -26,6 +26,7 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     .state("update", { cache: false, url: "^/update", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/update.html?v=" + new Date() } } })
     .state("host", { cache: false, url: "^/host", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/host.html?v=" + new Date() } } })
     .state("hostparam", { cache: false, url: "^/app", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/hostparam.html?v=" + new Date() } } })
+    .state("host2", { cache: false, url: "^/host2", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/host2.html?v=" + new Date() } } })
     .state("time", { cache: false, url: "^/time", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/time.html?v=" + new Date() } } })
     .state("ns", { cache: false, url: "^/ns", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/ns.html?v=" + new Date() } } })
     .state("bind", { cache: false, url: "^/bind", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/bind.html?v=" + new Date() } } })

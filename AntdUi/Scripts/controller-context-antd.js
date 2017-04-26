@@ -1208,6 +1208,45 @@ function AntdHostController($scope, $http) {
     });
 }
 
+app.controller("AntdHost2Controller", ["$scope", "$http", AntdHost2Controller]);
+
+function AntdHost2Controller($scope, $http) {
+    $scope.SaveHostLocation = function () {
+        var data = $.param({
+            HostName: $scope.Host.HostName,
+            HostChassis: $scope.Host.HostChassis,
+            HostDeployment: $scope.Host.HostDeployment,
+            HostLocation: $scope.Host.HostLocation,
+            InternalDomainPrimary: $scope.Host.InternalDomainPrimary,
+            ExternalDomainPrimary: $scope.Host.ExternalDomainPrimary,
+            InternalHostIpPrimary: $scope.Host.InternalHostIpPrimary,
+            ExternalHostIpPrimary: $scope.Host.ExternalHostIpPrimary,
+            Timezone: $scope.Host.Timezone,
+            NtpdateServer: $scope.Host.NtpdateServer,
+            Cloud: $scope.Host.Cloud
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/host2/info", data).then(
+            function () {
+                console.log(1);
+            },
+        function (response) {
+            console.log(response);
+        });
+    }
+
+    $http.get("/host2").success(function (data) {
+        $scope.Host = data.Host;
+        $scope.IconName = data.IconName;
+        $scope.MachineId = data.MachineId;
+        $scope.BootId = data.BootId;
+        $scope.Virtualization = data.Virtualization;
+        $scope.Os = data.Os;
+        $scope.Kernel = data.Kernel;
+        $scope.Architecture = data.Architecture;
+    });
+}
+
 app.controller("AntdUpdateController", ["$scope", "$http", AntdUpdateController]);
 
 function AntdUpdateController($scope, $http) {

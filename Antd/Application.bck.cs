@@ -77,7 +77,7 @@ namespace Antd {
         private static readonly Zpool Zpool = new Zpool();
         private static readonly JournaldConfiguration JournaldConfiguration = new JournaldConfiguration();
         private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
-        private static readonly VariablesConfiguration VariablesConfiguration = new VariablesConfiguration();
+        private static readonly Host2Configuration VariablesConfiguration = new Host2Configuration();
         #endregion
 
         public static string KeyName = "antd";
@@ -252,14 +252,13 @@ namespace Antd {
                 var tmpHost = HostConfiguration.Host;
                 var varsFile = VariablesConfiguration.FilePath;
                 if(File.Exists(varsFile) && !string.IsNullOrEmpty(File.ReadAllText(varsFile))) {
-                    var vars = new VariablesModel {
+                    var vars = new Host2Model {
                         HostName = tmpHost.HostName.StoredValues.FirstOrDefault().Value,
                         HostChassis = tmpHost.HostChassis.StoredValues.FirstOrDefault().Value,
                         HostDeployment = tmpHost.HostDeployment.StoredValues.FirstOrDefault().Value,
+                        HostLocation = tmpHost.HostLocation.StoredValues.FirstOrDefault().Value,
                         InternalDomainPrimary = tmpHost.InternalDomain,
                         ExternalDomainPrimary = tmpHost.ExternalDomain,
-                        InternalNetPrimary = "",
-                        ExternalNetPrimary = "",
                         InternalHostIpPrimary = "",
                         ExternalHostIpPrimary = "",
                         Timezone = tmpHost.Timezone.StoredValues.FirstOrDefault().Value,
