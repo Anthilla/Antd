@@ -182,10 +182,10 @@ namespace Antd.Modules {
                 }
                 string mode = Request.Form.Mode;
                 var typedMode = mode?.ToEnum<DnsMode>() ?? DnsMode.Null;
-
                 if(typedMode == DnsMode.Null) {
                     return HttpStatusCode.InternalServerError;
                 }
+                string dest = Request.Form.Destination;
                 string domain = Request.Form.Domain;
                 string ip = Request.Form.Ip;
                 string auth = Request.Form.Auth;
@@ -193,6 +193,7 @@ namespace Antd.Modules {
                     Id = id ?? Random.ShortGuid(),
                     Type = typedType,
                     Mode = typedMode,
+                    Dest = dest?.ToEnum<DnsDestination>() ?? DnsDestination.Internal,
                     Domain = domain,
                     Ip = ip,
                     AuthenticationEnabled = auth?.ToBoolean() ?? true

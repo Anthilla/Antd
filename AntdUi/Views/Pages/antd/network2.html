@@ -411,6 +411,19 @@
                         </div>
                         <div class="row cells6 bg-hover-anthilla-gray-2">
                             <div class="cell colspan2 uppercase fg-anthilla-green">
+                                <p>Destination</p>
+                            </div>
+                            <div class="cell colspan4">
+                                <div class="input-control select width100pc">
+                                    <select ng-model="NewDnsConfiguration.Destination" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <option value="0">Internal</option>
+                                        <option value="1">External</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row cells6 bg-hover-anthilla-gray-2">
+                            <div class="cell colspan2 uppercase fg-anthilla-green">
                                 <p>Domain</p>
                             </div>
                             <div class="cell colspan4">
@@ -475,6 +488,19 @@
                                         <select ng-model="el.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
                                             <option value="1">Static</option>
                                             <option value="2">Dynamic</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row cells6 bg-hover-anthilla-gray-2">
+                                <div class="cell colspan2 uppercase fg-anthilla-green">
+                                    <p>Destination</p>
+                                </div>
+                                <div class="cell colspan4">
+                                    <div class="input-control select width100pc">
+                                        <select ng-model="el.Destination" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                            <option value="0">Internal</option>
+                                            <option value="1">External</option>
                                         </select>
                                     </div>
                                 </div>

@@ -699,13 +699,10 @@ function AntdNetwork2Controller($scope, $http) {
     $scope.NewDnsConfiguration = {
         Id: "",
         Type: "",
-        Description: "",
-        Verb: "",
         Mode: "",
-        Status: "",
-        Ip: "",
-        Adapter: "",
-        Ifs: ""
+        Destination: "",
+        Domain: "",
+        Ip: ""
     };
 
     $scope.deactivateDnsConfiguration = function (el) {
@@ -737,6 +734,7 @@ function AntdNetwork2Controller($scope, $http) {
             Id: el.Id,
             Type: el.Type,
             Mode: el.Mode,
+            Destination: el.Destination,
             Domain: el.Domain,
             Ip: el.Ip,
             AuthenticationEnabled: el.AuthenticationEnabled

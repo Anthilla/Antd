@@ -190,6 +190,21 @@
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
+    <None Include="Templates\named.conf.tmlp" />
+    <None Include="Templates\dhcpd.dynamic.internal.conf.tmlp" />
+    <None Include="Templates\dhcpd.static.external.conf.tmlp" />
+    <None Include="Templates\dhcpd.static.internal.conf.tmlp" />
+    <None Include="Templates\dhcpd.dynamic.external.conf.tmlp" />
+    <None Include="Templates\dhcpd.conf.tmlp" />
+    <None Include="Templates\nsswitch.conf.tmlp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\ntp.conf.tmlp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\resolv.conf.tmlp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\antd.service.ssh.js" />
     <None Include="Views\antd.storage.js" />
     <None Include="Views\antd.service.firewall.js" />
@@ -233,7 +248,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\_shared\anthilla.commands\anthilla.commands.csproj">
       <Project>{3E77920A-6201-48D8-A9CE-8D01A477E0F9}</Project>
@@ -267,6 +281,16 @@
       <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>
       <Name>antdlib.models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\hosts.tmlp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\networks.tmlp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

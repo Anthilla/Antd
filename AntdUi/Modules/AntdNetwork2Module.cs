@@ -106,6 +106,7 @@ namespace AntdUi.Modules {
                 string id = Request.Form.Id;
                 string type = Request.Form.Type;
                 string mode = Request.Form.Mode;
+                string dest = Request.Form.Destination;
                 string domain = Request.Form.Domain;
                 string ip = Request.Form.Ip;
                 string auth = Request.Form.Auth;
@@ -113,6 +114,7 @@ namespace AntdUi.Modules {
                     { "Id", id },
                     { "Type", type },
                     { "Mode", mode },
+                    { "Destination", dest },
                     { "Domain", domain },
                     { "Ip", ip },
                     { "Auth", auth }

@@ -137,6 +137,7 @@ namespace Antd {
         }
 
         private static void Test() {
+            new Do().oo();
         }
 
         #region [    Core Procedures    ]
@@ -193,8 +194,6 @@ namespace Antd {
                 Mount.AllDirectories();
                 Logger.Info("mounts ready");
                 #endregion
-
-
             }
 
             try {
@@ -251,7 +250,7 @@ namespace Antd {
                 #region [    Host Prepare Var Configuration    ]
                 var tmpHost = HostConfiguration.Host;
                 var varsFile = VariablesConfiguration.FilePath;
-                if(File.Exists(varsFile) && !string.IsNullOrEmpty(File.ReadAllText(varsFile))) {
+                if(!File.Exists(varsFile) && string.IsNullOrEmpty(File.ReadAllText(varsFile))) {
                     var vars = new Host2Model {
                         HostName = tmpHost.HostName.StoredValues.FirstOrDefault().Value,
                         HostChassis = tmpHost.HostChassis.StoredValues.FirstOrDefault().Value,
@@ -267,8 +266,8 @@ namespace Antd {
                         Cloud = Parameter.Cloud
                     };
                     VariablesConfiguration.Export(vars);
-                    #endregion
                 }
+                #endregion
             }
         }
         #endregion

@@ -45,6 +45,7 @@ namespace antdlib.models {
         public string Id { get; set; } = string.Empty;
         public DnsType Type { get; set; } = DnsType.Public;
         public DnsMode Mode { get; set; } = DnsMode.Dynamic;
+        public DnsDestination Dest { get; set; } = DnsDestination.Internal;
         public string Domain { get; set; } = string.Empty;
         public string Ip { get; set; } = string.Empty;
         public bool AuthenticationEnabled { get; set; } = true;

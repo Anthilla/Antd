@@ -1,0 +1,3 @@
+﻿127.0.0.1       localhost
+$internalIp		$hostname.$internalDomain $hostname
+$externalIp		$hostname.$externalDomain $hostname

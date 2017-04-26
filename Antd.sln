@@ -15,6 +15,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignorethis_misc", "{1BB31C59-D4CC-4640-BE45-B7857FBA22A1}"
 	ProjectSection(SolutionItems) = preProject
 		ignorethis_misc\_frequentregex.txt = ignorethis_misc\_frequentregex.txt
+		antd_vars.txt = antd_vars.txt
 		ignorethis_misc\converter.sh = ignorethis_misc\converter.sh
 		ignorethis_misc\createUserSmartCardCertificate.sh = ignorethis_misc\createUserSmartCardCertificate.sh
 		ignorethis_misc\gluster.cnf = ignorethis_misc\gluster.cnf
