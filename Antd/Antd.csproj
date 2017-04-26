@@ -106,6 +106,7 @@
     <Compile Include="Application.bck.cs" />
     <Compile Include="Cloud\UpdateCloudInfo.cs" />
     <Compile Include="Cloud\WhatIsMyIp.cs" />
+    <Compile Include="Do.cs" />
     <Compile Include="License\LicenseManagement.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNetwork2Module.cs" />

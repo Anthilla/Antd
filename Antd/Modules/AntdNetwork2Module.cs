@@ -64,6 +64,8 @@ namespace Antd.Modules {
                     VirtualIf = virtualInterfaces,
                     InterfaceConfigurationList = _network2Configuration.InterfaceConfigurationList,
                     GatewayConfigurationList = _network2Configuration.GatewayConfigurationList,
+                    DnsConfigurationList =  _network2Configuration.DnsConfigurationList,
+                    Configuration = _network2Configuration.Conf.Interfaces,
                     Variables = _variablesConfiguration.Host
                 };
                 return JsonConvert.SerializeObject(model);
@@ -75,6 +77,7 @@ namespace Antd.Modules {
             };
 
             Post["/network2/interfaceconfiguration"] = x => {
+                string id = Request.Form.Id;
                 string type = Request.Form.Type;
                 var typedType = type?.ToEnum<NetworkInterfaceType>() ?? NetworkInterfaceType.Null;
 
@@ -126,7 +129,7 @@ namespace Antd.Modules {
                 var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
 
                 var model = new NetworkInterfaceConfiguration {
-                    Id = Random.ShortGuid(),
+                    Id = id ?? Random.ShortGuid(),
                     Type = typedType,
                     Hostname = hostname,
                     Index = index,
@@ -152,10 +155,11 @@ namespace Antd.Modules {
             };
 
             Post["/network2/gatewayconfiguration"] = x => {
+                string id = Request.Form.Id;
                 string route = Request.Form.Route;
                 string gatewayAddress = Request.Form.GatewayAddress;
                 var model = new NetworkGatewayConfiguration {
-                    Id = Random.ShortGuid(),
+                    Id = id ?? Random.ShortGuid(),
                     Route = route,
                     GatewayAddress = gatewayAddress
                 };
@@ -166,6 +170,52 @@ namespace Antd.Modules {
             Post["/network2/gatewayconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
                 _network2Configuration.RemoveGatewayConfiguration(guid);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/dnsconfiguration"] = x => {
+                string id = Request.Form.Id;
+                string type = Request.Form.Type;
+                var typedType = type?.ToEnum<DnsType>() ?? DnsType.Null;
+                if(typedType == DnsType.Null) {
+                    return HttpStatusCode.InternalServerError;
+                }
+                string mode = Request.Form.Mode;
+                var typedMode = mode?.ToEnum<DnsMode>() ?? DnsMode.Null;
+
+                if(typedMode == DnsMode.Null) {
+                    return HttpStatusCode.InternalServerError;
+                }
+                string domain = Request.Form.Domain;
+                string ip = Request.Form.Ip;
+                string auth = Request.Form.Auth;
+                var model = new DnsConfiguration {
+                    Id = id ?? Random.ShortGuid(),
+                    Type = typedType,
+                    Mode = typedMode,
+                    Domain = domain,
+                    Ip = ip,
+                    AuthenticationEnabled = auth?.ToBoolean() ?? true
+                };
+                _network2Configuration.AddDnsConfiguration(model);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/dnsconfiguration/del"] = x => {
+                string guid = Request.Form.Guid;
+                _network2Configuration.RemoveDnsConfiguration(guid);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/dnsconfiguration/active"] = x => {
+                string guid = Request.Form.Guid;
+                _network2Configuration.SetDnsConfigurationActive(guid);
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/dnsconfiguration/active/del"] = x => {
+                string guid = Request.Form.Guid;
+                _network2Configuration.SetDnsConfigurationActive(guid);
                 return HttpStatusCode.OK;
             };
 

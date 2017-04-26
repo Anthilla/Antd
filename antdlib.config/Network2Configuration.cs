@@ -13,6 +13,7 @@ namespace antdlib.config {
         public Network2ConfigurationModel Conf => Parse();
         public List<NetworkInterfaceConfiguration> InterfaceConfigurationList => GetInterfaceConfiguration();
         public List<NetworkGatewayConfiguration> GatewayConfigurationList => GetGatewayConfiguration();
+        public List<DnsConfiguration> DnsConfigurationList => GetDnsConfiguration();
         public IEnumerable<string> NetworkInterfaces => GetAll();
         public IEnumerable<string> InterfacePhysical => GetPhysicalInterfaces();
         public IEnumerable<string> InterfaceVirtual => GetVirtualInterfaces();
@@ -23,8 +24,9 @@ namespace antdlib.config {
         private readonly string _cfgFile = $"{Parameter.AntdCfgNetwork}/network.conf";
         private readonly string _cfgFileBackup = $"{Parameter.AntdCfgNetwork}/network.conf.bck";
 
-        private const string InterfaceConfigurationExt = ".nic";
-        private const string GatewayConfigurationExt = ".gic";
+        private const string InterfaceConfigurationExt = ".nif";
+        private const string GatewayConfigurationExt = ".gw";
+        private const string DnsConfigurationExt = ".dns";
 
         private readonly CommandLauncher _launcher = new CommandLauncher();
         private readonly Bash _bash = new Bash();
@@ -469,6 +471,63 @@ namespace antdlib.config {
             }
             _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
             _launcher.Launch("systemctl-daemonreload");
+        }
+        #endregion
+
+        #region [    DnsConfiguration    ]
+        private List<DnsConfiguration> GetDnsConfiguration() {
+            var list = new List<DnsConfiguration>();
+            var files = Directory.EnumerateFiles(_dir, $"*{DnsConfigurationExt}");
+            foreach(var file in files) {
+                try {
+                    var text = File.ReadAllText(file);
+                    var conf = JsonConvert.DeserializeObject<DnsConfiguration>(text);
+                    list.Add(conf);
+                }
+                catch(Exception) {
+                    //throw;
+                }
+            }
+            return list;
+        }
+
+        public bool AddDnsConfiguration(DnsConfiguration conf) {
+            if(string.IsNullOrEmpty(conf.Id)) {
+                return false;
+            }
+            var file = $"{_dir}/{conf.Id}{DnsConfigurationExt}";
+            var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
+            try {
+                File.WriteAllText(file, text);
+            }
+            catch(Exception) {
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        public bool RemoveDnsConfiguration(string id) {
+            var file = $"{_dir}/{id}{DnsConfigurationExt}";
+            if(!File.Exists(file)) {
+                return false;
+            }
+            try {
+                File.Delete(file);
+            }
+            catch(Exception) {
+                return false;
+            }
+            return !File.Exists(file);
+        }
+
+        public void SetDnsConfigurationActive(string id) {
+            Conf.ActiveDnsConfiguration = id;
+            Save(Conf);
+        }
+
+        public void RemoveDnsConfigurationActive(string id) {
+            Conf.ActiveDnsConfiguration = string.Empty;
+            Save(Conf);
         }
         #endregion
     }

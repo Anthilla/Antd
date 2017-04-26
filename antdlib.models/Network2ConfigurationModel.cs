@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace antdlib.models {
     public class Network2ConfigurationModel {
         public List<NetworkInterface> Interfaces { get; set; } = new List<NetworkInterface>();
+        public string ActiveDnsConfiguration { get; set; } = string.Empty; //Id
     }
 
     public class NetworkInterface {
@@ -38,5 +39,14 @@ namespace antdlib.models {
         public string Route { get; set; } = "default";
         public string GatewayAddress { get; set; } = string.Empty;
         public bool IsUsed { get; set; } //viene calcolato
+    }
+
+    public class DnsConfiguration {
+        public string Id { get; set; } = string.Empty;
+        public DnsType Type { get; set; } = DnsType.Public;
+        public DnsMode Mode { get; set; } = DnsMode.Dynamic;
+        public string Domain { get; set; } = string.Empty;
+        public string Ip { get; set; } = string.Empty;
+        public bool AuthenticationEnabled { get; set; } = true;
     }
 }

@@ -71,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiConsumer.cs" />
+    <Compile Include="Enum\DnsMode.cs" />
+    <Compile Include="Enum\DnsType.cs" />
     <Compile Include="Enum\NetworkRoleVerb.cs" />
     <Compile Include="Enum\NetworkInterfaceType.cs" />
     <Compile Include="Retry.cs" />

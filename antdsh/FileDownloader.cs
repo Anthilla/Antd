@@ -9,7 +9,7 @@ namespace antdsh {
         private readonly string _url;
         private readonly string _fullPathWhereToSave;
         private bool _result;
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
+        //private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
 
         public FileDownloader(string url, string fullPathWhereToSave) {
             if(string.IsNullOrEmpty(url))
@@ -39,7 +39,7 @@ namespace antdsh {
                     client.DownloadFileCompleted += WebClientDownloadCompleted;
                     Console.WriteLine($"Downloading file {filename}:");
                     client.DownloadFileAsync(new Uri(_url), _fullPathWhereToSave);
-                    _semaphore.Wait(timeout);
+                    //_semaphore.Wait(timeout);
                     return _result && File.Exists(_fullPathWhereToSave);
                 }
             }
@@ -49,7 +49,7 @@ namespace antdsh {
                 return false;
             }
             finally {
-                _semaphore.Dispose();
+                //_semaphore.Dispose();
             }
         }
 
@@ -63,7 +63,7 @@ namespace antdsh {
                 Console.Write(args.Error.ToString());
             }
             Console.WriteLine("Download finished!");
-            _semaphore.Release();
+            //_semaphore.Release();
         }
 
         public bool DownloadFile() {

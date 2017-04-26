@@ -1,0 +1,47 @@
+Hostname					srv01
+
+InternalDomainPrimary		domint.local
+ExternalDomainPrimary		domext.local
+
+InternalHostIpPrimary		10.11.19.111
+InternalNetPrimaryBits		16
+InternalNetPrimary			10.11.0.0
+
+ExternalHostIpPrimary		192.168.111.2
+ExternalNetPrimaryBits		24
+ExternalNetPrimary			192.168.111.0
+
+ResolvNameserver			10.1.10.1 ip 
+ResolvDomain				domint.local/domext.local/altro -> resolv.conf domain & search
+
+=================================================
+
+[dev]
+InterfaceDev		eth0	
+InterfaceConfig		ID12345
+
+=================================================
+
+[solo configurazione da applicare a una IF]
+InterfaceId 			ID12345
+InterfaceHostname 		srv01extif01.domext.local   ->/etc/hosts -> utilizzabile da altri servizi + InterfaceAlias
+InterfaceType			External 					-> oppure Internal
+InterfaceRoleVerb		ext
+InterfaceAlias			extif						-> external interface extif01 + indice
+InterfaceIp				192.168.111.2
+InterfaceSubnet			24							-> 192.168.111.0 --> /24
+InterfaceBroadcast		192.168.111.255
+InterfaceDescription 	Internet
+InterfaceChildrenIf		(nel caso di bridge/bond)
+InterfaceIndex			0							-> 0..X
+
+=================================================
+
+[DNS configuration]
+
+=================================================
+
+dns ->resolv.conf ->bind
+
+route -> default gw o static 
+

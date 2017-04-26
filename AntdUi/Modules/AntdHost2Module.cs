@@ -50,10 +50,13 @@ namespace AntdUi.Modules {
                 string hostChassis = Request.Form.HostChassis;
                 string hostDeployment = Request.Form.HostDeployment;
                 string hostLocation = Request.Form.HostLocation;
+                string hostAliasPrimary = Request.Form.HostAliasPrimary;
                 string internalDomainPrimary = Request.Form.InternalDomainPrimary;
                 string externalDomainPrimary = Request.Form.ExternalDomainPrimary;
                 string internalHostIpPrimary = Request.Form.InternalHostIpPrimary;
                 string externalHostIpPrimary = Request.Form.ExternalHostIpPrimary;
+                string resolvNameserver = Request.Form.ResolvNameserver;
+                string resolvDomain = Request.Form.ResolvDomain;
                 string timezone = Request.Form.Timezone;
                 string ntpdateServer = Request.Form.NtpdateServer;
                 string cloud = Request.Form.Cloud;
@@ -62,10 +65,13 @@ namespace AntdUi.Modules {
                     { "HostChassis", hostChassis },
                     { "HostDeployment", hostDeployment },
                     { "HostLocation", hostLocation },
+                    { "HostAliasPrimary", hostAliasPrimary },
                     { "InternalDomainPrimary", internalDomainPrimary },
                     { "ExternalDomainPrimary", externalDomainPrimary },
                     { "InternalHostIpPrimary", internalHostIpPrimary },
                     { "ExternalHostIpPrimary", externalHostIpPrimary },
+                    { "ResolvNameserver", resolvNameserver },
+                    { "ResolvDomain", resolvDomain },
                     { "Timezone", timezone },
                     { "NtpdateServer", ntpdateServer },
                     { "Cloud", cloud }

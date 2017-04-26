@@ -64,10 +64,13 @@ namespace Antd.Modules {
                 string hostChassis = Request.Form.HostChassis;
                 string hostDeployment = Request.Form.HostDeployment;
                 string hostLocation = Request.Form.HostLocation;
+                string hostAliasPrimary = Request.Form.HostAliasPrimary;
                 string internalDomainPrimary = Request.Form.InternalDomainPrimary;
                 string externalDomainPrimary = Request.Form.ExternalDomainPrimary;
                 string internalHostIpPrimary = Request.Form.InternalHostIpPrimary;
                 string externalHostIpPrimary = Request.Form.ExternalHostIpPrimary;
+                string resolvNameserver = Request.Form.ResolvNameserver;
+                string resolvDomain = Request.Form.ResolvDomain;
                 string timezone = Request.Form.Timezone;
                 string ntpdateServer = Request.Form.NtpdateServer;
                 string cloud = Request.Form.Cloud;
@@ -77,10 +80,13 @@ namespace Antd.Modules {
                     HostChassis = hostChassis ?? old.HostChassis,
                     HostDeployment = hostDeployment ?? old.HostDeployment,
                     HostLocation = hostLocation ?? old.HostLocation,
+                    HostAliasPrimary = hostAliasPrimary ?? old.HostAliasPrimary,
                     InternalDomainPrimary = internalDomainPrimary ?? old.InternalDomainPrimary,
                     ExternalDomainPrimary = externalDomainPrimary ?? old.ExternalDomainPrimary,
                     InternalHostIpPrimary = internalHostIpPrimary ?? old.InternalHostIpPrimary,
                     ExternalHostIpPrimary = externalHostIpPrimary ?? old.ExternalHostIpPrimary,
+                    ResolvNameserver = resolvNameserver ?? old.ResolvNameserver,
+                    ResolvDomain = resolvDomain ?? old.ResolvDomain,
                     Timezone = timezone ?? old.Timezone,
                     NtpdateServer = ntpdateServer ?? old.NtpdateServer,
                     MachineUid = Machine.MachineId.Get,

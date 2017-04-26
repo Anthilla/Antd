@@ -8,7 +8,7 @@ namespace antdlib.models {
         public string HostDeployment { get; set; } = string.Empty;
         public string HostLocation { get; set; } = string.Empty;
 
-        public string HostAliasPrimary { get; set; } = string.Empty; //domint.local
+        public string HostAliasPrimary { get; set; } = string.Empty;
 
         public string InternalDomainPrimary { get; set; } = string.Empty; //domint.local
         public string InternalHostIpPrimary { get; set; } = string.Empty; //10.11.19.111
@@ -19,6 +19,9 @@ namespace antdlib.models {
         public string ExternalHostIpPrimary { get; set; } = string.Empty; //192.168.111.0/24
         public string ExternalNetPrimaryBits { get; set; } = string.Empty; //24
         public string ExternalNetPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, ExternalNetPrimaryBits).Network.ToString(); //viene calcolato
+
+        public string ResolvNameserver { get; set; } = string.Empty; //ip address
+        public string ResolvDomain { get; set; } = string.Empty; //può essere il domain interno o esterno
 
         #endregion
 

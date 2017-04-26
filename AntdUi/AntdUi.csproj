@@ -136,6 +136,7 @@
     <Compile Include="Modules\AntdGlusterModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNameServiceModule.cs" />
+    <Compile Include="Modules\AntdNetwork2Module.cs" />
     <Compile Include="Modules\AntdNetworkModule.cs" />
     <Compile Include="Modules\AntdRsyncModule.cs" />
     <Compile Include="Modules\AntdSambaModule.cs" />
@@ -778,6 +779,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\mod.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Pages\antd\network2.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\network.html">
