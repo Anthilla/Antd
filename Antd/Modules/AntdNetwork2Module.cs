@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using antdlib.common;
 using antdlib.config;
 using antdlib.models;
@@ -52,8 +53,8 @@ namespace Antd.Modules {
                 var virtualInterfaces = _network2Configuration.InterfaceVirtual.ToList();
                 foreach(var vif in virtualInterfaces) {
                     if(physicalInterfaces.Any(_ => _ == vif) ||
-                    bridgeInterfaces.Any(_ => _ == vif) ||
-                    bondInterfaces.Any(_ => _ == vif)) {
+                        bridgeInterfaces.Any(_ => _ == vif) ||
+                        bondInterfaces.Any(_ => _ == vif)) {
                         virtualInterfaces.Remove(vif);
                     }
                 }
@@ -64,7 +65,7 @@ namespace Antd.Modules {
                     VirtualIf = virtualInterfaces,
                     InterfaceConfigurationList = _network2Configuration.InterfaceConfigurationList,
                     GatewayConfigurationList = _network2Configuration.GatewayConfigurationList,
-                    DnsConfigurationList =  _network2Configuration.DnsConfigurationList,
+                    DnsConfigurationList = _network2Configuration.DnsConfigurationList,
                     Configuration = _network2Configuration.Conf.Interfaces,
                     Variables = _variablesConfiguration.Host
                 };
@@ -126,10 +127,15 @@ namespace Antd.Modules {
                     subnet = vars.ExternalNetPrimaryBits;
                 }
 
-                var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
+                var broadcast = "";
+                try {
+                    broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
+                }
+                catch(Exception) {
+                }
 
                 var model = new NetworkInterfaceConfiguration {
-                    Id = id ?? Random.ShortGuid(),
+                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
                     Type = typedType,
                     Hostname = hostname,
                     Index = index,
@@ -159,7 +165,7 @@ namespace Antd.Modules {
                 string route = Request.Form.Route;
                 string gatewayAddress = Request.Form.GatewayAddress;
                 var model = new NetworkGatewayConfiguration {
-                    Id = id ?? Random.ShortGuid(),
+                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
                     Route = route,
                     GatewayAddress = gatewayAddress
                 };
@@ -190,7 +196,7 @@ namespace Antd.Modules {
                 string ip = Request.Form.Ip;
                 string auth = Request.Form.Auth;
                 var model = new DnsConfiguration {
-                    Id = id ?? Random.ShortGuid(),
+                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
                     Type = typedType,
                     Mode = typedMode,
                     Dest = dest?.ToEnum<DnsDestination>() ?? DnsDestination.Internal,

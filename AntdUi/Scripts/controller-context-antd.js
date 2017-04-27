@@ -776,7 +776,7 @@ function AntdNetwork2Controller($scope, $http) {
     $scope.NewGatewayConfiguration = {
         Id: "",
         Route: "",
-        Address: ""
+        GatewayAddress: ""
     };
 
     $scope.deleteGatewayConfiguration = function (el) {
@@ -790,14 +790,8 @@ function AntdNetwork2Controller($scope, $http) {
     $scope.saveGatewayConfiguration = function (el) {
         var data = $.param({
             Id: el.Id,
-            Type: el.Type,
-            Description: el.Description,
-            Verb: el.Verb,
-            Mode: el.Mode,
-            Status: el.Status,
-            Ip: el.Ip,
-            Adapter: el.Adapter,
-            Ifs: el.Ifs
+            Route: el.Route,
+            GatewayAddress: el.GatewayAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network2/gatewayconfiguration", data).then(function () { console.log(1); }, function (r) { console.log(r); });

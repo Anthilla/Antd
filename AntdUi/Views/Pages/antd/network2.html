@@ -1,7 +1,9 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">network</h1>
 
 <div ng-controller="AntdNetwork2Controller">
-    <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+    <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+    <br />
+    <br />
     <br />
 
     <!--Network Interface Configuration-->
@@ -29,7 +31,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewInterfaceConfiguration.Type" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewInterfaceConfiguration.Type" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="1">Internal</option>
                                         <option value="2">External</option>
                                     </select>
@@ -53,7 +55,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewInterfaceConfiguration.Verb" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewInterfaceConfiguration.Verb" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="0">loif</option>
                                         <option value="1">iif</option>
                                         <option value="2">eif</option>
@@ -70,7 +72,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewInterfaceConfiguration.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewInterfaceConfiguration.Mode" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="1">Static</option>
                                         <option value="2">Dynamic</option>
                                     </select>
@@ -82,8 +84,8 @@
                                 <p>Status</p>
                             </div>
                             <div class="cell colspan4">
-                                <div class="input-control select width50pc">
-                                    <select ng-model="NewInterfaceConfiguration.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                <div class="input-control select width100pc">
+                                    <select ng-model="NewInterfaceConfiguration.Status" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="1">Up</option>
                                         <option value="0">Down</option>
                                     </select>
@@ -107,7 +109,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewInterfaceConfiguration.Adapter" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewInterfaceConfiguration.Adapter" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="1">Physical</option>
                                         <option value="4">Bridge</option>
                                         <option value="3">Bond</option>
@@ -130,7 +132,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="saveInterfaceConfiguration(NewInterfaceConfiguration)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                <button ng-click="saveInterfaceConfiguration(NewInterfaceConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -153,7 +155,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="ic.Type" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="ic.Type" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="1">Internal</option>
                                             <option value="2">External</option>
                                         </select>
@@ -177,7 +179,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="ic.Verb" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="ic.Verb" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="0">loif</option>
                                             <option value="1">iif</option>
                                             <option value="2">eif</option>
@@ -194,7 +196,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="ic.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="ic.Mode" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="1">Static</option>
                                             <option value="2">Dynamic</option>
                                         </select>
@@ -206,8 +208,8 @@
                                     <p>Status</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <div class="input-control select width50pc">
-                                        <select ng-model="ic.Status" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <div class="input-control select width100pc">
+                                        <select ng-model="ic.Status" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="1">Up</option>
                                             <option value="0">Down</option>
                                         </select>
@@ -231,7 +233,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="ic.Adapter" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="ic.Adapter" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="1">Physical</option>
                                             <option value="4">Bridge</option>
                                             <option value="3">Bond</option>
@@ -254,7 +256,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="saveInterfaceConfiguration(ic)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                    <button ng-click="saveInterfaceConfiguration(ic)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>
@@ -300,7 +302,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                                    <input type="text" ng-model="NewGatewayConfiguration.Address" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                    <input type="text" ng-model="NewGatewayConfiguration.GatewayAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
                                     <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                                 </div>
                             </div>
@@ -310,7 +312,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="saveGatewayConfiguration(NewGatewayConfiguration)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                <button ng-click="saveGatewayConfiguration(NewGatewayConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -322,7 +324,7 @@
                     <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
                         <span class="icon mif-file-text fg-anthilla-blue bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
                         <span class="title">
-                            {{ gw.Route }}&nbsp;-&nbsp;{{ gw.Address }}
+                            {{ gw.Route }}&nbsp;-&nbsp;{{ gw.GatewayAddress }}
                         </span>
                     </div>
                     <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
@@ -344,7 +346,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                                        <input type="text" ng-model="gw.Address" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                        <input type="text" ng-model="gw.GatewayAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
                                         <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                                     </div>
                                 </div>
@@ -354,7 +356,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="saveGatewayConfiguration(gw)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                    <button ng-click="saveGatewayConfiguration(gw)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>
@@ -389,7 +391,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewDnsConfiguration.Type" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewDnsConfiguration.Type" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="0">Public</option>
                                         <option value="1">Private</option>
                                     </select>
@@ -402,7 +404,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewDnsConfiguration.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewDnsConfiguration.Mode" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="1">Static</option>
                                         <option value="2">Dynamic</option>
                                     </select>
@@ -415,7 +417,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewDnsConfiguration.Destination" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewDnsConfiguration.Destination" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option value="0">Internal</option>
                                         <option value="1">External</option>
                                     </select>
@@ -449,7 +451,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="saveDnsConfiguration(NewDnsConfiguration)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                <button ng-click="saveDnsConfiguration(NewDnsConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -472,7 +474,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="el.Type" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="el.Type" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="0">Public</option>
                                             <option value="1">Private</option>
                                         </select>
@@ -485,7 +487,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="el.Mode" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="el.Mode" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="1">Static</option>
                                             <option value="2">Dynamic</option>
                                         </select>
@@ -498,7 +500,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="el.Destination" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="el.Destination" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option value="0">Internal</option>
                                             <option value="1">External</option>
                                         </select>
@@ -532,7 +534,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="saveDnsConfiguration(NewDnsConfiguration)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                    <button ng-click="saveDnsConfiguration(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                             <div class="row cells6 bg-hover-anthilla-gray-2">
@@ -540,7 +542,7 @@
                                     <p>Activate</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="activateDnsConfiguration(NewDnsConfiguration)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Activate</button>
+                                    <button ng-click="activateDnsConfiguration(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Activate</button>
                                 </div>
                             </div>
                         </div>
@@ -586,7 +588,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewInterface.Configuration" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewInterface.Configuration" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option ng-repeat="v in InterfaceConfigurationList" value="{{ v.Id }}">{{ v.Alias }}</option>
                                     </select>
                                 </div>
@@ -598,7 +600,7 @@
                             </div>
                             <div class="cell colspan4">
                                 <div class="input-control select width100pc">
-                                    <select ng-model="NewInterface.GatewayConfiguration" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                    <select ng-model="NewInterface.GatewayConfiguration" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                         <option ng-repeat="v in GatewayConfigurationList" value="{{ v.Id }}">{{ v.Route }}&nbsp;-&nbsp;{{ v.Address }}</option>
                                     </select>
                                 </div>
@@ -631,7 +633,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="save(NewInterface)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                <button ng-click="save(NewInterface)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -665,7 +667,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="el.Configuration" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="el.Configuration" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option ng-repeat="v in InterfaceConfigurationList" value="{{ v.Id }}">{{ v.Alias }}</option>
                                         </select>
                                     </div>
@@ -677,7 +679,7 @@
                                 </div>
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
-                                        <select ng-model="el.GatewayConfiguration" class="bg-anthilla-gray-2 bd-anthilla-gray-3 fg-white">
+                                        <select ng-model="el.GatewayConfiguration" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                             <option ng-repeat="v in GatewayConfigurationList" value="{{ v.Id }}">{{ v.Route }}&nbsp;-&nbsp;{{ v.Address }}</option>
                                         </select>
                                     </div>
@@ -710,7 +712,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="save(el)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20 place-right">Save</button>
+                                    <button ng-click="save(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>
@@ -746,7 +748,7 @@
                         <p>&nbsp;</p>
                     </div>
                     <div class="cell colspan4">
-                        <button ng-click="createBridge(NewBridge)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                        <button ng-click="createBridge(NewBridge)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                     </div>
                 </div>
             </div>
@@ -779,7 +781,7 @@
                         <p>&nbsp;</p>
                     </div>
                     <div class="cell colspan4">
-                        <button ng-click="createBond(NewBond)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                        <button ng-click="createBond(NewBond)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                     </div>
                 </div>
             </div>

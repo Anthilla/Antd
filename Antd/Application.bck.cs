@@ -137,7 +137,6 @@ namespace Antd {
         }
 
         private static void Test() {
-            new Do().oo();
         }
 
         #region [    Core Procedures    ]
@@ -557,6 +556,8 @@ namespace Antd {
             Logger.Info("[config] post procedures");
             if(!Parameter.IsUnix)
                 return;
+
+            new Do().oo();
 
             #region [    Apply Setup Configuration    ]
             SetupConfiguration.Set();
