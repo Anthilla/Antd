@@ -29,12 +29,15 @@ namespace Antd {
             IsDnsExternal = Dns?.Dest == DnsDestination.External;
 
             _replacements = new Dictionary<string, string> {
+                { "$hostname", Host.HostName },
                 { "$internalIp", Host.InternalHostIpPrimary },
                 { "$externalIp", Host.ExternalHostIpPrimary },
                 { "$internalNet", Host.InternalNetPrimary },
                 { "$externalNet", Host.ExternalNetPrimary },
                 { "$internalMask", Host.InternalNetMaskPrimary },
                 { "$externalMask", Host.ExternalNetMaskPrimary },
+                { "$internalNetBits", Host.InternalNetPrimaryBits },
+                { "$externalNetBits", Host.ExternalNetPrimaryBits },
                 { "$internalDomain", Host.InternalDomainPrimary },
                 { "$externalDomain", Host.ExternalDomainPrimary },
                 { "$internalBroadcast", Host.InternalBroadcastPrimary },
@@ -43,12 +46,26 @@ namespace Antd {
                 { "$externalNetArpa", Host.ExternalArpaPrimary },
                 { "$resolvNameserver", Host.ResolvNameserver },
                 { "$resolvDomain", Host.ResolvDomain },
-
                 { "$dnsDomain", Dns?.Domain },
                 { "$dnsIp", Dns?.Ip },
-
-                { "$secret", Host.Secret }
+                { "$secret", Host.Secret },
+                { "$internalArpaIpAddress", Host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
             };
+
+            var interfaces = _network2Configuration.Conf.Interfaces;
+            var activeNetworkConfsIds = interfaces.Select(_ => _.Configuration);
+            var networkConfs = _network2Configuration.InterfaceConfigurationList;
+            var activeNetworkConfs = activeNetworkConfsIds.Select(_ => networkConfs.FirstOrDefault(__ => __.Id == _)).ToList();
+            var internalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.Internal);
+            var internalActiveNetworkConfsIds = internalActiveNetworkConfs.Select(_ => _.Id);
+            var internalInterfaces = internalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
+            _replacements["$internalInterface"] = internalInterfaces;
+            var externalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.External);
+            var externalActiveNetworkConfsIds = externalActiveNetworkConfs.Select(_ => _.Id);
+            var externalInterfaces = externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
+            _replacements["$externalInterface"] = externalInterfaces;
+            var allInterfaces = interfaces.Select(_=>_.Device).ToList().JoinToString(", ");
+            _replacements["$allInterface"] = allInterfaces;
         }
 
         public void oo() {
@@ -57,8 +74,14 @@ namespace Antd {
             SaveNsswitchFile();
             SaveNetworksFile();
             SaveHostsFile();
+            Directory.CreateDirectory("/etc/dhcp");
             SaveDhcpdFile();
+            Directory.CreateDirectory("/etc/bind");
             SaveNamedFile();
+            SaveRndcFile();
+            SaveBindFiles();
+            SaveBindZones();
+            SaveNftablesFile();
         }
 
         private string EditLine(string input) {
@@ -69,8 +92,14 @@ namespace Antd {
             return output;
         }
 
+        private void ImportTemplate(string src, string dest) {
+            if(!File.Exists(dest)) {
+                File.Copy(src, dest);
+            }
+        }
+
         #region [    ntp.conf    ]
-        private readonly string _ntpFileInput = $"{LocalTemplateDirectory}/ntp.conf.tmlp.tmlp";
+        private readonly string _ntpFileInput = $"{LocalTemplateDirectory}/ntp.conf.tmlp";
         private const string NtpFileOutput = "/etc/ntp.conf";
 
         private void SaveNtpFile() {
@@ -242,5 +271,92 @@ namespace Antd {
         }
         #endregion
 
+        #region [    rndc.conf    ]
+        private readonly string _rndcFileInput = $"{LocalTemplateDirectory}/rndc.conf.tmpl";
+        private const string RndcFileOutput = "/etc/bind/rndc.conf";
+
+        private void SaveRndcFile() {
+            try {
+                using(var reader = new StreamReader(_rndcFileInput)) {
+                    using(TextWriter writer = File.CreateText(RndcFileOutput)) {
+                        string line;
+                        while((line = reader.ReadLine()) != null) {
+                            writer.WriteLine(EditLine(line));
+                        }
+                    }
+                }
+            }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
+        }
+        #endregion
+
+        #region [    bind files    ]
+        private void SaveBindFiles() {
+            Directory.CreateDirectory("/etc/bind");
+            Directory.CreateDirectory("/etc/bind/zones");
+            ImportTemplate($"{LocalTemplateDirectory}/blackhole.zones.tmpl", "/etc/bind/blackhole.zones");
+            ImportTemplate($"{LocalTemplateDirectory}/zones_blockeddomain.hosts.tmpl", "/etc/bind/zones/blockeddomain.hosts");
+            ImportTemplate($"{LocalTemplateDirectory}/zones_empty.db.tmpl", "/etc/bind/zones/empty.db");
+            ImportTemplate($"{LocalTemplateDirectory}/zones_localhost-forward.db.tmpl", "/etc/bind/zones/localhost-forward.db");
+            ImportTemplate($"{LocalTemplateDirectory}/zones_localhost-reverse.db.tmpl", "/etc/bind/zones/localhost-reverse.db");
+        }
+
+        private void SaveBindZones() {
+            var hostZoneFileInput = $"{LocalTemplateDirectory}/zones_host.domint.local.db.tmpl";
+            var hostZoneFileOutput = $"/etc/bind/zones/host.{Host.InternalDomainPrimary}.db";
+            try {
+                using(var reader = new StreamReader(hostZoneFileInput)) {
+                    using(TextWriter writer = File.CreateText(hostZoneFileOutput)) {
+                        string line;
+                        while((line = reader.ReadLine()) != null) {
+                            writer.WriteLine(EditLine(line));
+                        }
+                    }
+                }
+            }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
+
+            var revZoneFileInput = $"{LocalTemplateDirectory}/zones_rev.10.11.0.0.db.tmpl";
+            var revZoneFileOutput = $"/etc/bind/zones/rev.{Host.InternalNetPrimary}.db";
+            try {
+                using(var reader = new StreamReader(revZoneFileInput)) {
+                    using(TextWriter writer = File.CreateText(revZoneFileOutput)) {
+                        string line;
+                        while((line = reader.ReadLine()) != null) {
+                            writer.WriteLine(EditLine(line));
+                        }
+                    }
+                }
+            }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
+        }
+        #endregion
+
+        #region [    Nftable    ]
+        private readonly string _nftablesFileInput = $"{LocalTemplateDirectory}/nftables.conf.tmpl";
+        private const string NftablesFileOutput = "/etc/nftables.conf";
+
+        private void SaveNftablesFile() {
+            try {
+                using(var reader = new StreamReader(_nftablesFileInput)) {
+                    using(TextWriter writer = File.CreateText(NftablesFileOutput)) {
+                        string line;
+                        while((line = reader.ReadLine()) != null) {
+                            writer.WriteLine(EditLine(line));
+                        }
+                    }
+                }
+            }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+            }
+        }
+        #endregion
     }
 }

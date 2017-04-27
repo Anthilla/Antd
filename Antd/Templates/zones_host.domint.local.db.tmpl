@@ -1,0 +1,55 @@
+$ORIGIN .
+$TTL 3600	; 1 hour
+$internalDomain			IN SOA	$hostname.$internalDomain. hostmaster.$internalDomain. (
+				1000	   ; serial
+				900        ; refresh (15 minutes)
+				600        ; retry (10 minutes)
+				86400      ; expire (1 day)
+				3600       ; minimum (1 hour)
+				)
+			NS	$hostname.$internalDomain.
+$TTL 600	; 10 minutes
+			A	$internalIp
+$ORIGIN _tcp.DefaultSite._sites.$internalDomain.
+_gc			SRV	0 100 3268 $hostname.$internalDomain.
+_kerberos		SRV	0 100 88 $hostname.$internalDomain.
+_ldap			SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN _tcp.$internalDomain.
+_gc			SRV	0 100 3268 $hostname.$internalDomain.
+_kerberos		SRV	0 100 88 $hostname.$internalDomain.
+_kpasswd		SRV	0 100 464 $hostname.$internalDomain.
+_ldap			SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN _udp.$internalDomain.
+_kerberos		SRV	0 100 88 $hostname.$internalDomain.
+_kpasswd		SRV	0 100 464 $hostname.$internalDomain.
+$ORIGIN $internalDomain.
+$TTL 600	; 10 minutes
+domaindnszones		A	$internalIp
+$ORIGIN domaindnszones.$internalDomain.
+_ldap._tcp.DefaultSite._sites	SRV	0 100 389 $hostname.$internalDomain.
+_ldap._tcp		SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN $internalDomain.
+$TTL 1200	; 20 minutes
+forestdnszones		A	$internalIp
+$ORIGIN forestdnszones.$internalDomain.
+_ldap._tcp.DefaultSite._sites	SRV	0 100 389 $hostname.$internalDomain.
+_ldap._tcp		SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN _tcp.DefaultSite._sites.dc._msdcs.$internalDomain.
+$TTL 3600       ; 1 hour
+_kerberos		SRV	0 100 88 $hostname.$internalDomain.
+_ldap			SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN _tcp.dc._msdcs.$internalDomain.
+$TTL 3600       ; 1 hour
+_kerberos		SRV	0 100 88 $hostname.$internalDomain.
+_ldap			SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN _msdcs.$internalDomain.
+$TTL 3600       ; 1 hour
+_ldap._tcp		SRV 0 100 389 $hostname.$internalDomain.
+$ORIGIN gc._msdcs.$internalDomain.
+$TTL 3600       ; 1 hour
+_ldap._tcp.DefaultSite._sites SRV	0 100 3268 $hostname.$internalDomain.
+_ldap._tcp		SRV	0 100 3268 $hostname.$internalDomain.
+$ORIGIN _msdcs.$internalDomain.
+$TTL 3600       ; 1 hour
+_ldap._tcp.pdc		SRV	0 100 389 $hostname.$internalDomain.
+$ORIGIN $internalDomain.

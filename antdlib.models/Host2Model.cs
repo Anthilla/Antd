@@ -60,6 +60,7 @@ namespace antdlib.models {
                 rng.GetBytes(c);
             }
             byte[] hashValue;
+
             using(var hmac = new HMACMD5(key)) {
                 hashValue = hmac.ComputeHash(c);
             }

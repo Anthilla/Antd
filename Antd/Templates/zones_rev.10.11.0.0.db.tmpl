@@ -1,0 +1,12 @@
+$ORIGIN .
+$TTL 3600	; 1 hour
+$internalNetArpa.in-addr.arpa	IN SOA	$hostname.$internalDomain. hostmaster.$internalDomain. (
+				1111	   ; serial
+				900        ; refresh (15 minutes)
+				600        ; retry (10 minutes)
+				86400      ; expire (1 day)
+				3600       ; minimum (1 hour)
+				)
+			NS	$hostname.$internalDomain.
+$ORIGIN $internalNetArpa.in-addr.arpa.
+$internalArpaIpAddress			PTR	$hostname.$internalDomain.
