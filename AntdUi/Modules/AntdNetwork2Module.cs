@@ -146,6 +146,46 @@ namespace AntdUi.Modules {
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/active/del", dict);
             };
 
+            Post["/network2/nsupdateconfiguration"] = x => {
+                string id = Request.Form.Id;
+                string serverName = Request.Form.ServerName;
+                string serverPort = Request.Form.ServerPort;
+                string localAddress = Request.Form.LocalAddress;
+                string localPort = Request.Form.LocalPort;
+                string zoneName = Request.Form.ZoneName;
+                string className = Request.Form.ClassName;
+                string nxDomain = Request.Form.NxDomain;
+                string yxDomain = Request.Form.YxDomain;
+                string nxRrset = Request.Form.NxRrset;
+                string yxRrset = Request.Form.YxRrset;
+                string delete = Request.Form.Delete;
+                string add = Request.Form.Add;
+                var dict = new Dictionary<string, string> {
+                    { "Id", id },
+                    { "ServerName", serverName },
+                    { "ServerPort", serverPort },
+                    { "LocalAddress", localAddress },
+                    { "LocalPort", localPort },
+                    { "ZoneName", zoneName },
+                    { "ClassName", className },
+                    { "NxDomain", nxDomain },
+                    { "YxDomain", yxDomain },
+                    { "NxRrset", nxRrset },
+                    { "YxRrset", yxRrset },
+                    { "Delete", delete },
+                    { "Add", add }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration", dict);
+            };
+
+            Post["/network2/nsupdateconfiguration/del"] = x => {
+                string guid = Request.Form.Guid;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration/active/del", dict);
+            };
+
             Post["/network2/interface"] = x => {
                 string dev = Request.Form.Device;
                 string conf = Request.Form.Configuration;

@@ -14,6 +14,7 @@ namespace antdlib.config {
         public List<NetworkInterfaceConfiguration> InterfaceConfigurationList => GetInterfaceConfiguration();
         public List<NetworkGatewayConfiguration> GatewayConfigurationList => GetGatewayConfiguration();
         public List<DnsConfiguration> DnsConfigurationList => GetDnsConfiguration();
+        public List<NsUpdateConfiguration> NsUpdateConfigurationList => GetNsUpdateConfiguration();
         public IEnumerable<string> NetworkInterfaces => GetAll();
         public IEnumerable<string> InterfacePhysical => GetPhysicalInterfaces();
         public IEnumerable<string> InterfaceVirtual => GetVirtualInterfaces();
@@ -27,6 +28,7 @@ namespace antdlib.config {
         private const string InterfaceConfigurationExt = ".nif";
         private const string GatewayConfigurationExt = ".gw";
         private const string DnsConfigurationExt = ".dns";
+        private const string NsUpdateConfigurationExt = ".nsu";
 
         private readonly CommandLauncher _launcher = new CommandLauncher();
         private readonly Bash _bash = new Bash();
@@ -284,6 +286,66 @@ namespace antdlib.config {
         }
         #endregion
 
+        #region [    NsUpdateConfiguration    ]
+        private List<NsUpdateConfiguration> GetNsUpdateConfiguration() {
+            var list = new List<NsUpdateConfiguration>();
+            var files = Directory.EnumerateFiles(_dir, $"*{NsUpdateConfigurationExt}");
+            foreach(var file in files) {
+                try {
+                    var text = File.ReadAllText(file);
+                    var conf = JsonConvert.DeserializeObject<NsUpdateConfiguration>(text);
+                    list.Add(conf);
+                }
+                catch(Exception) {
+                    //throw;
+                }
+            }
+            return list;
+        }
+
+        public bool AddNsUpdateConfiguration(NsUpdateConfiguration conf) {
+            if(string.IsNullOrEmpty(conf.Id)) {
+                return false;
+            }
+            var file = $"{_dir}/{conf.Id}{NsUpdateConfigurationExt}";
+            var lines = new List<string>();
+            if(!string.IsNullOrEmpty(conf.ServerName)) { lines.Add($"server {conf.ServerName} {conf.ServerPort}"); }
+            if(!string.IsNullOrEmpty(conf.LocalAddress)) { lines.Add($"local  {conf.LocalAddress} {conf.LocalPort}"); }
+            if(!string.IsNullOrEmpty(conf.ZoneName)) { lines.Add($"zone  {conf.ZoneName}"); }
+            if(!string.IsNullOrEmpty(conf.ClassName)) { lines.Add($"class  {conf.ClassName}"); }
+            if(!string.IsNullOrEmpty(conf.KeySecret)) { lines.Add($"key {conf.KeyName} {conf.KeySecret}"); }
+            if(!string.IsNullOrEmpty(conf.NxDomain)) { lines.Add($"prereq nxdomain {conf.NxDomain}"); }
+            if(!string.IsNullOrEmpty(conf.YxDomain)) { lines.Add($"prereq yxdomain {conf.YxDomain}"); }
+            if(!string.IsNullOrEmpty(conf.NxRrset)) { lines.Add($"prereq nxrrset {conf.NxRrset}"); }
+            if(!string.IsNullOrEmpty(conf.YxRrset)) { lines.Add($"prereq yxrrset {conf.YxRrset}"); }
+            if(!string.IsNullOrEmpty(conf.Delete)) { lines.Add($"update delete {conf.Delete}"); }
+            if(!string.IsNullOrEmpty(conf.Add)) { lines.Add($"update add {conf.Add}"); }
+            lines.Add("show");
+            lines.Add("send");
+            try {
+                File.WriteAllLines(file, lines);
+            }
+            catch(Exception) {
+                return false;
+            }
+            return File.Exists(file);
+        }
+
+        public bool RemoveNsUpdateConfiguration(string id) {
+            var file = $"{_dir}/{id}{NsUpdateConfigurationExt}";
+            if(!File.Exists(file)) {
+                return false;
+            }
+            try {
+                File.Delete(file);
+            }
+            catch(Exception) {
+                return false;
+            }
+            return !File.Exists(file);
+        }
+        #endregion
+
         #region [    Network Devices Mapping    ]
         private IEnumerable<string> GetAll() {
             if(!Parameter.IsUnix) {
@@ -445,7 +507,7 @@ namespace antdlib.config {
         }
         #endregion
 
-        #region [     Resolv(D)    ]
+        #region [    Resolv(D)    ]
         public void SetupResolv() {
             if(!File.Exists("/etc/resolv.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/resolv.conf"))) {
                 var lines = new List<string> {

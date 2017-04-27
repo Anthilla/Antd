@@ -1,5 +1,6 @@
 ﻿using antdlib.common;
 using System.Collections.Generic;
+using System.IO;
 
 namespace antdlib.models {
     public class Network2ConfigurationModel {
@@ -49,5 +50,23 @@ namespace antdlib.models {
         public string Domain { get; set; } = string.Empty;
         public string Ip { get; set; } = string.Empty;
         public bool AuthenticationEnabled { get; set; } = true;
+    }
+
+    public class NsUpdateConfiguration {
+        public string Id { get; set; } = string.Empty;
+        public string ServerName { get; set; } = string.Empty;
+        public string ServerPort { get; set; } = string.Empty;
+        public string LocalAddress { get; set; } = string.Empty;
+        public string LocalPort { get; set; } = string.Empty;
+        public string ZoneName { get; set; } = string.Empty;
+        public string ClassName { get; set; } = string.Empty;
+        public string KeyName { get; set; } = "upbindkey";
+        public string KeySecret => File.ReadAllText(Parameter.AntdCfgSecret);
+        public string NxDomain { get; set; } = string.Empty;
+        public string YxDomain { get; set; } = string.Empty;
+        public string NxRrset { get; set; } = string.Empty;
+        public string YxRrset { get; set; } = string.Empty;
+        public string Delete { get; set; } = string.Empty;
+        public string Add { get; set; } = string.Empty;
     }
 }
