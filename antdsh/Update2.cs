@@ -93,6 +93,7 @@ namespace antdsh {
         #endregion Parameters
 
         #region [    Private Members   ]
+
         private static string GetVersionDateFromFile(string path) {
             var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
             var m = r.Match(path);
@@ -134,10 +135,15 @@ namespace antdsh {
         }
 
         private static void CleanTmp() {
-            if(Directory.Exists(TmpDirectory)) {
-                Directory.Delete(TmpDirectory, true);
+            try {
+                if(Directory.Exists(TmpDirectory)) {
+                    Directory.Delete(TmpDirectory, true);
+                }
+                Directory.CreateDirectory(TmpDirectory);
             }
-            Directory.CreateDirectory(TmpDirectory);
+            catch(Exception) {
+                //throw;
+            }
         }
 
         public static string GetFileHash(string filePath) {
@@ -145,20 +151,6 @@ namespace antdsh {
                 return BitConverter.ToString(new SHA1Managed().ComputeHash(fileStreamToRead)).Replace("-", string.Empty);
             }
         }
-
-        //private bool DownloadFile(string url, string path) {
-        //    try {
-        //        var success = FileDownloader.DownloadFile(url, path, 1000 * 60 * 60);
-        //        if(success == false) {
-        //            throw new Exception("Download failed");
-        //        }
-        //        return success;
-        //    }
-        //    catch(Exception ex) {
-        //        Console.WriteLine(ex.Message);
-        //        throw;
-        //    }
-        //}
 
         private static bool DownloadLatestFile(FileInfoModel latestFileInfo) {
             var sourceUrl = $"{_publicRepositoryUrlHttps}{latestFileInfo.FileName}";
