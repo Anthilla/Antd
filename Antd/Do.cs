@@ -84,6 +84,7 @@ namespace Antd {
 
         public void HostChanges() {
             SaveHostname();
+            ApplyNtpdate();
             SaveNtpFile();
             SaveResolvFile();
             SaveNsswitchFile();
@@ -91,17 +92,20 @@ namespace Antd {
             SaveHostsFile();
             Directory.CreateDirectory("/etc/dhcp");
             SaveDhcpdFile();
+            SaveDhcpdService();
             Directory.CreateDirectory("/etc/bind");
             SaveNamedFile();
             SaveRndcFile();
             SaveBindFiles();
             SaveBindZones();
+            SaveBindService();
             SaveNftablesFile();
         }
 
         public void NetworkChanges() {
             ApplyNetworkConfiguration();
         }
+
         #region [    private functions    ]
         private string EditLine(string input) {
             var output = input;
@@ -116,11 +120,24 @@ namespace Antd {
                 File.Copy(src, dest);
             }
         }
+
+        private void ActivateService(string svc) {
+            if(Systemctl.IsEnabled(svc) == false) {
+                Systemctl.Enable(svc);
+            }
+            if(Systemctl.IsActive(svc) == false) {
+                Systemctl.Restart(svc);
+            }
+        }
         #endregion
 
         #region [    network    ]
         private void ApplyNetworkConfiguration() {
             var configurations = _network2Configuration.Conf.Interfaces;
+            if(!configurations.Any()) {
+                ConsoleLogger.Log("[network] configurations not found: create defaults");
+                CreateDefaultNetworkConfiguration();
+            }
             var interfaceConfigurations = _network2Configuration.InterfaceConfigurationList;
             var gatewayConfigurations = _network2Configuration.GatewayConfigurationList;
             foreach(var configuration in configurations) {
@@ -204,6 +221,50 @@ namespace Antd {
                 _commandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$gateway", gwConfig.GatewayAddress }, { "$ip_address", gwConfig.Route } });
             }
         }
+
+        private void CreateDefaultNetworkConfiguration() {
+            _network2Configuration.AddInterfaceConfiguration(Default.InternalPhysicalInterfaceConfiguration());
+            _network2Configuration.AddInterfaceConfiguration(Default.ExternalPhysicalInterfaceConfiguration());
+            _network2Configuration.AddInterfaceConfiguration(Default.InternalBridgeInterfaceConfiguration());
+            _network2Configuration.AddInterfaceConfiguration(Default.ExternalBridgeInterfaceConfiguration());
+            _network2Configuration.AddGatewayConfiguration(Default.GatewayConfiguration());
+            _network2Configuration.AddDnsConfiguration(Default.PublicDnsConfiguration());
+            _network2Configuration.AddDnsConfiguration(Default.PrivateInternalDnsConfiguration());
+            _network2Configuration.AddDnsConfiguration(Default.PrivateExternalDnsConfiguration());
+            var devs = _network2Configuration.InterfacePhysical.ToList();
+            var partIp = Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3).JoinToString(".");
+            var counter = 200;
+            foreach(var dev in devs) {
+                var conf = Default.InternalPhysicalInterfaceConfiguration($"{partIp}.{counter}");
+                _network2Configuration.AddInterfaceConfiguration(conf);
+                var networkInterface = new NetworkInterface {
+                    Device = dev,
+                    Configuration = conf.Id,
+                    GatewayConfiguration = Default.GatewayConfiguration().Id,
+                    AdditionalConfigurations = new List<string>(),
+                    Mtu = "6000",
+                    Txqueuelen = "10000"
+                };
+                _network2Configuration.AddInterfaceSetting(networkInterface);
+                counter = counter + 1;
+            }
+            _network2Configuration.SetDnsConfigurationActive(Default.PublicDnsConfiguration().Id);
+        }
+
+        //public void SetupResolvD() {
+        //    if(!File.Exists("/etc/systemd/resolved.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/systemd/resolved.conf"))) {
+        //        var lines = new List<string> {
+        //            "[Resolve]",
+        //            "DNS=10.1.19.1 10.99.19.1",
+        //            "FallbackDNS=8.8.8.8 8.8.4.4 2001:4860:4860::8888 2001:4860:4860::8844",
+        //            "Domains=antd.local",
+        //            "LLMNR=yes"
+        //        };
+        //        File.WriteAllLines("/etc/systemd/resolved.conf", lines);
+        //    }
+        //    _launcher.Launch("systemctl-daemonreload");
+        //    _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
+        //}
         #endregion
 
         #region [    hostnamectl    ]
@@ -224,6 +285,12 @@ namespace Antd {
             _commandLauncher.Launch("set-timezone", new Dictionary<string, string> {
                 { "$host_timezone", Host.Timezone }
             });
+        }
+        #endregion
+
+        #region [    ntpdate    ]
+        private void ApplyNtpdate() {
+            _commandLauncher.Launch("ntpdate", new Dictionary<string, string> { { "$server", Host.NtpdateServer } });
         }
         #endregion
 
@@ -352,6 +419,13 @@ namespace Antd {
         }
         #endregion
 
+        #region [    dhcpd service    ]
+        private void SaveDhcpdService() {
+            const string svc = "dhcpd4.service";
+            ActivateService(svc);
+        }
+        #endregion
+
         #region [    dhcpd.conf    ]
         private readonly string _dhcpdDynamicExternalFileInput = $"{LocalTemplateDirectory}/dhcpd.dynamic.external.conf.tmlp";
         private readonly string _dhcpdDynamicInternalFileInput = $"{LocalTemplateDirectory}/dhcpd.dynamic.internal.conf.tmlp";
@@ -376,6 +450,15 @@ namespace Antd {
             catch(Exception e) {
                 Console.WriteLine(e.Message);
             }
+        }
+        #endregion
+
+        #region [    bind service    ]
+        private void SaveBindService() {
+            const string svc = "named.service";
+            ActivateService(svc);
+            _commandLauncher.Launch("rndc-reconfig");
+            _commandLauncher.Launch("rndc-reload");
         }
         #endregion
 
@@ -481,6 +564,7 @@ namespace Antd {
                         }
                     }
                 }
+                _commandLauncher.Launch("nft-f", new Dictionary<string, string> { { "$file", NftablesFileOutput } });
             }
             catch(Exception e) {
                 Console.WriteLine(e.Message);

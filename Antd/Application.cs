@@ -83,33 +83,15 @@ namespace Antd {
         #endregion
 
         public static string KeyName = "antd";
-        public static anthilla.logger.Logger Logger;
 
         private static void Main() {
-            Logger = new anthilla.logger.Logger(KeyName, $"{Parameter.AntdCfg}/events.log", true);
-            Logger.Info("starting antd");
+            ConsoleLogger.Log("starting antd");
             var startTime = DateTime.Now;
 
             CoreProcedures();
-
-            if(Parameter.IsUnix) {
-                var isConfigured = HostConfiguration.IsHostConfiguredByUser();
-                Logger.Info($"[config] antd is {(isConfigured == false ? "NOT " : "")}configured");
-                Logger.ConsoleOnly = false;
-
-                if(isConfigured) {
-                    Procedures();
-                }
-                else {
-                    FallbackProcedures();
-                }
-
-                PostProcedures();
-
-                if(isConfigured) {
-                    ManagedProcedures();
-                }
-            }
+            Procedures();
+            PostProcedures();
+            ManagedProcedures();
 
             #region [    Host Init    ]
             var app = new AppConfiguration().Get();
@@ -117,11 +99,11 @@ namespace Antd {
             var uri = $"http://localhost:{app.AntdPort}/";
             var host = new NancyHost(new Uri(uri));
             host.Start();
-            Logger.Info("host ready");
+            ConsoleLogger.Log("host ready");
             StaticConfiguration.DisableErrorTraces = false;
-            Logger.Info($"http port: {port}");
-            Logger.Info("antd is running");
-            Logger.Info($"loaded in: {DateTime.Now - startTime}");
+            ConsoleLogger.Log($"http port: {port}");
+            ConsoleLogger.Log("antd is running");
+            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             #endregion
 
             WorkingProcedures();
@@ -133,7 +115,7 @@ namespace Antd {
             #endregion
 
             KeepAlive();
-            Logger.Info("antd is closing");
+            ConsoleLogger.Log("antd is closing");
             host.Stop();
             Console.WriteLine("host shutdown");
         }
@@ -143,138 +125,133 @@ namespace Antd {
 
         #region [    Core Procedures    ]
         private static void CoreProcedures() {
-            Logger.Info("[config] core procedures");
-            if(Parameter.IsUnix) {
+            ConsoleLogger.Log("[config] core procedures");
 
-                #region [    os Rw    ]
-                Bash.Execute("mount -o remount,rw /", false);
-                Bash.Execute("mount -o remount,rw /mnt/cdrom", false);
-                #endregion
+            #region [    os Rw    ]
+            Bash.Execute("mount -o remount,rw /", false);
+            Bash.Execute("mount -o remount,rw /mnt/cdrom", false);
+            #endregion
 
-                #region [    Remove Limits    ]
-                const string limitsFile = "/etc/security/limits.conf";
-                if(File.Exists(limitsFile)) {
-                    if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
-                        File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
-                    }
+            #region [    Remove Limits    ]
+            const string limitsFile = "/etc/security/limits.conf";
+            if(File.Exists(limitsFile)) {
+                if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
+                    File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
                 }
-                Bash.Execute("ulimit -n 1024000", false);
-                #endregion
-
-                #region [    Overlay Watcher    ]
-                if(Directory.Exists(Parameter.Overlay)) {
-                    new OverlayWatcher().StartWatching();
-                    Logger.Info("overlay watcher ready");
-                }
-                #endregion
-
-                #region [    Working Directories    ]
-                Directory.CreateDirectory("/cfg/antd");
-                Directory.CreateDirectory("/cfg/antd/database");
-                Directory.CreateDirectory("/cfg/antd/services");
-                Directory.CreateDirectory("/mnt/cdrom/DIRS");
-                if(Parameter.IsUnix) {
-                    Mount.WorkingDirectories();
-                }
-                Logger.Info("working directories ready");
-                #endregion
-
-                #region [    Mounts    ]
-                if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
-                    Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
-                }
-                var kernelRelease = Bash.Execute("uname -r").Trim();
-                var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
-                if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
-                    linkedRelease.Contains(kernelRelease)) {
-                    var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                    Directory.CreateDirectory(moduleDir);
-                    Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
-                }
-                Bash.Execute("systemctl restart systemd-modules-load.service", false);
-                Mount.AllDirectories();
-                Logger.Info("mounts ready");
-                #endregion
             }
+            Bash.Execute("ulimit -n 1024000", false);
+            #endregion
 
+            #region [    Overlay Watcher    ]
+            if(Directory.Exists(Parameter.Overlay)) {
+                new OverlayWatcher().StartWatching();
+                ConsoleLogger.Log("overlay watcher ready");
+            }
+            #endregion
+
+            #region [    Working Directories    ]
+            Directory.CreateDirectory("/cfg/antd");
+            Directory.CreateDirectory("/cfg/antd/database");
+            Directory.CreateDirectory("/cfg/antd/services");
+            Directory.CreateDirectory("/mnt/cdrom/DIRS");
+            if(Parameter.IsUnix) {
+                Mount.WorkingDirectories();
+            }
+            ConsoleLogger.Log("working directories ready");
+            #endregion
+
+            #region [    Mounts    ]
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
+                Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
+            }
+            var kernelRelease = Bash.Execute("uname -r").Trim();
+            var linkedRelease = Bash.Execute("file /mnt/cdrom/Kernel/active-modules").Trim();
+            if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
+                linkedRelease.Contains(kernelRelease)) {
+                var moduleDir = $"/lib64/modules/{kernelRelease}/";
+                Directory.CreateDirectory(moduleDir);
+                Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
+            }
+            Bash.Execute("systemctl restart systemd-modules-load.service", false);
+            Mount.AllDirectories();
+            ConsoleLogger.Log("mounts ready");
+            #endregion
+
+            #region [    Application Keys    ]
+
+            var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
+            var pub = ak.PublicKey;
+
+            #endregion
+
+            #region [    License Management    ]
+
+            var appconfig = new AppConfiguration().Get();
+            ConsoleLogger.Log($"[cloud] {appconfig.CloudAddress}");
             try {
-                #region [    Application Keys    ]
-                var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
-                var pub = ak.PublicKey;
-                #endregion
-
-                #region [    License Management    ]
-                var appconfig = new AppConfiguration().Get();
-                Logger.Info($"[cloud] {appconfig.CloudAddress}");
-                try {
-                    var machineId = Machine.MachineId.Get;
-                    var licenseManagement = new LicenseManagement();
-                    licenseManagement.Download("Antd", machineId, pub);
-                    Logger.Info($"[machineid] {machineId}");
-                    var licenseStatus = licenseManagement.Check("Antd", machineId, pub);
-                    Logger.Info(licenseStatus == null
-                        ? "[license] license results null"
-                        : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
-                }
-                catch(Exception) { }
-
-                #endregion
-
-                #region [    Secret    ]
-                if(!File.Exists(Parameter.AntdCfgSecret)) {
-                    File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
-                }
-
-                if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
-                    File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
-                }
-                #endregion
+                var machineId = Machine.MachineId.Get;
+                var licenseManagement = new LicenseManagement();
+                licenseManagement.Download("Antd", machineId, pub);
+                ConsoleLogger.Log($"[machineid] {machineId}");
+                var licenseStatus = licenseManagement.Check("Antd", machineId, pub);
+                ConsoleLogger.Log(licenseStatus == null
+                    ? "[license] license results null"
+                    : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
             }
-            catch(Exception) { }
+            catch(Exception) {
+            }
 
-            if(Parameter.IsUnix) {
-                #region [    OS Parameters    ]
-                HostConfiguration.ApplyHostOsParameters();
-                Logger.Info("os parameters ready");
-                #endregion
+            #endregion
 
-                #region [    Modules    ]
-                HostConfiguration.ApplyHostBlacklistModules();
-                HostConfiguration.ApplyHostModprobes();
-                HostConfiguration.ApplyHostRemoveModules();
-                Logger.Info("modules ready");
-                #endregion
+            #region [    Secret    ]
 
-                #region [    Time & Date    ]
-                HostConfiguration.ApplyNtpdate();
-                HostConfiguration.ApplyTimezone();
-                HostConfiguration.ApplyNtpd();
-                Logger.Info("time and date configured");
-                #endregion
+            if(!File.Exists(Parameter.AntdCfgSecret)) {
+                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+            }
 
-                #region [    JournalD    ]
-                if(JournaldConfiguration.IsActive()) {
-                    JournaldConfiguration.Set();
-                }
-                #endregion
+            if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
+                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+            }
 
-                #region [    Host and Network Import Configuration    ]
-                var tmpHost = HostConfiguration.Host;
-                var varsFile = Host2Configuration.FilePath;
-                var vars = new Host2Model {
-                    HostName = tmpHost.HostName.StoredValues.FirstOrDefault().Value,
-                    HostChassis = tmpHost.HostChassis.StoredValues.FirstOrDefault().Value,
-                    HostDeployment = tmpHost.HostDeployment.StoredValues.FirstOrDefault().Value,
-                    HostLocation = tmpHost.HostLocation.StoredValues.FirstOrDefault().Value,
-                    InternalDomainPrimary = tmpHost.InternalDomain,
-                    ExternalDomainPrimary = tmpHost.ExternalDomain,
-                    InternalHostIpPrimary = "",
-                    ExternalHostIpPrimary = "",
-                    Timezone = tmpHost.Timezone.StoredValues.FirstOrDefault().Value,
-                    NtpdateServer = tmpHost.NtpdateServer.StoredValues.FirstOrDefault().Value,
-                    MachineUid = Machine.MachineId.Get,
-                    Cloud = Parameter.Cloud
-                };
+            #endregion
+
+            #region [    OS Parameters    ]
+            HostConfiguration.ApplyHostOsParameters();
+            ConsoleLogger.Log("os parameters ready");
+            #endregion
+
+            #region [    Modules    ]
+            HostConfiguration.ApplyHostBlacklistModules();
+            HostConfiguration.ApplyHostModprobes();
+            HostConfiguration.ApplyHostRemoveModules();
+            ConsoleLogger.Log("modules ready");
+            #endregion
+
+            #region [    JournalD    ]
+            if(JournaldConfiguration.IsActive()) {
+                JournaldConfiguration.Set();
+            }
+            #endregion
+
+            #region [    Host and Network Import Configuration    ]
+            var tmpHost = HostConfiguration.Host;
+            var varsFile = Host2Configuration.FilePath;
+            var vars = new Host2Model {
+                HostName = tmpHost.HostName.StoredValues.FirstOrDefault().Value,
+                HostChassis = tmpHost.HostChassis.StoredValues.FirstOrDefault().Value,
+                HostDeployment = tmpHost.HostDeployment.StoredValues.FirstOrDefault().Value,
+                HostLocation = tmpHost.HostLocation.StoredValues.FirstOrDefault().Value,
+                InternalDomainPrimary = tmpHost.InternalDomain,
+                ExternalDomainPrimary = tmpHost.ExternalDomain,
+                InternalHostIpPrimary = "",
+                ExternalHostIpPrimary = "",
+                Timezone = tmpHost.Timezone.StoredValues.FirstOrDefault().Value,
+                NtpdateServer = tmpHost.NtpdateServer.StoredValues.FirstOrDefault().Value,
+                MachineUid = Machine.MachineId.Get,
+                Cloud = Parameter.Cloud
+            };
+
+            if(File.Exists(HostConfiguration.FilePath)) {
 
                 if(!File.Exists(varsFile)) {
                     ConsoleLogger.Log("[data import] host configuration");
@@ -282,79 +259,77 @@ namespace Antd {
                 }
                 else {
                     if(string.IsNullOrEmpty(File.ReadAllText(varsFile))) {
-                    ConsoleLogger.Log("[data import] host configuration");
+                        ConsoleLogger.Log("[data import] host configuration");
                         Host2Configuration.Export(vars);
                     }
                 }
-
-                var tmpNet = NetworkConfiguration.Get();
-                var tmpHost2 = Host2Configuration.Host;
-                foreach(var cif in tmpNet.Interfaces) {
-                    ConsoleLogger.Log($"[data import] network configuration for '{cif.Interface}'");
-                    var broadcast = "";
-                    try {
-                        broadcast = Cidr.CalcNetwork(cif.StaticAddress, cif.StaticRange).Broadcast.ToString();
-                    }
-                    catch(Exception) {
-                    }
-                    var hostname = $"{vars.HostName}{NetworkInterfaceType.Internal}.{vars.InternalDomainPrimary}";
-                    var subnet = tmpHost2.InternalNetPrimaryBits;
-                    var index = Network2Configuration.InterfaceConfigurationList.Count(_ => _.Type == NetworkInterfaceType.Internal);
-                    var networkConfiguration = new NetworkInterfaceConfiguration {
-                        Id = cif.Interface + cif.Guid.Substring(0, 8),
-                        Adapter = cif.Type,
-                        Alias = "import " + cif.Interface,
-                        Ip = cif.StaticAddress,
-                        Subnet = subnet,
-                        Status = cif.Status,
-                        Mode = cif.Mode,
-                        ChildrenIf = cif.InterfaceList,
-                        Broadcast = broadcast,
-                        Type = NetworkInterfaceType.Internal,
-                        Hostname = hostname,
-                        Index = index,
-                        Description = "import " + cif.Interface,
-                        RoleVerb = NetworkRoleVerb.iif
-                    };
-
-                    var tryget = Network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == networkConfiguration.Id);
-                    if(tryget == null) {
-                        Network2Configuration.AddInterfaceConfiguration(networkConfiguration);
-                    }
-
-                    var ifConfig = new NetworkInterface {
-                        Device = cif.Interface,
-                        Configuration = networkConfiguration.Id,
-                        AdditionalConfigurations = new List<string>(),
-                        GatewayConfiguration = "",
-                        Mtu = "6000",
-                        Txqueuelen = "10000"
-                    };
-
-                    var tryget2 = Network2Configuration.Conf.Interfaces.FirstOrDefault(_ => _.Device == cif.Interface);
-                    if(tryget2 == null) {
-                        Network2Configuration.AddInterfaceSetting(ifConfig);
-                    }
-                }
-
-                if(!Network2Configuration.GatewayConfigurationList.Any()) {
-                    var defaultGatewayConfiguration = new NetworkGatewayConfiguration {
-                        Id = Random.ShortGuid(),
-                        Route = "default",
-                        GatewayAddress = vars.InternalHostIpPrimary
-                    };
-                    Network2Configuration.AddGatewayConfiguration(defaultGatewayConfiguration);
-                }
-                #endregion
             }
+
+            var tmpNet = NetworkConfiguration.Get();
+            var tmpHost2 = Host2Configuration.Host;
+            foreach(var cif in tmpNet.Interfaces) {
+                ConsoleLogger.Log($"[data import] network configuration for '{cif.Interface}'");
+                var broadcast = "";
+                try {
+                    broadcast = Cidr.CalcNetwork(cif.StaticAddress, cif.StaticRange).Broadcast.ToString();
+                }
+                catch(Exception) {
+                }
+                var hostname = $"{vars.HostName}{NetworkInterfaceType.Internal}.{vars.InternalDomainPrimary}";
+                var subnet = tmpHost2.InternalNetPrimaryBits;
+                var index = Network2Configuration.InterfaceConfigurationList.Count(_ => _.Type == NetworkInterfaceType.Internal);
+                var networkConfiguration = new NetworkInterfaceConfiguration {
+                    Id = cif.Interface + cif.Guid.Substring(0, 8),
+                    Adapter = cif.Type,
+                    Alias = "import " + cif.Interface,
+                    Ip = cif.StaticAddress,
+                    Subnet = subnet,
+                    Status = cif.Status,
+                    Mode = cif.Mode,
+                    ChildrenIf = cif.InterfaceList,
+                    Broadcast = broadcast,
+                    Type = NetworkInterfaceType.Internal,
+                    Hostname = hostname,
+                    Index = index,
+                    Description = "import " + cif.Interface,
+                    RoleVerb = NetworkRoleVerb.iif
+                };
+
+                var tryget = Network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == networkConfiguration.Id);
+                if(tryget == null) {
+                    Network2Configuration.AddInterfaceConfiguration(networkConfiguration);
+                }
+
+                var ifConfig = new NetworkInterface {
+                    Device = cif.Interface,
+                    Configuration = networkConfiguration.Id,
+                    AdditionalConfigurations = new List<string>(),
+                    GatewayConfiguration = "",
+                    Mtu = "6000",
+                    Txqueuelen = "10000"
+                };
+
+                var tryget2 = Network2Configuration.Conf.Interfaces.FirstOrDefault(_ => _.Device == cif.Interface);
+                if(tryget2 == null) {
+                    Network2Configuration.AddInterfaceSetting(ifConfig);
+                }
+            }
+
+            if(!Network2Configuration.GatewayConfigurationList.Any()) {
+                var defaultGatewayConfiguration = new NetworkGatewayConfiguration {
+                    Id = Random.ShortGuid(),
+                    Route = "default",
+                    GatewayAddress = vars.InternalHostIpPrimary
+                };
+                Network2Configuration.AddGatewayConfiguration(defaultGatewayConfiguration);
+            }
+            #endregion
         }
         #endregion
 
         #region [    Procedures    ]
         private static void Procedures() {
-            Logger.Info("[config] procedures");
-            if(!Parameter.IsUnix)
-                return;
+            ConsoleLogger.Log("[config] procedures");
 
             #region [    Users    ]
             var manageMaster = new ManageMaster();
@@ -363,25 +338,18 @@ namespace Antd {
                 UserConfiguration.Import();
                 UserConfiguration.Set();
             }
-            Logger.Info("users config ready");
+            ConsoleLogger.Log("users config ready");
             #endregion
 
-            #region [    Host Configuration    ]
-            HostConfiguration.ApplyHostInfo();
-            Logger.Info("host configured");
-            #endregion
-
-            #region [    Name Service    ]
-            HostConfiguration.ApplyNsHosts();
-            HostConfiguration.ApplyNsNetworks();
-            HostConfiguration.ApplyNsResolv();
-            HostConfiguration.ApplyNsSwitch();
-            Logger.Info("name service ready");
+            #region [    Host Configuration & Name Service    ]
+            new Do().HostChanges();
+            ConsoleLogger.Log("host configured");
+            ConsoleLogger.Log("name service ready");
             #endregion
 
             #region [    Network    ]
-            NetworkConfiguration.Start();
-            NetworkConfiguration.ApplyDefaultInterfaceSetting();
+            new Do().NetworkChanges();
+            ConsoleLogger.Log("network ready");
             #endregion
 
             #region [    Firewall    ]
@@ -406,9 +374,7 @@ namespace Antd {
 
         #region [    Managed Procedures    ]
         private static void ManagedProcedures() {
-            Logger.Info("[config] managed procedures");
-            if(!Parameter.IsUnix)
-                return;
+            ConsoleLogger.Log("[config] managed procedures");
 
             #region [    Samba    ]
             if(SambaConfiguration.IsActive()) {
@@ -426,10 +392,10 @@ namespace Antd {
             foreach(var pool in Zpool.ImportList().ToList()) {
                 if(string.IsNullOrEmpty(pool))
                     continue;
-                Logger.Info($"pool {pool} imported");
+                ConsoleLogger.Log($"pool {pool} imported");
                 Zpool.Import(pool);
             }
-            Logger.Info("storage ready");
+            ConsoleLogger.Log("storage ready");
             #endregion
 
             #region [    Scheduler    ]
@@ -443,7 +409,7 @@ namespace Antd {
             new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
             new SyncTime().Start(new TimeSpan(0, 42, 00));
             new RemoveUnusedModules().Start(new TimeSpan(2, 15, 00));
-            Logger.Info("scheduled events ready");
+            ConsoleLogger.Log("scheduled events ready");
             #endregion
 
             #region [    Acl    ]
@@ -486,159 +452,24 @@ namespace Antd {
                 }
             }
             //AppTarget.StartAll();
-            Logger.Info("apps ready");
-            #endregion
-        }
-        #endregion
-
-        #region [    Fallback Procedures    ]
-        private static void FallbackProcedures() {
-            Logger.Info("[config] fallback procedures");
-            if(!Parameter.IsUnix)
-                return;
-
-            const string localNetwork = "10.11.0.0";
-            const string localIp = "10.11.254.254";
-            const string localRange = "16";
-            const string localHostname = "box01";
-            const string localDomain = "install.local";
-
-            #region [    Host Configuration    ]
-            HostConfiguration.SetHostInfoName(localHostname);
-            HostConfiguration.ApplyHostInfo();
-            Logger.Info("host configured");
-            #endregion
-
-            #region [    Name Service    ]
-            HostConfiguration.SetNsHosts(new[] {
-                "127.0.0.1 localhost",
-                $"{localIp} {localHostname}.{localDomain} {localHostname}"
-            });
-            HostConfiguration.ApplyNsHosts();
-            HostConfiguration.SetNsNetworks(new[] {
-                "loopback 127.0.0.0",
-                "link-local 169.254.0.0",
-                $"{localDomain} {localNetwork}"
-
-            });
-            HostConfiguration.ApplyNsNetworks();
-            HostConfiguration.SetNsResolv(new[] {
-                $"nameserver {localIp}",
-                $"search {localDomain}",
-                $"domain {localDomain}"
-            });
-            HostConfiguration.ApplyNsResolv();
-            HostConfiguration.SetNsSwitch(new[] {
-                "passwd: compat db files nis",
-                "shadow: compat db files nis",
-                "group: compat db files nis",
-                "hosts: files dns",
-                "networks: files dns",
-                "services: db files",
-                "protocols: db files",
-                "rpc: db files",
-                "ethers: db files",
-                "netmasks: files",
-                "netgroup: files",
-                "bootparams: files",
-                "automount: files",
-                "aliases: files"
-            });
-            HostConfiguration.ApplyNsSwitch();
-            Logger.Info("name service ready");
-            #endregion
-
-            #region [    Network    ]
-            var npi = NetworkConfiguration.InterfacePhysical;
-            var nifs = NetworkConfiguration.Get().Interfaces;
-            const string nifName = "br0";
-            var tryget = nifs?.FirstOrDefault(_ => _.Interface == nifName);
-            if(tryget == null) {
-                NetworkConfiguration.AddInterfaceSetting(new NetworkInterfaceConfigurationModel {
-                    Interface = nifName,
-                    Mode = NetworkInterfaceMode.Static,
-                    Status = NetworkInterfaceStatus.Up,
-                    StaticAddress = localIp,
-                    StaticRange = localRange,
-                    Type = NetworkAdapterType.Bridge,
-                    InterfaceList = npi.ToList()
-                });
-            }
-            NetworkConfiguration.ApplyDefaultInterfaceSetting();
-            #endregion
-
-            #region [    Dhcpd    ]
-            if(DhcpdConfiguration.IsActive() == false) {
-                DhcpdConfiguration.Save(new DhcpdConfigurationModel {
-                    ZoneName = localDomain,
-                    ZonePrimaryAddress = localIp,
-                    DdnsDomainName = $"{localDomain}.",
-                    Option =
-                        new List<string>
-                        {
-                            $"domain-name \"{localDomain}\"",
-                            "routers eth0",
-                            "local-proxy-config code 252 = text"
-                        },
-                    KeySecret = "ND991KFHCCA9tUrafsf29uxDM3ZKfnrVR4f1I2J27Ow=",
-                    SubnetNtpServers = localIp,
-                    SubnetTimeServers = localIp,
-                    SubnetOptionRouters = localIp,
-                    SubnetDomainNameServers = localIp,
-                    SubnetIpMask = "255.255.0.0",
-                    SubnetMask = "255.255.0.0",
-                    SubnetBroadcastAddress = "10.11.255.255",
-                    SubnetIpFamily = localNetwork
-                });
-                DhcpdConfiguration.Set();
-            }
-
-            #endregion
-
-            #region [    Bind    ]
-            if(BindConfiguration.IsActive() == false) {
-                BindConfiguration.Save(new BindConfigurationModel {
-                    ControlIp = localIp,
-                    AclInternalInterfaces = new List<string> { localIp },
-                    AclInternalNetworks = new List<string> { $"{localNetwork}/{localRange}" },
-                    Zones = new List<BindConfigurationZoneModel> {
-                    new BindConfigurationZoneModel {
-                        Name = "11.10.in-addr.arpa",
-                        Type = "master",
-                        File = "" //todo crea e gestisci file della zona
-                    },
-                    new BindConfigurationZoneModel {
-                        Name = localDomain,
-                        Type = "master",
-                        File = "" //todo crea e gestisci file della zona
-                    },
-                }
-                });
-                BindConfiguration.Set();
-            }
+            ConsoleLogger.Log("apps ready");
             #endregion
         }
         #endregion
 
         #region [    Post Procedures    ]
         private static void PostProcedures() {
-            Logger.Info("[config] post procedures");
-            if(!Parameter.IsUnix)
-                return;
-
-            var varsFile = Host2Configuration.FilePath;
-            if(File.Exists(varsFile)) {
-                new Do().AllChanges();
-            }
+            ConsoleLogger.Log("[config] post procedures");
 
             #region [    Apply Setup Configuration    ]
             SetupConfiguration.Set();
-            Logger.Info("machine configured (apply setup.conf)");
+            ConsoleLogger.Log("machine configured (apply setup.conf)");
             #endregion
 
             #region [    Services    ]
-            HostConfiguration.ApplyHostServices();
-            Logger.Info("services ready");
+            //todo move services + modules + osparameters
+            //HostConfiguration.ApplyHostServices();
+            ConsoleLogger.Log("services ready");
             #endregion
 
             #region [    Ssh    ]
@@ -671,10 +502,12 @@ namespace Antd {
                 Bash.Execute($"chmod 600 {authorizedKeysPath}");
                 Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
-            Logger.Info("ssh ready");
+            ConsoleLogger.Log("ssh ready");
             #endregion
 
             #region [    Avahi    ]
+
+            Directory.CreateDirectory("/etc/avahi/services");
             const string avahiServicePath = "/etc/avahi/services/antd.service";
             if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
@@ -685,18 +518,18 @@ namespace Antd {
             Bash.Execute($"chmod 644 {avahiServicePath}", false);
             Systemctl.Restart("avahi-daemon.service");
             Systemctl.Restart("avahi-daemon.socket");
-            Logger.Info("avahi ready");
+            ConsoleLogger.Log("avahi ready");
             #endregion
 
             #region [    AntdUI    ]
             UiService.Setup();
-            Logger.Info("antduisetup");
+            ConsoleLogger.Log("antduisetup");
             #endregion
         }
         #endregion
 
         private static void WorkingProcedures() {
-            Logger.Info("[config] working procedures");
+            ConsoleLogger.Log("[config] working procedures");
             #region [    Cloud Send Uptime    ]
             if(Parameter.IsUnix) {
                 var csuTimer = new UpdateCloudInfo();

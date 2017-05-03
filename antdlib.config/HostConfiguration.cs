@@ -121,6 +121,7 @@ namespace antdlib.config {
         }
 
         public void ApplyHostBlacklistModules() {
+            if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
             Host = LoadHostModel();
             var existing = File.ReadAllLines("/etc/modprobe.d/blacklist.conf").Select(_ => _.Replace("blacklist", "").Trim());
             var configured = Host.ModulesBlacklist;
@@ -296,12 +297,6 @@ namespace antdlib.config {
         #endregion
 
         #region [    repo - Ntpdate    ]
-        public string GetNtpdate() {
-            Host = LoadHostModel();
-            var ntpdate = Host.NtpdateServer.StoredValues["$server"];
-            return ntpdate;
-        }
-
         public void SetNtpdate(string ntpdate) {
             Host = LoadHostModel();
             Host.NtpdateServer.StoredValues["$server"] = ntpdate;
@@ -315,39 +310,10 @@ namespace antdlib.config {
         }
         #endregion
 
-        #region [    repo - NtpD    ]
-        public string[] GetNtpd() {
-            Host = LoadHostModel();
-            var launcher = new CommandLauncher();
-            var ntpd = launcher.Launch(Host.Ntpd.GetCmd).ToArray();
-            return ntpd;
-        }
-
-        public void SetNtpd(string[] ntpd) {
-            Host = LoadHostModel();
-            Host.NtpdContent = ntpd;
-            Host.Ntpd.StoredValues["$value"] = ntpd.JoinToString("\n");
-            Export(Host);
-        }
-
-        public void ApplyNtpd() {
-            Host = LoadHostModel();
-            var existing = File.ReadAllLines("/etc/ntp.conf");
-            var configured = Host.NtpdContent;
-            var merge = existing.Union(configured).ToArray();
-            Host.NtpdContent = merge;
-            File.WriteAllLines("/etc/ntp.conf", Host.NtpdContent);
-            Export(Host);
-        }
-        #endregion
-
         #region [    sync time    ]
         public void SyncClock(string ntpServer = "") {
             var launcher = new CommandLauncher();
             ApplyNtpdate();
-            if(Systemctl.IsActive("ntpd")) {
-                ApplyNtpd();
-            }
             launcher.Launch("sync-clock");
         }
         #endregion

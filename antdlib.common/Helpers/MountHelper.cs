@@ -28,6 +28,9 @@ namespace antdlib.common.Helpers {
         }
 
         public static bool IsAlreadyMounted(string directory) {
+            if(!File.Exists("/proc/mounts")) {
+                return false;
+            }
             var procMounts = File.ReadAllLines("/proc/mounts");
             return procMounts.Any(_ => _.Contains(directory));
         }
@@ -38,7 +41,7 @@ namespace antdlib.common.Helpers {
 
         private static int _umount1Retry;
         public static void Umount(string directory) {
-            if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
+            if(IsAlreadyMounted(directory) && _umount1Retry < 5) {
                 ConsoleLogger.Log($"umount, retry #{_umount1Retry}");
                 Bash.Execute($"umount {directory}", false);
                 _umount1Retry = _umount1Retry + 1;
@@ -49,7 +52,7 @@ namespace antdlib.common.Helpers {
 
         private static int _umount2Retry;
         public static void Umount(string source, string destination) {
-            if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
+            if(IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
                 ConsoleLogger.Log($"umount, retry #{_umount2Retry}");
                 Bash.Execute($"umount {source}", false);
                 Bash.Execute($"umount {destination}", false);

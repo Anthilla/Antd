@@ -61,10 +61,9 @@ namespace antdlib.config {
             }
             try {
                 File.WriteAllText(_cfgFile, text);
-                ConsoleLogger.Log("[network] configuration saved");
             }
-            catch(Exception) {
-                ConsoleLogger.Error("[network] configuration save error");
+            catch(Exception ex) {
+                ConsoleLogger.Error($"[network] configuration save error: {ex.Message}");
                 return false;
             }
             return true;
@@ -90,99 +89,6 @@ namespace antdlib.config {
             netif.Remove(model);
             Conf.Interfaces = netif;
             Save(Conf);
-        }
-        #endregion
-
-        #region [    Network conf apply    ]
-        public void ApplyInterfaceSetting() {
-            var netifs = Conf.Interfaces;
-            foreach(var netif in netifs) {
-                ApplyInterfaceSetting(netif);
-            }
-        }
-
-        private void ApplyInterfaceSetting(NetworkInterface model) {
-            var device = model.Device;
-
-            var interfaceConf = InterfaceConfigurationList.FirstOrDefault(_ => _.Id == model.Configuration);
-            if(interfaceConf == null) {
-                return;
-            }
-
-            var adapterType = interfaceConf.Adapter;
-            var mode = interfaceConf.Mode;
-            var staticAddress = interfaceConf.Ip;
-            var staticRange = interfaceConf.Subnet;
-            var status = interfaceConf.Status;
-
-            switch(adapterType) {
-                case NetworkAdapterType.Physical:
-                    break;
-                case NetworkAdapterType.Virtual:
-                    break;
-                case NetworkAdapterType.Bond:
-                    _launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", device } });
-                    foreach(var nif in interfaceConf.ChildrenIf) {
-                        _launcher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", device }, { "$net_if", nif } });
-                    }
-                    break;
-                case NetworkAdapterType.Bridge:
-                    _launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", device } });
-                    foreach(var nif in interfaceConf.ChildrenIf) {
-                        _launcher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", device }, { "$net_if", nif } });
-                    }
-                    break;
-                case NetworkAdapterType.Other:
-                    break;
-            }
-
-            switch(mode) {
-                case NetworkInterfaceMode.Null:
-                    return;
-                case NetworkInterfaceMode.Static:
-                    var networkdIsActive = Systemctl.IsActive("systemd-networkd");
-                    if(networkdIsActive) {
-                        Systemctl.Stop("systemd-networkd");
-                    }
-                    _launcher.Launch("dhclient-killall");
-                    _launcher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
-                        { "$net_if", device }
-                    });
-                    _launcher.Launch("ip4-add-addr", new Dictionary<string, string> {
-                        { "$net_if", device },
-                        { "$address", staticAddress },
-                        { "$range", staticRange }
-                    });
-                    if(networkdIsActive) {
-                        Systemctl.Start("systemd-networkd");
-                    }
-                    break;
-                case NetworkInterfaceMode.Dynamic:
-                    _launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", device } });
-                    break;
-                default:
-                    return;
-            }
-            _launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", device }, { "$mtu", model.Mtu } });
-            _launcher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", device }, { "$txqueuelen", model.Txqueuelen } });
-
-
-            var gatewayConf = GatewayConfigurationList.FirstOrDefault(_ => _.Id == model.GatewayConfiguration);
-            if(gatewayConf != null) {
-                _launcher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", device }, { "$gateway", gatewayConf.GatewayAddress }, { "$ip_address", gatewayConf.Route } });
-            }
-
-            switch(status) {
-                case NetworkInterfaceStatus.Down:
-                    _launcher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", device } });
-                    break;
-                case NetworkInterfaceStatus.Up:
-                    _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", device } });
-                    ConsoleLogger.Log($"[network] dev '{device}' configured");
-                    break;
-                default:
-                    return;
-            }
         }
         #endregion
 
@@ -416,125 +322,6 @@ namespace antdlib.config {
             return ifList;
         }
 
-        #endregion
-
-        #region [    Defaults    ]
-        //todo check procedure
-        public void Start() {
-            if(HasConfiguration()) {
-                ConsoleLogger.Log("[network] applying saved settings");
-                ApplyInterfaceSetting();
-                return;
-            }
-            if(!InterfacePhysical.Any()) {
-                ConsoleLogger.Log("[network] no interface to set");
-                StartFallback();
-                return;
-            }
-            var netIf = InterfacePhysical.FirstOrDefault();
-            var tryStart = _launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
-            if(!tryStart.Any()) {
-                ConsoleLogger.Log("[network] dhclient started");
-                ConsoleLogger.Log($"[network] {netIf} is configured");
-                return;
-            }
-            var tryGateway = _launcher.Launch("ip4-show-routes", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
-            if(!tryGateway.Any()) {
-                ConsoleLogger.Log("[network] no gateway available");
-                StartFallback();
-                return;
-            }
-            var gateway = tryGateway.FirstOrDefault(_ => _.Contains("default"));
-            if(string.IsNullOrEmpty(gateway)) {
-                ConsoleLogger.Log("[network] no gateway available");
-                StartFallback();
-                return;
-            }
-            var gatewayAddress = gateway.Replace("default", "").Trim();
-            ConsoleLogger.Log($"[network] available gateway at {gatewayAddress}");
-
-            var tryDns = _launcher.Launch("cat-etc-resolv").ToList();
-            if(!tryGateway.Any()) {
-                ConsoleLogger.Log("[network] no dns configured");
-                SetupResolv();
-            }
-            var dns = tryDns.FirstOrDefault(_ => _.Contains("nameserver"));
-            if(string.IsNullOrEmpty(dns)) {
-                ConsoleLogger.Log("[network] no dns configured");
-                SetupResolv();
-            }
-            var dnsAddress = gateway.Replace("nameserver", "").Trim();
-            ConsoleLogger.Log($"[network] configured dns is {dnsAddress}");
-            var pingDns = _launcher.Launch("ping-c", new Dictionary<string, string> { { "$net_if", dnsAddress } }).ToList();
-            if(pingDns.Any(_ => _.ToLower().Contains("unreachable"))) {
-                ConsoleLogger.Log("[network] dns is unreachable");
-                return;
-            }
-            ConsoleLogger.Log($"[network] available dns at {dnsAddress}");
-        }
-
-        public void StartFallback() {
-            ConsoleLogger.Log("[network] setting up a default configuration");
-            const string bridge = "br0";
-            if(InterfacePhysical.All(_ => _ != bridge)) {
-                _launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", bridge } });
-                ConsoleLogger.Log($"[network] {bridge} configured");
-            }
-            foreach(var phy in InterfacePhysical) {
-                _launcher.Launch("brctl-addif", new Dictionary<string, string> { { "$bridge", bridge }, { "$net_if", phy } });
-                ConsoleLogger.Log($"[network] {phy} add to {bridge}");
-            }
-            foreach(var phy in InterfacePhysical) {
-                _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", phy } });
-            }
-            _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", bridge } });
-            ConsoleLogger.Log("[network] interfaces up");
-            const string address = "192.168.1.1";
-            const string range = "24";
-            _launcher.Launch("ip4-add-addr", new Dictionary<string, string> { { "$address", address }, { "$range", range }, { "$net_if", bridge } });
-            var tryBridgeAddress = _launcher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
-            if(tryBridgeAddress.FirstOrDefault(_ => _.Contains("inet")) != null) {
-                var bridgeAddress = tryBridgeAddress.Print(2, " ");
-                ConsoleLogger.Log($"[network] {bridge} is now reachable at {bridgeAddress}");
-                return;
-            }
-            ConsoleLogger.Log($"[network] {bridge} is unreachable");
-        }
-
-        public bool HasConfiguration() {
-            var netif = Conf.Interfaces;
-            var config = InterfaceConfigurationList.Any(_ => netif.Select(__ => __.Configuration).Contains(_.Id));
-            return config;
-        }
-        #endregion
-
-        #region [    Resolv(D)    ]
-        public void SetupResolv() {
-            if(!File.Exists("/etc/resolv.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/resolv.conf"))) {
-                var lines = new List<string> {
-                    "nameserver 8.8.8.8",
-                    "search antd.local",
-                    "domain antd.local"
-                };
-                File.WriteAllLines("/etc/resolv.conf", lines);
-            }
-            _launcher.Launch("link-s", new Dictionary<string, string> { { "$link", "/run/systemd/resolve/resolv.conf" }, { "$file", "/etc/resolv.conf" } });
-        }
-
-        public void SetupResolvD() {
-            if(!File.Exists("/etc/systemd/resolved.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/systemd/resolved.conf"))) {
-                var lines = new List<string> {
-                    "[Resolve]",
-                    "DNS=10.1.19.1 10.99.19.1",
-                    "FallbackDNS=8.8.8.8 8.8.4.4 2001:4860:4860::8888 2001:4860:4860::8844",
-                    "Domains=antd.local",
-                    "LLMNR=yes"
-                };
-                File.WriteAllLines("/etc/systemd/resolved.conf", lines);
-            }
-            _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
-            _launcher.Launch("systemctl-daemonreload");
-        }
         #endregion
 
         #region [    DnsConfiguration    ]

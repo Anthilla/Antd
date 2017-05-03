@@ -14,6 +14,8 @@ namespace Antd.Ui {
         private const string Service03LauncherUnit = "app-antdui-03-launcher.service";
 
         public static void Setup() {
+            if(!Directory.Exists("/mnt/cdrom/Units")) { return; }
+            if(!Directory.Exists("/mnt/cdrom/Units/antd.target.wants")) { return; }
             var edit = false;
 
             if(!File.Exists(Service01PreparePath)) {

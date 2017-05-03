@@ -10,8 +10,10 @@ namespace Antd.Apps {
         public void Setup() {
             if(IsTargetActive())
                 return;
-            Bash.Execute("mkdir -p /etc/systemd/system/app.target.wants", false);
-            Bash.Execute("mkdir -p /mnt/cdrom/Units/app.target.wants", false);
+            if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
+            Directory.CreateDirectory("/etc/systemd/system/");
+            Directory.CreateDirectory("/etc/systemd/system/app.target.wants");
+            Directory.CreateDirectory("/mnt/cdrom/Units/app.target.wants");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();

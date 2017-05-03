@@ -19,9 +19,11 @@ namespace Antd.SystemdTimer {
         public void Setup() {
             if(IsTargetActive())
                 return;
+            if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
             var bash = new Bash();
-            bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants", false);
-            bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants", false);
+            Directory.CreateDirectory("/etc/systemd/system/");
+            Directory.CreateDirectory("/etc/systemd/system/tt.target.wants");
+            Directory.CreateDirectory("/mnt/cdrom/Units/tt.target.wants");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();

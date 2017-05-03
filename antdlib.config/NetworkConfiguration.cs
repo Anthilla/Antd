@@ -8,6 +8,9 @@ using System.IO;
 using System.Linq;
 
 namespace antdlib.config {
+    /// <summary>
+    /// Deprecated. Use Network2Configuration instead.
+    /// </summary>
     public class NetworkConfiguration {
 
         private NetworkConfigurationModel _serviceModel;

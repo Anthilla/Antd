@@ -88,12 +88,12 @@ namespace Antd.Modules {
             };
 
             Post["/host/ntpd"] = x => {
-                string ntpd = Request.Form.Ntpd;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNtpd(ntpd.Contains("\n")
-                  ? ntpd.SplitToList("\n").ToArray()
-                  : ntpd.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNtpd();
+                //string ntpd = Request.Form.Ntpd;
+                //var hostConfiguration = new HostConfiguration();
+                //hostConfiguration.SetNtpd(ntpd.Contains("\n")
+                //  ? ntpd.SplitToList("\n").ToArray()
+                //  : ntpd.SplitToList(Environment.NewLine).ToArray());
+                //hostConfiguration.ApplyNtpd();
                 return HttpStatusCode.OK;
             };
         }

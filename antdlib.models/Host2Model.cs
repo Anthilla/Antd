@@ -10,47 +10,47 @@ namespace antdlib.models {
     public class Host2Model {
         #region [    Host Var    ]
 
-        public string HostName { get; set; } = string.Empty; //srv01
-        public string HostChassis { get; set; } = string.Empty;
-        public string HostDeployment { get; set; } = string.Empty;
-        public string HostLocation { get; set; } = string.Empty;
+        public string HostName { get; set; } = "box01";
+        public string HostChassis { get; set; } = "server";
+        public string HostDeployment { get; set; } = "developement";
+        public string HostLocation { get; set; } = "onEarth";
 
-        public string HostAliasPrimary { get; set; } = string.Empty;
+        public string HostAliasPrimary { get; set; } = "box01.domint.local";
 
-        public string InternalDomainPrimary { get; set; } = string.Empty; //domint.local
-        public string InternalHostIpPrimary { get; set; } = string.Empty; //10.11.19.111
-        public string InternalNetPrimaryBits { get; set; } = string.Empty; //16
+        public string InternalDomainPrimary { get; set; } = "domint.local";
+        public string InternalHostIpPrimary { get; set; } = "10.11.19.111"; 
+        public string InternalNetPrimaryBits { get; set; } = "16"; 
         [JsonIgnore]
-        public string InternalNetPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Network.ToString(); //viene calcolato
+        public string InternalNetPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Network.ToString();
         [JsonIgnore]
-        public string InternalNetMaskPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Netmask.ToString(); //viene calcolato
+        public string InternalNetMaskPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Netmask.ToString();
         [JsonIgnore]
-        public string InternalBroadcastPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Broadcast.ToString(); //viene calcolato
+        public string InternalBroadcastPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Broadcast.ToString();
         [JsonIgnore]
-        public string InternalArpaPrimary => Cidr.IpArpaAnnotation(InternalHostIpPrimary, InternalNetPrimaryBits); //viene calcolato
+        public string InternalArpaPrimary => Cidr.IpArpaAnnotation(InternalHostIpPrimary, InternalNetPrimaryBits);
 
-        public string ExternalDomainPrimary { get; set; } = string.Empty; //domext.local
-        public string ExternalHostIpPrimary { get; set; } = string.Empty; //192.168.111.0/24
-        public string ExternalNetPrimaryBits { get; set; } = string.Empty; //24
+        public string ExternalDomainPrimary { get; set; } = "domext.local";
+        public string ExternalHostIpPrimary { get; set; } = "192.168.111.0"; 
+        public string ExternalNetPrimaryBits { get; set; } = "24";
         [JsonIgnore]
-        public string ExternalNetPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, ExternalNetPrimaryBits)?.Network.ToString(); //viene calcolato
+        public string ExternalNetPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, ExternalNetPrimaryBits)?.Network.ToString();
         [JsonIgnore]
-        public string ExternalNetMaskPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, InternalNetPrimaryBits)?.Netmask.ToString(); //viene calcolato
+        public string ExternalNetMaskPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, InternalNetPrimaryBits)?.Netmask.ToString();
         [JsonIgnore]
-        public string ExternalBroadcastPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, InternalNetPrimaryBits)?.Broadcast.ToString(); //viene calcolato
+        public string ExternalBroadcastPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, InternalNetPrimaryBits)?.Broadcast.ToString();
         [JsonIgnore]
-        public string ExternalArpaPrimary => Cidr.IpArpaAnnotation(ExternalHostIpPrimary, InternalNetPrimaryBits); //viene calcolato
+        public string ExternalArpaPrimary => Cidr.IpArpaAnnotation(ExternalHostIpPrimary, InternalNetPrimaryBits);
 
-        public string ResolvNameserver { get; set; } = string.Empty; //ip address
-        public string ResolvDomain { get; set; } = string.Empty; //può essere il domain interno o esterno
+        public string ResolvNameserver { get; set; } = "8.8.8.8";
+        public string ResolvDomain { get; set; } = "domint.local"; 
 
         public string Secret => File.ReadAllText(Parameter.AntdCfgSecret);
 
         #endregion
 
         #region [    Time Var    ]
-        public string Timezone { get; set; } = string.Empty;
-        public string NtpdateServer { get; set; } = string.Empty;
+        public string Timezone { get; set; } = "Europe/Rome";
+        public string NtpdateServer { get; set; } = "0.it.pool.ntp.org";
         #endregion
 
         #region [    Asset Var    ]
