@@ -35,7 +35,7 @@ using Nancy;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-
+using anthilla.commands;
 using Random = anthilla.core.Random;
 
 namespace Antd.Modules {
@@ -43,6 +43,8 @@ namespace Antd.Modules {
 
         private readonly Host2Configuration _variablesConfiguration = new Host2Configuration();
         private readonly Network2Configuration _network2Configuration = new Network2Configuration();
+
+        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
 
         public AntdNetwork2Module() {
 
@@ -58,11 +60,16 @@ namespace Antd.Modules {
                         virtualInterfaces.Remove(vif);
                     }
                 }
+                var allifs = new List<string>();
+                allifs.AddRange(physicalInterfaces);
+                allifs.AddRange(bridgeInterfaces);
+                allifs.AddRange(bondInterfaces);
                 var model = new PageNetwork2Model {
                     PhysicalIf = physicalInterfaces,
                     BridgeIf = bridgeInterfaces,
                     BondIf = bondInterfaces,
                     VirtualIf = virtualInterfaces,
+                    AllIfs = allifs, //new List <string> { "dev1", "dev2", "dev3" },
                     InterfaceConfigurationList = _network2Configuration.InterfaceConfigurationList,
                     GatewayConfigurationList = _network2Configuration.GatewayConfigurationList,
                     DnsConfigurationList = _network2Configuration.DnsConfigurationList,
@@ -73,7 +80,7 @@ namespace Antd.Modules {
             };
 
             Post["/network2/restart"] = x => {
-                _network2Configuration.Start();
+                new Do().NetworkChanges();
                 return HttpStatusCode.OK;
             };
 
@@ -269,10 +276,10 @@ namespace Antd.Modules {
                 string dev = Request.Form.Device;
                 string conf = Request.Form.Configuration;
 
-                var cc = _network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == conf)?.IsUsed;
-                if(cc == true || cc == null) {
-                    return HttpStatusCode.InternalServerError;
-                }
+                //var cc = _network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == conf)?.IsUsed;
+                //if(cc == true || cc == null) {
+                //    return HttpStatusCode.InternalServerError;
+                //}
 
                 string confs = Request.Form.AdditionalConfigurations;
                 string gwConf = Request.Form.GatewayConfiguration;
@@ -290,12 +297,42 @@ namespace Antd.Modules {
                     Mtu = mtu
                 };
                 _network2Configuration.AddInterfaceSetting(model);
+
+                new Do().NetworkChanges();
+
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/interface/del"] = x => {
                 string dev = Request.Form.Device;
                 _network2Configuration.RemoveInterfaceSetting(dev);
+
+                new Do().NetworkChanges();
+
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/add/bond"] = x => {
+                string name = Request.Form.Name;
+                try {
+                    _commandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", name } });
+                    ConsoleLogger.Log($"created bond {name}");
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex.Message);
+                }
+                return HttpStatusCode.OK;
+            };
+
+            Post["/network2/add/bridge"] = x => {
+                string name = Request.Form.Name;
+                try {
+                    _commandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", name } });
+                    ConsoleLogger.Log($"created bridge {name}");
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex.Message);
+                }
                 return HttpStatusCode.OK;
             };
         }

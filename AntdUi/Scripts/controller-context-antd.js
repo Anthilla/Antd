@@ -685,7 +685,7 @@ function AntdNetwork2Controller($scope, $http) {
             Name: el.Name
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/add/bond", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/add/bond", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.createBridge = function (el) {
@@ -693,7 +693,7 @@ function AntdNetwork2Controller($scope, $http) {
             Name: el.Name
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/add/bridge", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/add/bridge", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.NewDnsConfiguration = {
@@ -710,7 +710,7 @@ function AntdNetwork2Controller($scope, $http) {
             Guid: el.Id
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/dnsconfiguration/active/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/dnsconfiguration/active/del", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.activateDnsConfiguration = function (el) {
@@ -718,7 +718,7 @@ function AntdNetwork2Controller($scope, $http) {
             Guid: el.Id
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/dnsconfiguration/active", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/dnsconfiguration/active", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.deleteDnsConfiguration = function (el) {
@@ -726,7 +726,7 @@ function AntdNetwork2Controller($scope, $http) {
             Guid: el.Id
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/dnsconfiguration/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/dnsconfiguration/del", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.saveDnsConfiguration = function (el) {
@@ -740,7 +740,7 @@ function AntdNetwork2Controller($scope, $http) {
             AuthenticationEnabled: el.AuthenticationEnabled
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/dnsconfiguration", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/dnsconfiguration", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.NewInterface = {
@@ -757,7 +757,7 @@ function AntdNetwork2Controller($scope, $http) {
             Device: el.Device
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/interface/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/interface/del", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.save = function (el) {
@@ -770,7 +770,7 @@ function AntdNetwork2Controller($scope, $http) {
             Mtu: el.Mtu
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/interface", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/interface", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.NewGatewayConfiguration = {
@@ -784,7 +784,7 @@ function AntdNetwork2Controller($scope, $http) {
             Guid: el.Id
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/gatewayconfiguration/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/gatewayconfiguration/del", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.saveGatewayConfiguration = function (el) {
@@ -794,7 +794,7 @@ function AntdNetwork2Controller($scope, $http) {
             GatewayAddress: el.GatewayAddress
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/gatewayconfiguration", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/gatewayconfiguration", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.NewInterfaceConfiguration = {
@@ -806,18 +806,31 @@ function AntdNetwork2Controller($scope, $http) {
         Status: "",
         Ip: "",
         Adapter: "",
-        Ifs: ""
+        Ifs: "",
+        PostIfs: ""
     };
+
+    $scope.updatePostIfs = function (el) {
+        el.PostIfs = "";
+        angular.forEach(el.Ifs, function (val) {
+            el.PostIfs += val + ",";
+        });
+        console.log(el.PostIfs);
+    }
 
     $scope.deleteInterfaceConfiguration = function (el) {
         var data = $.param({
             Guid: el.Id
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/interfaceconfiguration/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/interfaceconfiguration/del", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.saveInterfaceConfiguration = function (el) {
+        var postIfs = "";
+        angular.forEach(el.Ifs, function (val) {
+            postIfs += val + ",";
+        });
         var data = $.param({
             Id: el.Id,
             Type: el.Type,
@@ -827,27 +840,48 @@ function AntdNetwork2Controller($scope, $http) {
             Status: el.Status,
             Ip: el.Ip,
             Adapter: el.Adapter,
-            Ifs: el.Ifs
+            Ifs: postIfs
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/interfaceconfiguration", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/interfaceconfiguration", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.restart = function () {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/network2/restart").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $http.get("/network2").success(function (data) {
-        $scope.InterfaceConfigurationList = data.InterfaceConfigurationList;
-        $scope.GatewayConfigurationList = data.GatewayConfigurationList;
-        $scope.Configuration = data.Configuration;
-        $scope.PhysicalIf = data.PhysicalIf;
-        $scope.BridgeIf = data.BridgeIf;
-        $scope.BondIf = data.BondIf;
-        $scope.VirtualIf = data.VirtualIf;
-        $scope.Variables = data.Variables;
-    });
+    $scope.Get = function() {
+        $http.get("/network2").success(function (data) {
+            $scope.InterfaceConfigurationList = data.InterfaceConfigurationList;
+            $scope.GatewayConfigurationList = data.GatewayConfigurationList;
+            $scope.Configuration = data.Configuration;
+            $scope.AllIfs = data.AllIfs;
+            $scope.PhysicalIf = data.PhysicalIf;
+            $scope.BridgeIf = data.BridgeIf;
+            $scope.BondIf = data.BondIf;
+            $scope.VirtualIf = data.VirtualIf;
+            $scope.Variables = data.Variables;
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
 }
 
 app.controller("AntdRsyncController", ["$scope", "$http", AntdRsyncController]);
@@ -1406,6 +1440,8 @@ function AntdHost2Controller($scope, $http) {
             ExternalDomainPrimary: $scope.Host.ExternalDomainPrimary,
             InternalHostIpPrimary: $scope.Host.InternalHostIpPrimary,
             ExternalHostIpPrimary: $scope.Host.ExternalHostIpPrimary,
+            InternalNetPrimaryBits: $scope.Host.InternalNetPrimaryBits,
+            ExternalNetPrimaryBits: $scope.Host.ExternalNetPrimaryBits,
             ResolvNameserver: $scope.Host.ResolvNameserver,
             ResolvDomain: $scope.Host.ResolvDomain,
             Timezone: $scope.Host.Timezone,
@@ -1415,23 +1451,43 @@ function AntdHost2Controller($scope, $http) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host2/info", data).then(
             function () {
-                console.log(1);
+                $scope.ShowResponseMessage("ok");
             },
         function (response) {
             console.log(response);
         });
     }
 
-    $http.get("/host2").success(function (data) {
-        $scope.Host = data.Host;
-        $scope.IconName = data.IconName;
-        $scope.MachineId = data.MachineId;
-        $scope.BootId = data.BootId;
-        $scope.Virtualization = data.Virtualization;
-        $scope.Os = data.Os;
-        $scope.Kernel = data.Kernel;
-        $scope.Architecture = data.Architecture;
-    });
+    $scope.Get = function() {
+        $http.get("/host2").success(function (data) {
+            $scope.Host = data.Host;
+            $scope.IconName = data.IconName;
+            $scope.MachineId = data.MachineId;
+            $scope.BootId = data.BootId;
+            $scope.Virtualization = data.Virtualization;
+            $scope.Os = data.Os;
+            $scope.Kernel = data.Kernel;
+            $scope.Architecture = data.Architecture;
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
 }
 
 app.controller("AntdUpdateController", ["$scope", "$http", AntdUpdateController]);

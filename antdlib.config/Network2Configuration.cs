@@ -10,7 +10,7 @@ using System.Linq;
 namespace antdlib.config {
     public class Network2Configuration {
 
-        public Network2ConfigurationModel Conf => Parse();
+        public Network2ConfigurationModel Conf;
         public List<NetworkInterfaceConfiguration> InterfaceConfigurationList => GetInterfaceConfiguration();
         public List<NetworkGatewayConfiguration> GatewayConfigurationList => GetGatewayConfiguration();
         public List<DnsConfiguration> DnsConfigurationList => GetDnsConfiguration();
@@ -35,6 +35,7 @@ namespace antdlib.config {
 
         public Network2Configuration() {
             Directory.CreateDirectory(_dir);
+            Conf = Parse();
         }
 
         #region [    Network conf   ]
@@ -70,7 +71,7 @@ namespace antdlib.config {
         }
 
         public void AddInterfaceSetting(NetworkInterface model) {
-            var netif = Conf.Interfaces;
+            var netif = Conf.Interfaces.ToList();
             var check = netif.Where(_ => _.Device == model.Device).ToList();
             if(check.Any()) {
                 check.ForEach(_ => RemoveInterfaceSetting(_.Device));
@@ -81,7 +82,7 @@ namespace antdlib.config {
         }
 
         public void RemoveInterfaceSetting(string device) {
-            var netif = Conf.Interfaces;
+            var netif = Conf.Interfaces.ToList();
             var model = netif.First(_ => _.Device == device);
             if(model == null) {
                 return;

@@ -69,6 +69,8 @@ namespace Antd.Modules {
                 string externalDomainPrimary = Request.Form.ExternalDomainPrimary;
                 string internalHostIpPrimary = Request.Form.InternalHostIpPrimary;
                 string externalHostIpPrimary = Request.Form.ExternalHostIpPrimary;
+                string internalNetPrimaryBits = Request.Form.InternalNetPrimaryBits;
+                string externalNetPrimaryBits = Request.Form.ExternalNetPrimaryBits;
                 string resolvNameserver = Request.Form.ResolvNameserver;
                 string resolvDomain = Request.Form.ResolvDomain;
                 string timezone = Request.Form.Timezone;
@@ -85,6 +87,8 @@ namespace Antd.Modules {
                     ExternalDomainPrimary = externalDomainPrimary ?? old.ExternalDomainPrimary,
                     InternalHostIpPrimary = internalHostIpPrimary ?? old.InternalHostIpPrimary,
                     ExternalHostIpPrimary = externalHostIpPrimary ?? old.ExternalHostIpPrimary,
+                    InternalNetPrimaryBits = internalNetPrimaryBits ?? old.InternalNetPrimaryBits,
+                    ExternalNetPrimaryBits = externalNetPrimaryBits ?? old.ExternalNetPrimaryBits,
                     ResolvNameserver = resolvNameserver ?? old.ResolvNameserver,
                     ResolvDomain = resolvDomain ?? old.ResolvDomain,
                     Timezone = timezone ?? old.Timezone,
@@ -93,7 +97,7 @@ namespace Antd.Modules {
                     Cloud = cloud ?? old.Cloud
                 };
                 _host2Configuration.Export(vars);
-                _host2Configuration.ApplySettings();
+                new Do().HostChanges();
                 return HttpStatusCode.OK;
             };
         }

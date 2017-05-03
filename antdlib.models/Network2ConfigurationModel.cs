@@ -28,6 +28,9 @@ namespace antdlib.models {
         public NetworkInterfaceMode Mode { get; set; } = NetworkInterfaceMode.Static;
         public NetworkInterfaceStatus Status { get; set; } = NetworkInterfaceStatus.Up;
         public string Ip { get; set; } = string.Empty; //192.168.111.2
+        /// <summary>
+        /// Subnet noted as its bit value 1..32
+        /// </summary>
         public string Subnet { get; set; } = string.Empty; //24 -> 192.168.111.0 --> /24
         public string Broadcast { get; set; } = string.Empty; //192.168.111.255
         public NetworkAdapterType Adapter { get; set; } = NetworkAdapterType.Physical;

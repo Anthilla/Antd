@@ -5,14 +5,16 @@ using System.Linq;
 using antdlib.common;
 using antdlib.config;
 using antdlib.models;
+using anthilla.commands;
 
 namespace Antd {
     public class Do {
-        private const string LocalTemplateDirectory = "Templates";
+        private const string LocalTemplateDirectory = "/framework/antd/Templates";
         private readonly Dictionary<string, string> _replacements;
 
         private readonly Host2Configuration _host2Configuration = new Host2Configuration();
         private readonly Network2Configuration _network2Configuration = new Network2Configuration();
+        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
 
         private readonly Host2Model Host;
         private readonly DnsConfiguration Dns;
@@ -20,6 +22,9 @@ namespace Antd {
         private readonly bool IsDnsDynamic;
         private readonly bool IsDnsExternal;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Do() {
             Host = _host2Configuration.Host;
             Dns = _network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == _network2Configuration.Conf.ActiveDnsConfiguration);
@@ -64,11 +69,21 @@ namespace Antd {
             var externalActiveNetworkConfsIds = externalActiveNetworkConfs.Select(_ => _.Id);
             var externalInterfaces = externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
             _replacements["$externalInterface"] = externalInterfaces;
-            var allInterfaces = interfaces.Select(_=>_.Device).ToList().JoinToString(", ");
+            var allInterfaces = interfaces.Select(_ => _.Device).ToList().JoinToString(", ");
             _replacements["$allInterface"] = allInterfaces;
         }
 
-        public void oo() {
+        /// <summary>
+        /// Main function
+        /// </summary>
+        public void AllChanges() {
+            ConsoleLogger.Log("[setup] apply configured host vars");
+            NetworkChanges();
+            HostChanges();
+        }
+
+        public void HostChanges() {
+            SaveHostname();
             SaveNtpFile();
             SaveResolvFile();
             SaveNsswitchFile();
@@ -84,6 +99,10 @@ namespace Antd {
             SaveNftablesFile();
         }
 
+        public void NetworkChanges() {
+            ApplyNetworkConfiguration();
+        }
+        #region [    private functions    ]
         private string EditLine(string input) {
             var output = input;
             foreach(var r in _replacements) {
@@ -97,6 +116,116 @@ namespace Antd {
                 File.Copy(src, dest);
             }
         }
+        #endregion
+
+        #region [    network    ]
+        private void ApplyNetworkConfiguration() {
+            var configurations = _network2Configuration.Conf.Interfaces;
+            var interfaceConfigurations = _network2Configuration.InterfaceConfigurationList;
+            var gatewayConfigurations = _network2Configuration.GatewayConfigurationList;
+            foreach(var configuration in configurations) {
+                var deviceName = configuration.Device;
+
+                var ifConfig = interfaceConfigurations.FirstOrDefault(_ => _.Id == configuration.Configuration);
+                if(ifConfig == null) {
+                    continue;
+                }
+
+                switch(ifConfig.Adapter) {
+                    case NetworkAdapterType.Physical:
+                        break;
+                    case NetworkAdapterType.Virtual:
+                        break;
+                    case NetworkAdapterType.Bond:
+                        _commandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", deviceName } });
+                        foreach(var nif in ifConfig.ChildrenIf) {
+                            _commandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
+                        }
+                        break;
+                    case NetworkAdapterType.Bridge:
+                        _commandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", deviceName } });
+                        foreach(var nif in ifConfig.ChildrenIf) {
+                            _commandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
+                        }
+                        break;
+                    case NetworkAdapterType.Other:
+                        continue;
+                }
+
+                _commandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", deviceName }, { "$mtu", configuration.Mtu } });
+                _commandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", deviceName }, { "$txqueuelen", configuration.Txqueuelen } });
+
+                switch(ifConfig.Mode) {
+                    case NetworkInterfaceMode.Null:
+                        continue;
+                    case NetworkInterfaceMode.Static:
+                        var networkdIsActive = Systemctl.IsActive("systemd-networkd");
+                        if(networkdIsActive) {
+                            Systemctl.Stop("systemd-networkd");
+                        }
+                        _commandLauncher.Launch("dhclient-killall");
+                        _commandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
+                            { "$net_if", deviceName }
+                        });
+                        _commandLauncher.Launch("ip4-add-addr", new Dictionary<string, string> {
+                            { "$net_if", deviceName },
+                            { "$address", ifConfig.Ip },
+                            { "$range", ifConfig.Subnet }
+                        });
+                        if(networkdIsActive) {
+                            Systemctl.Start("systemd-networkd");
+                        }
+                        break;
+                    case NetworkInterfaceMode.Dynamic:
+                        _commandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        break;
+                    default:
+                        continue;
+                }
+
+                switch(ifConfig.Status) {
+                    case NetworkInterfaceStatus.Down:
+                        _commandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        continue;
+                    case NetworkInterfaceStatus.Up:
+                        _commandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        ConsoleLogger.Log($"[network] interface '{deviceName}' configured");
+                        break;
+                    default:
+                        _commandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        continue;
+                }
+
+                var gwConfig = gatewayConfigurations.FirstOrDefault(_ => _.Id == configuration.GatewayConfiguration);
+                if(gwConfig == null) {
+                    continue;
+                }
+
+                _commandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$gateway", gwConfig.GatewayAddress }, { "$ip_address", gwConfig.Route } });
+            }
+        }
+        #endregion
+
+        #region [    hostnamectl    ]
+        private void SaveHostname() {
+            _commandLauncher.Launch("set-hostname", new Dictionary<string, string> {
+                { "$host_name", Host.HostName }
+            });
+            _commandLauncher.Launch("set-chassis", new Dictionary<string, string> {
+                { "$host_chassis", Host.HostChassis }
+            });
+            _commandLauncher.Launch("set-deployment", new Dictionary<string, string> {
+                { "$host_deployment", Host.HostDeployment }
+            });
+            _commandLauncher.Launch("set-location", new Dictionary<string, string> {
+                { "$host_location", Host.HostLocation }
+            });
+            File.WriteAllText("/etc/hostname", Host.HostName);
+            _commandLauncher.Launch("set-timezone", new Dictionary<string, string> {
+                { "$host_timezone", Host.Timezone }
+            });
+        }
+        #endregion
 
         #region [    ntp.conf    ]
         private readonly string _ntpFileInput = $"{LocalTemplateDirectory}/ntp.conf.tmlp";

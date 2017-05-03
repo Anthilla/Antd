@@ -55,6 +55,8 @@ namespace AntdUi.Modules {
                 string externalDomainPrimary = Request.Form.ExternalDomainPrimary;
                 string internalHostIpPrimary = Request.Form.InternalHostIpPrimary;
                 string externalHostIpPrimary = Request.Form.ExternalHostIpPrimary;
+                string internalNetPrimaryBits = Request.Form.InternalNetPrimaryBits;
+                string externalNetPrimaryBits = Request.Form.ExternalNetPrimaryBits;
                 string resolvNameserver = Request.Form.ResolvNameserver;
                 string resolvDomain = Request.Form.ResolvDomain;
                 string timezone = Request.Form.Timezone;
@@ -70,6 +72,8 @@ namespace AntdUi.Modules {
                     { "ExternalDomainPrimary", externalDomainPrimary },
                     { "InternalHostIpPrimary", internalHostIpPrimary },
                     { "ExternalHostIpPrimary", externalHostIpPrimary },
+                    { "InternalNetPrimaryBits", internalNetPrimaryBits },
+                    { "ExternalNetPrimaryBits", externalNetPrimaryBits },
                     { "ResolvNameserver", resolvNameserver },
                     { "ResolvDomain", resolvDomain },
                     { "Timezone", timezone },

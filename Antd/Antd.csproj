@@ -103,7 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application.bck.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="Cloud\UpdateCloudInfo.cs" />
     <Compile Include="Cloud\WhatIsMyIp.cs" />
     <Compile Include="Do.cs" />
@@ -178,7 +178,6 @@
     <Compile Include="Modules\renew\DomainControllerModule.cs" />
     <Compile Include="Modules\renew\AuthenticationModule.cs" />
     <Compile Include="Modules\renew\FeedModule.cs" />
-    <Compile Include="Application.cs" />
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />

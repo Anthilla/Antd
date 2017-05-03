@@ -4,10 +4,12 @@ using System.Linq;
 using System.Security.Cryptography;
 using antdlib.common;
 using LukeSkywalker.IPNetwork;
+using Newtonsoft.Json;
 
 namespace antdlib.models {
     public class Host2Model {
         #region [    Host Var    ]
+
         public string HostName { get; set; } = string.Empty; //srv01
         public string HostChassis { get; set; } = string.Empty;
         public string HostDeployment { get; set; } = string.Empty;
@@ -18,17 +20,25 @@ namespace antdlib.models {
         public string InternalDomainPrimary { get; set; } = string.Empty; //domint.local
         public string InternalHostIpPrimary { get; set; } = string.Empty; //10.11.19.111
         public string InternalNetPrimaryBits { get; set; } = string.Empty; //16
+        [JsonIgnore]
         public string InternalNetPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Network.ToString(); //viene calcolato
+        [JsonIgnore]
         public string InternalNetMaskPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Netmask.ToString(); //viene calcolato
+        [JsonIgnore]
         public string InternalBroadcastPrimary => Cidr.CalcNetwork(InternalHostIpPrimary, InternalNetPrimaryBits)?.Broadcast.ToString(); //viene calcolato
+        [JsonIgnore]
         public string InternalArpaPrimary => Cidr.IpArpaAnnotation(InternalHostIpPrimary, InternalNetPrimaryBits); //viene calcolato
 
         public string ExternalDomainPrimary { get; set; } = string.Empty; //domext.local
         public string ExternalHostIpPrimary { get; set; } = string.Empty; //192.168.111.0/24
         public string ExternalNetPrimaryBits { get; set; } = string.Empty; //24
+        [JsonIgnore]
         public string ExternalNetPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, ExternalNetPrimaryBits)?.Network.ToString(); //viene calcolato
+        [JsonIgnore]
         public string ExternalNetMaskPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, InternalNetPrimaryBits)?.Netmask.ToString(); //viene calcolato
+        [JsonIgnore]
         public string ExternalBroadcastPrimary => Cidr.CalcNetwork(ExternalHostIpPrimary, InternalNetPrimaryBits)?.Broadcast.ToString(); //viene calcolato
+        [JsonIgnore]
         public string ExternalArpaPrimary => Cidr.IpArpaAnnotation(ExternalHostIpPrimary, InternalNetPrimaryBits); //viene calcolato
 
         public string ResolvNameserver { get; set; } = string.Empty; //ip address
