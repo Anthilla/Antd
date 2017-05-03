@@ -666,19 +666,9 @@ function AntdNetworkController($scope, $http) {
     });
 }
 
-app.controller("AntdNetwork2Controller", ["$scope", "$http", AntdNetwork2Controller]);
+app.controller("AntdNetwork2Controller", ["$scope", "$http", "$interval", AntdNetwork2Controller]);
 
-function AntdNetwork2Controller($scope, $http) {
-
-    $scope.SelectInterfaceConfig = {
-        valueField: "text",
-        labelField: "text",
-        searchField: ["text"],
-        persist: false,
-        create: false,
-        delimiter: ",",
-        maxItems: 5
-    };
+function AntdNetwork2Controller($scope, $http, $interval) {
 
     $scope.createBond = function (el) {
         var data = $.param({
@@ -851,8 +841,9 @@ function AntdNetwork2Controller($scope, $http) {
         $http.post("/network2/restart").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $scope.Get = function() {
+    $scope.Get = function () {
         $http.get("/network2").success(function (data) {
+            $scope.DnsConfigurationList = data.DnsConfigurationList;
             $scope.InterfaceConfigurationList = data.InterfaceConfigurationList;
             $scope.GatewayConfigurationList = data.GatewayConfigurationList;
             $scope.Configuration = data.Configuration;
@@ -1458,7 +1449,7 @@ function AntdHost2Controller($scope, $http) {
         });
     }
 
-    $scope.Get = function() {
+    $scope.Get = function () {
         $http.get("/host2").success(function (data) {
             $scope.Host = data.Host;
             $scope.IconName = data.IconName;

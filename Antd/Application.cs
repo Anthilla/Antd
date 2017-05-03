@@ -349,6 +349,12 @@ namespace Antd {
 
             #region [    Network    ]
             new Do().NetworkChanges();
+            if(File.Exists("/cfg/antd/services/network.conf")) {
+                File.Delete("/cfg/antd/services/network.conf");
+            }
+            if(File.Exists("/cfg/antd/services/network.conf.bck")) {
+                File.Delete("/cfg/antd/services/network.conf.bck");
+            }
             ConsoleLogger.Log("network ready");
             #endregion
 

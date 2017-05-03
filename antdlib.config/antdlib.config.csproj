@@ -74,6 +74,7 @@
     <Compile Include="AclConfiguration.cs" />
     <Compile Include="AuthorizedKeysConfiguration.cs" />
     <Compile Include="AppsConfiguration.cs" />
+    <Compile Include="HostParametersConfiguration.cs" />
     <Compile Include="Network2Configuration.cs" />
     <Compile Include="TimerConfiguration.cs" />
     <Compile Include="BindConfiguration.cs" />

@@ -21,7 +21,7 @@ namespace Antd {
             var alias = $"{verb}00";
             var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
             var networkInterfaceConfiguration = new NetworkInterfaceConfiguration {
-                Id = string.IsNullOrEmpty(customIp) ? "XISYmNNB4k6zQg5ptFmZIQ" : Random.ShortGuid(),
+                Id = $"{customIp}gfEUxrgNe0qVR4HWpT1U2A",
                 Type = NetworkInterfaceType.Internal,
                 Hostname = hostname,
                 Index = 0,
@@ -48,7 +48,7 @@ namespace Antd {
             var alias = $"{verb}00";
             var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
             var networkInterfaceConfiguration = new NetworkInterfaceConfiguration {
-                Id = string.IsNullOrEmpty(customIp) ? "gfEUxrgNe0qVR4HWpT1U2A" : Random.ShortGuid(),
+                Id = $"{customIp}gfEUxrgNe0qVR4HWpT1U2A",
                 Type = NetworkInterfaceType.External,
                 Hostname = hostname,
                 Index = 0,
@@ -75,7 +75,7 @@ namespace Antd {
             var alias = $"{verb}00";
             var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
             var networkInterfaceConfiguration = new NetworkInterfaceConfiguration {
-                Id = string.IsNullOrEmpty(customIp) ? "w2IfaCIMsEus1tagEnFfiA" : Random.ShortGuid(),
+                Id = $"{customIp}gfEUxrgNe0qVR4HWpT1U2A",
                 Type = NetworkInterfaceType.Internal,
                 Hostname = hostname,
                 Index = 0,
@@ -102,7 +102,7 @@ namespace Antd {
             var alias = $"{verb}00";
             var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
             var networkInterfaceConfiguration = new NetworkInterfaceConfiguration {
-                Id = string.IsNullOrEmpty(customIp) ? "dTNko8N39EWIsGxBRtPZmw" : Random.ShortGuid(),
+                Id = $"{customIp}gfEUxrgNe0qVR4HWpT1U2A",
                 Type = NetworkInterfaceType.External,
                 Hostname = hostname,
                 Index = 0,

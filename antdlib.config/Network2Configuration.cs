@@ -89,6 +89,7 @@ namespace antdlib.config {
             netif.Remove(model);
             Conf.Interfaces = netif;
             Save(Conf);
+            _launcher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", device } });
         }
         #endregion
 

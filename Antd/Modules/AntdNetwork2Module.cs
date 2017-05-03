@@ -163,7 +163,7 @@ namespace Antd.Modules {
 
             Post["/network2/interfaceconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.RemoveInterfaceSetting(guid);
+                _network2Configuration.RemoveInterfaceConfiguration(guid);
                 return HttpStatusCode.OK;
             };
 
