@@ -134,6 +134,7 @@
     <Compile Include="Modules\AntdDiskUsageModule.cs" />
     <Compile Include="Modules\AntdFirewallModule.cs" />
     <Compile Include="Modules\AntdGlusterModule.cs" />
+    <Compile Include="Modules\AntdHostParametersModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNameServiceModule.cs" />
     <Compile Include="Modules\AntdNetwork2Module.cs" />

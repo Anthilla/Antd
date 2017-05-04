@@ -1,8 +1,8 @@
 "use strict";
 
-app.controller("BootCommandsController", ["$scope", "$http", BootCommandsController]);
+app.controller("BootCommandsController", ["$scope", "$http", "$interval", BootCommandsController]);
 
-function BootCommandsController($scope, $http) {
+function BootCommandsController($scope, $http, $interval) {
     $scope.moveUp = function (cmd, index) { //-1
         var from = index;
         var to = index - 1;
@@ -59,7 +59,7 @@ function BootCommandsController($scope, $http) {
             Data: commands
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/commands", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/boot/commands", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.Commands = [];
@@ -70,70 +70,187 @@ function BootCommandsController($scope, $http) {
         });
     }
     $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
 }
 
-app.controller("BootModulesController", ["$scope", "$http", BootModulesController]);
+app.controller("BootModulesController", ["$scope", "$http", "$interval", BootModulesController]);
 
-function BootModulesController($scope, $http) {
+function BootModulesController($scope, $http, $interval) {
+
+    $scope.FormatList = function (list) {
+        var d = "";
+        angular.forEach(list, function (v) {
+            d += v + "\n";
+        });
+        return d;
+    }
+
     $scope.saveModblacklist = function () {
         var data = $.param({
-            Config: $scope.Blacklist
+            Data: $scope.ModulesBlacklistStr.replace(/\n/g, ";")
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/modblacklist", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/hostparam/set/modulesblacklistlist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.saveRmmodules = function () {
         var data = $.param({
-            Config: $scope.RmModules
+            Data: $scope.RmmodStr.replace(/\n/g, ";")
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/rmmodules", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/hostparam/set/rmmodlist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
     $scope.saveModules = function () {
         var data = $.param({
-            Config: $scope.Modules
+            Data: $scope.ModprobesStr.replace(/\n/g, ";")
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/modules", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/hostparam/set/modprobeslist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $http.get("/boot/modules").success(function (data) {
-        $scope.Modules = data.Modules;
-        $scope.RmModules = data.RmModules;
-        $scope.Blacklist = data.Blacklist;
-    });
+    $scope.Get = function () {
+        $http.get("/hostparam").success(function (data) {
+            $scope.Modprobes = data.Modprobes;
+            $scope.ModprobesStr = $scope.FormatList($scope.Modprobes);
+            $scope.Rmmod = data.Rmmod;
+            $scope.RmmodStr = $scope.FormatList($scope.Rmmod);
+            $scope.ModulesBlacklist = data.ModulesBlacklist;
+            $scope.ModulesBlacklistStr = $scope.FormatList($scope.ModulesBlacklist);
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
 }
 
-app.controller("BootOsParametersController", ["$scope", "$http", BootOsParametersController]);
+app.controller("BootOsParametersController", ["$scope", "$http", "$interval", BootOsParametersController]);
 
-function BootOsParametersController($scope, $http) {
-    $scope.save = function () {
-        var data = $.param({
-            Config: $scope.OsParameters
+function BootOsParametersController($scope, $http, $interval) {
+    $scope.FormatList = function (list) {
+        var d = "";
+        angular.forEach(list, function (v) {
+            d += v + "\n";
         });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/osparameter", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        return d;
     }
 
-    $http.get("/boot/osparameter").success(function (data) {
-        $scope.OsParameters = data.OsParameters;
-    });
+    $scope.save = function () {
+        var data = $.param({
+            Data: $scope.OsParametersStr.replace(/\n/g, ";")
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/hostparam/set/osparameters", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.Get = function () {
+        $http.get("/hostparam").success(function (data) {
+            $scope.OsParameters = data.OsParameters;
+            $scope.OsParametersStr = $scope.FormatList($scope.OsParameters);
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
 }
 
-app.controller("BootServicesController", ["$scope", "$http", BootServicesController]);
+app.controller("BootServicesController", ["$scope", "$http", "$interval", BootServicesController]);
 
-function BootServicesController($scope, $http) {
-    $scope.save = function () {
-        var data = $.param({
-            Config: $scope.Services
+function BootServicesController($scope, $http, $interval) {
+    $scope.FormatList = function (list) {
+        var d = "";
+        angular.forEach(list, function (v) {
+            d += v + "\n";
         });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/services", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        return d;
     }
 
-    $http.get("/boot/services").success(function (data) {
-        $scope.Services = data.Services;
-    });
+    $scope.saveStop = function () {
+        var data = $.param({
+            Data: $scope.ServicesStopStr.replace(/\n/g, ";")
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/hostparam/set/servicesstoplist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.saveStart = function () {
+        var data = $.param({
+            Data: $scope.ServicesStartStr.replace(/\n/g, ";")
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/hostparam/set/servicesstartlist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.Get = function () {
+        $http.get("/hostparam").success(function (data) {
+            $scope.ServicesStart = data.ServicesStart;
+            $scope.ServicesStartStr = $scope.FormatList($scope.ServicesStart);
+            $scope.ServicesStop = data.ServicesStop;
+            $scope.ServicesStopStr = $scope.FormatList($scope.ServicesStop);
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
 }

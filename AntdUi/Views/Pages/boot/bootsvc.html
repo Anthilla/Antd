@@ -10,10 +10,24 @@
         </div>
         <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
             <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
-                <textarea ng-model="Services" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+                <textarea ng-model="ServicesStartStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
             </div>
-            <button ng-click="save()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            <button ng-click="saveStart()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
         </div>
     </div>
     <br />
+    <div class="panel  margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Stop
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
+                <textarea ng-model="ServicesStopStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
+            </div>
+            <button ng-click="saveStop()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+        </div>
+    </div>
 </div>

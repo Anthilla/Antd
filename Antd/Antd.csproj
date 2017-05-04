@@ -109,6 +109,7 @@
     <Compile Include="Do.cs" />
     <Compile Include="Helpers\Default.cs" />
     <Compile Include="License\LicenseManagement.cs" />
+    <Compile Include="Modules\AntdHostParametersModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNetwork2Module.cs" />
     <Compile Include="Modules\BootOsParametersModule.cs" />
