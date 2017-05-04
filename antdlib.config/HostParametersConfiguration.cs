@@ -231,7 +231,7 @@ namespace antdlib.config {
         private readonly string _startcommandsFileBackup = $"{Parameter.AntdCfgParameters}/startcommands.conf.bck";
 
         public void SetStartCommandsList(List<Control> commands) {
-            var text = JsonConvert.SerializeObject(commands);
+            var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
             if(File.Exists(_startcommandsFile)) {
                 File.Copy(_startcommandsFile, _startcommandsFileBackup, true);
             }
@@ -264,7 +264,7 @@ namespace antdlib.config {
         private readonly string _endcommandsFileBackup = $"{Parameter.AntdCfgParameters}/endcommands.conf.bck";
 
         public void SetEndCommandsList(List<Control> commands) {
-            var text = JsonConvert.SerializeObject(commands);
+            var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
             if(File.Exists(_endcommandsFile)) {
                 File.Copy(_endcommandsFile, _endcommandsFileBackup, true);
             }

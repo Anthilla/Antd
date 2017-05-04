@@ -58,6 +58,7 @@ namespace antdlib.config {
         }
         #endregion
 
+        // blocco da togliere
         #region [    repo - Modules    ]
 
         public string[] GetHostModprobes() {
@@ -218,6 +219,8 @@ namespace antdlib.config {
             }
         }
         #endregion
+        // blocco da togliere
+
 
         #region [    repo - Host Info    ]
         public HostInfoModel GetHostInfo() {

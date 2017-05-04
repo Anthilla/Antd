@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
@@ -49,84 +50,80 @@ namespace Antd.Modules {
             Post["/hostparam/set/modprobeslist"] = x => {
                 string data = Request.Form.Data;
                 _hostParametersConfiguration.SetModprobesList(data.SplitToList(";"));
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/rmmodlist"] = x => {
                 string data = Request.Form.Data;
                 _hostParametersConfiguration.SetRmmodList(data.SplitToList(";"));
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/modulesblacklistlist"] = x => {
                 string data = Request.Form.Data;
                 _hostParametersConfiguration.SetModulesBlacklistList(data.SplitToList(";"));
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/osparameters"] = x => {
                 string data = Request.Form.Data;
                 _hostParametersConfiguration.SetOsParametersList(data.SplitToList(";"));
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/servicesstartlist"] = x => {
                 string data = Request.Form.Data;
                 _hostParametersConfiguration.SetServicesStartList(data.SplitToList(";"));
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/servicesstoplist"] = x => {
                 string data = Request.Form.Data;
                 _hostParametersConfiguration.SetServicesStopList(data.SplitToList(";"));
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/startcommandslist"] = x => {
                 string data = Request.Form.Data;
                 var list = new List<Control>();
-                var arr1 = data.Split(';');
+                var arr1 = data.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                 for(var i = 0; i < arr1.Length; i++) {
-                    var arr2 = arr1[i].Split('_');
-                    if(arr2.Length != 3)
-                        continue;
+                    var arr2 = arr1[i].Split(',');
                     var mo = new Control {
                         Index = i,
-                        FirstCommand = arr2[0],
-                        ControlCommand = arr2[1],
-                        Check = arr2[3]
+                        FirstCommand = arr2[1],
+                        ControlCommand = arr2.Length < 3 ? "" : arr2[2],
+                        Check = arr2.Length < 4 ? "" : arr2[3]
                     };
                     list.Add(mo);
                 }
                 _hostParametersConfiguration.SetStartCommandsList(list);
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/endcommandslist"] = x => {
                 string data = Request.Form.Data;
                 var list = new List<Control>();
-                var arr1 = data.Split(';');
+                var arr1 = data.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                 for(var i = 0; i < arr1.Length; i++) {
-                    var arr2 = arr1[i].Split('_');
-                    if(arr2.Length != 3)
-                        continue;
+                    var arr2 = arr1[i].Split(',');
                     var mo = new Control {
                         Index = i,
-                        FirstCommand = arr2[0],
-                        ControlCommand = arr2[1],
-                        Check = arr2[3]
+                        FirstCommand = arr2[1],
+                        ControlCommand = arr2.Length < 3 ? "" : arr2[2],
+                        Check = arr2.Length < 4 ? "" : arr2[3]
                     };
                     list.Add(mo);
                 }
                 _hostParametersConfiguration.SetEndCommandsList(list);
-                new Do().HostChanges();
+                new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
         }

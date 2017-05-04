@@ -49,6 +49,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
 using Random = anthilla.core.Random;
 
@@ -80,6 +81,7 @@ namespace Antd {
         private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
         private static readonly Host2Configuration Host2Configuration = new Host2Configuration();
         private static readonly Network2Configuration Network2Configuration = new Network2Configuration();
+        private static readonly HostParametersConfiguration HostParametersConfiguration = new HostParametersConfiguration();
         #endregion
 
         public static string KeyName = "antd";
@@ -215,18 +217,6 @@ namespace Antd {
 
             #endregion
 
-            #region [    OS Parameters    ]
-            HostConfiguration.ApplyHostOsParameters();
-            ConsoleLogger.Log("os parameters ready");
-            #endregion
-
-            #region [    Modules    ]
-            HostConfiguration.ApplyHostBlacklistModules();
-            HostConfiguration.ApplyHostModprobes();
-            HostConfiguration.ApplyHostRemoveModules();
-            ConsoleLogger.Log("modules ready");
-            #endregion
-
             #region [    JournalD    ]
             if(JournaldConfiguration.IsActive()) {
                 JournaldConfiguration.Set();
@@ -234,6 +224,8 @@ namespace Antd {
             #endregion
 
             #region [    Host and Network Import Configuration    ]
+
+            #region import host2model
             var tmpHost = HostConfiguration.Host;
             var varsFile = Host2Configuration.FilePath;
             var vars = new Host2Model {
@@ -264,7 +256,9 @@ namespace Antd {
                     }
                 }
             }
+            #endregion
 
+            #region import network2model
             var tmpNet = NetworkConfiguration.Get();
             var tmpHost2 = Host2Configuration.Host;
             foreach(var cif in tmpNet.Interfaces) {
@@ -323,6 +317,75 @@ namespace Antd {
                 };
                 Network2Configuration.AddGatewayConfiguration(defaultGatewayConfiguration);
             }
+            #endregion
+
+            #region import parameters
+            if(!File.Exists($"{Parameter.AntdCfgParameters}/endcommands.conf")) {
+                var tmpsetup = SetupConfiguration.Get();
+                HostParametersConfiguration.SetEndCommandsList(tmpsetup);
+            }
+            if(!File.Exists($"{Parameter.AntdCfgParameters}/modprobes.conf")) {
+                var ddd = EnumerableExtensions.Merge(tmpHost.Modprobes.Select(_ => _.StoredValues.Select(___ => ___.Value)));
+                HostParametersConfiguration.SetModprobesList(ddd.ToList());
+            }
+            if(!File.Exists($"{Parameter.AntdCfgParameters}/rmmod.conf")) {
+                var ddd = tmpHost.RemoveModules.StoredValues.FirstOrDefault().Value.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                HostParametersConfiguration.SetModprobesList(ddd.ToList());
+            }
+            if(!File.Exists($"{Parameter.AntdCfgParameters}/modulesblacklist.conf")) {
+                var ddd = tmpHost.ModulesBlacklist;
+                HostParametersConfiguration.SetModprobesList(ddd.ToList());
+            }
+            if(!File.Exists($"{Parameter.AntdCfgParameters}/osparameters.conf")) {
+                var list = new List<string> {
+                    "/proc/sys/fs/file-max 1024000" ,
+                    "/proc/sys/net/bridge/bridge-nf-call-arptables 0" ,
+                    "/proc/sys/net/bridge/bridge-nf-call-ip6tables 0" ,
+                    "/proc/sys/net/bridge/bridge-nf-call-iptables 0" ,
+                    "/proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged 0" ,
+                    "/proc/sys/net/bridge/bridge-nf-filter-vlan-tagged 0" ,
+                    "/proc/sys/net/core/netdev_max_backlog 300000" ,
+                    "/proc/sys/net/core/optmem_max 40960" ,
+                    "/proc/sys/net/core/rmem_max 268435456" ,
+                    "/proc/sys/net/core/somaxconn 65536" ,
+                    "/proc/sys/net/core/wmem_max 268435456" ,
+                    "/proc/sys/net/ipv4/conf/all/accept_local 1" ,
+                    "/proc/sys/net/ipv4/conf/all/accept_redirects 1" ,
+                    "/proc/sys/net/ipv4/conf/all/accept_source_route 1" ,
+                    "/proc/sys/net/ipv4/conf/all/rp_filter 0" ,
+                    "/proc/sys/net/ipv4/conf/all/forwarding 1" ,
+                    "/proc/sys/net/ipv4/conf/default/rp_filter 0" ,
+                    "/proc/sys/net/ipv4/ip_forward 1" ,
+                    "/proc/sys/net/ipv4/ip_local_port_range 1024 65000" ,
+                    "/proc/sys/net/ipv4/ip_no_pmtu_disc 1" ,
+                    "/proc/sys/net/ipv4/tcp_congestion_control htcp" ,
+                    "/proc/sys/net/ipv4/tcp_fin_timeout 40" ,
+                    "/proc/sys/net/ipv4/tcp_max_syn_backlog 3240000" ,
+                    "/proc/sys/net/ipv4/tcp_max_tw_buckets 1440000" ,
+                    "/proc/sys/net/ipv4/tcp_moderate_rcvbuf 1" ,
+                    "/proc/sys/net/ipv4/tcp_mtu_probing 1" ,
+                    "/proc/sys/net/ipv4/tcp_rmem 4096 87380 134217728" ,
+                    "/proc/sys/net/ipv4/tcp_slow_start_after_idle 1" ,
+                    "/proc/sys/net/ipv4/tcp_tw_recycle 0" ,
+                    "/proc/sys/net/ipv4/tcp_tw_reuse 1" ,
+                    "/proc/sys/net/ipv4/tcp_window_scaling 1" ,
+                    "/proc/sys/net/ipv4/tcp_wmem 4096 65536 134217728" ,
+                    "/proc/sys/net/ipv6/conf/br0/disable_ipv6 1" ,
+                    "/proc/sys/net/ipv6/conf/eth0/disable_ipv6 1" ,
+                    "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6 1" ,
+                    "/proc/sys/vm/swappiness 0"
+                };
+                HostParametersConfiguration.SetOsParametersList(list);
+            }
+
+            ConsoleLogger.Log("[data import] parameters");
+            #endregion
+
+            #endregion
+
+            #region [    Adjustments    ]
+            new Do().ParametersChangesPre();
+            ConsoleLogger.Log("modules, services and os parameters ready");
             #endregion
         }
         #endregion
@@ -468,14 +531,8 @@ namespace Antd {
             ConsoleLogger.Log("[config] post procedures");
 
             #region [    Apply Setup Configuration    ]
-            SetupConfiguration.Set();
+            new Do().ParametersChangesPost();
             ConsoleLogger.Log("machine configured (apply setup.conf)");
-            #endregion
-
-            #region [    Services    ]
-            //todo move services + modules + osparameters
-            //HostConfiguration.ApplyHostServices();
-            ConsoleLogger.Log("services ready");
             #endregion
 
             #region [    Ssh    ]

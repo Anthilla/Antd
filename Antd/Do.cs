@@ -14,7 +14,9 @@ namespace Antd {
 
         private readonly Host2Configuration _host2Configuration = new Host2Configuration();
         private readonly Network2Configuration _network2Configuration = new Network2Configuration();
+        private readonly HostParametersConfiguration _hostParametersConfiguration = new HostParametersConfiguration();
         private readonly CommandLauncher _commandLauncher = new CommandLauncher();
+        private readonly Bash _bash = new Bash();
 
         private readonly Host2Model Host;
         private readonly DnsConfiguration Dns;
@@ -78,8 +80,10 @@ namespace Antd {
         /// </summary>
         public void AllChanges() {
             ConsoleLogger.Log("[setup] apply configured host vars");
+            ParametersChangesPre();
             NetworkChanges();
             HostChanges();
+            ParametersChangesPost();
         }
 
         public void HostChanges() {
@@ -104,6 +108,25 @@ namespace Antd {
 
         public void NetworkChanges() {
             ApplyNetworkConfiguration();
+        }
+
+        public void ParametersChanges() {
+            ParametersChangesPre();
+            ParametersChangesPost();
+        }
+
+        public void ParametersChangesPre() {
+            LaunchStart();
+            SaveOsParameters();
+            SaveModprobes();
+            RemoveModules();
+            BlacklistMudules();
+            StartService();
+            StopService();
+        }
+
+        public void ParametersChangesPost() {
+            LaunchEnd();
         }
 
         #region [    private functions    ]
@@ -568,6 +591,121 @@ namespace Antd {
             }
             catch(Exception e) {
                 Console.WriteLine(e.Message);
+            }
+        }
+        #endregion
+
+        #region [    modules    ]
+        private void SaveModprobes() {
+            var modules = _hostParametersConfiguration.Conf.Modprobes;
+            foreach(var mod in modules) {
+                _commandLauncher.Launch("modprobe", new Dictionary<string, string> { { "$package", mod } });
+            }
+        }
+
+        private void RemoveModules() {
+            var modules = string.Join(" ", _hostParametersConfiguration.Conf.Rmmod);
+            _commandLauncher.Launch("rmmod", new Dictionary<string, string> { { "$modules", modules } });
+        }
+
+        private void BlacklistMudules() {
+            if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
+            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", _hostParametersConfiguration.Conf.ModulesBlacklist);
+        }
+        #endregion
+
+        #region [    services    ]
+        private void StartService() {
+            var svcs = _hostParametersConfiguration.Conf.ServicesStart;
+            foreach(var svc in svcs) {
+                if(Systemctl.IsEnabled(svc) == false) {
+                    Systemctl.Enable(svc);
+                }
+                if(Systemctl.IsActive(svc) == false) {
+                    Systemctl.Start(svc);
+                }
+            }
+        }
+
+        private void StopService() {
+            var svcs = _hostParametersConfiguration.Conf.ServicesStop;
+            foreach(var svc in svcs) {
+                if(Systemctl.IsEnabled(svc)) {
+                    Systemctl.Disable(svc);
+                }
+                if(Systemctl.IsActive(svc)) {
+                    Systemctl.Stop(svc);
+                }
+            }
+        }
+        #endregion
+
+        #region [    os parameters    ]
+        private void SaveOsParameters() {
+            var parameters = _hostParametersConfiguration.Conf.OsParameters;
+            foreach(var par in parameters) {
+                if(!par.Contains(" ")) { continue; }
+                try {
+                    var arr = par.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    if(arr.Length != 2) { continue; }
+                    var file = arr[0];
+                    if(!File.Exists(file)) { continue; }
+                    var value = arr[1];
+                    File.WriteAllText(file, value);
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex);
+                    continue;
+                }
+            }
+        }
+        #endregion
+
+        #region [    commands    ]
+        private void LaunchStart() {
+            var controls = _hostParametersConfiguration.Conf.StartCommands;
+            foreach(var control in controls) {
+                Launch(control);
+            }
+        }
+
+        private void LaunchEnd() {
+            var controls = _hostParametersConfiguration.Conf.EndCommands;
+            foreach(var control in controls) {
+                Launch(control);
+            }
+        }
+
+        private void Launch(Control control) {
+            if(control?.FirstCommand == null) {
+                return;
+            }
+            try {
+                var firstCommand = control.FirstCommand;
+                if(string.IsNullOrEmpty(control.ControlCommand)) {
+                    ConsoleLogger.Log($"[setup.conf] {control.FirstCommand}");
+                    _bash.Execute(firstCommand, false);
+                    return;
+                }
+                var controlCommand = control.ControlCommand;
+                var controlResult = _bash.Execute(controlCommand);
+                var firstCheck = controlResult.Contains(control.Check);
+                if(firstCheck) {
+                    return;
+                }
+                _bash.Execute(firstCommand, false);
+                controlResult = _bash.Execute(controlCommand);
+                var secondCheck = controlResult.Contains(control.Check);
+                if(secondCheck) {
+                    return;
+                }
+                Launch(control);
+            }
+            catch(NullReferenceException nrex) {
+                ConsoleLogger.Warn(nrex.Message + " " + nrex.Source + " c: " + control.FirstCommand);
+            }
+            catch(Exception ex) {
+                ConsoleLogger.Warn(ex.Message + " c: " + control.FirstCommand);
             }
         }
         #endregion

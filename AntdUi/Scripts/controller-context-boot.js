@@ -3,70 +3,83 @@
 app.controller("BootCommandsController", ["$scope", "$http", "$interval", BootCommandsController]);
 
 function BootCommandsController($scope, $http, $interval) {
-    $scope.moveUp = function (cmd, index) { //-1
+    $scope.moveUp = function (cmd, index, list) { //-1
         var from = index;
         var to = index - 1;
-        var target = $scope.Commands[from];
+        var target = list[from];
         var increment = to < from ? -1 : 1;
 
         for (var k = from; k !== to; k += increment) {
-            $scope.Commands[k] = $scope.Commands[k + increment];
+            list[k] = list[k + increment];
         }
-        $scope.Commands[to] = target;
+        list[to] = target;
         $scope.refreshIndex();
     }
 
-    $scope.moveDown = function (cmd, index) { //+1
+    $scope.moveDown = function (cmd, index, list) { //+1
         var from = index;
         var to = index + 1;
-        var target = $scope.Commands[from];
+        var target = list[from];
         var increment = to < from ? -1 : 1;
 
         for (var k = from; k !== to; k += increment) {
-            $scope.Commands[k] = $scope.Commands[k + increment];
+            list[k] = list[k + increment];
         }
-        $scope.Commands[to] = target;
+        list[to] = target;
         $scope.refreshIndex();
     }
 
-    $scope.remove = function (cmd) {
-        var index = $scope.Commands.indexOf(cmd);
+    $scope.remove = function (cmd, list) {
+        var index = list.indexOf(cmd);
         if (index > -1) {
-            $scope.Commands.splice(index, 1);
+            list.splice(index, 1);
         }
-        angular.forEach($scope.Commands, function (v, i) {
+        angular.forEach(list, function (v, i) {
             v.Index = i;
         });
     }
 
-    $scope.refreshIndex = function () {
-        angular.forEach($scope.Commands, function (v, i) {
+    $scope.refreshIndex = function (list) {
+        angular.forEach(list, function (v, i) {
             v.Index = i;
         });
     }
 
-    $scope.add = function () {
-        var newIndex = $scope.Commands.length;
-        $scope.Commands.push({ Index: newIndex, FirstCommand: "", ControlCommand: "", Check: "" });
+    $scope.add = function (list) {
+        var newIndex = list.length;
+        list.push({ Index: newIndex, FirstCommand: "", ControlCommand: "", Check: "" });
     }
 
-    $scope.save = function () {
+    $scope.saveEnd = function () {
         var commands = "";
-        angular.forEach($scope.Commands, function (v) {
+        angular.forEach($scope.EndCommands, function (v) {
             commands += v.Index + "," + v.FirstCommand + ";";
         });
         var data = $.param({
             Data: commands
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/commands", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+        $http.post("/hostparam/set/endcommandslist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $scope.Commands = [];
+    $scope.saveStart = function () {
+        var commands = "";
+        angular.forEach($scope.StartCommands, function (v) {
+            commands += v.Index + "," + v.FirstCommand + ";";
+        });
+        var data = $.param({
+            Data: commands
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/hostparam/set/startcommandslist", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.StartCommands = [];
 
     $scope.Get = function () {
-        $http.get("/boot/commands").success(function (data) {
-            $scope.Commands = data.Controls;
+        $http.get("/hostparam").success(function (data) {
+            $scope.StartCommands = data.StartCommands;
+            $scope.EndCommands = data.EndCommands;
         });
     }
     $scope.Get();
