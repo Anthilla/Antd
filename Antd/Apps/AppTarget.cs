@@ -60,7 +60,6 @@ namespace Antd.Apps {
             var timerText = new List<string> {
                 "[Unit]",
                 "Description=Description=Anthilla OS - Antd Managed Application Target",
-                "ConditionDirectoryNotEmpty=/etc/systemd/system/app.target.wants/",
                 "After=etc-systemd-system-app.target.wants.mount",
                 "Before=app.target",
                 "Requires=etc-systemd-system-app.target.wants.mount",
@@ -86,9 +85,6 @@ namespace Antd.Apps {
                 "Description=Description=Anthilla OS - Antd Managed Application Target Units Binding",
                 "After=mnt-cdrom.mount",
                 "Before=app.service app.target",
-                "ConditionPathExists=/etc/systemd/system/app.target.wants",
-                "ConditionPathExists=/mnt/cdrom/Units/app.target.wants",
-                "ConditionPathIsDirectory=/etc/systemd/system/app.target.wants",
                 "",
                 "[Mount]",
                 "What=/mnt/cdrom/Units/app.target.wants",

@@ -39,8 +39,6 @@ namespace antdsh {
             var lines = new List<string> {
                 "[Unit]",
                 "Description=ExtUnit, Application: TT Antdsh 01 remount service",
-                "ConditionFileNotEmpty=/mnt/cdrom/Units/tt.target.wants/tt-antdsh-02-umount.service",
-                "ConditionFileNotEmpty=/mnt/cdrom/Units/tt.target.wants/tt-antdsh-03-mount.service",
                 "",
                 "[Service]",
                 "ExecStart=/usr/bin/systemctl restart tt-antdsh-02-umount.service",
@@ -74,7 +72,6 @@ namespace antdsh {
             var lines = new List<string> {
                 "[Unit]",
                 "Description=ExtUnit, Application: TT Antdsh 02 umount service",
-                "ConditionDirectoryNotEmpty=/framework/antdsh",
                 "",
                 "[Service]",
                 "ExecStart=/bin/umount /framework/antdsh",
@@ -92,7 +89,6 @@ namespace antdsh {
             var lines = new List<string> {
                 "[Unit]",
                 "Description=ExtUnit, Application: TT Antdsh 03 mount service",
-                "ConditionDirectoryEmpty=/framework/antdsh",
                 "",
                 "[Service]",
                 "ExecStart=/bin/mount /mnt/cdrom/Apps/Anthilla_antdsh/active-version /framework/antdsh",

@@ -72,7 +72,6 @@ namespace Antd.SystemdTimer {
             var timerText = new List<string> {
                 "[Unit]",
                 "Description=Description=Anthilla OS - Triggers and Timers Target",
-                "ConditionDirectoryNotEmpty=/etc/systemd/system/tt.target.wants/",
                 "After=etc-systemd-system-tt.target.wants.mount",
                 "Before=tt.target",
                 "Requires=etc-systemd-system-tt.target.wants.mount",
@@ -98,9 +97,6 @@ namespace Antd.SystemdTimer {
                 "Description=Description=Anthilla OS - Triggers and Timers Target Units Binding",
                 "After=mnt-cdrom.mount",
                 "Before=tt.service tt.target",
-                "ConditionPathExists=/etc/systemd/system/tt.target.wants",
-                "ConditionPathExists=/mnt/cdrom/Units/tt.target.wants",
-                "ConditionPathIsDirectory=/etc/systemd/system/tt.target.wants",
                 "",
                 "[Mount]",
                 "What=/mnt/cdrom/Units/tt.target.wants",
