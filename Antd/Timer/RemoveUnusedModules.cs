@@ -10,7 +10,6 @@ using System.Threading;
 namespace Antd.Timer {
     public class RemoveUnusedModules {
         public System.Threading.Timer Timer { get; private set; }
-        private static readonly MapToModel Mapper = new MapToModel();
 
         public void Start(TimeSpan alertTime) {
             Timer = new System.Threading.Timer(x => {
@@ -23,13 +22,7 @@ namespace Antd.Timer {
         }
 
         private static void Action() {
-            var lsmod = Mapper.FromCommand<ModuleModel>("lsmod").ToList().Skip(1).ToList();
-            if(!lsmod.Any())
-                return;
-            var launcher = new CommandLauncher();
-            launcher.Launch("rmmod", new Dictionary<string, string> { { "$modules", lsmod.Select(_ => _.Name).JoinToString(" ") } });
-            var hostConfiguration = new HostConfiguration();
-            hostConfiguration.ApplyHostModprobes();
+            new Do().ParametersChangesPost();
         }
     }
 }

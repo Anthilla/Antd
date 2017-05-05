@@ -67,8 +67,7 @@ namespace antdlib.config {
             var settings = _settings.Values.Where(_ => !string.IsNullOrEmpty(_.Label)).Select(
                 _ => $"{_settings.SubnetLabel}-{_.Label} {_settings.Subnet}{_.Number}.0"
             );
-            var hostConfiguration = new HostConfiguration();
-            hostConfiguration.SetNsNetworks(settings.ToArray());
+            //var hostConfiguration = new HostParametersConfiguration();
         }
     }
 }

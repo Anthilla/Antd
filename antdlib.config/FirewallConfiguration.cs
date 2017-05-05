@@ -5,45 +5,39 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class FirewallConfiguration {
+    public static class FirewallConfiguration {
 
-        private readonly FirewallConfigurationModel _serviceModel;
-
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/firewall.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/firewall.conf.bck";
+        private static FirewallConfigurationModel ServiceModel => Load();
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/firewall.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/firewall.conf.bck";
         private const string MainFilePath = "/etc/nftables.conf";
 
-        public FirewallConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
-            if(!File.Exists(_cfgFile)) {
-                _serviceModel = new FirewallConfigurationModel();
+        private static FirewallConfigurationModel Load() {
+            if(!File.Exists(CfgFile)) {
+                return new FirewallConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<FirewallConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new FirewallConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(CfgFile);
+                var obj = JsonConvert.DeserializeObject<FirewallConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new FirewallConfigurationModel();
             }
         }
 
-        public void Save(FirewallConfigurationModel model) {
+        public static void Save(FirewallConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(_cfgFile, text);
+            File.WriteAllText(CfgFile, text);
             ConsoleLogger.Log("[firewall] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             #region [    nftables.conf generation    ]
             var lines = new List<string> {
@@ -53,7 +47,7 @@ namespace antdlib.config {
                 "flush ruleset;",
                 "flush ruleset;"
             };
-            var table = _serviceModel.Ipv4FilterTable;
+            var table = ServiceModel.Ipv4FilterTable;
             lines.Add($"table {table.Type} {table.Name} {{");
             foreach(var set in table.Sets) {
                 lines.Add($"    set {set.Name} {{");
@@ -70,7 +64,7 @@ namespace antdlib.config {
 
             }
             lines.Add("}");
-            table = _serviceModel.Ipv4NatTable;
+            table = ServiceModel.Ipv4NatTable;
             lines.Add($"table {table.Type} {table.Name} {{");
             foreach(var set in table.Sets) {
                 lines.Add($"    set {set.Name} {{");
@@ -87,7 +81,7 @@ namespace antdlib.config {
 
             }
             lines.Add("}");
-            table = _serviceModel.Ipv6FilterTable;
+            table = ServiceModel.Ipv6FilterTable;
             lines.Add($"table {table.Type} {table.Name} {{");
             foreach(var set in table.Sets) {
                 lines.Add($"    set {set.Name} {{");
@@ -104,7 +98,7 @@ namespace antdlib.config {
 
             }
             lines.Add("}");
-            table = _serviceModel.Ipv6NatTable;
+            table = ServiceModel.Ipv6NatTable;
             lines.Add($"table {table.Type} {table.Name} {{");
             foreach(var set in table.Sets) {
                 lines.Add($"    set {set.Name} {{");
@@ -126,34 +120,34 @@ namespace antdlib.config {
             Start();
         }
 
-        public bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+        public static bool IsActive() {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
-        public FirewallConfigurationModel Get() {
-            return _serviceModel;
+        public static FirewallConfigurationModel Get() {
+            return ServiceModel;
         }
 
-        public void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+        public static void Enable() {
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[firewall] enabled");
         }
 
-        public void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+        public static void Disable() {
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[firewall] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             ConsoleLogger.Log("[firewall] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(!IsActive())
                 return;
             var launcher = new CommandLauncher();

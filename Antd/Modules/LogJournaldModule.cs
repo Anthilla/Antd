@@ -37,44 +37,38 @@ namespace Antd.Modules {
 
         public LogJournaldModule() {
             Get["/journald"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                var journaldIsActive = journaldConfiguration.IsActive();
+                var journaldIsActive = JournaldConfiguration.IsActive();
                 var model = new PageJournaldModel {
                     JournaldIsActive = journaldIsActive,
-                    JournaldOptions = journaldConfiguration.Get() ?? new JournaldConfigurationModel()
+                    JournaldOptions = JournaldConfiguration.Get() ?? new JournaldConfigurationModel()
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/journald/set"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Set();
+                JournaldConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/journald/restart"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Start();
+                JournaldConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/journald/stop"] = x => {
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Stop();
+                JournaldConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/journald/enable"] = x => {
-                var dhcpdConfiguration = new JournaldConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                JournaldConfiguration.Enable();
+                JournaldConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/journald/disable"] = x => {
-                var dhcpdConfiguration = new JournaldConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                JournaldConfiguration.Disable();
+                JournaldConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -131,8 +125,7 @@ namespace Antd.Modules {
                     MaxLevelConsole = maxLevelConsole,
                     MaxLevelWall = maxLevelWall,
                 };
-                var journaldConfiguration = new JournaldConfiguration();
-                journaldConfiguration.Save(model);
+                JournaldConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
         }

@@ -295,36 +295,30 @@ namespace antdsh {
         }
 
         private static void InstallDownloadedFile(string latestTmpFilePath, string newVersionPath, string activeVersionPath) {
-            if(Parameter.IsUnix) {
-                File.Copy(latestTmpFilePath, newVersionPath, true);
-                File.Delete(activeVersionPath);
-                Bash.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
-                Bash.Execute($"chown root:wheel {newVersionPath}");
-                Bash.Execute($"chmod 775 {newVersionPath}");
-            }
+            File.Copy(latestTmpFilePath, newVersionPath, true);
+            File.Delete(activeVersionPath);
+            Bash.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
+            Bash.Execute($"chown root:wheel {newVersionPath}");
+            Bash.Execute($"chmod 775 {newVersionPath}");
         }
 
         private static readonly Target Target = new Target();
         private static readonly Units Units = new Units();
 
         private static void RestartAntdUi() {
-            if(Parameter.IsUnix) {
-                Bash.Execute("systemctl daemon-reload");
-                Bash.Execute("systemctl stop app-antdui-03-launcher.service");
-                Bash.Execute("systemctl stop framework-antdui.mount");
-                Bash.Execute("systemctl restart app-antdui-02-mount.service");
-                Bash.Execute("systemctl restart app-antdui-03-launcher.service");
-            }
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl stop app-antdui-03-launcher.service");
+            Bash.Execute("systemctl stop framework-antdui.mount");
+            Bash.Execute("systemctl restart app-antdui-02-mount.service");
+            Bash.Execute("systemctl restart app-antdui-03-launcher.service");
         }
 
         private static void RestartAntd() {
-            if(Parameter.IsUnix) {
-                Bash.Execute("systemctl daemon-reload");
-                Bash.Execute("systemctl stop app-antd-03-launcher.service");
-                Bash.Execute("systemctl stop framework-antd.mount");
-                Bash.Execute("systemctl restart app-antd-02-mount.service");
-                Bash.Execute("systemctl restart app-antd-03-launcher.service");
-            }
+            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("systemctl stop app-antd-03-launcher.service");
+            Bash.Execute("systemctl stop framework-antd.mount");
+            Bash.Execute("systemctl restart app-antd-02-mount.service");
+            Bash.Execute("systemctl restart app-antd-03-launcher.service");
         }
 
         private static void RestartAntdsh() {

@@ -11,65 +11,40 @@ namespace antdlib.config {
     /// <summary>
     /// Deprecated. Use Network2Configuration instead.
     /// </summary>
-    public class NetworkConfiguration {
+    public static class NetworkConfiguration {
 
-        private NetworkConfigurationModel _serviceModel;
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/network.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
-        private readonly CommandLauncher _launcher = new CommandLauncher();
+        private static NetworkConfigurationModel _serviceModel => Load();
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/network.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
+        private static readonly CommandLauncher _launcher = new CommandLauncher();
 
-        public NetworkConfiguration() {
-            _networkInterfaces = GetAllNames();
-            NetworkInterfaces = GetAllNames();
-            InterfacePhysical = GetPhysicalInterfaces();
-            InterfaceVirtual = GetVirtualInterfaces();
-            InterfaceBond = GetBondInterfaces();
-            InterfaceBridge = GetBridgeInterfaces();
-            InterfacePhysicalModel = GetPhysicalInterfacesModel();
-            InterfaceVirtualModel = GetVirtualInterfacesModel();
-            InterfaceBondModel = GetBondInterfacesModel();
-            InterfaceBridgeModel = GetBridgeInterfacesModel();
-            Directory.CreateDirectory(Parameter.AntdCfgServices);
-            if(!File.Exists(_cfgFile)) {
-                _serviceModel = new NetworkConfigurationModel();
-            }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<NetworkConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new NetworkConfigurationModel();
-                }
-            }
-        }
-
-        private readonly IEnumerable<string> _networkInterfaces;
-        public IEnumerable<string> NetworkInterfaces;
-        public IEnumerable<string> InterfacePhysical;
-        public IEnumerable<string> InterfaceVirtual;
-        public IEnumerable<string> InterfaceBond;
-        public IEnumerable<string> InterfaceBridge;
-
-        public IEnumerable<NetworkInterfaceConfigurationModel> InterfacePhysicalModel;
-        public IEnumerable<NetworkInterfaceConfigurationModel> InterfaceVirtualModel;
-        public IEnumerable<NetworkInterfaceConfigurationModel> InterfaceBondModel;
-        public IEnumerable<NetworkInterfaceConfigurationModel> InterfaceBridgeModel;
-
-        private NetworkConfigurationModel LoadModel() {
+        public static NetworkConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
                 return new NetworkConfigurationModel();
             }
             try {
-                return JsonConvert.DeserializeObject<NetworkConfigurationModel>(File.ReadAllText(_cfgFile));
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<NetworkConfigurationModel>(text);
+                return obj;
             }
             catch(Exception) {
                 return new NetworkConfigurationModel();
             }
         }
 
-        public void Save(NetworkConfigurationModel model) {
+        private static IEnumerable<string> _networkInterfaces => GetAllNames();
+        public static IEnumerable<string> NetworkInterfaces => GetAllNames();
+        public static IEnumerable<string> InterfacePhysical => GetPhysicalInterfaces();
+        public static IEnumerable<string> InterfaceVirtual => GetVirtualInterfaces();
+        public static IEnumerable<string> InterfaceBond => GetBondInterfaces();
+        public static IEnumerable<string> InterfaceBridge => GetBridgeInterfaces();
+
+        public static IEnumerable<NetworkInterfaceConfigurationModel> InterfacePhysicalModel => GetPhysicalInterfacesModel();
+        public static IEnumerable<NetworkInterfaceConfigurationModel> InterfaceVirtualModel => GetVirtualInterfacesModel();
+        public static IEnumerable<NetworkInterfaceConfigurationModel> InterfaceBondModel => GetBondInterfacesModel();
+        public static IEnumerable<NetworkInterfaceConfigurationModel> InterfaceBridgeModel => GetBridgeInterfacesModel();
+
+        public static void Save(NetworkConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -78,11 +53,11 @@ namespace antdlib.config {
             ConsoleLogger.Log("[network] configuration saved");
         }
 
-        public NetworkConfigurationModel Get() {
+        public static NetworkConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Start() {
+        public static void Start() {
             if(HasConfiguration()) {
                 ConsoleLogger.Log("[network] applying saved settings");
                 ApplyInterfaceSetting();
@@ -100,7 +75,8 @@ namespace antdlib.config {
                 ConsoleLogger.Log($"[network] {netIf} is configured");
                 return;
             }
-            var tryGateway = _launcher.Launch("ip4-show-routes", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
+            var tryGateway =
+                _launcher.Launch("ip4-show-routes", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryGateway.Any()) {
                 ConsoleLogger.Log("[network] no gateway available");
                 StartFallback();
@@ -135,7 +111,7 @@ namespace antdlib.config {
             ConsoleLogger.Log($"[network] available dns at {dnsAddress}");
         }
 
-        public void StartFallback() {
+        public static void StartFallback() {
             ConsoleLogger.Log("[network] setting up a default configuration");
             const string bridge = "br0";
             if(_networkInterfaces.All(_ => _ != bridge)) {
@@ -153,8 +129,10 @@ namespace antdlib.config {
             ConsoleLogger.Log("[network] interfaces up");
             const string address = "192.168.1.1";
             const string range = "24";
-            _launcher.Launch("ip4-add-addr", new Dictionary<string, string> { { "$address", address }, { "$range", range }, { "$net_if", bridge } });
-            var tryBridgeAddress = _launcher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
+            _launcher.Launch("ip4-add-addr",
+                new Dictionary<string, string> { { "$address", address }, { "$range", range }, { "$net_if", bridge } });
+            var tryBridgeAddress =
+                _launcher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
             if(tryBridgeAddress.FirstOrDefault(_ => _.Contains("inet")) != null) {
                 var bridgeAddress = tryBridgeAddress.Print(2, " ");
                 ConsoleLogger.Log($"[network] {bridge} is now reachable at {bridgeAddress}");
@@ -163,40 +141,53 @@ namespace antdlib.config {
             ConsoleLogger.Log($"[network] {bridge} is unreachable");
         }
 
-        public void ApplyDefaultInterfaceSetting() {
-            _serviceModel = LoadModel();
+        public static void ApplyDefaultInterfaceSetting() {
             var interfaces = new List<string>();
             interfaces.AddRange(InterfacePhysical);
             interfaces.AddRange(InterfaceBridge);
             var launcher = new CommandLauncher();
             foreach(var netIf in interfaces) {
-                launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", _serviceModel.DefaultMtu } });
-                launcher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", netIf }, { "$txqueuelen", _serviceModel.DefaultTxqueuelen } });
+                launcher.Launch("ip4-set-mtu",
+                    new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", _serviceModel.DefaultMtu } });
+                launcher.Launch("ip4-set-txqueuelen",
+                    new Dictionary<string, string>
+                    {
+                        {"$net_if", netIf},
+                        {"$txqueuelen", _serviceModel.DefaultTxqueuelen}
+                    });
             }
         }
 
-        public bool HasConfiguration() {
-            _serviceModel = LoadModel();
+        public static bool HasConfiguration() {
             var netif = _serviceModel.Interfaces;
             return netif.Any(_ => _.Status == NetworkInterfaceStatus.Up);
         }
 
         #region [     Resolv(D)    ]
-        public void SetupResolv() {
+
+        public static void SetupResolv() {
             if(!File.Exists("/etc/resolv.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/resolv.conf"))) {
-                var lines = new List<string> {
+                var lines = new List<string>
+                {
                     "nameserver 8.8.8.8",
                     "search antd.local",
                     "domain antd.local"
                 };
                 File.WriteAllLines("/etc/resolv.conf", lines);
             }
-            _launcher.Launch("link-s", new Dictionary<string, string> { { "$link", "/run/systemd/resolve/resolv.conf" }, { "$file", "/etc/resolv.conf" } });
+            _launcher.Launch("link-s",
+                new Dictionary<string, string>
+                {
+                    {"$link", "/run/systemd/resolve/resolv.conf"},
+                    {"$file", "/etc/resolv.conf"}
+                });
         }
 
-        public void SetupResolvD() {
-            if(!File.Exists("/etc/systemd/resolved.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/systemd/resolved.conf"))) {
-                var lines = new List<string> {
+        public static void SetupResolvD() {
+            if(!File.Exists("/etc/systemd/resolved.conf") ||
+                string.IsNullOrEmpty(File.ReadAllText("/etc/systemd/resolved.conf"))) {
+                var lines = new List<string>
+                {
                     "[Resolve]",
                     "DNS=10.1.19.1 10.99.19.1",
                     "FallbackDNS=8.8.8.8 8.8.4.4 2001:4860:4860::8888 2001:4860:4860::8844",
@@ -208,19 +199,23 @@ namespace antdlib.config {
             _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
             _launcher.Launch("systemctl-daemonreload");
         }
+
         #endregion
 
         #region [    Interface Detection and Mapping  ]
+
         private static IEnumerable<string> GetAllNames() {
-            if(!Parameter.IsUnix) {
+            try {
+                var bash = new Bash();
+                var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+                return list.Select(f => f.Print(9, " ")).ToList();
+            }
+            catch(Exception) {
                 return new List<string>();
             }
-            var bash = new Bash();
-            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
-            return list.Select(f => f.Print(9, " ")).ToList();
         }
 
-        private IEnumerable<string> GetPhysicalInterfaces() {
+        private static IEnumerable<string> GetPhysicalInterfaces() {
             var ifList = new List<string>();
             var bash = new Bash();
             var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
@@ -236,8 +231,7 @@ namespace antdlib.config {
             return ifList;
         }
 
-        private IEnumerable<NetworkInterfaceConfigurationModel> GetPhysicalInterfacesModel() {
-            _serviceModel = LoadModel();
+        private static IEnumerable<NetworkInterfaceConfigurationModel> GetPhysicalInterfacesModel() {
             var netifs = _serviceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfacePhysical) {
@@ -253,7 +247,7 @@ namespace antdlib.config {
             return list;
         }
 
-        private IEnumerable<string> GetVirtualInterfaces() {
+        private static IEnumerable<string> GetVirtualInterfaces() {
             var ifList = new List<string>();
             var bash = new Bash();
             var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
@@ -269,8 +263,7 @@ namespace antdlib.config {
             return ifList;
         }
 
-        private IEnumerable<NetworkInterfaceConfigurationModel> GetVirtualInterfacesModel() {
-            _serviceModel = LoadModel();
+        private static IEnumerable<NetworkInterfaceConfigurationModel> GetVirtualInterfacesModel() {
             var netifs = _serviceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfaceVirtual) {
@@ -286,7 +279,7 @@ namespace antdlib.config {
             return list;
         }
 
-        private IEnumerable<string> GetBondInterfaces() {
+        private static IEnumerable<string> GetBondInterfaces() {
             var ifList = new List<string>();
             var bash = new Bash();
             var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
@@ -302,8 +295,7 @@ namespace antdlib.config {
             return ifList;
         }
 
-        private IEnumerable<NetworkInterfaceConfigurationModel> GetBondInterfacesModel() {
-            _serviceModel = LoadModel();
+        private static IEnumerable<NetworkInterfaceConfigurationModel> GetBondInterfacesModel() {
             var netifs = _serviceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfaceBond) {
@@ -319,7 +311,7 @@ namespace antdlib.config {
             return list;
         }
 
-        private IEnumerable<string> GetBridgeInterfaces() {
+        private static IEnumerable<string> GetBridgeInterfaces() {
             var ifList = new List<string>();
             var bash = new Bash();
             var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
@@ -335,8 +327,7 @@ namespace antdlib.config {
             return ifList;
         }
 
-        private IEnumerable<NetworkInterfaceConfigurationModel> GetBridgeInterfacesModel() {
-            _serviceModel = LoadModel();
+        private static IEnumerable<NetworkInterfaceConfigurationModel> GetBridgeInterfacesModel() {
             var netifs = _serviceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfaceBridge) {
@@ -354,8 +345,7 @@ namespace antdlib.config {
         #endregion
 
         #region [    Network Interface    ]
-        public void AddInterfaceSetting(NetworkInterfaceConfigurationModel model) {
-            _serviceModel = LoadModel();
+        public static void AddInterfaceSetting(NetworkInterfaceConfigurationModel model) {
             var netif = _serviceModel.Interfaces;
             var check = netif.Where(_ => _.Interface == model.Interface).ToList();
             if(check.Any()) {
@@ -366,8 +356,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void RemoveInterfaceSetting(string guid) {
-            _serviceModel = LoadModel();
+        public static void RemoveInterfaceSetting(string guid) {
             var netif = _serviceModel.Interfaces;
             var model = netif.First(_ => _.Guid == guid);
             if(model == null) {
@@ -378,15 +367,14 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void ApplyInterfaceSetting() {
-            _serviceModel = LoadModel();
+        public static void ApplyInterfaceSetting() {
             var netifs = _serviceModel.Interfaces;
             foreach(var netif in netifs) {
                 ApplyInterfaceSetting(netif);
             }
         }
 
-        public void ApplyInterfaceSetting(NetworkInterfaceConfigurationModel model) {
+        public static void ApplyInterfaceSetting(NetworkInterfaceConfigurationModel model) {
             var launcher = new CommandLauncher();
             var netif = model.Interface;
 

@@ -4,90 +4,86 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
     public class AppsConfiguration {
 
-        private readonly AppsConfigurationModel _serviceModel;
+        private static AppsConfigurationModel ServiceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/apps.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/apps.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/apps.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/apps.conf.bck";
 
-        public AppsConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
-            if(!File.Exists(_cfgFile)) {
-                _serviceModel = new AppsConfigurationModel();
+
+        private static AppsConfigurationModel Load() {
+            if(!File.Exists(CfgFile)) {
+                return new AppsConfigurationModel();
 
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<AppsConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new AppsConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(CfgFile);
+                var obj = JsonConvert.DeserializeObject<AppsConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new AppsConfigurationModel();
             }
         }
 
-        public void Save(AppsConfigurationModel model) {
+        public static void Save(AppsConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(_cfgFile, text);
+            File.WriteAllText(CfgFile, text);
             ConsoleLogger.Log("[apps] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
         }
 
-        public bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+        public static bool IsActive() {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
-        public AppsConfigurationModel Get() {
-            return _serviceModel;
+        public static AppsConfigurationModel Get() {
+            return ServiceModel;
         }
 
-        public void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+        public static void Enable() {
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[apps] enabled");
         }
 
-        public void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+        public static void Disable() {
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[apps] disabled");
         }
 
-        public void AddApp(ApplicationModel model) {
-            var zones = _serviceModel.Apps;
+        public static void AddApp(ApplicationModel model) {
+            var zones = ServiceModel.Apps;
             if(zones.Any(_ => _.Name == model.Name)) {
                 return;
             }
             zones.Add(model);
-            _serviceModel.Apps = zones;
-            Save(_serviceModel);
+            ServiceModel.Apps = zones;
+            Save(ServiceModel);
         }
 
-        public void RemoveApp(string guid) {
-            var zones = _serviceModel.Apps;
+        public static void RemoveApp(string guid) {
+            var zones = ServiceModel.Apps;
             var model = zones.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             zones.Remove(model);
-            _serviceModel.Apps = zones;
-            Save(_serviceModel);
+            ServiceModel.Apps = zones;
+            Save(ServiceModel);
         }
     }
 }

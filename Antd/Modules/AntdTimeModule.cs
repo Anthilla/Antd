@@ -45,7 +45,6 @@ namespace Antd.Modules {
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
                 var bash = new Bash();
                 var launcher = new CommandLauncher();
-                var hostConfiguration = new HostConfiguration();
                 var timezones = bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
                 var timedatectl = launcher.Launch("timedatectl").ToList();
                 var ntpd = launcher.Launch("cat-etc-ntp").ToArray();
@@ -58,7 +57,7 @@ namespace Antd.Modules {
                     Nettimeon = timedatectl.First(_ => _.Contains("Network time on:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Ntpsync = timedatectl.First(_ => _.Contains("NTP synchronized:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Rtcintz = timedatectl.First(_ => _.Contains("RTC in local TZ:")).Split(new[] { ":" }, 2, ssoree)[1],
-                    NtpServer = hostConfiguration.Host.NtpdateServer.StoredValues["$server"],
+                    NtpServer = HostConfiguration.Host.NtpdateServer.StoredValues["$server"],
                     Ntpd = ntpd.JoinToString("<br />"),
                     NtpdEdit = ntpd.JoinToString(Environment.NewLine)
                 };
@@ -67,23 +66,20 @@ namespace Antd.Modules {
 
             Post["/host/timezone"] = x => {
                 string timezone = Request.Form.Timezone;
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetTimezone(timezone);
-                hostconfiguration.ApplyTimezone();
+                HostConfiguration.SetTimezone(timezone);
+                HostConfiguration.ApplyTimezone();
                 return HttpStatusCode.OK;
             };
 
             Post["/host/synctime"] = x => {
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SyncClock();
+                HostConfiguration.SyncClock();
                 return HttpStatusCode.OK;
             };
 
             Post["/host/ntpdate"] = x => {
                 string ntpdate = Request.Form.Ntpdate;
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetNtpdate(ntpdate);
-                hostconfiguration.ApplyNtpdate();
+                HostConfiguration.SetNtpdate(ntpdate);
+                HostConfiguration.ApplyNtpdate();
                 return HttpStatusCode.OK;
             };
 

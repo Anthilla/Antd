@@ -38,7 +38,7 @@ using System.Linq;
 namespace Antd.Modules {
     public class AntdHost2Module : NancyModule {
 
-        private readonly Host2Configuration _host2Configuration = new Host2Configuration();
+        //private readonly Host2Configuration _host2Configuration = new Host2Configuration();
         private readonly CommandLauncher _commandLauncher = new CommandLauncher();
 
         public AntdHost2Module() {
@@ -47,7 +47,7 @@ namespace Antd.Modules {
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
                 var hostnamectl = _commandLauncher.Launch("hostnamectl").ToList();
                 var model = new PageHost2Model {
-                    Host = _host2Configuration.Host,
+                    Host = Host2Configuration.Host,
                     IconName = hostnamectl.FirstOrDefault(_ => _.Contains("Icon name:"))?.Split(new[] { ":" }, 2, ssoree)[1],
                     MachineId = hostnamectl.FirstOrDefault(_ => _.Contains("Machine ID:"))?.Split(new[] { ":" }, 2, ssoree)[1],
                     BootId = hostnamectl.FirstOrDefault(_ => _.Contains("Boot ID:"))?.Split(new[] { ":" }, 2, ssoree)[1],
@@ -76,7 +76,7 @@ namespace Antd.Modules {
                 string timezone = Request.Form.Timezone;
                 string ntpdateServer = Request.Form.NtpdateServer;
                 string cloud = Request.Form.Cloud;
-                var old = _host2Configuration.Host;
+                var old = Host2Configuration.Host;
                 var vars = new Host2Model {
                     HostName = hostName ?? old.HostName,
                     HostChassis = hostChassis ?? old.HostChassis,
@@ -96,7 +96,7 @@ namespace Antd.Modules {
                     MachineUid = Machine.MachineId.Get,
                     Cloud = cloud ?? old.Cloud
                 };
-                _host2Configuration.Export(vars);
+                Host2Configuration.Export(vars);
                 new Do().HostChanges();
                 return HttpStatusCode.OK;
             };

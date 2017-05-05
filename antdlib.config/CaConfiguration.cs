@@ -6,35 +6,29 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
     public class CaConfiguration {
 
-        private readonly CaConfigurationModel _serviceModel;
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/ca.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/ca.conf.bck";
+        private static CaConfigurationModel _serviceModel => Load();
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/ca.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/ca.conf.bck";
 
-        public CaConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
-            IoDir.CreateDirectory(_caMainDirectory);
+        private static CaConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new CaConfigurationModel();
+                return new CaConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<CaConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new CaConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<CaConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new CaConfigurationModel();
             }
         }
 
-        public void Save(CaConfigurationModel model) {
+        public static void Save(CaConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -43,7 +37,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[ca] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             PrepareDirectory();
             PrepareConfigurationFile();
             PrepareRootKey();
@@ -59,39 +53,39 @@ namespace antdlib.config {
             Enable();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public CaConfigurationModel Get() {
+        public static CaConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[ca] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[ca] disabled");
         }
 
-        private readonly string _caMainDirectory = $"{Parameter.AntdCfg}/ca";
-        private readonly string[] _caMainSubdirectories = {
+        private static readonly string _caMainDirectory = $"{Parameter.AntdCfg}/ca";
+        private static readonly string[] _caMainSubdirectories = {
             "certs",
             "crl",
             "newcerts",
             "private"
         };
 
-        private readonly string _caIntermediateDirectory = $"{Parameter.AntdCfg}/ca/intermediate";
-        private readonly string[] _caIntermediateSubdirectories = {
+        private static readonly string _caIntermediateDirectory = $"{Parameter.AntdCfg}/ca/intermediate";
+        private static readonly string[] _caIntermediateSubdirectories = {
             "certs",
             "crl",
             "csr",
@@ -100,15 +94,16 @@ namespace antdlib.config {
         };
 
         #region [    ca - Root    ]
-        public void PrepareDirectory() {
+        public static void PrepareDirectory() {
             //mkdir /data/ca => /cfg/antd/ca
             //cd /data/ca
             //mkdir certs crl newcerts private
             //chmod 700 private
             //touch index.txt
             //echo 1000 > serial
+            Directory.CreateDirectory(_caMainDirectory);
             foreach(var dir in _caMainSubdirectories) {
-                IoDir.CreateDirectory($"{_caMainDirectory}/{dir}");
+                Directory.CreateDirectory($"{_caMainDirectory}/{dir}");
             }
             var bash = new Bash();
             bash.Execute($"chmod 700 ${_caMainDirectory}/private");
@@ -120,14 +115,14 @@ namespace antdlib.config {
             }
         }
 
-        public void PrepareConfigurationFile() {
+        public static void PrepareConfigurationFile() {
             // /data/ca/openssl.cnf
             if(!File.Exists($"{_caMainDirectory}/openssl.cnf")) {
                 File.WriteAllLines($"{_caMainDirectory}/openssl.cnf", CaConfigurationFiles.RootCaOpensslCnf(_caMainDirectory));
             }
         }
 
-        public void PrepareRootKey() {
+        public static void PrepareRootKey() {
             //#Create the root key
             //cd /data/ca
             //openssl genrsa -aes256 -out private/ca.key.pem -passout pass:$passout 4096
@@ -142,7 +137,7 @@ namespace antdlib.config {
             }
         }
 
-        public void PrepareRootCertificate() {
+        public static void PrepareRootCertificate() {
             //cd /data/ca
             //openssl req -config openssl.cnf -key private/ca.key.pem -new -x509 -days 7300 -sha256 -extensions v3_ca -out certs/ca.cert.pem -passin pass:Anthilla -subj "/C=IT/ST=Milano/L=casamia/O=anthilla/OU=anthilla/CN=root/emailAddress=damiano.zanardi@anthilla.com"
             //chmod 444 certs/ca.cert.pem
@@ -156,7 +151,7 @@ namespace antdlib.config {
             }
         }
 
-        public bool VerifyRootCertificate() {
+        public static bool VerifyRootCertificate() {
             //openssl x509 -noout -text -in certs/ca.cert.pem
             var bash = new Bash();
             var file = $"{_caMainDirectory}/certs/ca.cert.pem";
@@ -166,10 +161,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    ca - Intermediate    ]
-        public void PrepareIntermediateDirectory() {
-            IoDir.CreateDirectory(_caIntermediateDirectory);
+        public static void PrepareIntermediateDirectory() {
+            Directory.CreateDirectory(_caIntermediateDirectory);
             foreach(var dir in _caIntermediateSubdirectories) {
-                IoDir.CreateDirectory($"{_caIntermediateDirectory}/{dir}");
+                Directory.CreateDirectory($"{_caIntermediateDirectory}/{dir}");
             }
             var bash = new Bash();
             bash.Execute($"chmod 700 ${_caIntermediateDirectory}/private");
@@ -199,14 +194,14 @@ namespace antdlib.config {
             return result[0].ToString();
         }
 
-        public void PrepareIntermediateConfigurationFile() {
+        public static void PrepareIntermediateConfigurationFile() {
             if(!File.Exists($"{_caIntermediateDirectory}/openssl.cnf")) {
                 var applicationSetting = new AppConfiguration().Get();
                 File.WriteAllLines($"{_caIntermediateDirectory}/openssl.cnf", CaConfigurationFiles.IntermediateCaOpensslCnf(_caIntermediateDirectory, $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl"));
             }
         }
 
-        public void PrepareIntermediateKey() {
+        public static void PrepareIntermediateKey() {
             var file = $"{_caIntermediateDirectory}/private/intermediate.key.pem";
             var bash = new Bash();
             if(!File.Exists(file)) {
@@ -215,7 +210,7 @@ namespace antdlib.config {
             }
         }
 
-        public void PrepareIntermediateCertificate() {
+        public static void PrepareIntermediateCertificate() {
             var key = $"{_caIntermediateDirectory}/private/intermediate.key.pem";
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var file = $"{_caIntermediateDirectory}/csr/intermediate.csr.pem";
@@ -231,7 +226,7 @@ namespace antdlib.config {
             }
         }
 
-        public bool VerifyIntermediateCertificate() {
+        public static bool VerifyIntermediateCertificate() {
             var bash = new Bash();
             var file = $"{_caIntermediateDirectory}/certs/intermediate.cert.pem";
             bash.Execute($"openssl x509 -noout -text -in {file}");
@@ -240,7 +235,7 @@ namespace antdlib.config {
             return true;
         }
 
-        public void CreateCertificateChain() {
+        public static void CreateCertificateChain() {
             var file1 = $"{_caMainDirectory}/certs/ca.cert.pem";
             var line1 = File.ReadAllLines(file1);
             var file2 = $"{_caIntermediateDirectory}/certs/intermediate.cert.pem";
@@ -254,7 +249,7 @@ namespace antdlib.config {
         #endregion
 
         #region [    ca - Certificate    ]
-        public void CreateUserCertificate(string name, string passphrase, string email, string c, string st, string l, string o, string ou) {
+        public static void CreateUserCertificate(string name, string passphrase, string email, string c, string st, string l, string o, string ou) {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
@@ -273,7 +268,7 @@ namespace antdlib.config {
             }
         }
 
-        public void CreateServerCertificate(string name, string passphrase, string email, string c, string st, string l, string o, string ou) {
+        public static void CreateServerCertificate(string name, string passphrase, string email, string c, string st, string l, string o, string ou) {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
@@ -292,7 +287,7 @@ namespace antdlib.config {
             }
         }
 
-        public void CreateDomainControllerCertificate(string name, string passphrase, string dcGuid, string dcDns, string email, string c, string st, string l, string o, string ou) {
+        public static void CreateDomainControllerCertificate(string name, string passphrase, string dcGuid, string dcDns, string email, string c, string st, string l, string o, string ou) {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
@@ -320,7 +315,7 @@ namespace antdlib.config {
             }
         }
 
-        public void CreateSmartCardCertificate(string name, string passphrase, string upn, string email, string c, string st, string l, string o, string ou) {
+        public static void CreateSmartCardCertificate(string name, string passphrase, string upn, string email, string c, string st, string l, string o, string ou) {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
@@ -347,7 +342,7 @@ namespace antdlib.config {
             }
         }
 
-        public bool VerifyCertificate(string name) {
+        public static bool VerifyCertificate(string name) {
             var bash = new Bash();
             var cert = $"{_caIntermediateDirectory}/certs/{name}.cert.pem";
             bash.Execute($"openssl x509 -noout -text -in {cert}");
@@ -358,7 +353,7 @@ namespace antdlib.config {
         #endregion
 
         #region [    ca - Revocation List    ]
-        public void CreateCrl() {
+        public static void CreateCrl() {
             var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var crl = $"{_caIntermediateDirectory}/crl/intermediate.crl.pem";
@@ -367,7 +362,7 @@ namespace antdlib.config {
             }
         }
 
-        public string[] ChecCrl() {
+        public static string[] ChecCrl() {
             var bash = new Bash();
             var crl = $"{_caIntermediateDirectory}/crl/intermediate.crl.pem";
             return bash.Execute($"openssl crl -in {crl} -noout -text").SplitBash().ToArray();

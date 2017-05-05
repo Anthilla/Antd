@@ -36,7 +36,7 @@ using System.IO;
 using System.Linq;
 
 namespace antdlib.config {
-    public class MountManagement {
+    public  static class MountManagement {
 
         private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
@@ -48,7 +48,7 @@ namespace antdlib.config {
             {"/sys/kernel/dlm", "-o default -t ocfs2_dlmfs dlm"}
         };
 
-        public void WorkingDirectories() {
+        public  static void WorkingDirectories() {
             foreach(var dir in DefaultWorkingDirectories) {
                 var mntDir = MountHelper.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
@@ -65,7 +65,7 @@ namespace antdlib.config {
             }
         }
 
-        public List<MountModel> GetAll() {
+        public  static List<MountModel> GetAll() {
             var list = new List<MountModel>();
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var directory in directories) {
@@ -91,7 +91,7 @@ namespace antdlib.config {
             return list;
         }
 
-        public void AllDirectories() {
+        public  static void AllDirectories() {
             var list = new List<MountModel>();
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var directory in directories) {
@@ -155,21 +155,21 @@ namespace antdlib.config {
             ConsoleLogger.Log("files mounted");
         }
 
-        public void Dir(string directory) {
+        public  static void Dir(string directory) {
             var mntDir = MountHelper.SetDirsPath(directory);
             Directory.CreateDirectory(directory);
             Directory.CreateDirectory(mntDir);
             SetBind(mntDir, directory);
         }
 
-        public void File(string file) {
+        public  static void File(string file) {
             var mntFile = MountHelper.SetFilesPath(file);
             SetBind(mntFile, file);
         }
 
-        //private readonly Dfp _dfp = new Dfp();
+        //private static readonly Dfp _dfp = new Dfp();
 
-        //private void CheckMount(string directory) {
+        //private static void CheckMount(string directory) {
         //    var isMntd = MountHelper.IsAlreadyMounted(directory);
         //    var mntDirectory = MountHelper.SetDirsPath(directory);
         //    var timestampNow = Timestamp.Now;

@@ -4,38 +4,33 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class SyslogNgConfiguration {
+    public static class SyslogNgConfiguration {
 
-        private readonly SyslogNgConfigurationModel _serviceModel;
+        private static SyslogNgConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/syslogng.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/syslogng.conf.bck";
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/syslogng.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/syslogng.conf.bck";
         private const string ServiceName = "syslog-ng.service";
         private const string MainFilePath = "/etc/syslog-ng/syslog-ng.conf";
         private const string MainFilePathBackup = "/etc/syslog-ng/.syslog-ng.conf";
 
-        public SyslogNgConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        private static SyslogNgConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new SyslogNgConfigurationModel();
+                return new SyslogNgConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<SyslogNgConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new SyslogNgConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<SyslogNgConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new SyslogNgConfigurationModel();
             }
         }
 
-        public void Save(SyslogNgConfigurationModel model) {
+        public static void Save(SyslogNgConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -44,7 +39,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[syslogng] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
             #region [    syslog-ng.conf generation    ]
@@ -111,35 +106,35 @@ namespace antdlib.config {
             Start();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public SyslogNgConfigurationModel Get() {
+        public static SyslogNgConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[syslogng] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[syslogng] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Systemctl.Stop(ServiceName);
             ConsoleLogger.Log("[syslogng] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }

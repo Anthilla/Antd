@@ -39,47 +39,41 @@ namespace Antd.Modules {
 
         public AntdDhcpdModule() {
             Get["/dhcpd"] = x => {
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                var dhcpdIsActive = dhcpdConfiguration.IsActive();
+                var dhcpdIsActive = DhcpdConfiguration.IsActive();
                 var model = new PageDhcpdModel {
                     DhcpdIsActive = dhcpdIsActive,
-                    DhcpdOptions = dhcpdConfiguration.Get() ?? new DhcpdConfigurationModel(),
-                    DhcpdClass = dhcpdConfiguration.Get()?.Classes,
-                    DhcpdPools = dhcpdConfiguration.Get()?.Pools,
-                    DhcpdReservation = dhcpdConfiguration.Get()?.Reservations
+                    DhcpdOptions = DhcpdConfiguration.Get() ?? new DhcpdConfigurationModel(),
+                    DhcpdClass = DhcpdConfiguration.Get()?.Classes,
+                    DhcpdPools = DhcpdConfiguration.Get()?.Pools,
+                    DhcpdReservation = DhcpdConfiguration.Get()?.Reservations
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/dhcpd/set"] = x => {
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Set();
+                DhcpdConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/restart"] = x => {
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Start();
+                DhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/stop"] = x => {
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Stop();
+                DhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/enable"] = x => {
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                DhcpdConfiguration.Enable();
+                DhcpdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/disable"] = x => {
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                DhcpdConfiguration.Disable();
+                DhcpdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -139,8 +133,7 @@ namespace Antd.Modules {
                     SubnetBroadcastAddress = broadcastAddress,
                     SubnetMask = subnetMask,
                 };
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.Save(model);
+                DhcpdConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
 
@@ -151,15 +144,13 @@ namespace Antd.Modules {
                     Name = name,
                     MacVendor = macVendor
                 };
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.AddClass(model);
+                DhcpdConfiguration.AddClass(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/class/del"] = x => {
                 string guid = Request.Form.Guid;
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.RemoveClass(guid);
+                DhcpdConfiguration.RemoveClass(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -168,15 +159,13 @@ namespace Antd.Modules {
                 var model = new DhcpConfigurationPoolModel {
                     Options = option.SplitToList().Select(_ => _.Trim()).ToList()
                 };
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.AddPool(model);
+                DhcpdConfiguration.AddPool(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/pool/del"] = x => {
                 string guid = Request.Form.Guid;
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.RemovePool(guid);
+                DhcpdConfiguration.RemovePool(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -189,15 +178,13 @@ namespace Antd.Modules {
                     MacAddress = macAddress,
                     IpAddress = ipAddress
                 };
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.AddReservation(model);
+                DhcpdConfiguration.AddReservation(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/reservation/del"] = x => {
                 string guid = Request.Form.Guid;
-                var dhcpdConfiguration = new DhcpdConfiguration();
-                dhcpdConfiguration.RemoveReservation(guid);
+                DhcpdConfiguration.RemoveReservation(guid);
                 return HttpStatusCode.OK;
             };
         }

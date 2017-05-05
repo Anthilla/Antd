@@ -12,9 +12,6 @@ namespace Antd {
         private const string LocalTemplateDirectory = "/framework/antd/Templates";
         private readonly Dictionary<string, string> _replacements;
 
-        private readonly Host2Configuration _host2Configuration = new Host2Configuration();
-        private readonly Network2Configuration _network2Configuration = new Network2Configuration();
-        private readonly HostParametersConfiguration _hostParametersConfiguration = new HostParametersConfiguration();
         private readonly CommandLauncher _commandLauncher = new CommandLauncher();
         private readonly Bash _bash = new Bash();
 
@@ -28,8 +25,8 @@ namespace Antd {
         /// Constructor
         /// </summary>
         public Do() {
-            Host = _host2Configuration.Host;
-            Dns = _network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == _network2Configuration.Conf.ActiveDnsConfiguration);
+            Host = Host2Configuration.Host;
+            Dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
 
             IsDnsPublic = Dns?.Type == DnsType.Public;
             IsDnsDynamic = Dns?.Mode == DnsMode.Dynamic;
@@ -59,9 +56,9 @@ namespace Antd {
                 { "$internalArpaIpAddress", Host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
             };
 
-            var interfaces = _network2Configuration.Conf.Interfaces;
+            var interfaces = Network2Configuration.Conf.Interfaces;
             var activeNetworkConfsIds = interfaces.Select(_ => _.Configuration);
-            var networkConfs = _network2Configuration.InterfaceConfigurationList;
+            var networkConfs = Network2Configuration.InterfaceConfigurationList;
             var activeNetworkConfs = activeNetworkConfsIds.Select(_ => networkConfs.FirstOrDefault(__ => __.Id == _)).ToList();
             var internalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.Internal);
             var internalActiveNetworkConfsIds = internalActiveNetworkConfs.Select(_ => _.Id);
@@ -156,13 +153,13 @@ namespace Antd {
 
         #region [    network    ]
         private void ApplyNetworkConfiguration() {
-            var configurations = _network2Configuration.Conf.Interfaces;
+            var configurations = Network2Configuration.Conf.Interfaces;
             if(!configurations.Any()) {
                 ConsoleLogger.Log("[network] configurations not found: create defaults");
                 CreateDefaultNetworkConfiguration();
             }
-            var interfaceConfigurations = _network2Configuration.InterfaceConfigurationList;
-            var gatewayConfigurations = _network2Configuration.GatewayConfigurationList;
+            var interfaceConfigurations = Network2Configuration.InterfaceConfigurationList;
+            var gatewayConfigurations = Network2Configuration.GatewayConfigurationList;
             foreach(var configuration in configurations) {
                 var deviceName = configuration.Device;
 
@@ -246,20 +243,20 @@ namespace Antd {
         }
 
         private void CreateDefaultNetworkConfiguration() {
-            _network2Configuration.AddInterfaceConfiguration(Default.InternalPhysicalInterfaceConfiguration());
-            _network2Configuration.AddInterfaceConfiguration(Default.ExternalPhysicalInterfaceConfiguration());
-            _network2Configuration.AddInterfaceConfiguration(Default.InternalBridgeInterfaceConfiguration());
-            _network2Configuration.AddInterfaceConfiguration(Default.ExternalBridgeInterfaceConfiguration());
-            _network2Configuration.AddGatewayConfiguration(Default.GatewayConfiguration());
-            _network2Configuration.AddDnsConfiguration(Default.PublicDnsConfiguration());
-            _network2Configuration.AddDnsConfiguration(Default.PrivateInternalDnsConfiguration());
-            _network2Configuration.AddDnsConfiguration(Default.PrivateExternalDnsConfiguration());
-            var devs = _network2Configuration.InterfacePhysical.ToList();
+            Network2Configuration.AddInterfaceConfiguration(Default.InternalPhysicalInterfaceConfiguration());
+            Network2Configuration.AddInterfaceConfiguration(Default.ExternalPhysicalInterfaceConfiguration());
+            Network2Configuration.AddInterfaceConfiguration(Default.InternalBridgeInterfaceConfiguration());
+            Network2Configuration.AddInterfaceConfiguration(Default.ExternalBridgeInterfaceConfiguration());
+            Network2Configuration.AddGatewayConfiguration(Default.GatewayConfiguration());
+            Network2Configuration.AddDnsConfiguration(Default.PublicDnsConfiguration());
+            Network2Configuration.AddDnsConfiguration(Default.PrivateInternalDnsConfiguration());
+            Network2Configuration.AddDnsConfiguration(Default.PrivateExternalDnsConfiguration());
+            var devs = Network2Configuration.InterfacePhysical.ToList();
             var partIp = Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3).JoinToString(".");
             var counter = 200;
             foreach(var dev in devs) {
                 var conf = Default.InternalPhysicalInterfaceConfiguration($"{partIp}.{counter}");
-                _network2Configuration.AddInterfaceConfiguration(conf);
+                Network2Configuration.AddInterfaceConfiguration(conf);
                 var networkInterface = new NetworkInterface {
                     Device = dev,
                     Configuration = conf.Id,
@@ -268,10 +265,10 @@ namespace Antd {
                     Mtu = "6000",
                     Txqueuelen = "10000"
                 };
-                _network2Configuration.AddInterfaceSetting(networkInterface);
+                Network2Configuration.AddInterfaceSetting(networkInterface);
                 counter = counter + 1;
             }
-            _network2Configuration.SetDnsConfigurationActive(Default.PublicDnsConfiguration().Id);
+            Network2Configuration.SetDnsConfigurationActive(Default.PublicDnsConfiguration().Id);
         }
 
         //public void SetupResolvD() {
@@ -597,26 +594,26 @@ namespace Antd {
 
         #region [    modules    ]
         private void SaveModprobes() {
-            var modules = _hostParametersConfiguration.Conf.Modprobes;
+            var modules = HostParametersConfiguration.Conf.Modprobes;
             foreach(var mod in modules) {
                 _commandLauncher.Launch("modprobe", new Dictionary<string, string> { { "$package", mod } });
             }
         }
 
         private void RemoveModules() {
-            var modules = string.Join(" ", _hostParametersConfiguration.Conf.Rmmod);
+            var modules = string.Join(" ", HostParametersConfiguration.Conf.Rmmod);
             _commandLauncher.Launch("rmmod", new Dictionary<string, string> { { "$modules", modules } });
         }
 
         private void BlacklistMudules() {
             if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
-            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", _hostParametersConfiguration.Conf.ModulesBlacklist);
+            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist);
         }
         #endregion
 
         #region [    services    ]
         private void StartService() {
-            var svcs = _hostParametersConfiguration.Conf.ServicesStart;
+            var svcs = HostParametersConfiguration.Conf.ServicesStart;
             foreach(var svc in svcs) {
                 if(Systemctl.IsEnabled(svc) == false) {
                     Systemctl.Enable(svc);
@@ -628,7 +625,7 @@ namespace Antd {
         }
 
         private void StopService() {
-            var svcs = _hostParametersConfiguration.Conf.ServicesStop;
+            var svcs = HostParametersConfiguration.Conf.ServicesStop;
             foreach(var svc in svcs) {
                 if(Systemctl.IsEnabled(svc)) {
                     Systemctl.Disable(svc);
@@ -642,7 +639,7 @@ namespace Antd {
 
         #region [    os parameters    ]
         private void SaveOsParameters() {
-            var parameters = _hostParametersConfiguration.Conf.OsParameters;
+            var parameters = HostParametersConfiguration.Conf.OsParameters;
             foreach(var par in parameters) {
                 if(!par.Contains(" ")) { continue; }
                 try {
@@ -663,14 +660,14 @@ namespace Antd {
 
         #region [    commands    ]
         private void LaunchStart() {
-            var controls = _hostParametersConfiguration.Conf.StartCommands;
+            var controls = HostParametersConfiguration.Conf.StartCommands;
             foreach(var control in controls) {
                 Launch(control);
             }
         }
 
         private void LaunchEnd() {
-            var controls = _hostParametersConfiguration.Conf.EndCommands;
+            var controls = HostParametersConfiguration.Conf.EndCommands;
             foreach(var control in controls) {
                 Launch(control);
             }

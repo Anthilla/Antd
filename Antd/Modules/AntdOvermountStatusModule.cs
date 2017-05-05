@@ -8,9 +8,8 @@ namespace Antd.Modules {
 
         public AntdOvermountStatusModule() {
             Get["/overmountstatus"] = x => {
-                var info = new MountManagement();
                 var model = new PageOvermountStatusModel {
-                    Components = info.GetAll()
+                    Components = MountManagement.GetAll()
                 };
                 return JsonConvert.SerializeObject(model);
             };

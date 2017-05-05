@@ -57,31 +57,8 @@ namespace Antd {
     internal class Application {
 
         #region [    private classes init    ]
-        private static readonly AclConfiguration AclConfiguration = new AclConfiguration();
-        private static readonly AppsConfiguration AppsConfiguration = new AppsConfiguration();
-        private static readonly AppTarget AppTarget = new AppTarget();
         private static readonly Bash Bash = new Bash();
-        private static readonly BindConfiguration BindConfiguration = new BindConfiguration();
-        private static readonly CaConfiguration CaConfiguration = new CaConfiguration();
-        private static readonly DhcpdConfiguration DhcpdConfiguration = new DhcpdConfiguration();
-        private static readonly FirewallConfiguration FirewallConfiguration = new FirewallConfiguration();
-        private static readonly GlusterConfiguration GlusterConfiguration = new GlusterConfiguration();
-        private static readonly HostConfiguration HostConfiguration = new HostConfiguration();
-        private static readonly MountManagement Mount = new MountManagement();
-        private static readonly NetworkConfiguration NetworkConfiguration = new NetworkConfiguration();
-        private static readonly RsyncConfiguration RsyncConfiguration = new RsyncConfiguration();
-        private static readonly SambaConfiguration SambaConfiguration = new SambaConfiguration();
-        private static readonly SetupConfiguration SetupConfiguration = new SetupConfiguration();
-        private static readonly SshdConfiguration SshdConfiguration = new SshdConfiguration();
-        private static readonly SyslogNgConfiguration SyslogNgConfiguration = new SyslogNgConfiguration();
-        private static readonly Timers Timers = new Timers();
-        private static readonly UserConfiguration UserConfiguration = new UserConfiguration();
-        private static readonly Zpool Zpool = new Zpool();
-        private static readonly JournaldConfiguration JournaldConfiguration = new JournaldConfiguration();
-        private static readonly SyncMachineConfiguration SyncMachineConfiguration = new SyncMachineConfiguration();
-        private static readonly Host2Configuration Host2Configuration = new Host2Configuration();
-        private static readonly Network2Configuration Network2Configuration = new Network2Configuration();
-        private static readonly HostParametersConfiguration HostParametersConfiguration = new HostParametersConfiguration();
+
         #endregion
 
         public static string KeyName = "antd";
@@ -105,10 +82,15 @@ namespace Antd {
             StaticConfiguration.DisableErrorTraces = false;
             ConsoleLogger.Log($"http port: {port}");
             ConsoleLogger.Log("antd is running");
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
+            var startupTime = DateTime.Now - startTime;
+            ConsoleLogger.Log($"loaded in: {startupTime}");
+            if(!File.Exists("/cfg/antd/stats.txt")) {
+                File.WriteAllText("/cfg/antd/stats.txt", "");
+            }
+            File.AppendAllLines("/cfg/antd/stats.txt", new[] { $"{startTime:yyyy MM dd HH:mm} - {startupTime}" });
             #endregion
 
-            WorkingProcedures();
+                WorkingProcedures();
 
             #region [    Test    ]
 #if DEBUG
@@ -152,13 +134,15 @@ namespace Antd {
             #endregion
 
             #region [    Working Directories    ]
-            Directory.CreateDirectory("/cfg/antd");
-            Directory.CreateDirectory("/cfg/antd/database");
-            Directory.CreateDirectory("/cfg/antd/services");
+            Directory.CreateDirectory(Parameter.AntdCfg);
+            Directory.CreateDirectory(Parameter.AntdCfgServices);
+            Directory.CreateDirectory(Parameter.AntdCfgNetwork);
+            Directory.CreateDirectory(Parameter.AntdCfgParameters);
+            Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls");
+            Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template");
+            Directory.CreateDirectory(Parameter.RepoConfig);
             Directory.CreateDirectory("/mnt/cdrom/DIRS");
-            if(Parameter.IsUnix) {
-                Mount.WorkingDirectories();
-            }
+            MountManagement.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
             #endregion
 
@@ -175,7 +159,7 @@ namespace Antd {
                 Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
             }
             Bash.Execute("systemctl restart systemd-modules-load.service", false);
-            Mount.AllDirectories();
+            MountManagement.AllDirectories();
             ConsoleLogger.Log("mounts ready");
             #endregion
 
@@ -200,13 +184,13 @@ namespace Antd {
                     ? "[license] license results null"
                     : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
             }
-            catch(Exception) {
+            catch(Exception ex) {
+                ConsoleLogger.Warn(ex.Message);
             }
 
             #endregion
 
             #region [    Secret    ]
-
             if(!File.Exists(Parameter.AntdCfgSecret)) {
                 File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
             }
@@ -214,7 +198,6 @@ namespace Antd {
             if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
                 File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
             }
-
             #endregion
 
             #region [    JournalD    ]
@@ -397,10 +380,8 @@ namespace Antd {
             #region [    Users    ]
             var manageMaster = new ManageMaster();
             manageMaster.Setup();
-            if(Parameter.IsUnix) {
-                UserConfiguration.Import();
-                UserConfiguration.Set();
-            }
+            UserConfiguration.Import();
+            UserConfiguration.Set();
             ConsoleLogger.Log("users config ready");
             #endregion
 
@@ -546,8 +527,7 @@ namespace Antd {
                 Directory.CreateDirectory(Parameter.RootSshMntCdrom);
             }
             if(!MountHelper.IsAlreadyMounted(Parameter.RootSsh)) {
-                var mnt = new MountManagement();
-                mnt.Dir(Parameter.RootSsh);
+                MountManagement.Dir(Parameter.RootSsh);
             }
             var rk = new RootKeys();
             if(rk.Exists == false) {
@@ -594,10 +574,8 @@ namespace Antd {
         private static void WorkingProcedures() {
             ConsoleLogger.Log("[config] working procedures");
             #region [    Cloud Send Uptime    ]
-            if(Parameter.IsUnix) {
-                var csuTimer = new UpdateCloudInfo();
-                csuTimer.Start(1000 * 60 * 5);
-            }
+            var csuTimer = new UpdateCloudInfo();
+            csuTimer.Start(1000 * 60 * 5);
             #endregion
 
             #region [    Cloud Fetch Commands    ]

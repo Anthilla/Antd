@@ -5,40 +5,35 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class SambaConfiguration {
+    public static class SambaConfiguration {
 
-        private readonly SambaConfigurationModel _serviceModel;
+        private static SambaConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/samba.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/samba.conf.bck";
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/samba.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/samba.conf.bck";
         private const string ServiceName1 = "smbd.service";
         private const string ServiceName2 = "nmbd.service";
         private const string ServiceName3 = "winbindd.service";
         private const string MainFilePath = "/etc/samba/smb.conf";
         private const string MainFilePathBackup = "/etc/samba/.smb.conf";
 
-        public SambaConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        private static SambaConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new SambaConfigurationModel();
+                return new SambaConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<SambaConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new SambaConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<SambaConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new SambaConfigurationModel();
             }
         }
 
-        public void Save(SambaConfigurationModel model) {
+        public static void Save(SambaConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -47,7 +42,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[samba] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
             #region [    smb.conf generation    ]
@@ -130,37 +125,37 @@ namespace antdlib.config {
             Start();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public SambaConfigurationModel Get() {
+        public static SambaConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[samba] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[samba] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Systemctl.Stop(ServiceName1);
             Systemctl.Stop(ServiceName2);
             Systemctl.Stop(ServiceName3);
             ConsoleLogger.Log("[samba] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(Systemctl.IsEnabled(ServiceName1) == false) {
                 Systemctl.Enable(ServiceName1);
             }
@@ -182,7 +177,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[samba] start");
         }
 
-        public void AddResource(SambaConfigurationResourceModel model) {
+        public static void AddResource(SambaConfigurationResourceModel model) {
             var resources = _serviceModel.Resources;
             if(resources.Any(_ => _.Name == model.Name)) {
                 return;
@@ -192,7 +187,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void RemoveResource(string guid) {
+        public static void RemoveResource(string guid) {
             var resources = _serviceModel.Resources;
             var model = resources.First(_ => _.Guid == guid);
             if(model == null) {

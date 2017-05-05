@@ -4,38 +4,33 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class SshdConfiguration {
+    public static class SshdConfiguration {
 
-        private readonly SshdConfigurationModel _serviceModel;
+        private static SshdConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/sshd.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/sshd.conf.bck";
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/sshd.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/sshd.conf.bck";
         private const string ServiceName = "sshd.service";
         private const string MainFilePath = "/etc/ssh/sshd_config";
         private const string MainFilePathBackup = "/etc/ssh/.sshd_config";
 
-        public SshdConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        private static SshdConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new SshdConfigurationModel();
+                return new SshdConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<SshdConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new SshdConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<SshdConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new SshdConfigurationModel();
             }
         }
 
-        public void Save(SshdConfigurationModel model) {
+        public static void Save(SshdConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -44,7 +39,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[sshd] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
             #region [    named.conf generation    ]
@@ -140,35 +135,35 @@ namespace antdlib.config {
             Start();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public SshdConfigurationModel Get() {
+        public static SshdConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[sshd] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[sshd] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Systemctl.Stop(ServiceName);
             ConsoleLogger.Log("[sshd] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }

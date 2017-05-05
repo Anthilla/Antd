@@ -39,47 +39,41 @@ namespace Antd.Modules {
 
         public AntdFirewallModule() {
             Get["/firewall"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                var firewallIsActive = firewallConfiguration.IsActive();
+                var firewallIsActive = FirewallConfiguration.IsActive();
                 var model = new PageFirewallModel {
                     FirewallIsActive = firewallIsActive,
-                    FwIp4Filter = firewallConfiguration.Get()?.Ipv4FilterTable,
-                    FwIp4Nat = firewallConfiguration.Get()?.Ipv4NatTable,
-                    FwIp6Filter = firewallConfiguration.Get()?.Ipv6FilterTable,
-                    FwIp6Nat = firewallConfiguration.Get()?.Ipv6NatTable
+                    FwIp4Filter = FirewallConfiguration.Get()?.Ipv4FilterTable,
+                    FwIp4Nat = FirewallConfiguration.Get()?.Ipv4NatTable,
+                    FwIp6Filter = FirewallConfiguration.Get()?.Ipv6FilterTable,
+                    FwIp6Nat = FirewallConfiguration.Get()?.Ipv6NatTable
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/firewall/set"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Set();
+                FirewallConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/firewall/restart"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/firewall/stop"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Stop();
+                FirewallConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/firewall/enable"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Enable();
-                firewallConfiguration.Start();
+                FirewallConfiguration.Enable();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/firewall/disable"] = x => {
-                var firewallConfiguration = new FirewallConfiguration();
-                firewallConfiguration.Disable();
-                firewallConfiguration.Stop();
+                FirewallConfiguration.Disable();
+                FirewallConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -91,8 +85,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
+                var table = FirewallConfiguration.Get().Ipv4FilterTable;
                 var sets = table.Sets.ToList();
                 var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
                 if(tryGetSet == null) {
@@ -103,7 +96,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -113,8 +106,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
+                var table = FirewallConfiguration.Get().Ipv4FilterTable;
                 var chains = table.Chains.ToList();
                 var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
                 if(tryGetSet == null) {
@@ -125,7 +117,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -136,8 +128,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
+                var table = FirewallConfiguration.Get().Ipv4NatTable;
                 var sets = table.Sets.ToList();
                 var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
                 if(tryGetSet == null) {
@@ -148,7 +139,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -158,8 +149,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
+                var table = FirewallConfiguration.Get().Ipv4NatTable;
                 var chains = table.Chains.ToList();
                 var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
                 if(tryGetSet == null) {
@@ -170,7 +160,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
             #endregion
@@ -183,8 +173,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
+                var table = FirewallConfiguration.Get().Ipv4FilterTable;
                 var sets = table.Sets.ToList();
                 var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
                 if(tryGetSet == null) {
@@ -195,7 +184,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -205,8 +194,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4FilterTable;
+                var table = FirewallConfiguration.Get().Ipv4FilterTable;
                 var chains = table.Chains.ToList();
                 var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
                 if(tryGetSet == null) {
@@ -217,7 +205,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -228,8 +216,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(set) || string.IsNullOrEmpty(type) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
+                var table = FirewallConfiguration.Get().Ipv4NatTable;
                 var sets = table.Sets.ToList();
                 var tryGetSet = sets.FirstOrDefault(_ => _.Name == set && _.Type == type);
                 if(tryGetSet == null) {
@@ -240,7 +227,7 @@ namespace Antd.Modules {
                     tryGetSet.Elements = elements.SplitToList().ToArray();
                     sets.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -250,8 +237,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(chain) || string.IsNullOrEmpty(elements)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var firewallConfiguration = new FirewallConfiguration();
-                var table = firewallConfiguration.Get().Ipv4NatTable;
+                var table = FirewallConfiguration.Get().Ipv4NatTable;
                 var chains = table.Chains.ToList();
                 var tryGetSet = chains.FirstOrDefault(_ => _.Name == chain);
                 if(tryGetSet == null) {
@@ -262,7 +248,7 @@ namespace Antd.Modules {
                     tryGetSet.Rules = elements.SplitToList().ToArray();
                     chains.Add(tryGetSet);
                 }
-                firewallConfiguration.Start();
+                FirewallConfiguration.Start();
                 return HttpStatusCode.OK;
             };
             #endregion

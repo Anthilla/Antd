@@ -43,11 +43,10 @@ namespace Antd.Modules {
         public AntdNetworkModule() {
 
             Get["/network"] = x => {
-                var networkConfiguration = new NetworkConfiguration();
-                var physicalInterfaces = networkConfiguration.InterfacePhysicalModel.ToList();
-                var bridgeInterfaces = networkConfiguration.InterfaceBridgeModel.ToList();
-                var bondInterfaces = networkConfiguration.InterfaceBondModel.ToList();
-                var virtualInterfaces = networkConfiguration.InterfaceVirtualModel.ToList();
+                var physicalInterfaces = NetworkConfiguration.InterfacePhysicalModel.ToList();
+                var bridgeInterfaces = NetworkConfiguration.InterfaceBridgeModel.ToList();
+                var bondInterfaces = NetworkConfiguration.InterfaceBondModel.ToList();
+                var virtualInterfaces = NetworkConfiguration.InterfaceVirtualModel.ToList();
                 foreach(var vif in virtualInterfaces) {
                     if(physicalInterfaces.Any(_ => _.Interface == vif.Interface) ||
                     bridgeInterfaces.Any(_ => _.Interface == vif.Interface) ||
@@ -60,14 +59,13 @@ namespace Antd.Modules {
                     NetworkBridgeIf = bridgeInterfaces,
                     NetworkBondIf = bondInterfaces,
                     NetworkVirtualIf = virtualInterfaces,
-                    NetworkIfList = networkConfiguration.NetworkInterfaces
+                    NetworkIfList = NetworkConfiguration.NetworkInterfaces
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/network/restart"] = x => {
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.Start();
+                NetworkConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
@@ -93,15 +91,13 @@ namespace Antd.Modules {
                     Route = route,
                     Gateway = gateway
                 };
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.AddInterfaceSetting(model);
+                NetworkConfiguration.AddInterfaceSetting(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/network/interface/del"] = x => {
                 string guid = Request.Form.Guid;
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.RemoveInterfaceSetting(guid);
+                NetworkConfiguration.RemoveInterfaceSetting(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -135,8 +131,7 @@ namespace Antd.Modules {
                     Route = route,
                     Gateway = gateway
                 };
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.AddInterfaceSetting(model);
+                NetworkConfiguration.AddInterfaceSetting(model);
                 return HttpStatusCode.OK;
             };
 
@@ -170,8 +165,7 @@ namespace Antd.Modules {
                     Route = route,
                     Gateway =  gateway
                 };
-                var networkConfiguration = new NetworkConfiguration();
-                networkConfiguration.AddInterfaceSetting(model);
+                NetworkConfiguration.AddInterfaceSetting(model);
                 return HttpStatusCode.OK;
             };
         }

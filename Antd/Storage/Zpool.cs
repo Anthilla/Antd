@@ -8,11 +8,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Antd.Storage {
-    public class Zpool {
-        private static readonly Bash Bash = new Bash();
-        private readonly Timers _timers = new Timers();
+    public  static class Zpool {
+        private static  readonly Bash Bash = new Bash();
 
-        public List<ZpoolModel> List() {
+        public  static List<ZpoolModel> List() {
             var result = Bash.Execute("zpool list");
             var list = new List<ZpoolModel>();
             if(string.IsNullOrEmpty(result)) {
@@ -42,7 +41,7 @@ namespace Antd.Storage {
                 if(jobs.Any()) {
                     var j = jobs.FirstOrDefault();
                     if(j != null) {
-                        model.HasSnapshot = _timers.IsActive(model.Name);
+                        model.HasSnapshot = Timers.IsActive(model.Name);
                         model.Snapshot = j.Time;
                         model.SnapshotGuid = j.Guid;
                     }
@@ -53,16 +52,16 @@ namespace Antd.Storage {
             return list;
         }
 
-        public IEnumerable<string> ImportList() {
+        public  static IEnumerable<string> ImportList() {
             var text = Bash.Execute("zpool import").SplitBash().Grep("'pool:'").Print(2, " ");
             return text;
         }
 
-        public void Import(string poolName) {
+        public  static void Import(string poolName) {
             Bash.Execute($"zpool import -f -o altroot=/Data/{poolName} {poolName}", false);
         }
 
-        public List<string> History() {
+        public  static List<string> History() {
             var obj = Bash.Execute("zpool history");
             var list = obj.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             return list.ToList();

@@ -4,36 +4,31 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class RsyncConfiguration {
+    public static class RsyncConfiguration {
 
-        private readonly RsyncConfigurationModel _serviceModel;
+        private static RsyncConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/rsync.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/rsync.conf.bck";
-        private DirectoryWatcher _directoryWatcher;
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/rsync.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/rsync.conf.bck";
+        private static DirectoryWatcher _directoryWatcher;
 
-        public RsyncConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        public static RsyncConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new RsyncConfigurationModel();
+                return new RsyncConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<RsyncConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new RsyncConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<RsyncConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new RsyncConfigurationModel();
             }
         }
 
-        public void Save(RsyncConfigurationModel model) {
+        public static void Save(RsyncConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -42,53 +37,53 @@ namespace antdlib.config {
             ConsoleLogger.Log("[rsync] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Start();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public RsyncConfigurationModel Get() {
+        public static RsyncConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[rsync] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[rsync] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             _directoryWatcher?.Stop();
             ConsoleLogger.Log("[rsync] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             _directoryWatcher = new DirectoryWatcher(_serviceModel.Directories.ToArray());
             _directoryWatcher.StartWatching();
             ConsoleLogger.Log("[rsync] start");
         }
 
-        public void AddDirectory(RsyncObjectModel model) {
+        public static void AddDirectory(RsyncObjectModel model) {
             var dirs = _serviceModel.Directories;
             dirs.Add(model);
             _serviceModel.Directories = dirs;
             Save(_serviceModel);
         }
 
-        public void RemoveDirectory(string guid) {
+        public static void RemoveDirectory(string guid) {
             var dirs = _serviceModel.Directories;
             var model = dirs.First(_ => _.Guid == guid);
             if(model == null) {

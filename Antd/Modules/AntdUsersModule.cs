@@ -40,8 +40,7 @@ namespace Antd.Modules {
         public AntdUsersModule() {
 
             Get["/users"] = _ => {
-                var userConfiguration = new UserConfiguration();
-                var list = userConfiguration.Get();
+                var list = UserConfiguration.Get();
                 var manageMaster = new ManageMaster();
                 list.Add(new User {
                     Name = manageMaster.Name,
@@ -71,8 +70,7 @@ namespace Antd.Modules {
                     Name = user,
                     Password = hpwd
                 };
-                var userConfiguration = new UserConfiguration();
-                userConfiguration.AddUser(mo);
+                UserConfiguration.AddUser(mo);
                 return HttpStatusCode.OK;
             };
 

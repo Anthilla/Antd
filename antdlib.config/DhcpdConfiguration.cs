@@ -5,37 +5,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
     public class DhcpdConfiguration {
 
-        private readonly DhcpdConfigurationModel _serviceModel;
+        private static DhcpdConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/dhcp.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/dhcp.conf.bck";
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/dhcp.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/dhcp.conf.bck";
         private const string ServiceName = "dhcpd4.service";
         private const string MainFilePath = "/etc/dhcp/dhcpd.conf";
         private const string MainFilePathBackup = "/etc/dhcp/.dhcpd.conf";
 
-        public DhcpdConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        private static DhcpdConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new DhcpdConfigurationModel();
+                return new DhcpdConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<DhcpdConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new DhcpdConfigurationModel();
-                }
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<DhcpdConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new DhcpdConfigurationModel();
             }
         }
 
-        public void Save(DhcpdConfigurationModel model) {
+        public static void Save(DhcpdConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -44,7 +40,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[dhcpd] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Stop();
             #region [    dhcpd.conf generation    ]
             if(File.Exists(MainFilePath)) {
@@ -118,39 +114,39 @@ namespace antdlib.config {
             Start();
         }
 
-        public void DefaultSet() {
-          
+        public static void DefaultSet() {
+
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public DhcpdConfigurationModel Get() {
+        public static DhcpdConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[dhcpd] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[dhcpd] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Systemctl.Stop(ServiceName);
             ConsoleLogger.Log("[dhcpd] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
@@ -160,7 +156,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[dhcpd] start");
         }
 
-        public void AddClass(DhcpConfigurationClassModel model) {
+        public static void AddClass(DhcpConfigurationClassModel model) {
             var cls = _serviceModel.Classes;
             if(cls.Any(_ => _.Name == model.Name)) {
                 return;
@@ -170,7 +166,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void RemoveClass(string guid) {
+        public static void RemoveClass(string guid) {
             var cls = _serviceModel.Classes;
             var model = cls.First(_ => _.Guid == guid);
             if(model == null) {
@@ -181,7 +177,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void AddPool(DhcpConfigurationPoolModel model) {
+        public static void AddPool(DhcpConfigurationPoolModel model) {
             var pool = _serviceModel.Pools;
             if(pool.Any(_ => _.Guid == model.Guid)) {
                 return;
@@ -191,7 +187,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void RemovePool(string guid) {
+        public static void RemovePool(string guid) {
             var pool = _serviceModel.Pools;
             var model = pool.First(_ => _.Guid == guid);
             if(model == null) {
@@ -202,7 +198,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void AddReservation(DhcpConfigurationReservationModel model) {
+        public static void AddReservation(DhcpConfigurationReservationModel model) {
             var hostres = _serviceModel.Reservations;
             if(hostres.Any(_ => _.Guid == model.Guid)) {
                 return;
@@ -212,7 +208,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void RemoveReservation(string guid) {
+        public static void RemoveReservation(string guid) {
             var hostres = _serviceModel.Reservations;
             var model = hostres.First(_ => _.Guid == guid);
             if(model == null) {

@@ -37,44 +37,38 @@ namespace Antd.Modules {
 
         public AntdSshdModule() {
             Get["/sshd"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                var sshdIsActive = sshdConfiguration.IsActive();
+                var sshdIsActive = SshdConfiguration.IsActive();
                 var model = new PageSshdModel {
                     SshdIsActive = sshdIsActive,
-                    SshdOptions = sshdConfiguration.Get() ?? new SshdConfigurationModel()
+                    SshdOptions = SshdConfiguration.Get() ?? new SshdConfigurationModel()
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/sshd/set"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Set();
+                SshdConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/sshd/restart"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Start();
+                SshdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/sshd/stop"] = x => {
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Stop();
+                SshdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/sshd/enable"] = x => {
-                var dhcpdConfiguration = new SshdConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                SshdConfiguration.Enable();
+                SshdConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/sshd/disable"] = x => {
-                var dhcpdConfiguration = new SshdConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                SshdConfiguration.Disable();
+                SshdConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -97,8 +91,7 @@ namespace Antd.Modules {
                     PubkeyAuthentication = pubkeyAuthentication,
                     UsePam = usePam
                 };
-                var sshdConfiguration = new SshdConfiguration();
-                sshdConfiguration.Save(model);
+                SshdConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
         }

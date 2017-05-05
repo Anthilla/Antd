@@ -4,36 +4,32 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class SyncMachineConfiguration {
+    public static class SyncMachineConfiguration {
 
-        private readonly SyncMachineConfigurationModel _serviceModel;
+        private static SyncMachineConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/syncmachine.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/syncmachine.conf.bck";
-        private readonly string[] _syncPaths = { Parameter.AntdCfg };
-        private DirectoryWatcher _directoryWatcher;
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/syncmachine.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/syncmachine.conf.bck";
+        private static readonly string[] _syncPaths = { Parameter.AntdCfg };
+        private static DirectoryWatcher _directoryWatcher;
 
-        public SyncMachineConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        private static SyncMachineConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new SyncMachineConfigurationModel();
+                return new SyncMachineConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<SyncMachineConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new SyncMachineConfigurationModel();
-                }
+            try {
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<SyncMachineConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new SyncMachineConfigurationModel();
             }
         }
 
-        public void Save(SyncMachineConfigurationModel model) {
+        public static void Save(SyncMachineConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -42,47 +38,47 @@ namespace antdlib.config {
             ConsoleLogger.Log("[syncmachine] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
             Start();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public SyncMachineConfigurationModel Get() {
+        public static SyncMachineConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[syncmachine] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[syncmachine] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             _directoryWatcher?.Stop();
             ConsoleLogger.Log("[syncmachine] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             _directoryWatcher = new DirectoryWatcher(_syncPaths);
             _directoryWatcher.StartWatching();
             ConsoleLogger.Log("[syncmachine] start");
         }
 
-        public void AddResource(SyncMachineModel model) {
+        public static void AddResource(SyncMachineModel model) {
             var resources = _serviceModel.Machines;
             if(resources.Any(_ => _.MachineAddress == model.MachineAddress)) {
                 return;
@@ -92,7 +88,7 @@ namespace antdlib.config {
             Save(_serviceModel);
         }
 
-        public void RemoveResource(string guid) {
+        public static void RemoveResource(string guid) {
             var resources = _serviceModel.Machines;
             var model = resources.First(_ => _.Guid == guid);
             if(model == null) {

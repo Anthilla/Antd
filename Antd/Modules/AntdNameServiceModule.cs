@@ -42,15 +42,14 @@ namespace Antd.Modules {
         public AntdNameServiceModule() {
             Get["/nameservice"] = x => {
                 var launcher = new CommandLauncher();
-                var hostConfiguration = new HostConfiguration();
                 var hosts = launcher.Launch("cat-etc-hosts").ToArray();
                 var networks = launcher.Launch("cat-etc-networks").ToArray();
                 var resolv = launcher.Launch("cat-etc-resolv").ToArray();
                 var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
                 var model = new PageNameServiceModel {
                     Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />"),
-                    DomainInt = hostConfiguration.Host.InternalDomain,
-                    DomainExt = hostConfiguration.Host.ExternalDomain,
+                    DomainInt = HostConfiguration.Host.InternalDomain,
+                    DomainExt = HostConfiguration.Host.ExternalDomain,
                     Hosts = hosts.JoinToString("<br />"),
                     Networks = networks.JoinToString("<br />"),
                     Resolv = resolv.JoinToString("<br />"),
@@ -61,55 +60,49 @@ namespace Antd.Modules {
 
             Post["/nameservice/hosts"] = x => {
                 string hosts = Request.Form.Hosts;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsHosts(hosts.Contains("\n")
+                HostConfiguration.SetNsHosts(hosts.Contains("\n")
                     ? hosts.SplitToList("\n").ToArray()
                     : hosts.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsHosts();
+                HostConfiguration.ApplyNsHosts();
                 return HttpStatusCode.OK;
             };
 
             Post["/nameservice/networks"] = x => {
                 string networks = Request.Form.Networks;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsNetworks(networks.Contains("\n")
+                HostConfiguration.SetNsNetworks(networks.Contains("\n")
                   ? networks.SplitToList("\n").ToArray()
                   : networks.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsNetworks();
+                HostConfiguration.ApplyNsNetworks();
                 return HttpStatusCode.OK;
             };
 
             Post["/nameservice/resolv"] = x => {
                 string resolv = Request.Form.Resolv;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsResolv(resolv.Contains("\n")
+                HostConfiguration.SetNsResolv(resolv.Contains("\n")
                   ? resolv.SplitToList("\n").ToArray()
                   : resolv.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsResolv();
+                HostConfiguration.ApplyNsResolv();
                 return HttpStatusCode.OK;
             };
 
             Post["/nameservice/switch"] = x => {
                 string @switch = Request.Form.Switch;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetNsSwitch(@switch.Contains("\n")
+                HostConfiguration.SetNsSwitch(@switch.Contains("\n")
                   ? @switch.SplitToList("\n").ToArray()
                   : @switch.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsSwitch();
+                HostConfiguration.ApplyNsSwitch();
                 return HttpStatusCode.OK;
             };
 
             Post["/host/int/domain"] = x => {
                 string domain = Request.Form.Domain;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetInternalDomain(domain);
+                HostConfiguration.SetInternalDomain(domain);
                 return HttpStatusCode.OK;
             };
 
             Post["/host/ext/domain"] = x => {
                 string domain = Request.Form.Domain;
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetExtenalDomain(domain);
+                HostConfiguration.SetExtenalDomain(domain);
                 return HttpStatusCode.OK;
             };
         }

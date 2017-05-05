@@ -44,9 +44,7 @@ namespace Antd.Modules {
             Get["/wizard/data"] = x => {
                 var bash = new Bash();
                 var timezones = bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
-                var networkConfiguration = new NetworkConfiguration();
                 var launcher = new CommandLauncher();
-                var hostConfiguration = new HostConfiguration();
                 var hosts = launcher.Launch("cat-etc-hosts").ToArray();
                 var networks = launcher.Launch("cat-etc-networks").ToArray();
                 var resolv = launcher.Launch("cat-etc-resolv").ToArray();
@@ -55,9 +53,9 @@ namespace Antd.Modules {
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
                 var model = new PageWizardModel {
                     Timezones = timezones,
-                    NetworkInterfaceList = networkConfiguration.InterfacePhysical,
-                    DomainInt = hostConfiguration.Host.InternalDomain,
-                    DomainExt = hostConfiguration.Host.ExternalDomain,
+                    NetworkInterfaceList = NetworkConfiguration.InterfacePhysical,
+                    DomainInt = HostConfiguration.Host.InternalDomain,
+                    DomainExt = HostConfiguration.Host.ExternalDomain,
                     Hosts = hosts.JoinToString(Environment.NewLine),
                     Networks = networks.JoinToString(Environment.NewLine),
                     Resolv = resolv.JoinToString(Environment.NewLine),
@@ -84,42 +82,41 @@ namespace Antd.Modules {
                 ConsoleLogger.Log($"[wizard] host info:\t{location}");
                 ConsoleLogger.Log($"[wizard] host info:\t{chassis}");
                 ConsoleLogger.Log($"[wizard] host info:\t{deployment}");
-                var hostConfiguration = new HostConfiguration();
-                hostConfiguration.SetHostInfoName(hostname);
-                hostConfiguration.SetHostInfoChassis(chassis);
-                hostConfiguration.SetHostInfoDeployment(deployment);
-                hostConfiguration.SetHostInfoLocation(location);
-                hostConfiguration.ApplyHostInfo();
+                HostConfiguration.SetHostInfoName(hostname);
+                HostConfiguration.SetHostInfoChassis(chassis);
+                HostConfiguration.SetHostInfoDeployment(deployment);
+                HostConfiguration.SetHostInfoLocation(location);
+                HostConfiguration.ApplyHostInfo();
                 string timezone = Request.Form.Timezone;
-                hostConfiguration.SetTimezone(timezone);
-                hostConfiguration.ApplyTimezone();
+                HostConfiguration.SetTimezone(timezone);
+                HostConfiguration.ApplyTimezone();
                 string ntpServer = Request.Form.NtpServer;
-                hostConfiguration.SetNtpdate(ntpServer);
-                hostConfiguration.ApplyNtpdate();
+                HostConfiguration.SetNtpdate(ntpServer);
+                HostConfiguration.ApplyNtpdate();
                 string domainInt = Request.Form.DomainInt;
                 string domainExt = Request.Form.DomainExt;
                 string hosts = Request.Form.Hosts;
                 string networks = Request.Form.Networks;
                 string resolv = Request.Form.Resolv;
                 string nsswitch = Request.Form.Nsswitch;
-                hostConfiguration.SetNsHosts(hosts.Contains("\n")
+                HostConfiguration.SetNsHosts(hosts.Contains("\n")
                     ? hosts.SplitToList("\n").ToArray()
                     : hosts.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsHosts();
-                hostConfiguration.SetNsNetworks(networks.Contains("\n")
+                HostConfiguration.ApplyNsHosts();
+                HostConfiguration.SetNsNetworks(networks.Contains("\n")
                     ? networks.SplitToList("\n").ToArray()
                     : networks.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsNetworks();
-                hostConfiguration.SetNsResolv(resolv.Contains("\n")
+                HostConfiguration.ApplyNsNetworks();
+                HostConfiguration.SetNsResolv(resolv.Contains("\n")
                   ? resolv.SplitToList("\n").ToArray()
                   : resolv.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsResolv();
-                hostConfiguration.SetNsSwitch(nsswitch.Contains("\n")
+                HostConfiguration.ApplyNsResolv();
+                HostConfiguration.SetNsSwitch(nsswitch.Contains("\n")
                   ? nsswitch.SplitToList("\n").ToArray()
                   : nsswitch.SplitToList(Environment.NewLine).ToArray());
-                hostConfiguration.ApplyNsSwitch();
-                hostConfiguration.SetInternalDomain(domainInt);
-                hostConfiguration.SetExtenalDomain(domainExt);
+                HostConfiguration.ApplyNsSwitch();
+                HostConfiguration.SetInternalDomain(domainInt);
+                HostConfiguration.SetExtenalDomain(domainExt);
                 ConsoleLogger.Log("[wizard] name services configured");
                 string Interface = Request.Form.Interface;
                 string txqueuelen = Request.Form.Txqueuelen;
@@ -127,7 +124,6 @@ namespace Antd.Modules {
                 string mode = Request.Form.Mode;
                 string staticAddress = Request.Form.StaticAddress;
                 string staticRange = Request.Form.StaticRange;
-                var networkConfiguration = new NetworkConfiguration();
                 var model = new NetworkInterfaceConfigurationModel {
                     Interface = Interface,
                     Mode = (NetworkInterfaceMode)Enum.Parse(typeof(NetworkInterfaceMode), mode),
@@ -138,10 +134,10 @@ namespace Antd.Modules {
                     Mtu = mtu,
                     Type = NetworkAdapterType.Physical
                 };
-                networkConfiguration.AddInterfaceSetting(model);
-                networkConfiguration.ApplyInterfaceSetting(model);
+                NetworkConfiguration.AddInterfaceSetting(model);
+                NetworkConfiguration.ApplyInterfaceSetting(model);
                 ConsoleLogger.Log($"[wizard] network configured at {Interface}");
-                hostConfiguration.SetHostAsConfigured();
+                HostConfiguration.SetHostAsConfigured();
                 ConsoleLogger.Log("[wizard] configuration complete");
                 return HttpStatusCode.OK;
             };

@@ -38,50 +38,43 @@ namespace Antd.Modules {
 
         public AntdRsyncModule() {
             Get["/rsync"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                var rsyncIsActive = rsyncConfiguration.IsActive();
+                var rsyncIsActive = RsyncConfiguration.IsActive();
                 var model = new PageRsyncModel {
                     RsyncIsActive = rsyncIsActive,
-                    RsyncDirectories = rsyncConfiguration.Get()?.Directories.OrderBy(_ => _.Type)
+                    RsyncDirectories = RsyncConfiguration.Get()?.Directories.OrderBy(_ => _.Type)
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/rsync/set"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Set();
+                RsyncConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/restart"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Start();
+                RsyncConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/stop"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Stop();
+                RsyncConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/enable"] = x => {
-                var dhcpdConfiguration = new RsyncConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                RsyncConfiguration.Enable();
+                RsyncConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/disable"] = x => {
-                var dhcpdConfiguration = new RsyncConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                RsyncConfiguration.Disable();
+                RsyncConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/options"] = x => {
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.Save(new RsyncConfigurationModel());
+                RsyncConfiguration.Save(new RsyncConfigurationModel());
                 return HttpStatusCode.OK;
             };
 
@@ -94,15 +87,13 @@ namespace Antd.Modules {
                     Destination = destination,
                     Type = type
                 };
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.AddDirectory(model);
+                RsyncConfiguration.AddDirectory(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/directory/del"] = x => {
                 string guid = Request.Form.Guid;
-                var rsyncConfiguration = new RsyncConfiguration();
-                rsyncConfiguration.RemoveDirectory(guid);
+                RsyncConfiguration.RemoveDirectory(guid);
                 return HttpStatusCode.OK;
             };
         }

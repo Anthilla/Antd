@@ -18,7 +18,7 @@ namespace Antd.Timer {
         }
 
         private static void Action() {
-            new HostConfiguration().SyncClock();
+            HostConfiguration.SyncClock();
         }
     }
 }

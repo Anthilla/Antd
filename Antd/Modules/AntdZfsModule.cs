@@ -41,20 +41,18 @@ namespace Antd.Modules {
     public class AntdZfsModule : NancyModule {
 
         private readonly CommandLauncher _launcher = new CommandLauncher();
-        private readonly Timers _timers = new Timers();
 
         public AntdZfsModule() {
             Get["/zfs"] = x => {
-                var zpool = new Zpool();
                 var zfsSnap = new ZfsSnap();
                 var zfs = new Zfs();
                 var disks = new Disks();
 
                 var model = new PageZfsModel {
-                    ZpoolList = zpool.List(),
+                    ZpoolList = Zpool.List(),
                     ZfsList = zfs.List(),
                     ZfsSnap = zfsSnap.List(),
-                    ZpoolHistory = zpool.History(),
+                    ZpoolHistory = Zpool.History(),
                     DisksList = disks.GetList().Where(_ => _.Type == "disk" && string.IsNullOrEmpty(_.Mountpoint))
 
                 };
@@ -73,7 +71,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(pool) || string.IsNullOrEmpty(interval)) {
                     return HttpStatusCode.InternalServerError;
                 }
-                _timers.Create(pool + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
+                Timers.Create(pool + "snap", interval, $"/sbin/zfs snap -r {pool}@${{TTDATE}}");
                 return HttpStatusCode.OK;
             };
 
@@ -82,7 +80,7 @@ namespace Antd.Modules {
             //    var tt = _timerRepository.GetByGuid(guid);
             //    if(tt == null)
             //        return HttpStatusCode.InternalServerError;
-            //    _timers.Disable(tt.Alias);
+            //    Timers.Disable(tt.Alias);
             //    return HttpStatusCode.OK;
             //};
 

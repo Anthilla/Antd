@@ -9,17 +9,13 @@ using Newtonsoft.Json;
 namespace antdlib.config {
     public class HostParametersConfiguration {
 
-        public HostParameters Conf;
+        public static HostParameters Conf => Parse();
 
-        private readonly string _dir = Parameter.AntdCfgParameters;
+        private static readonly string _dir = Parameter.AntdCfgParameters;
 
-        public HostParametersConfiguration() {
-            Directory.CreateDirectory(_dir);
-            Conf = Parse();
-        }
 
         #region [    HostParameters conf   ]
-        private HostParameters Parse() {
+        private static HostParameters Parse() {
             var hostParameters = new HostParameters {
                 Modprobes = GetModprobesList(),
                 Rmmod = GetRmmodList(),
@@ -35,10 +31,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    modprobes    ]
-        private readonly string _modprobesFile = $"{Parameter.AntdCfgParameters}/modprobes.conf";
-        private readonly string _modprobesFileBackup = $"{Parameter.AntdCfgParameters}/modprobes.conf.bck";
+        private static readonly string _modprobesFile = $"{Parameter.AntdCfgParameters}/modprobes.conf";
+        private static readonly string _modprobesFileBackup = $"{Parameter.AntdCfgParameters}/modprobes.conf.bck";
 
-        public void SetModprobesList(List<string> objects) {
+        public static void SetModprobesList(List<string> objects) {
             var lines = objects;
             if(File.Exists(_modprobesFile)) {
                 File.Copy(_modprobesFile, _modprobesFileBackup, true);
@@ -51,7 +47,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<string> GetModprobesList() {
+        private static List<string> GetModprobesList() {
             if(!File.Exists(_modprobesFile)) {
                 return new List<string>();
             }
@@ -67,10 +63,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    rmmod    ]
-        private readonly string _rmmodFile = $"{Parameter.AntdCfgParameters}/rmmod.conf";
-        private readonly string _rmmodFileBackup = $"{Parameter.AntdCfgParameters}/rmmod.conf.bck";
+        private static readonly string _rmmodFile = $"{Parameter.AntdCfgParameters}/rmmod.conf";
+        private static readonly string _rmmodFileBackup = $"{Parameter.AntdCfgParameters}/rmmod.conf.bck";
 
-        public void SetRmmodList(List<string> objects) {
+        public static void SetRmmodList(List<string> objects) {
             var lines = objects;
             if(File.Exists(_rmmodFile)) {
                 File.Copy(_rmmodFile, _rmmodFileBackup, true);
@@ -83,7 +79,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<string> GetRmmodList() {
+        private static List<string> GetRmmodList() {
             if(!File.Exists(_rmmodFile)) {
                 return new List<string>();
             }
@@ -99,10 +95,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    modulesblacklist    ]
-        private readonly string _modulesblacklistFile = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf";
-        private readonly string _modulesblacklistFileBackup = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf.bck";
+        private static readonly string _modulesblacklistFile = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf";
+        private static readonly string _modulesblacklistFileBackup = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf.bck";
 
-        public void SetModulesBlacklistList(List<string> objects) {
+        public static void SetModulesBlacklistList(List<string> objects) {
             var lines = objects;
             if(File.Exists(_modulesblacklistFile)) {
                 File.Copy(_modulesblacklistFile, _modulesblacklistFileBackup, true);
@@ -115,7 +111,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<string> GetModulesBlacklistList() {
+        private static List<string> GetModulesBlacklistList() {
             if(!File.Exists(_modulesblacklistFile)) {
                 return new List<string>();
             }
@@ -131,10 +127,10 @@ namespace antdlib.config {
         #endregion}
 
         #region [    osparameters    ]
-        private readonly string _osparametersFile = $"{Parameter.AntdCfgParameters}/osparameters.conf";
-        private readonly string _osparametersFileBackup = $"{Parameter.AntdCfgParameters}/osparameters.conf.bck";
+        private static readonly string _osparametersFile = $"{Parameter.AntdCfgParameters}/osparameters.conf";
+        private static readonly string _osparametersFileBackup = $"{Parameter.AntdCfgParameters}/osparameters.conf.bck";
 
-        public void SetOsParametersList(List<string> objects) {
+        public static void SetOsParametersList(List<string> objects) {
             var lines = objects;
             if(File.Exists(_osparametersFile)) {
                 File.Copy(_osparametersFile, _osparametersFileBackup, true);
@@ -147,7 +143,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<string> GetOsParametersList() {
+        private static List<string> GetOsParametersList() {
             if(!File.Exists(_osparametersFile)) {
                 return new List<string>();
             }
@@ -163,10 +159,10 @@ namespace antdlib.config {
         #endregion}
 
         #region [    servicesstart    ]
-        private readonly string _servicesstartFile = $"{Parameter.AntdCfgParameters}/servicesstart.conf";
-        private readonly string _servicesstartFileBackup = $"{Parameter.AntdCfgParameters}/servicesstart.conf.bck";
+        private static readonly string _servicesstartFile = $"{Parameter.AntdCfgParameters}/servicesstart.conf";
+        private static readonly string _servicesstartFileBackup = $"{Parameter.AntdCfgParameters}/servicesstart.conf.bck";
 
-        public void SetServicesStartList(List<string> objects) {
+        public static void SetServicesStartList(List<string> objects) {
             var lines = objects;
             if(File.Exists(_servicesstartFile)) {
                 File.Copy(_servicesstartFile, _servicesstartFileBackup, true);
@@ -179,7 +175,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<string> GetServicesStartList() {
+        private static List<string> GetServicesStartList() {
             if(!File.Exists(_servicesstartFile)) {
                 return new List<string>();
             }
@@ -195,10 +191,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    servicesstop    ]
-        private readonly string _servicesstopFile = $"{Parameter.AntdCfgParameters}/servicesstop.conf";
-        private readonly string _servicesstopFileBackup = $"{Parameter.AntdCfgParameters}/servicesstop.conf.bck";
+        private static readonly string _servicesstopFile = $"{Parameter.AntdCfgParameters}/servicesstop.conf";
+        private static readonly string _servicesstopFileBackup = $"{Parameter.AntdCfgParameters}/servicesstop.conf.bck";
 
-        public void SetServicesStopList(List<string> objects) {
+        public static void SetServicesStopList(List<string> objects) {
             var lines = objects;
             if(File.Exists(_servicesstopFile)) {
                 File.Copy(_servicesstopFile, _servicesstopFileBackup, true);
@@ -211,7 +207,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<string> GetServicesStopList() {
+        private static List<string> GetServicesStopList() {
             if(!File.Exists(_servicesstopFile)) {
                 return new List<string>();
             }
@@ -227,10 +223,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    startcommands    ]
-        private readonly string _startcommandsFile = $"{Parameter.AntdCfgParameters}/startcommands.conf";
-        private readonly string _startcommandsFileBackup = $"{Parameter.AntdCfgParameters}/startcommands.conf.bck";
+        private static readonly string _startcommandsFile = $"{Parameter.AntdCfgParameters}/startcommands.conf";
+        private static readonly string _startcommandsFileBackup = $"{Parameter.AntdCfgParameters}/startcommands.conf.bck";
 
-        public void SetStartCommandsList(List<Control> commands) {
+        public static void SetStartCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
             if(File.Exists(_startcommandsFile)) {
                 File.Copy(_startcommandsFile, _startcommandsFileBackup, true);
@@ -243,7 +239,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<Control> GetStartCommandsList() {
+        private static List<Control> GetStartCommandsList() {
             if(!File.Exists(_startcommandsFile)) {
                 return new List<Control>();
             }
@@ -260,10 +256,10 @@ namespace antdlib.config {
         #endregion
 
         #region [    endcommands    ]
-        private readonly string _endcommandsFile = $"{Parameter.AntdCfgParameters}/endcommands.conf";
-        private readonly string _endcommandsFileBackup = $"{Parameter.AntdCfgParameters}/endcommands.conf.bck";
+        private static readonly string _endcommandsFile = $"{Parameter.AntdCfgParameters}/endcommands.conf";
+        private static readonly string _endcommandsFileBackup = $"{Parameter.AntdCfgParameters}/endcommands.conf.bck";
 
-        public void SetEndCommandsList(List<Control> commands) {
+        public static void SetEndCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
             if(File.Exists(_endcommandsFile)) {
                 File.Copy(_endcommandsFile, _endcommandsFileBackup, true);
@@ -276,7 +272,7 @@ namespace antdlib.config {
             }
         }
 
-        private List<Control> GetEndCommandsList() {
+        private static List<Control> GetEndCommandsList() {
             if(!File.Exists(_endcommandsFile)) {
                 return new List<Control>();
             }

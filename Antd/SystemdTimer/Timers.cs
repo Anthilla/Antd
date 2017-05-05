@@ -6,17 +6,17 @@ using System.IO;
 using System.Linq;
 
 namespace Antd.SystemdTimer {
-    public class Timers {
-        public class Model {
-            public string Next { get; set; }
-            public string Left { get; set; }
-            public string Last { get; set; }
-            public string Passed { get; set; }
-            public string Unit { get; set; }
-            public string Activates { get; set; }
+    public static class Timers {
+        public static class Model {
+            public static string Next { get; set; }
+            public static string Left { get; set; }
+            public static string Last { get; set; }
+            public static string Passed { get; set; }
+            public static string Unit { get; set; }
+            public static string Activates { get; set; }
         }
 
-        public void Setup() {
+        public static void Setup() {
             if(IsTargetActive())
                 return;
             if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
@@ -34,7 +34,7 @@ namespace Antd.SystemdTimer {
             bash.Execute("systemctl daemon-reload", false);
         }
 
-        public void StartAll() {
+        public static void StartAll() {
             var bash = new Bash();
             bash.Execute("systemctl restart tt.target", false);
         }
@@ -114,7 +114,7 @@ namespace Antd.SystemdTimer {
 
         private static readonly string TargetDirectory = Parameter.TimerUnits;
 
-        public void Create(string name, string time, string command) {
+        public static void Create(string name, string time, string command) {
             var timerFile = $"{TargetDirectory}/{name}.timer";
             if(File.Exists(timerFile)) {
                 File.Delete(timerFile);
@@ -168,7 +168,7 @@ namespace Antd.SystemdTimer {
             bash.Execute("systemctl daemon-reload", false);
         }
 
-        public void Remove(string name) {
+        public static void Remove(string name) {
             var bash = new Bash();
             bash.Execute($"systemctl stop {name}.target", false);
             var timerFile = $"{TargetDirectory}/{name}.target";
@@ -191,7 +191,7 @@ namespace Antd.SystemdTimer {
             bash.Execute("systemctl daemon-reload", false);
         }
 
-        public void Import() {
+        public static void Import() {
             var files = Directory.EnumerateFiles(TargetDirectory).ToList();
             foreach(var file in files.Where(_ => _.EndsWith(".target"))) {
                 var name = Path.GetFileName(file);
@@ -232,7 +232,7 @@ namespace Antd.SystemdTimer {
             }
         }
 
-        public void Export() {
+        public static void Export() {
             var schedulerConfiguration = new TimerConfiguration();
             var all = schedulerConfiguration.Get().Timers;
             foreach(var tt in all) {
@@ -240,17 +240,17 @@ namespace Antd.SystemdTimer {
             }
         }
 
-        public void Enable(string ttName) {
+        public static void Enable(string ttName) {
             var bash = new Bash();
             bash.Execute($"systemctl restart {ttName}.target", false);
         }
 
-        public void Disable(string ttName) {
+        public static void Disable(string ttName) {
             var bash = new Bash();
             bash.Execute($"systemctl stop {ttName}.target", false);
         }
 
-        public bool IsActive(string ttName) {
+        public static bool IsActive(string ttName) {
             var bash = new Bash();
             var result = bash.Execute($"systemctl is-active {ttName}.target");
             return result.Trim() == "active";

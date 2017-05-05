@@ -37,44 +37,38 @@ namespace Antd.Modules {
 
         public LogSyslogNgModule() {
             Get["/syslogng"] = x => {
-                var syslogngConfiguration = new SyslogNgConfiguration();
-                var syslogngIsActive = syslogngConfiguration.IsActive();
+                var syslogngIsActive = SyslogNgConfiguration.IsActive();
                 var model = new PageSyslogNgModel {
                     SyslogNgIsActive = syslogngIsActive,
-                    SyslogNgOptions = syslogngConfiguration.Get() ?? new SyslogNgConfigurationModel()
+                    SyslogNgOptions = SyslogNgConfiguration.Get() ?? new SyslogNgConfigurationModel()
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/syslogng/set"] = x => {
-                var syslogngConfiguration = new SyslogNgConfiguration();
-                syslogngConfiguration.Set();
+                SyslogNgConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/syslogng/restart"] = x => {
-                var syslogngConfiguration = new SyslogNgConfiguration();
-                syslogngConfiguration.Start();
+                SyslogNgConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/syslogng/stop"] = x => {
-                var syslogngConfiguration = new SyslogNgConfiguration();
-                syslogngConfiguration.Stop();
+                SyslogNgConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/syslogng/enable"] = x => {
-                var dhcpdConfiguration = new SyslogNgConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                SyslogNgConfiguration.Enable();
+                SyslogNgConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/syslogng/disable"] = x => {
-                var dhcpdConfiguration = new SyslogNgConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                SyslogNgConfiguration.Disable();
+                SyslogNgConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -114,8 +108,7 @@ namespace Antd.Modules {
                     PortLevelSystem = portLevelSystem
 
                 };
-                var syslogngConfiguration = new SyslogNgConfiguration();
-                syslogngConfiguration.Save(model);
+                SyslogNgConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
         }

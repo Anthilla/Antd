@@ -41,8 +41,6 @@ namespace antdlib.config {
         private readonly string[] _paths;
         private FileSystemWatcher _fsw;
         private readonly bool _isSyncMachineService;
-        private readonly SyncMachineConfiguration _syncMachineConfiguration = new SyncMachineConfiguration();
-
 
         public DirectoryWatcher(RsyncObjectModel[] paths) {
             _directoriesModel = paths;
@@ -194,7 +192,7 @@ namespace antdlib.config {
                 return;
             }
 
-            var syncMachineConfiguration = _syncMachineConfiguration.Get();
+            var syncMachineConfiguration = SyncMachineConfiguration.Get();
             if(syncMachineConfiguration == null) {
                 return;
             }

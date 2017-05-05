@@ -41,8 +41,7 @@ namespace Antd.Modules {
 
         public AntdAclModule() {
             Get["/acl"] = x => {
-                var aclConfiguration = new AclConfiguration();
-                var aclConfig = aclConfiguration.Get() ?? new AclConfigurationModel();
+                var aclConfig = AclConfiguration.Get() ?? new AclConfigurationModel();
                 var aclIsActive = aclConfig.IsActive;
                 var list = new List<AclPersistentSettingModel>();
                 foreach(var aaa in aclConfig.Settings) {
@@ -57,34 +56,29 @@ namespace Antd.Modules {
             };
 
             Post["/acl/set"] = x => {
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.Set();
+                AclConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/acl/restart"] = x => {
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.Start();
+                AclConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/acl/stop"] = x => {
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.Stop();
+                AclConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/acl/enable"] = x => {
-                var dhcpdConfiguration = new AclConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                AclConfiguration.Enable();
+                AclConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/acl/disable"] = x => {
-                var dhcpdConfiguration = new AclConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                AclConfiguration.Disable();
+                AclConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -93,8 +87,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(dir)) {
                     return HttpStatusCode.OK;
                 }
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.AddAcl(dir);
+                AclConfiguration.AddAcl(dir);
                 return HttpStatusCode.OK;
             };
 
@@ -104,8 +97,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(textall)) {
                     return HttpStatusCode.OK;
                 }
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.SetAcl(guid, textall.SplitToList(Environment.NewLine).ToArray());
+                AclConfiguration.SetAcl(guid, textall.SplitToList(Environment.NewLine).ToArray());
                 return HttpStatusCode.OK;
             };
 
@@ -114,8 +106,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(guid)) {
                     return HttpStatusCode.OK;
                 }
-                var aclConfiguration = new AclConfiguration();
-                var result = aclConfiguration.GetAcl(guid);
+                var result = AclConfiguration.GetAcl(guid);
                 return JsonConvert.SerializeObject(result);
             };
 
@@ -124,8 +115,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(guid)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.RemoveAcl(guid);
+                AclConfiguration.RemoveAcl(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -134,8 +124,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(guid)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var aclConfiguration = new AclConfiguration();
-                var r = aclConfiguration.ApplyAcl(guid);
+                var r = AclConfiguration.ApplyAcl(guid);
                 return Response.AsText(r);
             };
 
@@ -145,8 +134,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(user)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var aclConfiguration = new AclConfiguration();
-                aclConfiguration.ApplyAclScript(user);
+                AclConfiguration.ApplyAclScript(user);
                 return HttpStatusCode.OK;
             };
             #endregion

@@ -10,7 +10,6 @@ namespace Antd.Storage {
  
 
         private static readonly Bash Bash = new Bash();
-        private readonly Zpool _zpool = new Zpool();
 
         public  List<ZfsModel> List() {
             var result = Bash.Execute("zfs list");
@@ -19,7 +18,7 @@ namespace Antd.Storage {
                 return list;
             }
 
-            var pools = _zpool.List();
+            var pools = Zpool.List();
 
             var lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList().Skip(1);
             foreach (var line in lines) {

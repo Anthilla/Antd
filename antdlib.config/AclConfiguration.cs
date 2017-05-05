@@ -6,83 +6,76 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
     public class AclConfiguration {
 
-        private readonly AclConfigurationModel _serviceModel;
+        private static AclConfigurationModel ServiceModel => Load();
 
-        private readonly string _storeDir = $"{Parameter.AntdCfgServices}/acls";
-        private readonly string _storeDirTemplate = $"{Parameter.AntdCfgServices}/acls/template";
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/acl.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/acl.conf.bck";
-        public Timer Timer { get; private set; }
+        private static readonly string StoreDir = $"{Parameter.AntdCfgServices}/acls";
+        private static readonly string StoreDirTemplate = $"{Parameter.AntdCfgServices}/acls/template";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/acl.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/acl.conf.bck";
+        public static Timer Timer { get; private set; }
 
-        public AclConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
-            IoDir.CreateDirectory(_storeDir);
-            IoDir.CreateDirectory(_storeDirTemplate);
-            if(!File.Exists(_cfgFile)) {
-                _serviceModel = new AclConfigurationModel();
+        private static AclConfigurationModel Load() {
+            if(!File.Exists(CfgFile)) {
+                return new AclConfigurationModel();
             }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<AclConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new AclConfigurationModel();
-                }
-
+            try {
+                var text = File.ReadAllText(CfgFile);
+                var obj = JsonConvert.DeserializeObject<AclConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new AclConfigurationModel();
             }
         }
 
-        public void Save(AclConfigurationModel model) {
+        public static void Save(AclConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(_cfgFile, text);
+            File.WriteAllText(CfgFile, text);
             ConsoleLogger.Log("[acl] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
             Start();
         }
 
-        public bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+        public static bool IsActive() {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
-        public AclConfigurationModel Get() {
-            return _serviceModel;
+        public static AclConfigurationModel Get() {
+            return ServiceModel;
         }
 
-        public void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+        public static void Enable() {
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[acl] enabled");
         }
 
-        public void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+        public static void Disable() {
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[acl] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Timer?.Dispose();
             ConsoleLogger.Log("[acl] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             ConsoleLogger.Log("[acl] start");
             var alertTime = new TimeSpan(0, 40, 0);
             var current = DateTime.Now;
@@ -95,31 +88,31 @@ namespace antdlib.config {
             }, null, timeToGo, Timeout.InfiniteTimeSpan);
         }
 
-        private readonly Bash _bash = new Bash();
+        private static readonly Bash Bash = new Bash();
 
-        private string SetAclBackupFilePath(string directory) {
-            return string.IsNullOrEmpty(directory) ? $"{_storeDir}/{Guid.NewGuid()}.acl" : $"{_storeDir}/ACL{directory.Replace("/", "_")}.acl";
+        private static string SetAclBackupFilePath(string directory) {
+            return string.IsNullOrEmpty(directory) ? $"{StoreDir}/{Guid.NewGuid()}.acl" : $"{StoreDir}/ACL{directory.Replace("/", "_")}.acl";
         }
 
-        public void Backup(string dir) {
-            var acls = _bash.Execute($"getfacl -R {dir}").SplitBash();
+        public static void Backup(string dir) {
+            var acls = Bash.Execute($"getfacl -R {dir}").SplitBash();
             var destination = SetAclBackupFilePath(dir);
             File.WriteAllLines(destination, acls);
         }
 
-        public void Restore() {
-            var acls = IoDir.EnumerateFiles(_storeDir);
+        public static void Restore() {
+            var acls = Directory.EnumerateFiles(StoreDir);
             foreach(var acl in acls) {
                 Restore(acl);
             }
         }
 
-        public string Restore(string acl) {
-            return _bash.Execute($"setfacl --restore {acl}", false);
+        public static string Restore(string acl) {
+            return Bash.Execute($"setfacl --restore {acl}", false);
         }
 
-        public Dictionary<string, string[]> GetTemplates() {
-            var files = IoDir.EnumerateFiles(_storeDirTemplate);
+        public static Dictionary<string, string[]> GetTemplates() {
+            var files = Directory.EnumerateFiles(StoreDirTemplate);
             var dict = new Dictionary<string, string[]>();
             foreach(var file in files) {
                 dict[file] = File.ReadAllLines(file);
@@ -127,12 +120,12 @@ namespace antdlib.config {
             return dict;
         }
 
-        public void SaveTemplate(string name, string[] rules) {
-            var file = $"{_storeDirTemplate}/{name}";
+        public static void SaveTemplate(string name, string[] rules) {
+            var file = $"{StoreDirTemplate}/{name}";
             File.WriteAllLines(file, rules);
         }
 
-        public string[] GetDefaultTemplate() {
+        public static string[] GetDefaultTemplate() {
             return new[] {
                 "# file: REPLACE_WITH_PATH",
                 "# owner: root",
@@ -160,10 +153,10 @@ namespace antdlib.config {
             };
         }
 
-        public void AddAcl(string dir) {
+        public static void AddAcl(string dir) {
             var backupFile = SetAclBackupFilePath(dir);
             File.WriteAllLines(backupFile, GetDefaultTemplate());
-            var acls = _serviceModel.Settings;
+            var acls = ServiceModel.Settings;
             if(acls.Any(_ => _.Path == dir)) {
                 return;
             }
@@ -172,12 +165,12 @@ namespace antdlib.config {
                 Acl = backupFile
             };
             acls.Add(model);
-            _serviceModel.Settings = acls;
-            Save(_serviceModel);
+            ServiceModel.Settings = acls;
+            Save(ServiceModel);
         }
 
-        public void SetAcl(string guid, string[] rules) {
-            var acls = _serviceModel.Settings;
+        public static void SetAcl(string guid, string[] rules) {
+            var acls = ServiceModel.Settings;
             var model = acls.FirstOrDefault(_ => _.Guid == guid);
             if(model == null) {
                 return;
@@ -185,19 +178,19 @@ namespace antdlib.config {
             File.WriteAllLines(model.Acl, rules);
         }
 
-        public void RemoveAcl(string guid) {
-            var acls = _serviceModel.Settings;
+        public static void RemoveAcl(string guid) {
+            var acls = ServiceModel.Settings;
             var model = acls.FirstOrDefault(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             acls.Remove(model);
-            _serviceModel.Settings = acls;
-            Save(_serviceModel);
+            ServiceModel.Settings = acls;
+            Save(ServiceModel);
         }
 
-        public string[] GetAcl(string guid) {
-            var acls = _serviceModel.Settings;
+        public static string[] GetAcl(string guid) {
+            var acls = ServiceModel.Settings;
             var model = acls.FirstOrDefault(_ => _.Guid == guid);
             if(model == null) {
                 return new[] { "" };
@@ -206,14 +199,14 @@ namespace antdlib.config {
             return result;
         }
 
-        public string ApplyAcl(string guid) {
-            var acls = _serviceModel.Settings;
+        public static string ApplyAcl(string guid) {
+            var acls = ServiceModel.Settings;
             var model = acls.FirstOrDefault(_ => _.Guid == guid);
             return model == null ? "Error" : Restore(model.Acl);
         }
 
         #region [    Script    ]
-        public void ScriptSetup() {
+        public static void ScriptSetup() {
             const string file1 = "/framework/antd/Resources/.010_Home_SKEL.acl";
             if(File.Exists(file1)) {
                 File.Copy(file1, $"{Parameter.AntdCfgServices}/acls/.010_Home_SKEL.acl", true);
@@ -230,7 +223,7 @@ namespace antdlib.config {
             }
         }
 
-        public void ApplyAclScript(string user) {
+        public static void ApplyAclScript(string user) {
             const string file3 = "/framework/antd/Resources/.000_define_user_acl.sh";
             if(!File.Exists(file3))
                 return;
@@ -239,7 +232,7 @@ namespace antdlib.config {
         }
         #endregion
 
-        public class AclAuto {
+        public static class AclAuto {
 
             public static void ApplyAcl(string user) {
                 //IFS=$'\n'
@@ -332,7 +325,7 @@ namespace antdlib.config {
                 //#wbinfo -S S-1-5-21-1191849564-1695385468-1789397799-1773
             }
 
-            public string[] HomeSkel(string value) {
+            public static string[] HomeSkel(string value) {
                 return new[] {
                 "# file: Data/UserData/Home/user",
                 "# owner: root",
@@ -364,7 +357,7 @@ namespace antdlib.config {
             };
             }
 
-            public string[] SharedSkel(string value) {
+            public static string[] SharedSkel(string value) {
                 return new[] {
                 "# file: Data/UserData/Home/user/Shared",
                 "# owner: root",

@@ -41,18 +41,15 @@ using Random = anthilla.core.Random;
 namespace Antd.Modules {
     public class AntdNetwork2Module : NancyModule {
 
-        private readonly Host2Configuration _variablesConfiguration = new Host2Configuration();
-        private readonly Network2Configuration _network2Configuration = new Network2Configuration();
-
         private readonly CommandLauncher _commandLauncher = new CommandLauncher();
 
         public AntdNetwork2Module() {
 
             Get["/network2"] = x => {
-                var physicalInterfaces = _network2Configuration.InterfacePhysical.ToList();
-                var bridgeInterfaces = _network2Configuration.InterfaceBridge.ToList();
-                var bondInterfaces = _network2Configuration.InterfaceBond.ToList();
-                var virtualInterfaces = _network2Configuration.InterfaceVirtual.ToList();
+                var physicalInterfaces = Network2Configuration.InterfacePhysical.ToList();
+                var bridgeInterfaces = Network2Configuration.InterfaceBridge.ToList();
+                var bondInterfaces = Network2Configuration.InterfaceBond.ToList();
+                var virtualInterfaces = Network2Configuration.InterfaceVirtual.ToList();
                 foreach(var vif in virtualInterfaces) {
                     if(physicalInterfaces.Any(_ => _ == vif) ||
                         bridgeInterfaces.Any(_ => _ == vif) ||
@@ -70,11 +67,11 @@ namespace Antd.Modules {
                     BondIf = bondInterfaces,
                     VirtualIf = virtualInterfaces,
                     AllIfs = allifs, //new List <string> { "dev1", "dev2", "dev3" },
-                    InterfaceConfigurationList = _network2Configuration.InterfaceConfigurationList,
-                    GatewayConfigurationList = _network2Configuration.GatewayConfigurationList,
-                    DnsConfigurationList = _network2Configuration.DnsConfigurationList,
-                    Configuration = _network2Configuration.Conf.Interfaces,
-                    Variables = _variablesConfiguration.Host
+                    InterfaceConfigurationList = Network2Configuration.InterfaceConfigurationList,
+                    GatewayConfigurationList = Network2Configuration.GatewayConfigurationList,
+                    DnsConfigurationList = Network2Configuration.DnsConfigurationList,
+                    Configuration = Network2Configuration.Conf.Interfaces,
+                    Variables = Host2Configuration.Host
                 };
                 return JsonConvert.SerializeObject(model);
             };
@@ -93,7 +90,7 @@ namespace Antd.Modules {
                     return HttpStatusCode.InternalServerError;
                 }
 
-                var index = _network2Configuration.InterfaceConfigurationList.Count(_ => _.Type == typedType);
+                var index = Network2Configuration.InterfaceConfigurationList.Count(_ => _.Type == typedType);
                 string description = Request.Form.Description;
 
                 string verb = Request.Form.Verb;
@@ -121,7 +118,7 @@ namespace Antd.Modules {
 
                 string children = Request.Form.Ifs;
 
-                var vars = _variablesConfiguration.Host;
+                var vars = Host2Configuration.Host;
 
                 var hostname = "";
                 var subnet = "";
@@ -157,13 +154,13 @@ namespace Antd.Modules {
                     Adapter = typedAdapter,
                     ChildrenIf = children == null ? new List<string>() : children.SplitToList()
                 };
-                _network2Configuration.AddInterfaceConfiguration(model);
+                Network2Configuration.AddInterfaceConfiguration(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/interfaceconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.RemoveInterfaceConfiguration(guid);
+                Network2Configuration.RemoveInterfaceConfiguration(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -176,13 +173,13 @@ namespace Antd.Modules {
                     Route = route,
                     GatewayAddress = gatewayAddress
                 };
-                _network2Configuration.AddGatewayConfiguration(model);
+                Network2Configuration.AddGatewayConfiguration(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/gatewayconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.RemoveGatewayConfiguration(guid);
+                Network2Configuration.RemoveGatewayConfiguration(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -211,25 +208,25 @@ namespace Antd.Modules {
                     Ip = ip,
                     AuthenticationEnabled = auth?.ToBoolean() ?? true
                 };
-                _network2Configuration.AddDnsConfiguration(model);
+                Network2Configuration.AddDnsConfiguration(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/dnsconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.RemoveDnsConfiguration(guid);
+                Network2Configuration.RemoveDnsConfiguration(guid);
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/dnsconfiguration/active"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.SetDnsConfigurationActive(guid);
+                Network2Configuration.SetDnsConfigurationActive(guid);
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/dnsconfiguration/active/del"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.SetDnsConfigurationActive(guid);
+                Network2Configuration.SetDnsConfigurationActive(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -262,13 +259,13 @@ namespace Antd.Modules {
                     Delete = delete,
                     Add = add
                 };
-                _network2Configuration.AddNsUpdateConfiguration(model);
+                Network2Configuration.AddNsUpdateConfiguration(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/nsupdateconfiguration/del"] = x => {
                 string guid = Request.Form.Guid;
-                _network2Configuration.RemoveNsUpdateConfiguration(guid);
+                Network2Configuration.RemoveNsUpdateConfiguration(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -276,7 +273,7 @@ namespace Antd.Modules {
                 string dev = Request.Form.Device;
                 string conf = Request.Form.Configuration;
 
-                //var cc = _network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == conf)?.IsUsed;
+                //var cc = Network2Configuration.InterfaceConfigurationList.FirstOrDefault(_ => _.Id == conf)?.IsUsed;
                 //if(cc == true || cc == null) {
                 //    return HttpStatusCode.InternalServerError;
                 //}
@@ -284,7 +281,7 @@ namespace Antd.Modules {
                 string confs = Request.Form.AdditionalConfigurations;
                 string gwConf = Request.Form.GatewayConfiguration;
 
-                var cc2 = _network2Configuration.GatewayConfigurationList.FirstOrDefault(_ => _.Id == gwConf)?.IsUsed;
+                var cc2 = Network2Configuration.GatewayConfigurationList.FirstOrDefault(_ => _.Id == gwConf)?.IsUsed;
 
                 string txqueuelen = Request.Form.Txqueuelen;
                 string mtu = Request.Form.Mtu;
@@ -296,7 +293,7 @@ namespace Antd.Modules {
                     Txqueuelen = txqueuelen,
                     Mtu = mtu
                 };
-                _network2Configuration.AddInterfaceSetting(model);
+                Network2Configuration.AddInterfaceSetting(model);
 
                 new Do().NetworkChanges();
 
@@ -305,7 +302,7 @@ namespace Antd.Modules {
 
             Post["/network2/interface/del"] = x => {
                 string dev = Request.Form.Device;
-                _network2Configuration.RemoveInterfaceSetting(dev);
+                Network2Configuration.RemoveInterfaceSetting(dev);
 
                 new Do().NetworkChanges();
 

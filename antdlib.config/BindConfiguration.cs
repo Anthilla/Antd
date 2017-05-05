@@ -10,42 +10,40 @@ using IoDir = System.IO.Directory;
 namespace antdlib.config {
     public class BindConfiguration {
 
-        private readonly BindConfigurationModel _serviceModel;
+        private static BindConfigurationModel ServiceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/bind.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/bind.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/bind.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/bind.conf.bck";
         private const string ServiceName = "named.service";
         private const string MainFilePath = "/etc/bind/named.conf";
         private const string MainFilePathBackup = "/etc/bind/.named.conf";
 
-        public BindConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
-            if(!File.Exists(_cfgFile)) {
-                _serviceModel = new BindConfigurationModel();
-            }
-            else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<BindConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new BindConfigurationModel();
-                }
+        private static BindConfigurationModel Load() {
+            if(!File.Exists(CfgFile)) {
+                return new BindConfigurationModel();
 
+            }
+            try {
+                var text = File.ReadAllText(CfgFile);
+                var obj = JsonConvert.DeserializeObject<BindConfigurationModel>(text);
+                return obj;
+            }
+            catch(Exception) {
+                return new BindConfigurationModel();
             }
         }
 
-        public void Save(BindConfigurationModel model) {
+
+        public static void Save(BindConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(_cfgFile, text);
+            File.WriteAllText(CfgFile, text);
             ConsoleLogger.Log("[bind] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
             #region [    named.conf generation    ]
@@ -58,7 +56,7 @@ namespace antdlib.config {
             var lines = new List<string> {
                 "options {"
             };
-            var options = _serviceModel;
+            var options = ServiceModel;
             lines.Add($"notify {options.Notify};");
             lines.Add($"max-cache-size {options.MaxCacheSize};");
             lines.Add($"max-cache-ttl {options.MaxCacheTtl};");
@@ -172,35 +170,35 @@ namespace antdlib.config {
             RndcReconfig();
         }
 
-        public bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+        public static bool IsActive() {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
-        public BindConfigurationModel Get() {
-            return _serviceModel;
+        public static BindConfigurationModel Get() {
+            return ServiceModel;
         }
 
-        public void Enable() {
-            _serviceModel.IsActive = true;
+        public static void Enable() {
+            ServiceModel.IsActive = true;
             //Save(_serviceModel);
             ConsoleLogger.Log("[bind] enabled");
         }
 
-        public void Disable() {
-            _serviceModel.IsActive = false;
+        public static void Disable() {
+            ServiceModel.IsActive = false;
             //Save(_serviceModel);
             ConsoleLogger.Log("[bind] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Systemctl.Stop(ServiceName);
             ConsoleLogger.Log("[bind] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
@@ -210,35 +208,35 @@ namespace antdlib.config {
             ConsoleLogger.Log("[bind] start");
         }
 
-        private readonly Bash _bash = new Bash();
+        private static readonly Bash Bash = new Bash();
 
-        public void RndcReconfig() {
-            _bash.Execute("rndc reconfig");
+        public static void RndcReconfig() {
+            Bash.Execute("rndc reconfig");
         }
 
-        public void RndcReload() {
-            _bash.Execute("rndc reload");
+        public static void RndcReload() {
+            Bash.Execute("rndc reload");
         }
 
-        public void AddZone(BindConfigurationZoneModel model) {
-            var zones = _serviceModel.Zones;
+        public static void AddZone(BindConfigurationZoneModel model) {
+            var zones = ServiceModel.Zones;
             if(zones.Any(_ => _.Name == model.Name)) {
                 return;
             }
             zones.Add(model);
-            _serviceModel.Zones = zones;
-            Save(_serviceModel);
+            ServiceModel.Zones = zones;
+            Save(ServiceModel);
         }
 
-        public void RemoveZone(string guid) {
-            var zones = _serviceModel.Zones;
+        public static void RemoveZone(string guid) {
+            var zones = ServiceModel.Zones;
             var model = zones.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             zones.Remove(model);
-            _serviceModel.Zones = zones;
-            Save(_serviceModel);
+            ServiceModel.Zones = zones;
+            Save(ServiceModel);
         }
     }
 }

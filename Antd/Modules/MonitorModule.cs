@@ -77,9 +77,7 @@ namespace Antd.Modules {
             };
 
             Get["/configured"] = x => {
-                var hostConfiguration = new HostConfiguration();
-                var configured = hostConfiguration.IsHostConfiguredByUser();
-                return JsonConvert.SerializeObject(configured   );
+                return JsonConvert.SerializeObject(true);
             };
         }
     }

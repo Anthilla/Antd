@@ -5,39 +5,37 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
-    public class JournaldConfiguration {
+    public static class JournaldConfiguration {
 
-        private readonly JournaldConfigurationModel _serviceModel;
+        private static JournaldConfigurationModel _serviceModel => Load();
 
-        private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/journald.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/journald.conf.bck";
+        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/journald.conf";
+        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/journald.conf.bck";
         private const string ServiceName = "systemd-journald.service";
         private const string MainFilePath = "/etc/systemd/journald.conf";
         private const string MainFilePathBackup = "/etc/systemd/.journald.conf";
         private const string DirsDirectoryPath = "/mnt/cdrom/DIRS/FILE_etc_systemd_journald.conf";
 
-        public JournaldConfiguration() {
-            IoDir.CreateDirectory(Parameter.AntdCfgServices);
+        public static JournaldConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
-                _serviceModel = new JournaldConfigurationModel();
+                return new JournaldConfigurationModel();
             }
             else {
                 try {
                     var text = File.ReadAllText(_cfgFile);
                     var obj = JsonConvert.DeserializeObject<JournaldConfigurationModel>(text);
-                    _serviceModel = obj;
+                    return obj;
                 }
                 catch(Exception) {
-                    _serviceModel = new JournaldConfigurationModel();
+                    return new JournaldConfigurationModel();
                 }
 
             }
         }
 
-        public void Save(JournaldConfigurationModel model) {
+        public static void Save(JournaldConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
@@ -46,7 +44,7 @@ namespace antdlib.config {
             ConsoleLogger.Log("[journald] configuration saved");
         }
 
-        public void Set() {
+        public static void Set() {
             Enable();
             Stop();
 
@@ -145,35 +143,35 @@ namespace antdlib.config {
             Start();
         }
 
-        public bool IsActive() {
+        public static bool IsActive() {
             if(!File.Exists(_cfgFile)) {
                 return false;
             }
             return _serviceModel != null && _serviceModel.IsActive;
         }
 
-        public JournaldConfigurationModel Get() {
+        public static JournaldConfigurationModel Get() {
             return _serviceModel;
         }
 
-        public void Enable() {
+        public static void Enable() {
             _serviceModel.IsActive = true;
             Save(_serviceModel);
             ConsoleLogger.Log("[journald] enabled");
         }
 
-        public void Disable() {
+        public static void Disable() {
             _serviceModel.IsActive = false;
             Save(_serviceModel);
             ConsoleLogger.Log("[journald] disabled");
         }
 
-        public void Stop() {
+        public static void Stop() {
             Systemctl.Stop(ServiceName);
             ConsoleLogger.Log("[journald] stop");
         }
 
-        public void Start() {
+        public static void Start() {
             if(Systemctl.IsEnabled(ServiceName) == false) {
                 Systemctl.Enable(ServiceName);
             }
@@ -183,12 +181,11 @@ namespace antdlib.config {
             ConsoleLogger.Log("[journald] start");
         }
 
-        public void Remount() {
+        public static void Remount() {
             while(MountHelper.IsAlreadyMounted(MainFilePath, DirsDirectoryPath)) {
                 MountHelper.Umount(MainFilePath);
             }
-            var mount = new MountManagement();
-            mount.File(MainFilePath);
+            MountManagement.File(MainFilePath);
         }
     }
 }

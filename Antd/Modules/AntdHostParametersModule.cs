@@ -38,53 +38,53 @@ using antdlib.common;
 namespace Antd.Modules {
     public class AntdHostParametersModule : NancyModule {
 
-        private readonly HostParametersConfiguration _hostParametersConfiguration = new HostParametersConfiguration();
+        private readonly HostParametersConfiguration HostParametersConfiguration = new HostParametersConfiguration();
 
         public AntdHostParametersModule() {
 
             Get["/hostparam"] = x => {
-                var hostparam = _hostParametersConfiguration.Conf;
+                var hostparam = HostParametersConfiguration.Conf;
                 return JsonConvert.SerializeObject(hostparam);
             };
 
             Post["/hostparam/set/modprobeslist"] = x => {
                 string data = Request.Form.Data;
-                _hostParametersConfiguration.SetModprobesList(data.SplitToList(";"));
+                HostParametersConfiguration.SetModprobesList(data.SplitToList(";"));
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/rmmodlist"] = x => {
                 string data = Request.Form.Data;
-                _hostParametersConfiguration.SetRmmodList(data.SplitToList(";"));
+                HostParametersConfiguration.SetRmmodList(data.SplitToList(";"));
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/modulesblacklistlist"] = x => {
                 string data = Request.Form.Data;
-                _hostParametersConfiguration.SetModulesBlacklistList(data.SplitToList(";"));
+                HostParametersConfiguration.SetModulesBlacklistList(data.SplitToList(";"));
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/osparameters"] = x => {
                 string data = Request.Form.Data;
-                _hostParametersConfiguration.SetOsParametersList(data.SplitToList(";"));
+                HostParametersConfiguration.SetOsParametersList(data.SplitToList(";"));
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/servicesstartlist"] = x => {
                 string data = Request.Form.Data;
-                _hostParametersConfiguration.SetServicesStartList(data.SplitToList(";"));
+                HostParametersConfiguration.SetServicesStartList(data.SplitToList(";"));
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/servicesstoplist"] = x => {
                 string data = Request.Form.Data;
-                _hostParametersConfiguration.SetServicesStopList(data.SplitToList(";"));
+                HostParametersConfiguration.SetServicesStopList(data.SplitToList(";"));
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
@@ -103,7 +103,7 @@ namespace Antd.Modules {
                     };
                     list.Add(mo);
                 }
-                _hostParametersConfiguration.SetStartCommandsList(list);
+                HostParametersConfiguration.SetStartCommandsList(list);
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };
@@ -122,7 +122,7 @@ namespace Antd.Modules {
                     };
                     list.Add(mo);
                 }
-                _hostParametersConfiguration.SetEndCommandsList(list);
+                HostParametersConfiguration.SetEndCommandsList(list);
                 new Do().ParametersChanges();
                 return HttpStatusCode.OK;
             };

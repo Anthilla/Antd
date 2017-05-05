@@ -112,11 +112,7 @@
     <Compile Include="Modules\AntdHostParametersModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNetwork2Module.cs" />
-    <Compile Include="Modules\BootOsParametersModule.cs" />
-    <Compile Include="Modules\BootServicesModule.cs" />
-    <Compile Include="Modules\BootModulesModule.cs" />
     <Compile Include="Modules\CaModule.cs" />
-    <Compile Include="Modules\BootCommandsModule.cs" />
     <Compile Include="Modules\LogSyslogNgModule.cs" />
     <Compile Include="Modules\LogJournaldModule.cs" />
     <Compile Include="Modules\LogReportModule.cs" />

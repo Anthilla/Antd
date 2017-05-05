@@ -6,17 +6,11 @@ using Newtonsoft.Json;
 
 namespace antdlib.config {
     public class Host2Configuration {
-        public string FilePath { get; }
-        public string FilePathBackup { get; }
-        public Host2Model Host { get; }
+        public static string FilePath => $"{Parameter.AntdCfg}/localhost.conf";
+        public static string FilePathBackup => $"{Parameter.AntdCfg}/localhost.conf.bck";
+        public static Host2Model Host => LoadModel();
 
-        public Host2Configuration() {
-            FilePath = $"{Parameter.AntdCfg}/localhost.conf";
-            FilePathBackup = $"{Parameter.AntdCfg}/localhost.conf.bck";
-            Host = LoadModel();
-        }
-
-        private Host2Model LoadModel() {
+        private static Host2Model LoadModel() {
             if(!File.Exists(FilePath)) {
                 return new Host2Model();
             }
@@ -28,7 +22,7 @@ namespace antdlib.config {
             }
         }
 
-        public void Export(Host2Model model) {
+        public static void Export(Host2Model model) {
             if(File.Exists(FilePath)) {
                 File.Copy(FilePath, $"{FilePath}.bck", true);
             }

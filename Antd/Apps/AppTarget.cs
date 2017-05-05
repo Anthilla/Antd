@@ -7,7 +7,7 @@ namespace Antd.Apps {
 
         private static readonly Bash Bash = new Bash();
 
-        public void Setup() {
+        public static void Setup() {
             if(IsTargetActive())
                 return;
             if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
@@ -24,17 +24,17 @@ namespace Antd.Apps {
             Bash.Execute("systemctl daemon-reload", false);
         }
 
-        public void StartAll() {
+        public static void StartAll() {
             Bash.Execute("systemctl restart app.target", false);
         }
 
         #region TT Target
-        private static bool IsTargetActive() {
+        private static  bool IsTargetActive() {
             var result = Bash.Execute("systemctl is-active app.target", false);
             return result.Trim() == "active";
         }
 
-        private static void WriteTimerTargetFile() {
+        private static  void WriteTimerTargetFile() {
             const string file = "/usr/lib64/systemd/system/app.target";
             if(File.Exists(file)) {
                 File.Delete(file);
@@ -52,7 +52,7 @@ namespace Antd.Apps {
             File.WriteAllLines(file, timerText);
         }
 
-        private static void WriteTimerServiceFile() {
+        private static  void WriteTimerServiceFile() {
             const string file = "/usr/lib64/systemd/system/app.service";
             if(File.Exists(file)) {
                 File.Delete(file);
@@ -75,7 +75,7 @@ namespace Antd.Apps {
             File.WriteAllLines(file, timerText);
         }
 
-        private static void WriteTimerMountFile() {
+        private static  void WriteTimerMountFile() {
             const string file = "/usr/lib64/systemd/system/etc-systemd-system-app.target.wants.mount";
             if(File.Exists(file)) {
                 File.Delete(file);

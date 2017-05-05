@@ -39,10 +39,8 @@ namespace Antd.Modules {
 
         public AppsManagementModule() {
             Get["/apps/management"] = x => {
-                var appsConfiguration = new AppsConfiguration();
-
                 var model = new PageAppsManagementModel {
-                    AppList = appsConfiguration.Get().Apps
+                    AppList = AppsConfiguration.Get().Apps
                 };
                 return JsonConvert.SerializeObject(model);
             };

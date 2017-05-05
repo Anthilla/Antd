@@ -40,45 +40,39 @@ namespace Antd.Modules {
 
         public AntdGlusterModule() {
             Get["/gluster"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                var glusterIsActive = glusterConfiguration.IsActive();
+                var glusterIsActive = GlusterConfiguration.IsActive();
                 var model = new PageGlusterModel {
                     GlusterIsActive = glusterIsActive,
-                    Nodes = glusterConfiguration.Get()?.Nodes,
-                    Volumes = glusterConfiguration.Get()?.Volumes
+                    Nodes = GlusterConfiguration.Get()?.Nodes,
+                    Volumes = GlusterConfiguration.Get()?.Volumes
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/gluster/set"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Set();
+                GlusterConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/gluster/restart"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Start();
+                GlusterConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/gluster/stop"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Stop();
+                GlusterConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/gluster/enable"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Enable();
-                glusterConfiguration.Start();
+                GlusterConfiguration.Enable();
+                GlusterConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/gluster/disable"] = x => {
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Disable();
-                glusterConfiguration.Stop();
+                GlusterConfiguration.Disable();
+                GlusterConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -114,8 +108,7 @@ namespace Antd.Modules {
                     Nodes = nodelist.ToArray(),
                     Volumes = volumelist.ToArray()
                 };
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.Save(config);
+                GlusterConfiguration.Save(config);
                 return HttpStatusCode.OK;
             };
 
@@ -124,8 +117,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrWhiteSpace(node)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.AddNode(node);
+                GlusterConfiguration.AddNode(node);
                 return HttpStatusCode.OK;
             };
 
@@ -134,8 +126,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrWhiteSpace(node)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var glusterConfiguration = new GlusterConfiguration();
-                glusterConfiguration.RemoveNode(node);
+                GlusterConfiguration.RemoveNode(node);
                 return HttpStatusCode.OK;
             };
         }

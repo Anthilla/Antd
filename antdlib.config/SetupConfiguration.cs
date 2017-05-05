@@ -7,13 +7,12 @@ using System.IO;
 using System.Linq;
 
 namespace antdlib.config {
-    public class SetupConfiguration {
+    public static class SetupConfiguration {
 
         private static readonly string FilePath = $"{Parameter.RepoConfig}/setup.conf";
         private static readonly Bash Bash = new Bash();
 
-        public void Set() {
-            Directory.CreateDirectory(Parameter.RepoConfig);
+        public static void Set() {
             if(!File.Exists(FilePath)) {
                 var backupConfigFile = $"{Parameter.RepoConfig}/network/000network.cfg";
                 if(File.Exists(backupConfigFile)) {
@@ -121,7 +120,7 @@ namespace antdlib.config {
             }
         }
 
-        public List<Control> Get() {
+        public static List<Control> Get() {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if(!File.Exists(FilePath)) {
                 return new List<Control>();
@@ -132,7 +131,7 @@ namespace antdlib.config {
             return controls;
         }
 
-        public void Export(List<Control> controls) {
+        public static void Export(List<Control> controls) {
             Directory.CreateDirectory(Parameter.RepoConfig);
             if(File.Exists(FilePath)) {
                 File.Delete(FilePath);

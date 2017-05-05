@@ -40,8 +40,7 @@ namespace Antd.Modules {
 
         public AssetSyncMachineModule() {
             Get["/syncmachine"] = x => {
-                var settings = new SyncMachineConfiguration();
-                var set = settings.Get();
+                var set = SyncMachineConfiguration.Get();
                 var syncedMachines = set.Machines.Any() ? set.Machines : new List<SyncMachineModel>();
                 var model = new PageAssetSyncMachineModel {
                     IsActive = set.IsActive,
@@ -51,34 +50,29 @@ namespace Antd.Modules {
             };
 
             Post["/syncmachine/set"] = x => {
-                var syncmachineConfiguration = new SyncMachineConfiguration();
-                syncmachineConfiguration.Set();
+                SyncMachineConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/syncmachine/restart"] = x => {
-                var syncmachineConfiguration = new SyncMachineConfiguration();
-                syncmachineConfiguration.Start();
+                SyncMachineConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/syncmachine/stop"] = x => {
-                var syncmachineConfiguration = new SyncMachineConfiguration();
-                syncmachineConfiguration.Stop();
+                SyncMachineConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/syncmachine/enable"] = x => {
-                var dhcpdConfiguration = new SyncMachineConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                SyncMachineConfiguration.Enable();
+                SyncMachineConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/syncmachine/disable"] = x => {
-                var dhcpdConfiguration = new SyncMachineConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                SyncMachineConfiguration.Disable();
+                SyncMachineConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -87,15 +81,13 @@ namespace Antd.Modules {
                 var model = new SyncMachineModel {
                     MachineAddress = machineAddress
                 };
-                var syncmachineConfiguration = new SyncMachineConfiguration();
-                syncmachineConfiguration.AddResource(model);
+                SyncMachineConfiguration.AddResource(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/syncmachine/machine/del"] = x => {
                 string guid = Request.Form.Guid;
-                var syncmachineConfiguration = new SyncMachineConfiguration();
-                syncmachineConfiguration.RemoveResource(guid);
+                SyncMachineConfiguration.RemoveResource(guid);
                 return HttpStatusCode.OK;
             };
 

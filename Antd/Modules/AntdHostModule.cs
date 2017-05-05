@@ -65,9 +65,8 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(name)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoName(name);
-                hostconfiguration.ApplyHostInfo();
+                HostConfiguration.SetHostInfoName(name);
+                HostConfiguration.ApplyHostInfo();
                 return HttpStatusCode.OK;
             };
 
@@ -76,9 +75,8 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(chassis)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoChassis(chassis);
-                hostconfiguration.ApplyHostInfo();
+                HostConfiguration.SetHostInfoChassis(chassis);
+                HostConfiguration.ApplyHostInfo();
                 return HttpStatusCode.OK;
             };
 
@@ -87,9 +85,8 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(deployment)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoDeployment(deployment);
-                hostconfiguration.ApplyHostInfo();
+                HostConfiguration.SetHostInfoDeployment(deployment);
+                HostConfiguration.ApplyHostInfo();
                 return HttpStatusCode.OK;
             };
 
@@ -98,9 +95,8 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(location)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfoLocation(location);
-                hostconfiguration.ApplyHostInfo();
+                HostConfiguration.SetHostInfoLocation(location);
+                HostConfiguration.ApplyHostInfo();
                 return HttpStatusCode.OK;
             };
 
@@ -112,9 +108,8 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(name) || string.IsNullOrEmpty(chassis) || string.IsNullOrEmpty(deployment) || string.IsNullOrEmpty(location)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var hostconfiguration = new HostConfiguration();
-                hostconfiguration.SetHostInfo(name, chassis, deployment, location);
-                hostconfiguration.ApplyHostInfo();
+                HostConfiguration.SetHostInfo(name, chassis, deployment, location);
+                HostConfiguration.ApplyHostInfo();
                 return HttpStatusCode.OK;
             };
         }

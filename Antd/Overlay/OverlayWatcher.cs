@@ -86,8 +86,6 @@ namespace Antd.Overlay {
             }
         }
 
-        private readonly MountManagement _mount = new MountManagement();
-
         public void SetOverlayDirectory(string overlayPath) {
             var overlayDir = Parameter.Overlay;
             var path = overlayPath.Replace(Parameter.Overlay, "");
@@ -95,7 +93,7 @@ namespace Antd.Overlay {
             Bash.Execute($"mkdir -p {dirsPath}", false);
             Bash.Execute($"rsync -aHA --delete-during {overlayDir}/ {dirsPath}/", false);
             Bash.Execute($"rm -fR {path}", false);
-            _mount.Dir(path);
+            MountManagement.Dir(path);
         }
     }
 }

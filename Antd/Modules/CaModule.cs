@@ -40,30 +40,26 @@ namespace Antd.Modules {
 
         public CaModule() {
             Get["/ca"] = x => {
-                var caConfiguration = new CaConfiguration();
-                var caIsActive = caConfiguration.IsActive();
+                var caIsActive = CaConfiguration.IsActive();
                 var model = new PageCaModel {
                     CaIsActive = caIsActive,
-                    CaOptions = caConfiguration.Get() ?? new CaConfigurationModel()
+                    CaOptions = CaConfiguration.Get() ?? new CaConfigurationModel()
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/ca/set"] = x => {
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Set();
+                CaConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/ca/enable"] = x => {
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Enable();
+                CaConfiguration.Enable();
                 return HttpStatusCode.OK;
             };
 
             Post["/ca/disable"] = x => {
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Disable();
+                CaConfiguration.Disable();
                 return HttpStatusCode.OK;
             };
 
@@ -86,8 +82,7 @@ namespace Antd.Modules {
                     RootCommonName = rootCommonName,
                     RootEmailAddress = rootEmailAddress,
                 };
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.Save(model);
+                CaConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
 
@@ -111,8 +106,7 @@ namespace Antd.Modules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateUserCertificate(name, passphrase, email, c, st, l, o, ou);
+                CaConfiguration.CreateUserCertificate(name, passphrase, email, c, st, l, o, ou);
                 return HttpStatusCode.OK;
             };
 
@@ -125,8 +119,7 @@ namespace Antd.Modules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateServerCertificate(name, passphrase, email, c, st, l, o, ou);
+                CaConfiguration.CreateServerCertificate(name, passphrase, email, c, st, l, o, ou);
                 return HttpStatusCode.OK;
             };
 
@@ -141,8 +134,7 @@ namespace Antd.Modules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateDomainControllerCertificate(name, passphrase, dcGuid, dcDns, email, c, st, l, o, ou);
+                CaConfiguration.CreateDomainControllerCertificate(name, passphrase, dcGuid, dcDns, email, c, st, l, o, ou);
                 return HttpStatusCode.OK;
             };
 
@@ -156,8 +148,7 @@ namespace Antd.Modules {
                 string l = Request.Form.LocalityName;
                 string o = Request.Form.OrganizationName;
                 string ou = Request.Form.OrganizationalUnitName;
-                var caConfiguration = new CaConfiguration();
-                caConfiguration.CreateSmartCardCertificate(name, passphrase, upn, email, c, st, l, o, ou);
+                CaConfiguration.CreateSmartCardCertificate(name, passphrase, upn, email, c, st, l, o, ou);
                 return HttpStatusCode.OK;
             };
         }

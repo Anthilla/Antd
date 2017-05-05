@@ -40,45 +40,39 @@ namespace Antd.Modules {
         public AntdBindModule() {
             Get["/bind"] = x => {
                 var model = new PageBindModel();
-                var bindConfiguration = new BindConfiguration();
-                var bindIsActive = bindConfiguration.IsActive();
+                var bindIsActive = BindConfiguration.IsActive();
                 model.BindIsActive = bindIsActive;
-                model.BindOptions = bindConfiguration.Get() ?? new BindConfigurationModel();
-                model.BindZones = bindConfiguration.Get()?.Zones;
+                model.BindOptions = BindConfiguration.Get() ?? new BindConfigurationModel();
+                model.BindZones = BindConfiguration.Get()?.Zones;
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/bind/set"] = x => {
-                var bindConfiguration = new BindConfiguration();
-                bindConfiguration.Set();
+                BindConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/bind/restart"] = x => {
-                var bindConfiguration = new BindConfiguration();
-                bindConfiguration.Start();
-                bindConfiguration.RndcReconfig();
-                bindConfiguration.RndcReload();
+                BindConfiguration.Start();
+                BindConfiguration.RndcReconfig();
+                BindConfiguration.RndcReload();
                 return HttpStatusCode.OK;
             };
 
             Post["/bind/stop"] = x => {
-                var bindConfiguration = new BindConfiguration();
-                bindConfiguration.Stop();
+                BindConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/bind/enable"] = x => {
-                var dhcpdConfiguration = new BindConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                BindConfiguration.Enable();
+                BindConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/bind/disable"] = x => {
-                var dhcpdConfiguration = new BindConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                BindConfiguration.Disable();
+                BindConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -165,8 +159,7 @@ namespace Antd.Modules {
                     AclInternalNetworks = aclInternalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
                     AclExternalNetworks = aclExternalNetworks.SplitToList().Select(_ => _.Trim()).ToList()
                 };
-                var bindConfiguration = new BindConfiguration();
-                bindConfiguration.Save(model);
+                BindConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
 
@@ -187,15 +180,13 @@ namespace Antd.Modules {
                     AllowUpdate = allowUpdate.SplitToList().Select(_ => _.Trim()).ToList(),
                     AllowTransfer = allowTransfer.SplitToList().Select(_ => _.Trim()).ToList()
                 };
-                var bindConfiguration = new BindConfiguration();
-                bindConfiguration.AddZone(model);
+                BindConfiguration.AddZone(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/bind/zone/del"] = x => {
                 string guid = Request.Form.Guid;
-                var bindConfiguration = new BindConfiguration();
-                bindConfiguration.RemoveZone(guid);
+                BindConfiguration.RemoveZone(guid);
                 return HttpStatusCode.OK;
             };
         }

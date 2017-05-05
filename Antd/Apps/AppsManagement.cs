@@ -43,8 +43,7 @@ namespace Antd.Apps {
             var allDetected = Directory.EnumerateFiles(Parameter.RepoApps, "*.appinfo", SearchOption.AllDirectories).Select(MapFromFile).ToArray();
             var notInstalled = new List<AppInfo>();
 
-            var appsConfiguration = new AppsConfiguration();
-            var apps = appsConfiguration.Get().Apps;
+            var apps = AppsConfiguration.Get().Apps;
 
             foreach(var app in allDetected) {
                 var tryGet = apps.FirstOrDefault(_ => _.Name == app.Name);
@@ -57,7 +56,6 @@ namespace Antd.Apps {
 
         private readonly Bash _bash = new Bash();
         private readonly AppsUnits _appsUnits = new AppsUnits();
-        private readonly MountManagement _mount = new MountManagement();
 
         public void Setup(string appName) {
             ConsoleLogger.Log("=========================================");
@@ -118,12 +116,11 @@ namespace Antd.Apps {
                 var mounts = appInfo.Values.Where(_ => _.Key == "app_path").Select(_ => _.Value).ToList();
                 foreach(var mount in mounts) {
                     ConsoleLogger.Log($"workingDir => {mount}");
-                    _mount.Dir(mount);
+                    MountManagement.Dir(mount);
                 }
                 ConsoleLogger.Log("working directories created and mounted");
 
-                var appsConfiguration = new AppsConfiguration();
-                var tryGet = appsConfiguration.Get().Apps.FirstOrDefault(_ => _.Name == name);
+                var tryGet = AppsConfiguration.Get().Apps.FirstOrDefault(_ => _.Name == name);
                 if(tryGet != null)
                     return;
                 var model = new ApplicationModel {
@@ -135,7 +132,7 @@ namespace Antd.Apps {
                     UnitMount = mountUnitName,
                     UnitLauncher = launcherUnitName
                 };
-                appsConfiguration.AddApp(model);
+                AppsConfiguration.AddApp(model);
             }
         }
 

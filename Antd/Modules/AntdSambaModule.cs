@@ -37,46 +37,40 @@ namespace Antd.Modules {
 
         public AntdSambaModule() {
             Get["/samba"] = x => {
-                var sambaConfiguration = new SambaConfiguration();
-                var sambaIsActive = sambaConfiguration.IsActive();
+                var sambaIsActive = SambaConfiguration.IsActive();
                 var model = new PageSambaModel {
                     SambaIsActive = sambaIsActive,
-                    SambaOptions = sambaConfiguration.Get() ?? new SambaConfigurationModel(),
-                    SambaResources = sambaConfiguration.Get()?.Resources
+                    SambaOptions = SambaConfiguration.Get() ?? new SambaConfigurationModel(),
+                    SambaResources = SambaConfiguration.Get()?.Resources
 
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/samba/set"] = x => {
-                var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.Set();
+                SambaConfiguration.Set();
                 return HttpStatusCode.OK;
             };
 
             Post["/samba/restart"] = x => {
-                var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.Start();
+                SambaConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/samba/stop"] = x => {
-                var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.Stop();
+                SambaConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
             Post["/samba/enable"] = x => {
-                var dhcpdConfiguration = new SambaConfiguration();
-                dhcpdConfiguration.Enable();
-                dhcpdConfiguration.Start();
+                SambaConfiguration.Enable();
+                SambaConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/samba/disable"] = x => {
-                var dhcpdConfiguration = new SambaConfiguration();
-                dhcpdConfiguration.Disable();
-                dhcpdConfiguration.Stop();
+                SambaConfiguration.Disable();
+                SambaConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
@@ -189,8 +183,7 @@ namespace Antd.Modules {
                     DosFiletimeResolution = dosFiletimeResolution,
                     VfsObjects = vfsObjects
                 };
-                var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.Save(model);
+                SambaConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
 
@@ -203,15 +196,13 @@ namespace Antd.Modules {
                     Comment = comment,
                     Path = path
                 };
-                var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.AddResource(model);
+                SambaConfiguration.AddResource(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/samba/resource/del"] = x => {
                 string guid = Request.Form.Guid;
-                var sambaConfiguration = new SambaConfiguration();
-                sambaConfiguration.RemoveResource(guid);
+                SambaConfiguration.RemoveResource(guid);
                 return HttpStatusCode.OK;
             };
         }
