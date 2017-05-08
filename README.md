@@ -12,7 +12,7 @@ Antd is:
 - implemented as web service with REST API service and rendered web interface
 - released under the BSD 3 license
 - self hosted, no external webserver is needed
-- IMPORTANT: WE CHANGED THE DB, from DensoDB v3, to RaptorDB, to LiteDB
+- IMPORTANT: WE CHANGED THE DB, from DensoDB v3, to RaptorDB to ... Database Removed.
 
 Antd is a single daemon to maintain the entire Linux/Unix appliance system (processes, clustering, configuration, and monitoring) using, whenever possible, shell commands, kernel related userspace commands, or direct access to Unix pseudo filesystems like <code>/proc</code>, <code>/sys</code>, integration with systemd become deeper and deeper.
 
@@ -37,7 +37,7 @@ Antd is a single daemon to maintain the entire Linux/Unix appliance system (proc
 
 ### Dependencies:
 - [C5](https://github.com/sestoft/C5/)
-- [LiteDB](https://github.com/mbdavid/LiteDB)
+- [LiteDB](https://github.com/mbdavid/LiteDB) Used only in Antd Apps, not in Antd.
 - [jQuery](https://github.com/jquery/jquery)
 - [Owin](https://github.com/owin/owin)
 - [Nancy](https://github.com/NancyFx/Nancy)
@@ -66,14 +66,6 @@ How to Contribute
 -----------------
 
 This project is still in its early stages of development. Please help us by sharing ideas to help organize and improve the project!
-
-### Communicate by Email
-
-Email: osdev@anthilla.com
-
-### IM
-
-Freenode IRC channel: #anthilla
 
 ### Getting Started
 
