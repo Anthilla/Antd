@@ -85,6 +85,7 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
             'content': { templateUrl: "pages/asset/discovery.html?v=" + new Date() }
         }
     })
+    .state("cluster", { cache: false, url: "^/discovery", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/cluster.html?v=" + new Date() } } })
     .state("discovery", { cache: false, url: "^/discovery", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/discovery.html?v=" + new Date() } } })
     .state("scan", { cache: false, url: "^/scan", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/scan.html?v=" + new Date() } } })
     .state("assetsync", { cache: false, url: "^/assetsync", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/assetsync.html?v=" + new Date() } } })

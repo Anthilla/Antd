@@ -36,69 +36,47 @@ using System.IO;
 using System.Linq;
 
 namespace Antd.Modules {
-    public class AssetSyncMachineModule : NancyModule {
+    public class AssetClusterModule : NancyModule {
 
-        public AssetSyncMachineModule() {
-            Get["/syncmachine"] = x => {
-                var set = SyncMachineConfiguration.Get();
-                var syncedMachines = set.Machines.Any() ? set.Machines : new List<SyncMachineModel>();
-                var model = new PageAssetSyncMachineModel {
-                    IsActive = set.IsActive,
-                    SyncedMachines = syncedMachines.OrderBy(_ => _.MachineAddress)
+        public AssetClusterModule() {
+            Get["/cluster"] = x => {
+                var syncedMachines = ClusterConfiguration.Get();
+                var model = new PageAssetClusterModel {
+                    Info = ClusterConfiguration.GetClusterInfo(),
+                    ClusterNodes = syncedMachines.OrderBy(_ => _.Hostname).ThenBy(_ => _.IpAddress).ToList()
                 };
                 return JsonConvert.SerializeObject(model);
             };
 
-            Post["/syncmachine/set"] = x => {
-                SyncMachineConfiguration.Set();
+            Post["/cluster/restart"] = x => {
+                ClusterConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
-            Post["/syncmachine/restart"] = x => {
-                SyncMachineConfiguration.Start();
+            Post["/cluster/stop"] = x => {
+                ClusterConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 
-            Post["/syncmachine/stop"] = x => {
-                SyncMachineConfiguration.Stop();
+            Post["/cluster/save"] = x => {
+                string config = Request.Form.Config;
+                string ip = Request.Form.Ip;
+                var model = JsonConvert.DeserializeObject<List<Cluster.Node>>(config);
+                var model2 = JsonConvert.DeserializeObject<Cluster.Configuration>(ip);
+                ClusterConfiguration.Save(model);
+                ClusterConfiguration.SaveClusterInfo(model2);
+                new Do().ClusterChanges();
                 return HttpStatusCode.OK;
             };
 
-            Post["/syncmachine/enable"] = x => {
-                SyncMachineConfiguration.Enable();
-                SyncMachineConfiguration.Start();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/syncmachine/disable"] = x => {
-                SyncMachineConfiguration.Disable();
-                SyncMachineConfiguration.Stop();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/syncmachine/machine"] = x => {
-                string machineAddress = Request.Form.MachineAddress;
-                var model = new SyncMachineModel {
-                    MachineAddress = machineAddress
-                };
-                SyncMachineConfiguration.AddResource(model);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/syncmachine/machine/del"] = x => {
-                string guid = Request.Form.Guid;
-                SyncMachineConfiguration.RemoveResource(guid);
-                return HttpStatusCode.OK;
-            };
-
-            Post["Accept Configuration", "/syncmachine/accept"] = x => {
+            Post["Accept Configuration", "/cluster/accept"] = x => {
                 string file = Request.Form.File;
                 string content = Request.Form.Content;
                 if(File.Exists(file)) {
                     File.Copy(file, $"{file}.sbck", true);
                 }
                 File.WriteAllText(file, content);
-                //todo restart service to apply changes
+                //todo restart context service to apply changes
                 return HttpStatusCode.OK;
             };
         }

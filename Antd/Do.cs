@@ -15,45 +15,49 @@ namespace Antd {
         private readonly CommandLauncher _commandLauncher = new CommandLauncher();
         private readonly Bash _bash = new Bash();
 
-        private readonly Host2Model Host;
-        private readonly DnsConfiguration Dns;
-        private readonly bool IsDnsPublic;
-        private readonly bool IsDnsDynamic;
-        private readonly bool IsDnsExternal;
+        private readonly Host2Model _host;
+        private readonly DnsConfiguration _dns;
+        private readonly bool _isDnsPublic;
+        private readonly bool _isDnsDynamic;
+        private readonly bool _isDnsExternal;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Do() {
-            Host = Host2Configuration.Host;
-            Dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
+            _host = Host2Configuration.Host;
+            _dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
 
-            IsDnsPublic = Dns?.Type == DnsType.Public;
-            IsDnsDynamic = Dns?.Mode == DnsMode.Dynamic;
-            IsDnsExternal = Dns?.Dest == DnsDestination.External;
+            _isDnsPublic = _dns?.Type == DnsType.Public;
+            _isDnsDynamic = _dns?.Mode == DnsMode.Dynamic;
+            _isDnsExternal = _dns?.Dest == DnsDestination.External;
+
+            var clusterInfo = ClusterConfiguration.GetClusterInfo();
 
             _replacements = new Dictionary<string, string> {
-                { "$hostname", Host.HostName },
-                { "$internalIp", Host.InternalHostIpPrimary },
-                { "$externalIp", Host.ExternalHostIpPrimary },
-                { "$internalNet", Host.InternalNetPrimary },
-                { "$externalNet", Host.ExternalNetPrimary },
-                { "$internalMask", Host.InternalNetMaskPrimary },
-                { "$externalMask", Host.ExternalNetMaskPrimary },
-                { "$internalNetBits", Host.InternalNetPrimaryBits },
-                { "$externalNetBits", Host.ExternalNetPrimaryBits },
-                { "$internalDomain", Host.InternalDomainPrimary },
-                { "$externalDomain", Host.ExternalDomainPrimary },
-                { "$internalBroadcast", Host.InternalBroadcastPrimary },
-                { "$externalBroadcast", Host.ExternalBroadcastPrimary },
-                { "$internalNetArpa", Host.InternalArpaPrimary },
-                { "$externalNetArpa", Host.ExternalArpaPrimary },
-                { "$resolvNameserver", Host.ResolvNameserver },
-                { "$resolvDomain", Host.ResolvDomain },
-                { "$dnsDomain", Dns?.Domain },
-                { "$dnsIp", Dns?.Ip },
-                { "$secret", Host.Secret },
-                { "$internalArpaIpAddress", Host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
+                { "$hostname", _host.HostName },
+                { "$internalIp", _host.InternalHostIpPrimary },
+                { "$externalIp", _host.ExternalHostIpPrimary },
+                { "$internalNet", _host.InternalNetPrimary },
+                { "$externalNet", _host.ExternalNetPrimary },
+                { "$internalMask", _host.InternalNetMaskPrimary },
+                { "$externalMask", _host.ExternalNetMaskPrimary },
+                { "$internalNetBits", _host.InternalNetPrimaryBits },
+                { "$externalNetBits", _host.ExternalNetPrimaryBits },
+                { "$internalDomain", _host.InternalDomainPrimary },
+                { "$externalDomain", _host.ExternalDomainPrimary },
+                { "$internalBroadcast", _host.InternalBroadcastPrimary },
+                { "$externalBroadcast", _host.ExternalBroadcastPrimary },
+                { "$internalNetArpa", _host.InternalArpaPrimary },
+                { "$externalNetArpa", _host.ExternalArpaPrimary },
+                { "$resolvNameserver", _host.ResolvNameserver },
+                { "$resolvDomain", _host.ResolvDomain },
+                { "$dnsDomain", _dns?.Domain },
+                { "$dnsIp", _dns?.Ip },
+                { "$secret", _host.Secret },
+                { "$virtualIp", clusterInfo.VirtualIpAddress },
+                { "$clusterPassword", clusterInfo.Password },
+                { "$internalArpaIpAddress", _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
             };
 
             var interfaces = Network2Configuration.Conf.Interfaces;
@@ -76,11 +80,11 @@ namespace Antd {
         /// Main function
         /// </summary>
         public void AllChanges() {
-            ConsoleLogger.Log("[setup] apply configured host vars");
             ParametersChangesPre();
             NetworkChanges();
             HostChanges();
             ParametersChangesPost();
+            ClusterChanges();
         }
 
         public void HostChanges() {
@@ -104,7 +108,6 @@ namespace Antd {
         }
 
         public void NetworkChanges() {
-        
             ApplyNetworkConfiguration();
         }
 
@@ -126,6 +129,116 @@ namespace Antd {
         public void ParametersChangesPost() {
             LaunchEnd();
         }
+
+        public void ClusterChanges() {
+            var publicIp = ClusterConfiguration.GetClusterInfo().VirtualIpAddress;
+            if(string.IsNullOrEmpty(publicIp)) {
+                return;
+            }
+            var nodes = ClusterConfiguration.Get();
+            if(!nodes.Any()) {
+                return;
+            }
+
+            ClusterConfiguration.Stop();
+            SaveKeepalived(publicIp, nodes);
+            SaveHaproxy(publicIp, nodes);
+            ClusterConfiguration.Start();
+        }
+
+        #region [    keepalived    ]
+        private readonly string _keepalivedFileInput = $"{LocalTemplateDirectory}/keepalived.conf.tmpl";
+        private const string KeepalivedFileOutput = "/etc/keepalived/keepalived.conf";
+
+        private void SaveKeepalived(string publicIp, List<Cluster.Node> nodes) {
+            const string keepalivedService = "keepalived.service";
+            if(Systemctl.IsActive(keepalivedService)) {
+                Systemctl.Stop(keepalivedService);
+            }
+
+            try {
+                using(var reader = new StreamReader(_keepalivedFileInput)) {
+                    using(TextWriter writer = File.CreateText(KeepalivedFileOutput)) {
+                        string line;
+                        while((line = reader.ReadLine()) != null) {
+                            writer.WriteLine(EditLine(line));
+                        }
+                    }
+                }
+            }
+            catch(Exception e) {
+                Console.WriteLine(e.Message);
+                return;
+            }
+
+            var additionalLines = new List<string> {
+                $"virtual_server {publicIp} 80 {{",
+                "    delay_loop 6",
+                "    lb_algo rr",
+                "    lb_kind NAT",
+                "    protocol TCP",
+                ""
+            };
+            foreach(var node in nodes) {
+                foreach(var svc in node.Services) {
+                    additionalLines.Add($"    real_server {node.IpAddress} {svc.Port} {{");
+                    additionalLines.Add("        TCP_CHECK {");
+                    additionalLines.Add("                connect_timeout 10");
+                    additionalLines.Add("        }");
+                    additionalLines.Add("    }");
+                }
+            }
+            additionalLines.Add("}");
+            additionalLines.Add("");
+
+            File.AppendAllLines(KeepalivedFileOutput, additionalLines);
+            if(Systemctl.IsEnabled(keepalivedService) == false) {
+                Systemctl.Enable(keepalivedService);
+                ConsoleLogger.Log("[systemctl] keepalived enabled");
+            }
+            if(Systemctl.IsActive(keepalivedService) == false) {
+                Systemctl.Restart(keepalivedService);
+                ConsoleLogger.Log("[systemctl] keepalived restarted");
+            }
+            ConsoleLogger.Log("[keepalived] keepalived started");
+        }
+
+        private readonly string _haproxyFileOutput = $"{Parameter.AntdCfgCluster}/haproxy.conf";
+
+        private void SaveHaproxy(string publicIp, List<Cluster.Node> nodes) {
+            _commandLauncher.Launch("haproxy-stop");
+            if(File.Exists(_haproxyFileOutput)) {
+                File.Copy(_haproxyFileOutput, $"{_haproxyFileOutput}.bck", true);
+            }
+            var lines = new List<string> {
+                "global",
+                "    daemon",
+                "    maxconn 256",
+                "",
+                "defaults",
+                "    mode http",
+                "    timeout connect 5000ms",
+                "    timeout client 50000ms",
+                "    timeout server 50000ms",
+                "",
+                "frontend http-in",
+                $"    bind {publicIp}:80",
+                "    default_backend servers",
+                "",
+                "backend servers"
+            };
+
+            foreach(var node in nodes) {
+                foreach(var svc in node.Services) {
+                    lines.Add($"    server {node.Hostname} {node.IpAddress}:{svc.Port} maxconn 32");
+                }
+            }
+
+            File.WriteAllLines(_haproxyFileOutput, lines);
+            _commandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
+            ConsoleLogger.Log("[haproxy] haproxy started");
+        }
+        #endregion
 
         #region [    private functions    ]
         private string EditLine(string input) {
@@ -293,27 +406,27 @@ namespace Antd {
         #region [    hostnamectl    ]
         private void SaveHostname() {
             _commandLauncher.Launch("set-hostname", new Dictionary<string, string> {
-                { "$host_name", Host.HostName }
+                { "$host_name", _host.HostName }
             });
             _commandLauncher.Launch("set-chassis", new Dictionary<string, string> {
-                { "$host_chassis", Host.HostChassis }
+                { "$host_chassis", _host.HostChassis }
             });
             _commandLauncher.Launch("set-deployment", new Dictionary<string, string> {
-                { "$host_deployment", Host.HostDeployment }
+                { "$host_deployment", _host.HostDeployment }
             });
             _commandLauncher.Launch("set-location", new Dictionary<string, string> {
-                { "$host_location", Host.HostLocation }
+                { "$host_location", _host.HostLocation }
             });
-            File.WriteAllText("/etc/hostname", Host.HostName);
+            File.WriteAllText("/etc/hostname", _host.HostName);
             _commandLauncher.Launch("set-timezone", new Dictionary<string, string> {
-                { "$host_timezone", Host.Timezone }
+                { "$host_timezone", _host.Timezone }
             });
         }
         #endregion
 
         #region [    ntpdate    ]
         private void ApplyNtpdate() {
-            _commandLauncher.Launch("ntpdate", new Dictionary<string, string> { { "$server", Host.NtpdateServer } });
+            _commandLauncher.Launch("ntpdate", new Dictionary<string, string> { { "$server", _host.NtpdateServer } });
         }
         #endregion
 
@@ -343,26 +456,26 @@ namespace Antd {
 
         private void SaveResolvFile() {
             string[] lines;
-            if(IsDnsPublic) {
+            if(_isDnsPublic) {
                 lines = new[] {
                     "nameserver 8.8.8.8",
                     "nameserver 8.8.4.4"
                 };
             }
             else {
-                if(IsDnsExternal) {
+                if(_isDnsExternal) {
                     lines = new[] {
-                        $"nameserver {Host.ExternalHostIpPrimary}",
-                        $"nameserver {Host.ResolvNameserver}",
-                        $"search {Host.ResolvDomain}",
-                        $"domain {Host.ResolvDomain}"
+                        $"nameserver {_host.ExternalHostIpPrimary}",
+                        $"nameserver {_host.ResolvNameserver}",
+                        $"search {_host.ResolvDomain}",
+                        $"domain {_host.ResolvDomain}"
                     };
                 }
                 else {
                     lines = new[] {
-                        $"nameserver {Host.ResolvNameserver}",
-                        $"search {Host.ResolvDomain}",
-                        $"domain {Host.ResolvDomain}"
+                        $"nameserver {_host.ResolvNameserver}",
+                        $"search {_host.ResolvDomain}",
+                        $"domain {_host.ResolvDomain}"
                     };
                 }
             }
@@ -458,9 +571,9 @@ namespace Antd {
 
         private void SaveDhcpdFile() {
             try {
-                var dhcpdFileInput = IsDnsDynamic ?
-                    (IsDnsExternal ? _dhcpdDynamicExternalFileInput : _dhcpdDynamicInternalFileInput) :
-                    (IsDnsExternal ? _dhcpdStaticExternalFileInput : _dhcpdStaticInternalFileInput);
+                var dhcpdFileInput = _isDnsDynamic ?
+                    (_isDnsExternal ? _dhcpdDynamicExternalFileInput : _dhcpdDynamicInternalFileInput) :
+                    (_isDnsExternal ? _dhcpdStaticExternalFileInput : _dhcpdStaticInternalFileInput);
                 using(var reader = new StreamReader(dhcpdFileInput)) {
                     using(TextWriter writer = File.CreateText(DhcpdFileOutput)) {
                         string line;
@@ -540,7 +653,7 @@ namespace Antd {
 
         private void SaveBindZones() {
             var hostZoneFileInput = $"{LocalTemplateDirectory}/zones_host.domint.local.db.tmpl";
-            var hostZoneFileOutput = $"/etc/bind/zones/host.{Host.InternalDomainPrimary}.db";
+            var hostZoneFileOutput = $"/etc/bind/zones/host.{_host.InternalDomainPrimary}.db";
             try {
                 using(var reader = new StreamReader(hostZoneFileInput)) {
                     using(TextWriter writer = File.CreateText(hostZoneFileOutput)) {
@@ -556,7 +669,7 @@ namespace Antd {
             }
 
             var revZoneFileInput = $"{LocalTemplateDirectory}/zones_rev.10.11.0.0.db.tmpl";
-            var revZoneFileOutput = $"/etc/bind/zones/rev.{Host.InternalNetPrimary}.db";
+            var revZoneFileOutput = $"/etc/bind/zones/rev.{_host.InternalNetPrimary}.db";
             try {
                 using(var reader = new StreamReader(revZoneFileInput)) {
                     using(TextWriter writer = File.CreateText(revZoneFileOutput)) {

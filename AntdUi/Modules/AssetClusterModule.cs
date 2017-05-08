@@ -34,61 +34,55 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace AntdUi.Modules {
-    public class AssetSyncMachineModule : NancyModule {
+    public class AssetClusterModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public AssetSyncMachineModule() {
-            Get["/syncmachine"] = x => {
-                var model = _api.Get<PageAssetSyncMachineModel>($"http://127.0.0.1:{Application.ServerPort}/syncmachine");
+        public AssetClusterModule() {
+            Get["/cluster"] = x => {
+                var model = _api.Get<PageAssetClusterModel>($"http://127.0.0.1:{Application.ServerPort}/cluster");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/syncmachine/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/set");
+            Post["/cluster/set"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/set");
             };
 
-            Post["/syncmachine/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/restart");
+            Post["/cluster/restart"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/restart");
             };
 
-            Post["/syncmachine/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/stop");
+            Post["/cluster/stop"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/stop");
             };
 
-            Post["/syncmachine/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/enable");
+            Post["/cluster/enable"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/enable");
             };
 
-            Post["/syncmachine/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/disable");
+            Post["/cluster/disable"] = x => {
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/disable");
             };
 
-            Post["/syncmachine/machine"] = x => {
-                string machineAddress = Request.Form.MachineAddress;
+            Post["/cluster/save"] = x => {
+                string config = Request.Form.Config;
+                string ip = Request.Form.Ip;
                 var dict = new Dictionary<string, string> {
-                    {"MachineAddress", machineAddress}
+                    {"Config", config},
+                    {"Ip", ip}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/machine", dict);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/save", dict);
             };
 
-            Post["/syncmachine/machine/del"] = x => {
-                string guid = Request.Form.Guid;
-                var dict = new Dictionary<string, string> {
-                    {"Guid", guid}
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/machine/del", dict);
-            };
-
-            Post["Accept Configuration", "/syncmachine/accept"] = x => {
+            Post["Accept Configuration", "/cluster/accept"] = x => {
                 string file = Request.Form.File;
                 string content = Request.Form.Content;
                 var dict = new Dictionary<string, string> {
                     {"File", file},
                     {"Content", content}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syncmachine/accept", dict);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/accept", dict);
             };
         }
     }

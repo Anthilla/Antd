@@ -9,8 +9,9 @@ defaults
     timeout server 50000ms
 
 frontend http-in
-    bind *:80
+    bind 10.1.122.1:80
     default_backend servers
 
 backend servers
-    server server1 127.0.0.1:8000 maxconn 32
+    server server0 node00:8086 maxconn 32
+    server server1 node01:8086 maxconn 32

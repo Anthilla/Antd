@@ -1,5 +1,89 @@
 "use strict";
 
+app.controller("AssetClusterController", ["$scope", "$http", "$interval", AssetClusterController]);
+
+function AssetClusterController($scope, $http, $interval) {
+    $scope.save = function () {
+        var config = angular.toJson($scope.ClusterNodes, true);
+        var config2 = angular.toJson($scope.Info, true);
+        var data = $.param({
+            Config: config,
+            Ip: config2
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/cluster/save", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/cluster/restart").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/cluster/stop").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/cluster/enable").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/cluster/disable").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/cluster/set").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.addService = function (node) {
+        var svc = {
+            Name: "",
+            Port: ""
+        };
+        node.Services.push(svc);
+    };
+
+    $scope.addNode = function () {
+        var node = {
+            Hostname: "",
+            IpAddress: "",
+            Services: []
+        };
+        $scope.ClusterNodes.push(node);
+    }
+
+    $scope.PublicIp = "";
+    $scope.ClusterNodes =[];
+    $scope.Get = function () {
+        $http.get("/cluster").success(function (data) {
+            $scope.Info = data.Info;
+            $scope.ClusterNodes = data.ClusterNodes;
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
+}
+
 app.controller("AssetDiscoveryController", ["$scope", "$http", AssetDiscoveryController]);
 
 function AssetDiscoveryController($scope, $http) {
@@ -74,7 +158,7 @@ function AssetScanController($scope, $http) {
     $scope.scan = function () {
         if ($scope.NetScan.length > 0) {
             $http.get("/scan/" + $scope.NetScan)
-                .success(function(data) {
+                .success(function (data) {
                     $scope.AssetScan = data;
                 });
         } else {

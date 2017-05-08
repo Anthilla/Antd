@@ -97,6 +97,7 @@ namespace Antd {
             Directory.CreateDirectory(Parameter.AntdCfgServices);
             Directory.CreateDirectory(Parameter.AntdCfgNetwork);
             Directory.CreateDirectory(Parameter.AntdCfgParameters);
+            Directory.CreateDirectory(Parameter.AntdCfgCluster);
             Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls");
             Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template");
             Directory.CreateDirectory(Parameter.RepoConfig);
@@ -497,12 +498,6 @@ namespace Antd {
             }
             #endregion
 
-            #region [    SyncMachine    ]
-            if(SyncMachineConfiguration.IsActive()) {
-                SyncMachineConfiguration.Set();
-            }
-            #endregion
-
             #region [    C A    ]
             if(CaConfiguration.IsActive()) {
                 CaConfiguration.Set();
@@ -548,6 +543,11 @@ namespace Antd {
             TorConfiguration.AddVirtualPort("80", $"127.0.0.1:{app.AntdUiPort}");
             var torHostname = TorConfiguration.Hostname;
             ConsoleLogger.Log($"[tor] hostname: {torHostname}");
+            #endregion
+
+            #region [    Cluster    ]
+            new Do().ClusterChanges();
+            ConsoleLogger.Log("[cluster] active");
             #endregion
 
             #region [    Cloud Send Uptime    ]

@@ -1,0 +1,38 @@
+<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">sync</h1>
+
+<div ng-controller="AssetClusterController">
+    <button ng-click="ResponseMessageHideSelf()" ng-hide="ResponseMessageHide" class="button fg-anthilla-blue bg-anthilla-gray-1 bd-anthilla-blue width100pc" style="border: 2px solid; margin-bottom: 10px;">{{ ResponseMessage }}</button>
+    <br />
+    <ul class="fg-white">
+        <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
+        <li><input placeholder="public ip" ng-model="Info.VirtualIpAddress" type="text" /></li>
+        <li><input placeholder="password" ng-model="Info.Password" type="text" /></li>
+        <li><input placeholder="guid" ng-model="Info.Guid" type="text" /></li>
+        <li></li>
+
+        <li ng-repeat="node in ClusterNodes">
+            <ul>
+                <li>{{ $index }}</li>
+                <li><input placeholder="name" ng-model="node.Hostname" type="text" /></li>
+                <li><input placeholder="ip" ng-model="node.IpAddress" type="text" /></li>
+
+                <li>
+                    <ul>
+                        <li ng-repeat="svc in node.Services">
+                            <ul>
+                                <li><input placeholder="name" ng-model="svc.Name" type="text" /></li>
+                                <li><input placeholder="port" ng-model="svc.Port" type="text" /></li>
+                            </ul>
+                        </li>
+
+                        <li><button ng-click="addService(node)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ svc</button></li>
+                    </ul>
+                </li>
+
+            </ul>
+        </li>
+
+        <li><button ng-click="addNode()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ node</button></li>
+        <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
+    </ul>
+</div>

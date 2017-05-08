@@ -102,7 +102,7 @@
     <Compile Include="SetupConfiguration.cs" />
     <Compile Include="SshdConfiguration.cs" />
     <Compile Include="SshKnownHosts.cs" />
-    <Compile Include="SyncMachineConfiguration.cs" />
+    <Compile Include="ClusterConfiguration.cs" />
     <Compile Include="SyslogNgConfiguration.cs" />
     <Compile Include="SystemUser.cs" />
     <Compile Include="UserConfiguration.cs" />

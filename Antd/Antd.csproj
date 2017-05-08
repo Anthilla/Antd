@@ -106,7 +106,6 @@
     <Compile Include="Application.cs" />
     <Compile Include="Cloud\UpdateCloudInfo.cs" />
     <Compile Include="Cloud\WhatIsMyIp.cs" />
-    <Compile Include="Cluster\KeepProxyAlive.cs" />
     <Compile Include="Do.cs" />
     <Compile Include="Helpers\Default.cs" />
     <Compile Include="License\LicenseManagement.cs" />
@@ -124,7 +123,7 @@
     <Compile Include="Modules\AppsDetectModule.cs" />
     <Compile Include="Modules\AppsManagementModule.cs" />
     <Compile Include="Modules\AssetSettingModule.cs" />
-    <Compile Include="Modules\AssetSyncMachineModule.cs" />
+    <Compile Include="Modules\AssetClusterModule.cs" />
     <Compile Include="Modules\AssetScanModule.cs" />
     <Compile Include="Modules\AssetDiscoveryModule.cs" />
     <Compile Include="Modules\AntdVmModule.cs" />
@@ -188,7 +187,12 @@
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
-    <None Include="Templates\haproxy.tmpl" />
+    <None Include="Templates\haproxy.conf.tmpl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\keepalived.conf.tmpl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\nftables.conf.tmpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

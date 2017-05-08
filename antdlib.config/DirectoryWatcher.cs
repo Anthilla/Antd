@@ -66,7 +66,7 @@ namespace antdlib.config {
                             NotifyFilters.LastWrite |
                             NotifyFilters.FileName |
                             NotifyFilters.DirectoryName,
-                        IncludeSubdirectories = true,
+                        IncludeSubdirectories = true
                     };
                     if(_isSyncMachineService) {
                         _fsw.Changed += SyncMachineChanged;
@@ -77,7 +77,6 @@ namespace antdlib.config {
                         _fsw.Changed += RsyncChanged;
                         _fsw.Created += RsyncChanged;
                         _fsw.Deleted += RsyncChanged;
-                        //_fsw.Renamed += RsyncRenamed;
                     }
                     _fsw.EnableRaisingEvents = true;
                 }
@@ -178,8 +177,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    Sync Machine Service    ]
-        private void SyncMachineChanged(object source, FileSystemEventArgs e) {
-            if(e.Name.Contains("syncmachine.conf")) {
+        private static void SyncMachineChanged(object source, FileSystemEventArgs e) {
+            var extension = Path.GetExtension(e.FullPath);
+            if(string.IsNullOrEmpty(extension)) {
+                return;
+            }
+            if(e.Name.Contains("cluster")) {
                 return;
             }
             if(e.Name.Contains(".bck")) {
@@ -192,17 +195,18 @@ namespace antdlib.config {
                 return;
             }
 
-            var syncMachineConfiguration = SyncMachineConfiguration.Get();
+            var syncMachineConfiguration = ClusterConfiguration.Get();
             if(syncMachineConfiguration == null) {
                 return;
             }
-            var machines = syncMachineConfiguration.Machines.Select(_ => _.MachineAddress).ToList();
+            var machines = syncMachineConfiguration.Select(_ => _.IpAddress).ToList();
             if(!machines.Any()) {
                 return;
             }
             var data = new SyncMachinePostModel { File = file, Content = text };
             foreach(var machine in machines) {
-                new ApiConsumer().Post($"http://{machine}/services/syncmachine/accept", data.ToDictionary());
+                //todo prendi porta corretta
+                new ApiConsumer().Post($"http://{machine}:8086/services/cluster/accept", data.ToDictionary());
             }
         }
         #endregion
