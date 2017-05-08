@@ -49,6 +49,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Antd.Tor;
 using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
 using Random = anthilla.core.Random;
@@ -64,52 +65,10 @@ namespace Antd {
         public static string KeyName = "antd";
 
         private static void Main() {
-            ConsoleLogger.Log("starting antd");
+            ConsoleLogger.Log("[boot step] starting antd");
             var startTime = DateTime.Now;
 
-            CoreProcedures();
-            Procedures();
-            PostProcedures();
-            ManagedProcedures();
-
-            #region [    Host Init    ]
-            var app = new AppConfiguration().Get();
-            var port = app.AntdPort;
-            var uri = $"http://localhost:{app.AntdPort}/";
-            var host = new NancyHost(new Uri(uri));
-            host.Start();
-            ConsoleLogger.Log("host ready");
-            StaticConfiguration.DisableErrorTraces = false;
-            ConsoleLogger.Log($"http port: {port}");
-            ConsoleLogger.Log("antd is running");
-            var startupTime = DateTime.Now - startTime;
-            ConsoleLogger.Log($"loaded in: {startupTime}");
-            if(!File.Exists("/cfg/antd/stats.txt")) {
-                File.WriteAllText("/cfg/antd/stats.txt", "");
-            }
-            File.AppendAllLines("/cfg/antd/stats.txt", new[] { $"{startTime:yyyy MM dd HH:mm} - {startupTime}" });
-            #endregion
-
-                WorkingProcedures();
-
-            #region [    Test    ]
-#if DEBUG
-            Test();
-#endif
-            #endregion
-
-            KeepAlive();
-            ConsoleLogger.Log("antd is closing");
-            host.Stop();
-            Console.WriteLine("host shutdown");
-        }
-
-        private static void Test() {
-        }
-
-        #region [    Core Procedures    ]
-        private static void CoreProcedures() {
-            ConsoleLogger.Log("[config] core procedures");
+            ConsoleLogger.Log("[boot step] core procedures");
 
             #region [    os Rw    ]
             Bash.Execute("mount -o remount,rw /", false);
@@ -164,14 +123,11 @@ namespace Antd {
             #endregion
 
             #region [    Application Keys    ]
-
             var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
             var pub = ak.PublicKey;
-
             #endregion
 
             #region [    License Management    ]
-
             var appconfig = new AppConfiguration().Get();
             ConsoleLogger.Log($"[cloud] {appconfig.CloudAddress}");
             try {
@@ -187,7 +143,6 @@ namespace Antd {
             catch(Exception ex) {
                 ConsoleLogger.Warn(ex.Message);
             }
-
             #endregion
 
             #region [    Secret    ]
@@ -206,7 +161,17 @@ namespace Antd {
             }
             #endregion
 
-            #region [    Host and Network Import Configuration    ]
+            #region [    Manage Networkd    ]
+            const string networkdService = "systemd-networkd.service";
+            if(Systemctl.IsActive(networkdService)) {
+                Systemctl.Stop(networkdService);
+            }
+            if(Systemctl.IsEnabled(networkdService)) {
+                Systemctl.Disable(networkdService);
+            }
+            #endregion
+
+            #region [    Import Existing Configuration    ]
 
             #region import host2model
             var tmpHost = HostConfiguration.Host;
@@ -250,7 +215,8 @@ namespace Antd {
                 try {
                     broadcast = Cidr.CalcNetwork(cif.StaticAddress, cif.StaticRange).Broadcast.ToString();
                 }
-                catch(Exception) {
+                catch(Exception ex) {
+                    ConsoleLogger.Error($"[data import] {ex.Message}");
                 }
                 var hostname = $"{vars.HostName}{NetworkInterfaceType.Internal}.{vars.InternalDomainPrimary}";
                 var subnet = tmpHost2.InternalNetPrimaryBits;
@@ -320,48 +286,50 @@ namespace Antd {
                 HostParametersConfiguration.SetModprobesList(ddd.ToList());
             }
             if(!File.Exists($"{Parameter.AntdCfgParameters}/osparameters.conf")) {
-                var list = new List<string> {
-                    "/proc/sys/fs/file-max 1024000" ,
-                    "/proc/sys/net/bridge/bridge-nf-call-arptables 0" ,
-                    "/proc/sys/net/bridge/bridge-nf-call-ip6tables 0" ,
-                    "/proc/sys/net/bridge/bridge-nf-call-iptables 0" ,
-                    "/proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged 0" ,
-                    "/proc/sys/net/bridge/bridge-nf-filter-vlan-tagged 0" ,
-                    "/proc/sys/net/core/netdev_max_backlog 300000" ,
-                    "/proc/sys/net/core/optmem_max 40960" ,
-                    "/proc/sys/net/core/rmem_max 268435456" ,
-                    "/proc/sys/net/core/somaxconn 65536" ,
-                    "/proc/sys/net/core/wmem_max 268435456" ,
-                    "/proc/sys/net/ipv4/conf/all/accept_local 1" ,
-                    "/proc/sys/net/ipv4/conf/all/accept_redirects 1" ,
-                    "/proc/sys/net/ipv4/conf/all/accept_source_route 1" ,
-                    "/proc/sys/net/ipv4/conf/all/rp_filter 0" ,
-                    "/proc/sys/net/ipv4/conf/all/forwarding 1" ,
-                    "/proc/sys/net/ipv4/conf/default/rp_filter 0" ,
-                    "/proc/sys/net/ipv4/ip_forward 1" ,
-                    "/proc/sys/net/ipv4/ip_local_port_range 1024 65000" ,
-                    "/proc/sys/net/ipv4/ip_no_pmtu_disc 1" ,
-                    "/proc/sys/net/ipv4/tcp_congestion_control htcp" ,
-                    "/proc/sys/net/ipv4/tcp_fin_timeout 40" ,
-                    "/proc/sys/net/ipv4/tcp_max_syn_backlog 3240000" ,
-                    "/proc/sys/net/ipv4/tcp_max_tw_buckets 1440000" ,
-                    "/proc/sys/net/ipv4/tcp_moderate_rcvbuf 1" ,
-                    "/proc/sys/net/ipv4/tcp_mtu_probing 1" ,
-                    "/proc/sys/net/ipv4/tcp_rmem 4096 87380 134217728" ,
-                    "/proc/sys/net/ipv4/tcp_slow_start_after_idle 1" ,
-                    "/proc/sys/net/ipv4/tcp_tw_recycle 0" ,
-                    "/proc/sys/net/ipv4/tcp_tw_reuse 1" ,
-                    "/proc/sys/net/ipv4/tcp_window_scaling 1" ,
-                    "/proc/sys/net/ipv4/tcp_wmem 4096 65536 134217728" ,
-                    "/proc/sys/net/ipv6/conf/br0/disable_ipv6 1" ,
-                    "/proc/sys/net/ipv6/conf/eth0/disable_ipv6 1" ,
-                    "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6 1" ,
+                var list = new List<string>
+                {
+                    "/proc/sys/fs/file-max 1024000",
+                    "/proc/sys/net/bridge/bridge-nf-call-arptables 0",
+                    "/proc/sys/net/bridge/bridge-nf-call-ip6tables 0",
+                    "/proc/sys/net/bridge/bridge-nf-call-iptables 0",
+                    "/proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged 0",
+                    "/proc/sys/net/bridge/bridge-nf-filter-vlan-tagged 0",
+                    "/proc/sys/net/core/netdev_max_backlog 300000",
+                    "/proc/sys/net/core/optmem_max 40960",
+                    "/proc/sys/net/core/rmem_max 268435456",
+                    "/proc/sys/net/core/somaxconn 65536",
+                    "/proc/sys/net/core/wmem_max 268435456",
+                    "/proc/sys/net/ipv4/conf/all/accept_local 1",
+                    "/proc/sys/net/ipv4/conf/all/accept_redirects 1",
+                    "/proc/sys/net/ipv4/conf/all/accept_source_route 1",
+                    "/proc/sys/net/ipv4/conf/all/rp_filter 0",
+                    "/proc/sys/net/ipv4/conf/all/forwarding 1",
+                    "/proc/sys/net/ipv4/conf/default/rp_filter 0",
+                    "/proc/sys/net/ipv4/ip_forward 1",
+                    "/proc/sys/net/ipv4/ip_local_port_range 1024 65000",
+                    "/proc/sys/net/ipv4/ip_no_pmtu_disc 1",
+                    "/proc/sys/net/ipv4/tcp_congestion_control htcp",
+                    "/proc/sys/net/ipv4/tcp_fin_timeout 40",
+                    "/proc/sys/net/ipv4/tcp_max_syn_backlog 3240000",
+                    "/proc/sys/net/ipv4/tcp_max_tw_buckets 1440000",
+                    "/proc/sys/net/ipv4/tcp_moderate_rcvbuf 1",
+                    "/proc/sys/net/ipv4/tcp_mtu_probing 1",
+                    "/proc/sys/net/ipv4/tcp_rmem 4096 87380 134217728",
+                    "/proc/sys/net/ipv4/tcp_slow_start_after_idle 1",
+                    "/proc/sys/net/ipv4/tcp_tw_recycle 0",
+                    "/proc/sys/net/ipv4/tcp_tw_reuse 1",
+                    "/proc/sys/net/ipv4/tcp_window_scaling 1",
+                    "/proc/sys/net/ipv4/tcp_wmem 4096 65536 134217728",
+                    "/proc/sys/net/ipv6/conf/br0/disable_ipv6 1",
+                    "/proc/sys/net/ipv6/conf/eth0/disable_ipv6 1",
+                    "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6 1",
                     "/proc/sys/vm/swappiness 0"
                 };
                 HostParametersConfiguration.SetOsParametersList(list);
+
+                ConsoleLogger.Log("[data import] parameters");
             }
 
-            ConsoleLogger.Log("[data import] parameters");
             #endregion
 
             #endregion
@@ -370,12 +338,8 @@ namespace Antd {
             new Do().ParametersChangesPre();
             ConsoleLogger.Log("modules, services and os parameters ready");
             #endregion
-        }
-        #endregion
 
-        #region [    Procedures    ]
-        private static void Procedures() {
-            ConsoleLogger.Log("[config] procedures");
+            ConsoleLogger.Log("[boot step] procedures");
 
             #region [    Users    ]
             var manageMaster = new ManageMaster();
@@ -419,12 +383,67 @@ namespace Antd {
                 BindConfiguration.Set();
             }
             #endregion
-        }
-        #endregion
 
-        #region [    Managed Procedures    ]
-        private static void ManagedProcedures() {
-            ConsoleLogger.Log("[config] managed procedures");
+            ConsoleLogger.Log("[boot step] post procedures");
+
+            #region [    Apply Setup Configuration    ]
+            new Do().ParametersChangesPost();
+            ConsoleLogger.Log("machine configured (apply setup.conf)");
+            #endregion
+
+            #region [    Ssh    ]
+            if(SshdConfiguration.IsActive()) {
+                SshdConfiguration.Set();
+            }
+            if(!Directory.Exists(Parameter.RootSsh)) {
+                Directory.CreateDirectory(Parameter.RootSsh);
+            }
+            if(!Directory.Exists(Parameter.RootSshMntCdrom)) {
+                Directory.CreateDirectory(Parameter.RootSshMntCdrom);
+            }
+            if(!MountHelper.IsAlreadyMounted(Parameter.RootSsh)) {
+                MountManagement.Dir(Parameter.RootSsh);
+            }
+            var rk = new RootKeys();
+            if(rk.Exists == false) {
+                rk.Create();
+            }
+            var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
+            var storedKeys = authorizedKeysConfiguration.Get().Keys;
+            foreach(var storedKey in storedKeys) {
+                var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
+                var authorizedKeysPath = $"{home}/authorized_keys";
+                if(!File.Exists(authorizedKeysPath)) {
+                    File.Create(authorizedKeysPath);
+                }
+                File.AppendAllLines(authorizedKeysPath, new List<string> { $"{storedKey.KeyValue} {storedKey.RemoteUser}" });
+                Bash.Execute($"chmod 600 {authorizedKeysPath}");
+                Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
+            }
+            ConsoleLogger.Log("ssh ready");
+            #endregion
+
+            #region [    Avahi    ]
+            Directory.CreateDirectory("/etc/avahi/services");
+            const string avahiServicePath = "/etc/avahi/services/antd.service";
+            if(File.Exists(avahiServicePath)) {
+                File.Delete(avahiServicePath);
+            }
+            var appConfiguration = new AppConfiguration().Get();
+            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
+            Bash.Execute("chmod 755 /etc/avahi/services", false);
+            Bash.Execute($"chmod 644 {avahiServicePath}", false);
+            Systemctl.Restart("avahi-daemon.service");
+            Systemctl.Restart("avahi-daemon.socket");
+            ConsoleLogger.Log("avahi ready");
+            #endregion
+
+            #region [    AntdUI    ]
+            UiService.Setup();
+            ConsoleLogger.Log("antduisetup");
+            #endregion
+
+            ConsoleLogger.Log("[boot step] managed procedures");
 
             #region [    Samba    ]
             if(SambaConfiguration.IsActive()) {
@@ -493,8 +512,8 @@ namespace Antd {
             #region [    Apps    ]
             AppTarget.Setup();
             var apps = AppsConfiguration.Get().Apps;
-            foreach(var app in apps) {
-                var units = app.UnitLauncher;
+            foreach(var mapp in apps) {
+                var units = mapp.UnitLauncher;
                 foreach(var unit in units) {
                     if(Systemctl.IsActive(unit) == false) {
                         Systemctl.Restart(unit);
@@ -504,75 +523,33 @@ namespace Antd {
             //AppTarget.StartAll();
             ConsoleLogger.Log("apps ready");
             #endregion
-        }
-        #endregion
 
-        #region [    Post Procedures    ]
-        private static void PostProcedures() {
-            ConsoleLogger.Log("[config] post procedures");
-
-            #region [    Apply Setup Configuration    ]
-            new Do().ParametersChangesPost();
-            ConsoleLogger.Log("machine configured (apply setup.conf)");
+            #region [    Host Init    ]
+            var app = new AppConfiguration().Get();
+            var port = app.AntdPort;
+            var uri = $"http://localhost:{app.AntdPort}/";
+            var host = new NancyHost(new Uri(uri));
+            host.Start();
+            ConsoleLogger.Log("host ready");
+            StaticConfiguration.DisableErrorTraces = false;
+            ConsoleLogger.Log($"http port: {port}");
+            ConsoleLogger.Log("[boot step] antd is running");
+            var startupTime = DateTime.Now - startTime;
+            ConsoleLogger.Log($"loaded in: {startupTime}");
+            if(!File.Exists("/cfg/antd/stats.txt")) {
+                File.WriteAllText("/cfg/antd/stats.txt", "");
+            }
+            File.AppendAllLines("/cfg/antd/stats.txt", new[] { $"{startTime:yyyy MM dd HH:mm} - {startupTime}" });
             #endregion
 
-            #region [    Ssh    ]
-            if(SshdConfiguration.IsActive()) {
-                SshdConfiguration.Set();
-            }
-            if(!Directory.Exists(Parameter.RootSsh)) {
-                Directory.CreateDirectory(Parameter.RootSsh);
-            }
-            if(!Directory.Exists(Parameter.RootSshMntCdrom)) {
-                Directory.CreateDirectory(Parameter.RootSshMntCdrom);
-            }
-            if(!MountHelper.IsAlreadyMounted(Parameter.RootSsh)) {
-                MountManagement.Dir(Parameter.RootSsh);
-            }
-            var rk = new RootKeys();
-            if(rk.Exists == false) {
-                rk.Create();
-            }
-            var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
-            var storedKeys = authorizedKeysConfiguration.Get().Keys;
-            foreach(var storedKey in storedKeys) {
-                var home = storedKey.User == "root" ? "/root/.ssh" : $"/home/{storedKey.User}/.ssh";
-                var authorizedKeysPath = $"{home}/authorized_keys";
-                if(!File.Exists(authorizedKeysPath)) {
-                    File.Create(authorizedKeysPath);
-                }
-                File.AppendAllLines(authorizedKeysPath, new List<string> { $"{storedKey.KeyValue} {storedKey.RemoteUser}" });
-                Bash.Execute($"chmod 600 {authorizedKeysPath}");
-                Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
-            }
-            ConsoleLogger.Log("ssh ready");
+            ConsoleLogger.Log("[boot step] working procedures");
+
+            #region [    Tor    ]
+            TorConfiguration.AddVirtualPort("80", $"127.0.0.1:{app.AntdUiPort}");
+            var torHostname = TorConfiguration.Hostname;
+            ConsoleLogger.Log($"[tor] hostname: {torHostname}");
             #endregion
 
-            #region [    Avahi    ]
-
-            Directory.CreateDirectory("/etc/avahi/services");
-            const string avahiServicePath = "/etc/avahi/services/antd.service";
-            if(File.Exists(avahiServicePath)) {
-                File.Delete(avahiServicePath);
-            }
-            var appConfiguration = new AppConfiguration().Get();
-            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
-            Bash.Execute("chmod 755 /etc/avahi/services", false);
-            Bash.Execute($"chmod 644 {avahiServicePath}", false);
-            Systemctl.Restart("avahi-daemon.service");
-            Systemctl.Restart("avahi-daemon.socket");
-            ConsoleLogger.Log("avahi ready");
-            #endregion
-
-            #region [    AntdUI    ]
-            UiService.Setup();
-            ConsoleLogger.Log("antduisetup");
-            #endregion
-        }
-        #endregion
-
-        private static void WorkingProcedures() {
-            ConsoleLogger.Log("[config] working procedures");
             #region [    Cloud Send Uptime    ]
             var csuTimer = new UpdateCloudInfo();
             csuTimer.Start(1000 * 60 * 5);
@@ -582,6 +559,20 @@ namespace Antd {
             var cfcTimer = new FetchRemoteCommand();
             cfcTimer.Start(1000 * 60 * 2 + 330);
             #endregion
+
+            #region [    Test    ]
+#if DEBUG
+            Test();
+#endif
+            #endregion
+
+            KeepAlive();
+            ConsoleLogger.Log("antd is closing");
+            host.Stop();
+            Console.WriteLine("host shutdown");
+        }
+
+        private static void Test() {
         }
 
         #region [    Shutdown Management    ]

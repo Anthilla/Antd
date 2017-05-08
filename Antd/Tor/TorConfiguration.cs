@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using anthilla.commands;
+using anthilla.commands.Utils;
 
 namespace Antd.Tor {
     public class TorConfiguration {
@@ -17,6 +18,7 @@ namespace Antd.Tor {
         }
 
         private static readonly CommandLauncher Launcher = new CommandLauncher();
+        private static readonly Bash Bash = new Bash();
 
         public static bool IsActive => _isActive();
 
@@ -27,8 +29,14 @@ namespace Antd.Tor {
 
         public static void Start() {
             System.IO.Directory.CreateDirectory(HiddenServiceDirectoryPath);
+            Bash.Execute($"chown -R tor:root {HiddenServiceDirectoryPath}");
+            Bash.Execute($"chmod -R 700 {HiddenServiceDirectoryPath}");
             if(IsActive == false) {
-                Launcher.Launch("tor");
+                var ths = new System.Threading.ThreadStart(() => {
+                    Launcher.Launch("tor");
+                });
+                var th = new System.Threading.Thread(ths);
+                th.Start();
             }
         }
 
@@ -39,8 +47,15 @@ namespace Antd.Tor {
         }
 
         public static void Restart() {
-            Stop();
-            Start();
+            Launcher.Launch("tor-kill");
+            System.IO.Directory.CreateDirectory(HiddenServiceDirectoryPath);
+            Bash.Execute($"chown -R tor:root {HiddenServiceDirectoryPath}");
+            Bash.Execute($"chmod -R 700 {HiddenServiceDirectoryPath}");
+            var ths = new System.Threading.ThreadStart(() => {
+                Launcher.Launch("tor");
+            });
+            var th = new System.Threading.Thread(ths);
+            th.Start();
         }
 
         public static bool AddVirtualPort(string virtualPort, string localService) {
@@ -48,7 +63,7 @@ namespace Antd.Tor {
                 return false;
             }
             var fileContent = System.IO.File.ReadAllLines(ConfigFilePath).ToList();
-            var str1 = $"HiddenServiceDir {HostnameFilePath}";
+            var str1 = $"HiddenServiceDir {HiddenServiceDirectoryPath}";
             if(!fileContent.Contains(str1)) {
                 fileContent.Add(str1);
             }

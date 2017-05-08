@@ -65,6 +65,7 @@ namespace antdlib.common {
         public static string AntdCfgNetworkd => $"{AntdCfg}/networkd";
         public static string AntdCfgNetwork => $"{AntdCfg}/network";
         public static string AntdCfgParameters => $"{AntdCfg}/parameters";
+        public static string AntdCfgCluster => $"{AntdCfg}/cluster";
         public static string AntdCfgKeys => $"{AntdCfg}/keys";
         public static string AntdCfgReport => $"{AntdCfg}/report";
         public static string AntdCfgCommands => $"{AntdCfg}/commands";
