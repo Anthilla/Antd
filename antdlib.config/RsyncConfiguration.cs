@@ -12,7 +12,6 @@ namespace antdlib.config {
 
         private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/rsync.conf";
         private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/rsync.conf.bck";
-        private static DirectoryWatcher _directoryWatcher;
 
         public static RsyncConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
@@ -39,7 +38,6 @@ namespace antdlib.config {
 
         public static void Set() {
             Enable();
-            Start();
         }
 
         public static bool IsActive() {
@@ -65,22 +63,12 @@ namespace antdlib.config {
             ConsoleLogger.Log("[rsync] disabled");
         }
 
-        public static void Stop() {
-            _directoryWatcher?.Stop();
-            ConsoleLogger.Log("[rsync] stop");
-        }
-
-        public static void Start() {
-            _directoryWatcher = new DirectoryWatcher(_serviceModel.Directories.ToArray());
-            _directoryWatcher.StartWatching();
-            ConsoleLogger.Log("[rsync] start");
-        }
-
         public static void AddDirectory(RsyncObjectModel model) {
             var dirs = _serviceModel.Directories;
             dirs.Add(model);
             _serviceModel.Directories = dirs;
             Save(_serviceModel);
+            DirectoryWatcherRsync.Start(dirs);
         }
 
         public static void RemoveDirectory(string guid) {

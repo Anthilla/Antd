@@ -550,6 +550,11 @@ namespace Antd {
             ConsoleLogger.Log("[cluster] active");
             #endregion
 
+            #region [    Directory Watchers    ]
+            DirectoryWatcherCluster.Start();
+            DirectoryWatcherRsync.Start();
+            #endregion
+
             #region [    Cloud Send Uptime    ]
             var csuTimer = new UpdateCloudInfo();
             csuTimer.Start(1000 * 60 * 5);

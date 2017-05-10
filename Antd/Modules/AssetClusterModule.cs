@@ -48,16 +48,6 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(model);
             };
 
-            Post["/cluster/restart"] = x => {
-                ClusterConfiguration.Start();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/cluster/stop"] = x => {
-                ClusterConfiguration.Stop();
-                return HttpStatusCode.OK;
-            };
-
             Post["/cluster/save"] = x => {
                 string config = Request.Form.Config;
                 string ip = Request.Form.Ip;

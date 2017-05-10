@@ -161,7 +161,6 @@
     <Compile Include="SambaConfigurationModel.cs" />
     <Compile Include="SelectizerMapModel.cs" />
     <Compile Include="SshdConfigurationModel.cs" />
-    <Compile Include="SyncMachinePostModel.cs" />
     <Compile Include="SyslogNgConfigurationModel.cs" />
     <Compile Include="SystemComponentModel.cs" />
     <Compile Include="UnitModel.cs" />

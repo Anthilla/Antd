@@ -140,10 +140,8 @@ namespace Antd {
                 return;
             }
 
-            ClusterConfiguration.Stop();
             SaveKeepalived(publicIp, nodes);
             SaveHaproxy(publicIp, nodes);
-            ClusterConfiguration.Start();
         }
 
         #region [    keepalived    ]

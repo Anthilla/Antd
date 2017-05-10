@@ -51,25 +51,13 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/rsync/restart"] = x => {
-                RsyncConfiguration.Start();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/rsync/stop"] = x => {
-                RsyncConfiguration.Stop();
-                return HttpStatusCode.OK;
-            };
-
             Post["/rsync/enable"] = x => {
                 RsyncConfiguration.Enable();
-                RsyncConfiguration.Start();
                 return HttpStatusCode.OK;
             };
 
             Post["/rsync/disable"] = x => {
                 RsyncConfiguration.Disable();
-                RsyncConfiguration.Stop();
                 return HttpStatusCode.OK;
             };
 

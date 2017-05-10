@@ -10,7 +10,6 @@ namespace antdlib.config {
 
         private static readonly string CfgFile = $"{Parameter.AntdCfgCluster}/cluster.conf";
         private static readonly string CfgFileBackup = $"{Parameter.AntdCfgCluster}/cluster.conf.bck";
-        private static DirectoryWatcher _directoryWatcher;
 
         private static List<Cluster.Node> Load() {
             if(!File.Exists(CfgFile)) {
@@ -64,17 +63,6 @@ namespace antdlib.config {
 
         public static List<Cluster.Node> Get() {
             return Load();
-        }
-
-        public static void Stop() {
-            _directoryWatcher?.Stop();
-            ConsoleLogger.Log("[cluster] stop");
-        }
-
-        public static void Start() {
-            _directoryWatcher = new DirectoryWatcher(new[] { Parameter.AntdCfg });
-            _directoryWatcher.StartWatching();
-            ConsoleLogger.Log("[cluster] start");
         }
     }
 }

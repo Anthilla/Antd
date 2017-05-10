@@ -74,6 +74,8 @@
     <Compile Include="AclConfiguration.cs" />
     <Compile Include="AuthorizedKeysConfiguration.cs" />
     <Compile Include="AppsConfiguration.cs" />
+    <Compile Include="DirectoryWatcherRsync.cs" />
+    <Compile Include="DirectoryWatcherCluster.cs" />
     <Compile Include="HostParametersConfiguration.cs" />
     <Compile Include="Network2Configuration.cs" />
     <Compile Include="TimerConfiguration.cs" />
