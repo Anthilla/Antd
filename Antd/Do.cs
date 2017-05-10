@@ -131,12 +131,15 @@ namespace Antd {
         }
 
         public void ClusterChanges() {
+            ConsoleLogger.Log("[cluster] applying changes");
             var publicIp = ClusterConfiguration.GetClusterInfo().VirtualIpAddress;
             if(string.IsNullOrEmpty(publicIp)) {
+                ConsoleLogger.Warn("[cluster] public ip not valid");
                 return;
             }
             var nodes = ClusterConfiguration.Get();
             if(!nodes.Any()) {
+                ConsoleLogger.Warn("[cluster] configuration not valid");
                 return;
             }
 
@@ -149,11 +152,13 @@ namespace Antd {
         private const string KeepalivedFileOutput = "/etc/keepalived/keepalived.conf";
 
         private void SaveKeepalived(string publicIp, List<Cluster.Node> nodes) {
+            ConsoleLogger.Log("[cluster] init keepalived");
             const string keepalivedService = "keepalived.service";
             if(Systemctl.IsActive(keepalivedService)) {
+                ConsoleLogger.Log("[cluster] stop service");
                 Systemctl.Stop(keepalivedService);
             }
-
+            ConsoleLogger.Log("[cluster] set configuration file");
             try {
                 using(var reader = new StreamReader(_keepalivedFileInput)) {
                     using(TextWriter writer = File.CreateText(KeepalivedFileOutput)) {
@@ -165,7 +170,8 @@ namespace Antd {
                 }
             }
             catch(Exception e) {
-                Console.WriteLine(e.Message);
+                ConsoleLogger.Error("[cluster] error:");
+                ConsoleLogger.Error(e.Message);
                 return;
             }
 
@@ -190,24 +196,30 @@ namespace Antd {
             additionalLines.Add("");
 
             File.AppendAllLines(KeepalivedFileOutput, additionalLines);
-            if(Systemctl.IsEnabled(keepalivedService) == false) {
-                Systemctl.Enable(keepalivedService);
-                ConsoleLogger.Log("[systemctl] keepalived enabled");
-            }
-            if(Systemctl.IsActive(keepalivedService) == false) {
-                Systemctl.Restart(keepalivedService);
-                ConsoleLogger.Log("[systemctl] keepalived restarted");
-            }
-            ConsoleLogger.Log("[keepalived] keepalived started");
+            //if(Systemctl.IsEnabled(keepalivedService) == false) {
+            //    Systemctl.Enable(keepalivedService);
+            //    ConsoleLogger.Log("[cluster] keepalived enabled");
+            //}
+            //if(Systemctl.IsActive(keepalivedService) == false) {
+            //    Systemctl.Restart(keepalivedService);
+            //    ConsoleLogger.Log("[cluster] keepalived restarted");
+            //}
+            Systemctl.Enable(keepalivedService);
+            ConsoleLogger.Log("[cluster] keepalived enabled");
+            Systemctl.Restart(keepalivedService);
+            ConsoleLogger.Log("[cluster] keepalived restarted");
+            //ConsoleLogger.Log("[cluster] keepalived started");
         }
 
         private readonly string _haproxyFileOutput = $"{Parameter.AntdCfgCluster}/haproxy.conf";
 
         private void SaveHaproxy(string publicIp, List<Cluster.Node> nodes) {
+            ConsoleLogger.Log("[cluster] init haproxy");
             _commandLauncher.Launch("haproxy-stop");
             if(File.Exists(_haproxyFileOutput)) {
                 File.Copy(_haproxyFileOutput, $"{_haproxyFileOutput}.bck", true);
             }
+            ConsoleLogger.Log("[cluster] set haproxy file");
             var lines = new List<string> {
                 "global",
                 "    daemon",
@@ -225,16 +237,14 @@ namespace Antd {
                 "",
                 "backend servers"
             };
-
             foreach(var node in nodes) {
                 foreach(var svc in node.Services) {
                     lines.Add($"    server {node.Hostname} {node.IpAddress}:{svc.Port} maxconn 32");
                 }
             }
-
             File.WriteAllLines(_haproxyFileOutput, lines);
             _commandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
-            ConsoleLogger.Log("[haproxy] haproxy started");
+            ConsoleLogger.Log("[cluster] haproxy started");
         }
         #endregion
 

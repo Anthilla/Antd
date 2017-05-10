@@ -108,6 +108,7 @@
     <Compile Include="Cloud\WhatIsMyIp.cs" />
     <Compile Include="Do.cs" />
     <Compile Include="Helpers\Default.cs" />
+    <Compile Include="Helpers\Dicts.cs" />
     <Compile Include="License\LicenseManagement.cs" />
     <Compile Include="Modules\AntdHostParametersModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />

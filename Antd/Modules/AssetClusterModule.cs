@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using System;
 using antdlib.config;
 using antdlib.models;
 using Nancy;
@@ -34,6 +35,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.common;
 
 namespace Antd.Modules {
     public class AssetClusterModule : NancyModule {
@@ -62,11 +64,40 @@ namespace Antd.Modules {
             Post["Accept Configuration", "/cluster/accept"] = x => {
                 string file = Request.Form.File;
                 string content = Request.Form.Content;
-                if(File.Exists(file)) {
-                    File.Copy(file, $"{file}.sbck", true);
+                if(string.IsNullOrEmpty(file)) {
+                    return HttpStatusCode.BadRequest;
                 }
-                File.WriteAllText(file, content);
-                //todo restart context service to apply changes
+                if(string.IsNullOrEmpty(content)) {
+                    return HttpStatusCode.BadRequest;
+                }
+                ConsoleLogger.Log($"[cluster] received config for file: {file}");
+
+                DirectoryWatcherCluster.Stop();
+                try {
+                    if(File.Exists(file)) {
+                        File.Copy(file, $"{file}.sbck", true);
+                    }
+                    File.WriteAllText(file, content);
+                }
+                catch(Exception) {
+                    ConsoleLogger.Warn("");
+                    DirectoryWatcherCluster.Start();
+                    return HttpStatusCode.InternalServerError;
+                }
+                DirectoryWatcherCluster.Start();
+
+                var dict = Dicts.DirsAndServices;
+                if(dict.ContainsKey(file)) {
+                    ConsoleLogger.Log("[cluster] restart service bind to config file");
+                    var services = dict[file];
+                    foreach(var svc in services) {
+                        Systemctl.Enable(svc);
+                        Systemctl.Restart(svc);
+                    }
+                }
+                ConsoleLogger.Log("[cluster] apply changes after new config");
+                new Do().HostChanges();
+                new Do().NetworkChanges();
                 return HttpStatusCode.OK;
             };
         }

@@ -33,32 +33,34 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.config.shared;
+using Nancy;
 
 namespace antdlib.config {
     public class DirectoryWatcherCluster {
+
+        private static FileSystemWatcher _fileSystemWatcher;
+
         public static void Start() {
+            if(_fileSystemWatcher != null) {
+                return;
+            }
             ConsoleLogger.Log("[watcher config] start");
-            var paths = new[] { Parameter.RepoDirs };
             try {
-                foreach(var path in paths) {
-                    if(!Directory.Exists(path) && !File.Exists(path)) {
-                        continue;
-                    }
-                    var fsw = new FileSystemWatcher(path) {
-                        NotifyFilter =
-                             NotifyFilters.LastAccess |
-                             NotifyFilters.LastWrite |
-                             NotifyFilters.FileName |
-                             NotifyFilters.DirectoryName,
-                        IncludeSubdirectories = true
-                    };
-                    fsw.Changed += FileChanged;
-                    fsw.EnableRaisingEvents = true;
-                }
+                _fileSystemWatcher = new FileSystemWatcher(Parameter.RepoDirs) {
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    IncludeSubdirectories = true,
+                    EnableRaisingEvents = true
+                };
+                _fileSystemWatcher.Changed += FileChanged;
             }
             catch(Exception ex) {
                 ConsoleLogger.Log(ex.Message);
             }
+        }
+
+        public static void Stop() {
+            ConsoleLogger.Log("[watcher config] stop");
+            _fileSystemWatcher?.Dispose();
         }
 
         private static void FileChanged(object source, FileSystemEventArgs e) {
@@ -80,6 +82,12 @@ namespace antdlib.config {
             if(e.Name.Contains(".bck")) {
                 return;
             }
+            if(e.Name.ToLower().Contains("dir_root")) {
+                return;
+            }
+            if(e.Name.StartsWith(".")) {
+                return;
+            }
             ConsoleLogger.Log($"[watcher config] change at {e.FullPath}");
             var file = e.FullPath;
             var text = File.ReadAllText(file);
@@ -90,9 +98,16 @@ namespace antdlib.config {
                 { "File", file },
                 { "Content", text }
             };
+            var app = new AppConfiguration().Get();
             foreach(var machine in machines) {
-                var app = new AppConfiguration().Get();
-                new ApiConsumer().Post($"http://{machine}:{app.AntdUiPort}/services/cluster/accept", data);
+                ConsoleLogger.Log($"[watcher config] send config to {machine}");
+                var status = new ApiConsumer().Post($"http://{machine}:{app.AntdUiPort}/cluster/accept", data);
+                if(status != HttpStatusCode.OK) {
+                    ConsoleLogger.Warn($"[watcher config] sync with {machine} failed");
+                }
+                else {
+                    ConsoleLogger.Warn($"[watcher config] sync with {machine} ok");
+                }
             }
         }
     }

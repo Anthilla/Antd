@@ -64,16 +64,12 @@ namespace antdlib.config {
                         continue;
                     }
                     var fsw = new FileSystemWatcher(path) {
-                        NotifyFilter =
-                            NotifyFilters.LastAccess |
-                            NotifyFilters.LastWrite |
-                            NotifyFilters.FileName |
-                            NotifyFilters.DirectoryName,
-                        IncludeSubdirectories = true
+                        NotifyFilter = NotifyFilters.LastWrite,
+                        IncludeSubdirectories = true,
+                        EnableRaisingEvents = true
                     };
 
                     fsw.Changed += FileChanged;
-                    fsw.EnableRaisingEvents = true;
                     _watchers.Add(fsw);
                 }
             }
