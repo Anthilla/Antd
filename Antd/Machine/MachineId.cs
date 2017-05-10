@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using antdlib.models;
+using Newtonsoft.Json;
 
 namespace Antd.Machine {
     public class MachineId {
@@ -24,7 +26,13 @@ namespace Antd.Machine {
                     File.Delete(IdPath);
                 }
                 else {
-                    return checkFile;
+                    try {
+                        var x = JsonConvert.DeserializeObject<MachineIdModel>(checkFile);
+                        return x.Value;
+                    }
+                    catch(Exception) {
+                        File.Delete(IdPath);
+                    }
                 }
             }
             else {
@@ -56,10 +64,12 @@ namespace Antd.Machine {
                     }
                 }
                 catch(Exception) {
-                    File.WriteAllText(IdPath, machineUuid);
+                    var txt = JsonConvert.SerializeObject(new MachineIdModel(machineUuid), Formatting.Indented);
+                    File.WriteAllText(IdPath, txt);
                     return machineUuid;
                 }
-                File.WriteAllText(IdPath, machineUuid);
+                var txt2 = JsonConvert.SerializeObject(new MachineIdModel(machineUuid), Formatting.Indented);
+                File.WriteAllText(IdPath, txt2);
                 return machineUuid;
             }
             return string.Empty;

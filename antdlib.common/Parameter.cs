@@ -31,7 +31,7 @@ using System;
 
 namespace antdlib.common {
     public class Parameter {
-        public static string Cloud => "http://localhost:80/";
+        public static string Cloud => "http://api.anthilla.com:80/";
 
         public static string LabelAntdRoot => "antd_root";
         public static string LabelAntdPort => "antd_port";
