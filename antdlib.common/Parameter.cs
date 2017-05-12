@@ -91,6 +91,8 @@ namespace antdlib.common {
         public static string Overlay => "/mnt/overlay";
 
         public static string Livecd => "/mnt/livecd";
+        public static string AnthillaUnits => $"{RepoUnits}/anthillaUnits";
+        public static string AntdUnits => $"{RepoUnits}/antd.target.wants";
         public static string AppsUnits => $"{RepoUnits}/app.target.wants";
         public static string ApplicativeUnits => $"{RepoUnits}/applicative.target.wants";
         public static string WebsocketUnits => $"{RepoUnits}/websocket.target.wants";

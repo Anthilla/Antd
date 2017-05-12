@@ -25,7 +25,7 @@ namespace Antd.Apps {
                 "RemainAfterExit=yes",
                 "",
                 "[Install]",
-                "WantedBy=app.target"
+                "WantedBy=applicative.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
@@ -52,7 +52,7 @@ namespace Antd.Apps {
                 "RemainAfterExit=yes",
                 "",
                 "[Install]",
-                "WantedBy=app.target"
+                "WantedBy=applicative.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();
@@ -82,7 +82,7 @@ namespace Antd.Apps {
                 "LimitNOFILE=1024000",
                 "",
                 "[Install]",
-                "WantedBy=app.target"
+                "WantedBy=applicative.target"
             };
             File.WriteAllLines(fileName, lines);
             Systemctl.DaemonReload();

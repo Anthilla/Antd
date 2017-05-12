@@ -564,7 +564,51 @@ namespace Antd {
 
             #region [    Check System Components    ]
             MachineInfo.CheckSystemComponents();
-            ConsoleLogger.Log("[system] components health checked");
+            ConsoleLogger.Log("[check] system components health");
+            #endregion
+
+            #region [    Check Units Location    ]
+            var anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
+            if(!anthillaUnits.Any()) {
+                var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
+                foreach(var unit in antdUnits) {
+                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    File.Copy(unit, trueUnit);
+                    File.Delete(unit);
+                    Bash.Execute($"ln -s {trueUnit} {unit}");
+                }
+                var appsUnits = Directory.EnumerateFiles(Parameter.AppsUnits, "*.*", SearchOption.TopDirectoryOnly);
+                foreach(var unit in appsUnits) {
+                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    File.Copy(unit, trueUnit);
+                    File.Delete(unit);
+                    Bash.Execute($"ln -s {trueUnit} {unit}");
+                }
+                var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
+                foreach(var unit in applicativeUnits) {
+                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    File.Copy(unit, trueUnit);
+                    File.Delete(unit);
+                    Bash.Execute($"ln -s {trueUnit} {unit}");
+                }
+            }
+            anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            if(!anthillaUnits.Any()) {
+                foreach(var unit in anthillaUnits) {
+                    Bash.Execute($"chown root:wheel {unit}");
+                    Bash.Execute($"chmod 644 {unit}");
+                }
+            }
+            ConsoleLogger.Log("[check] units integrity");
+            #endregion
+
+            #region [    Check Application File Acls    ]
+            var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories);
+            foreach(var file in files) {
+                Bash.Execute($"chmod 644 {file}");
+                Bash.Execute($"chown root:wheel {file}");
+            }
+            ConsoleLogger.Log("[check] app-file acl");
             #endregion
 
             #region [    Test    ]

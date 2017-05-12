@@ -90,8 +90,6 @@ namespace antdsh {
             Bash.Execute($"ln -s {Parameter.RepoKernel}/kernel {Parameter.RepoKernel}/active-kernel");
             Bash.Execute($"ln -s {Parameter.RepoKernel}/modules {Parameter.RepoKernel}/active-modules");
             Bash.Execute($"ln -s {Parameter.RepoSystem}/system {Parameter.RepoSystem}/active-system");
-
-            new Execute().CleanTmp();
         }
 
         /// <summary>

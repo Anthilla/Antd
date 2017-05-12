@@ -23,19 +23,19 @@ namespace antdsh {
                 while(true) {
                     Console.Write($"{DateTime.Now:[dd-MM-yyyy] HH:mm} > antdsh > ");
                     var command = Console.ReadLine();
-                    if(!string.IsNullOrEmpty(command)) {
-                        AddCommand(command);
-                        var commandMain = command.Split(' ').First();
-                        var arguments = command.Split(' ').Skip(1).ToArray();
+                    if(string.IsNullOrEmpty(command))
+                        continue;
+                    AddCommand(command);
+                    var commandMain = command.Split(' ').First();
+                    var arguments = command.Split(' ').Skip(1).ToArray();
 
-                        if(LCommands.ContainsKey(commandMain)) {
-                            Action<string[]> functionToExecute;
-                            LCommands.TryGetValue(commandMain, out functionToExecute);
-                            functionToExecute?.Invoke(arguments);
-                        }
-                        else {
-                            Console.WriteLine("Command '" + commandMain + "' not found");
-                        }
+                    if(LCommands.ContainsKey(commandMain)) {
+                        Action<string[]> functionToExecute;
+                        LCommands.TryGetValue(commandMain, out functionToExecute);
+                        functionToExecute?.Invoke(arguments);
+                    }
+                    else {
+                        Console.WriteLine("Command '" + commandMain + "' not found");
                     }
                 }
             }
@@ -111,7 +111,7 @@ namespace antdsh {
             if(File.Exists(verb)) {
                 Console.WriteLine($"{verb} does not exist");
             }
-            var h = Update2.GetFileHash(verb);
+            var h = Update.GetFileHash(verb);
             Console.WriteLine(h);
         }
 
@@ -179,39 +179,39 @@ namespace antdsh {
 
             switch(verb) {
                 case "check":
-                    Update2.Check();
+                    Update.Check();
                     break;
                 case "all":
-                    Update2.Antd(forced, unitsOnly);
-                    Update2.AntdUi(forced, unitsOnly);
-                    Update2.Antdsh(forced, unitsOnly);
-                    Update2.Aossvc(forced, unitsOnly);
-                    Update2.KernelSystemMap(forced, unitsOnly);
-                    Update2.KernelFirmware(forced, unitsOnly);
-                    Update2.KernelInitrd(forced, unitsOnly);
-                    Update2.KernelKernel(forced, unitsOnly);
-                    Update2.KernelModules(forced, unitsOnly);
-                    Update2.System(forced, unitsOnly);
+                    Update.Antd(forced, unitsOnly);
+                    Update.AntdUi(forced, unitsOnly);
+                    Update.Antdsh(forced, unitsOnly);
+                    Update.Aossvc(forced, unitsOnly);
+                    Update.KernelSystemMap(forced, unitsOnly);
+                    Update.KernelFirmware(forced, unitsOnly);
+                    Update.KernelInitrd(forced, unitsOnly);
+                    Update.KernelKernel(forced, unitsOnly);
+                    Update.KernelModules(forced, unitsOnly);
+                    Update.System(forced, unitsOnly);
                     break;
                 case "antd":
-                    Update2.Antd(forced, unitsOnly);
-                    Update2.AntdUi(forced, unitsOnly);
+                    Update.Antd(forced, unitsOnly);
+                    Update.AntdUi(forced, unitsOnly);
                     break;
                 case "antdsh":
-                    Update2.Antdsh(forced, unitsOnly);
+                    Update.Antdsh(forced, unitsOnly);
                     break;
                 case "aossvc":
-                    Update2.Aossvc(forced, unitsOnly);
+                    Update.Aossvc(forced, unitsOnly);
                     break;
                 case "system":
-                    Update2.System(forced, unitsOnly);
+                    Update.System(forced, unitsOnly);
                     break;
                 case "kernel":
-                    Update2.KernelSystemMap(forced, unitsOnly);
-                    Update2.KernelFirmware(forced, unitsOnly);
-                    Update2.KernelInitrd(forced, unitsOnly);
-                    Update2.KernelKernel(forced, unitsOnly);
-                    Update2.KernelModules(forced, unitsOnly);
+                    Update.KernelSystemMap(forced, unitsOnly);
+                    Update.KernelFirmware(forced, unitsOnly);
+                    Update.KernelInitrd(forced, unitsOnly);
+                    Update.KernelKernel(forced, unitsOnly);
+                    Update.KernelModules(forced, unitsOnly);
                     break;
                 case "xen":
                     //Update.Xen(forced, unitsOnly);
@@ -222,75 +222,73 @@ namespace antdsh {
             }
         }
 
-        private static readonly Execute Execute = new Execute();
+        //private static bool IsAntdRunning() => Bash.Execute("ps -aef").Grep("Antd.exe").Any();
 
-        private static bool IsAntdRunning() => Bash.Execute("ps -aef").Grep("Antd.exe").Any();
-
-        private static int _startCount;
+        //private static int _startCount;
         private static void StartFunc(string[] args) {
-            var versionToRun = args.First();
-            while(true) {
-                _startCount++;
-                Console.WriteLine($"Retry #{_startCount}");
-                if(_startCount < 5) {
-                    Execute.LinkVersionToRunning(versionToRun);
-                    Console.WriteLine($"New antd '{versionToRun}' linked to running version");
-                    Console.WriteLine("Restarting services now...");
-                    Execute.RestartSystemctlAntdServices();
-                    if(IsAntdRunning()) {
-                        Console.WriteLine("Antd is running now!");
-                    }
-                    else {
-                        Console.WriteLine("Something went wrong starting antd... retrying starting it...");
-                        continue;
-                    }
-                }
-                else {
-                    Console.WriteLine("Error: too many retries...");
-                }
-                _startCount = 0;
-                break;
-            }
+            //var versionToRun = args.First();
+            //while(true) {
+            //    _startCount++;
+            //    Console.WriteLine($"Retry #{_startCount}");
+            //    if(_startCount < 5) {
+            //        Execute.LinkVersionToRunning(versionToRun);
+            //        Console.WriteLine($"New antd '{versionToRun}' linked to running version");
+            //        Console.WriteLine("Restarting services now...");
+            //        Execute.RestartSystemctlAntdServices();
+            //        if(IsAntdRunning()) {
+            //            Console.WriteLine("Antd is running now!");
+            //        }
+            //        else {
+            //            Console.WriteLine("Something went wrong starting antd... retrying starting it...");
+            //            continue;
+            //        }
+            //    }
+            //    else {
+            //        Console.WriteLine("Error: too many retries...");
+            //    }
+            //    _startCount = 0;
+            //    break;
+            //}
         }
 
-        private static int _stopCount;
+        //private static int _stopCount;
         private static void StopFunc(string[] args) {
-            while(true) {
-                _stopCount++;
-                Console.WriteLine($"Retry #{_stopCount}");
-                if(_stopCount < 5) {
-                    Console.WriteLine("Removing everything and stopping antd.");
-                    Execute.StopServices();
-                    UmountAll();
-                    if(IsAntdRunning() == false) {
-                        Console.WriteLine("Antd has been stopped now!");
-                    }
-                    else {
-                        Console.WriteLine("Something went wrong stopping antd... retrying stopping it...");
-                        continue;
-                    }
-                }
-                else {
-                    Console.WriteLine("Error: too many retries...");
-                }
-                _stopCount = 0;
-                break;
-            }
+            //while(true) {
+            //    _stopCount++;
+            //    Console.WriteLine($"Retry #{_stopCount}");
+            //    if(_stopCount < 5) {
+            //        Console.WriteLine("Removing everything and stopping antd.");
+            //        Execute.StopServices();
+            //        UmountAll();
+            //        if(IsAntdRunning() == false) {
+            //            Console.WriteLine("Antd has been stopped now!");
+            //        }
+            //        else {
+            //            Console.WriteLine("Something went wrong stopping antd... retrying stopping it...");
+            //            continue;
+            //        }
+            //    }
+            //    else {
+            //        Console.WriteLine("Error: too many retries...");
+            //    }
+            //    _stopCount = 0;
+            //    break;
+            //}
         }
 
-        private static void UmountAll() {
-            Console.WriteLine("Unmounting Antd");
-            while(true) {
-                if(File.Exists("/proc/mounts")) {
-                    var procMounts = File.ReadAllLines("/proc/mounts");
-                    if(procMounts.Any(_ => _.Contains("/antd")))
-                        return;
-                    Bash.Execute($"umount {Parameter.AntdCfg}");
-                    Bash.Execute($"umount {Parameter.AntdCfgDatabase}");
-                    Bash.Execute("umount /framework/antd");
-                }
-            }
-        }
+        //private static void UmountAll() {
+        //    Console.WriteLine("Unmounting Antd");
+        //    while(true) {
+        //        if(File.Exists("/proc/mounts")) {
+        //            var procMounts = File.ReadAllLines("/proc/mounts");
+        //            if(procMounts.Any(_ => _.Contains("/antd")))
+        //                return;
+        //            Bash.Execute($"umount {Parameter.AntdCfg}");
+        //            Bash.Execute($"umount {Parameter.AntdCfgDatabase}");
+        //            Bash.Execute("umount /framework/antd");
+        //        }
+        //    }
+        //}
 
         private static void StatusFunc(string[] args) {
             var res = Bash.Execute("ps -aef").Grep("Antd.exe");
@@ -298,10 +296,5 @@ namespace antdsh {
             Console.WriteLine("");
             Console.WriteLine(Bash.Execute("systemctl status "));
         }
-
-        //private static void CleanTmp() {
-        //    Console.WriteLine("Cleaning tmp.");
-        //    Execute.CleanTmp();
-        //}
     }
 }

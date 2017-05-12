@@ -36,7 +36,7 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace antdsh {
-    public class Update2 {
+    public class Update {
 
         public class FileInfoModel {
             public string FileName { get; set; }
@@ -46,7 +46,6 @@ namespace antdsh {
         }
 
         #region [    Private Parameters    ]
-
         private const string UpdateVerbForAntd = "update.antd";
         private const string UpdateVerbForAntdUi = "update.antdui";
         private const string UpdateVerbForAntdsh = "update.antdsh";
@@ -55,7 +54,8 @@ namespace antdsh {
         private const string UpdateVerbForKernel = "update.kernel";
         private const string UpdateVerbForUnits = "update.units";
 
-        private const string UnitsTargetApp = "/mnt/cdrom/Units/antd.target.wants";
+        private const string UnitsTargetApp = "/mnt/cdrom/Units/anthillaUnits";
+        private const string UnitsTargetAppLinks = "/mnt/cdrom/Units/antd.target.wants";
         //private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
 
         private static string _officialRepo = "https://srv.anthilla.com/repo/";
@@ -86,11 +86,9 @@ namespace antdsh {
         private static string InitrdActive => $"{KernelDirectory}/active-initrd";
         private static string KernelActive => $"{KernelDirectory}/active-kernel";
         private static string ModulesActive => $"{KernelDirectory}/active-modules";
-
         #endregion Parameters
 
         #region [    Private Members   ]
-
         private static string GetVersionDateFromFile(string path) {
             var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
             var m = r.Match(path);
@@ -264,7 +262,7 @@ namespace antdsh {
             }
         }
 
-        private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter) {
+        private static void UpdateUnits(string currentContext, string unitsTargetDir, string filter, string linkDirForAntd = "") {
             Console.WriteLine("");
             Console.WriteLine($"Updating units for {currentContext}");
 
@@ -285,6 +283,13 @@ namespace antdsh {
                 var fullPath = Path.GetFullPath(downloadedUnit);
                 Console.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
                 File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
+                if(!string.IsNullOrEmpty(linkDirForAntd) && File.Exists(fullPath)) {
+                    var linkedFile = fullPath.Replace(unitsTargetDir, linkDirForAntd);
+                    if(File.Exists(linkedFile)) {
+                        File.Delete(linkedFile);
+                    }
+                    Bash.Execute($"ln -s {fullPath} {linkedFile}");
+                }
             }
             Bash.Execute("systemctl daemon-reload");
             Console.WriteLine($"{currentContext} units installation complete");
@@ -296,10 +301,9 @@ namespace antdsh {
             File.Delete(activeVersionPath);
             Bash.Execute($"ln -s {Path.GetFileName(newVersionPath)} {activeVersionPath}");
             Bash.Execute($"chown root:wheel {newVersionPath}");
-            Bash.Execute($"chmod 775 {newVersionPath}");
+            Bash.Execute($"chmod 644 {newVersionPath}");
         }
 
-        private static readonly Target Target = new Target();
         private static readonly Units Units = new Units();
 
         private static void RestartAntdUi() {
@@ -319,12 +323,10 @@ namespace antdsh {
         }
 
         private static void RestartAntdsh() {
-            if(Parameter.IsUnix) {
-                Target.Setup();
-                Units.CreateRemountUnits();
-                Bash.Execute("systemctl restart tt-antdsh-01-remount.timer");
-                Environment.Exit(0);
-            }
+            Target.Setup();
+            Units.CreateRemountUnits();
+            Bash.Execute("systemctl restart tt-antdsh-01-remount.timer");
+            Environment.Exit(0);
         }
         #endregion
 
@@ -351,7 +353,7 @@ namespace antdsh {
             if(unitsOnly == false) {
                 UpdateContext(UpdateVerbForAntd, AntdActive, AntdDirectory, forced);
             }
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntd.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntd.", UnitsTargetAppLinks);
             RestartAntd();
             CleanTmp();
             Console.WriteLine();
@@ -366,7 +368,7 @@ namespace antdsh {
             if(unitsOnly == false) {
                 UpdateContext(UpdateVerbForAntdUi, AntdUiActive, AntdUiDirectory, forced);
             }
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntdUi.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "-AppAntdUi.", UnitsTargetAppLinks);
             RestartAntdUi();
             CleanTmp();
             Console.WriteLine();
@@ -377,12 +379,10 @@ namespace antdsh {
             _publicRepositoryUrlHttps = GetReferenceServer("https");
             Console.WriteLine($"repo = {_publicRepositoryUrlHttps}");
             CleanTmp();
-            if(unitsOnly) {
-                UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
-                return;
+            if(unitsOnly == false) {
+                UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
             }
-            UpdateContext(UpdateVerbForAntdsh, AntdshActive, AntdshDirectory, forced);
-            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.");
+            UpdateUnits(UpdateVerbForUnits, UnitsTargetApp, "AppAntdsh.", UnitsTargetAppLinks);
             RestartAntdsh();
             CleanTmp();
             Console.WriteLine();
@@ -473,7 +473,6 @@ namespace antdsh {
             CleanTmp();
             Console.WriteLine();
         }
-
         #endregion
     }
 }

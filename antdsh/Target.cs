@@ -7,23 +7,26 @@ namespace antdsh {
         public void Check() {
         }
 
-        public void Setup() {
+        public static void Setup() {
             if(IsTargetActive())
                 return;
-            Bash.Execute("mkdir -p /etc/systemd/system/tt.target.wants");
-            Bash.Execute("mkdir -p /mnt/cdrom/Units/tt.target.wants");
+            if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
+            Directory.CreateDirectory("/etc/systemd/system/");
+            Directory.CreateDirectory("/etc/systemd/system/tt.target.wants");
+            Directory.CreateDirectory("/mnt/cdrom/Units/tt.target.wants");
+            Directory.CreateDirectory("/mnt/cdrom/Units/ttUnits");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
-            Bash.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants");
-            Bash.Execute("systemctl daemon-reload");
-            Bash.Execute("systemctl start tt.service");
-            Bash.Execute("systemctl start tt.target");
-            Bash.Execute("systemctl daemon-reload");
+            Bash.Execute("ln -s ../../../../usr/lib64/systemd/system/tt.service tt.service", "/etc/systemd/system/multi-user.target.wants", false);
+            Bash.Execute("systemctl daemon-reload", false);
+            Bash.Execute("systemctl start tt.service", false);
+            Bash.Execute("systemctl start tt.target", false);
+            Bash.Execute("systemctl daemon-reload", false);
         }
 
-        public void StartAll() {
-            Bash.Execute("systemctl restart tt.target");
+        public static void StartAll() {
+            Bash.Execute("systemctl restart tt.target", false);
         }
 
         #region TT Target
@@ -97,6 +100,5 @@ namespace antdsh {
             File.WriteAllLines(file, timerText);
         }
         #endregion TT Target
-
     }
 }
