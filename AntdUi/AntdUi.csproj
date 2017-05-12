@@ -171,10 +171,6 @@
     <Compile Include="Modules\AssetScanModule.cs" />
     <Compile Include="Modules\AssetSettingModule.cs" />
     <Compile Include="Modules\AssetClusterModule.cs" />
-    <Compile Include="Modules\BootCommandsModule.cs" />
-    <Compile Include="Modules\BootModulesModule.cs" />
-    <Compile Include="Modules\BootOsParametersModule.cs" />
-    <Compile Include="Modules\BootServicesModule.cs" />
     <Compile Include="Modules\CaModule.cs" />
     <Compile Include="Modules\ContentModule.cs" />
     <Compile Include="Database\Actions.cs" />

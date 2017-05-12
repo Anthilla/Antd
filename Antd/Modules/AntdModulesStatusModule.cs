@@ -8,9 +8,7 @@ namespace Antd.Modules {
 
         public AntdModulesStatusModule() {
             Get["/modulesstatus"] = x => {
-                var model = new PageModulesStatusModel();
-                var machineInfo = new MachineInfo();
-                model.Modules = machineInfo.GetModules();
+                var model = new PageModulesStatusModel { Modules = MachineInfo.GetModules() };
                 return JsonConvert.SerializeObject(model);
             };
         }

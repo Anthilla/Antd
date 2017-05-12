@@ -1,7 +1,6 @@
 ﻿using Antd.Info;
 using Antd.Storage;
 using antdlib.common;
-using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
@@ -52,10 +51,9 @@ namespace Antd.Modules {
 
             Get["/monitor/resources"] = x => {
                 var hostname = File.ReadAllText("/etc/hostname");
-                var machineInfo = new MachineInfo();
-                var uptime = machineInfo.GetUptime();
+                var uptime = MachineInfo.GetUptime();
                 var memoryUsage = 0;
-                var memory = machineInfo.GetFree().FirstOrDefault();
+                var memory = MachineInfo.GetFree().FirstOrDefault();
                 if(memory != null) {
                     var tot = memory.Total;
                     var used = memory.Used;

@@ -8,9 +8,8 @@ namespace Antd.Modules {
 
         public AntdSystemStatusModule() {
             Get["/systemstatus"] = x => {
-                var machineInfo = new MachineInfo();
                 var model = new PageSystemStatusModel {
-                    Components = machineInfo.GetSystemComponentModels()
+                    Components = MachineInfo.GetSystemComponentModels()
                 };
                 return JsonConvert.SerializeObject(model);
             };

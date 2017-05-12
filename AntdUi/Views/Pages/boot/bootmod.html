@@ -12,7 +12,7 @@
             <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
                 <textarea ng-model="ModprobesStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
             </div>
-            <button ng-click="saveModules()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            <button ng-click="saveModules($event)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
         </div>
     </div>
     <br />
@@ -27,7 +27,7 @@
             <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
                 <textarea ng-model="RmmodStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
             </div>
-            <button ng-click="saveRmmodules()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            <button ng-click="saveRmmodules($event)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
         </div>
     </div>
     <br />
@@ -42,7 +42,7 @@
             <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
                 <textarea ng-model="ModulesBlacklistStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
             </div>
-            <button ng-click="saveModblacklist()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            <button ng-click="saveModblacklist($event)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
         </div>
     </div>
 </div>

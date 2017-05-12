@@ -8,10 +8,10 @@ namespace Antd.Modules {
 
         public AntdMemoryStatusModule() {
             Get["/memorystatus"] = x => {
-                var model = new PageMemoryStatusModel();
-                var machineInfo = new MachineInfo();
-                model.Meminfo = machineInfo.GetMeminfo();
-                model.Free = machineInfo.GetFree();
+                var model = new PageMemoryStatusModel {
+                    Meminfo = MachineInfo.GetMeminfo(),
+                    Free = MachineInfo.GetFree()
+                };
                 return JsonConvert.SerializeObject(model);
             };
         }

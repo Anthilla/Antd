@@ -3,7 +3,6 @@ using System.Linq;
 using antdlib.common;
 using antdlib.config;
 using antdlib.models;
-using Random = anthilla.core.Random;
 
 namespace Antd {
 

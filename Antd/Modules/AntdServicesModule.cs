@@ -12,11 +12,10 @@ namespace Antd.Modules {
         public AntdServicesModule() {
             Get["/services"] = x => {
                 var model = new PageServicesModel();
-                var machineInfo = new MachineInfo();
-                var services = machineInfo.GetUnits("service");
-                var mounts = machineInfo.GetUnits("mount");
-                var targets = machineInfo.GetUnits("target");
-                var timers = machineInfo.GetUnits("timer");
+                var services = MachineInfo.GetUnits("service");
+                var mounts = MachineInfo.GetUnits("mount");
+                var targets = MachineInfo.GetUnits("target");
+                var timers = MachineInfo.GetUnits("timer");
                 services.AddRange(mounts);
                 services.AddRange(targets);
                 services.AddRange(timers);

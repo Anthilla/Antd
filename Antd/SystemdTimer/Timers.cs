@@ -17,6 +17,8 @@ namespace Antd.SystemdTimer {
         }
 
         public static void MoveExistingTimers() {
+            Directory.CreateDirectory(Parameter.TimerUnits);
+            Directory.CreateDirectory(Parameter.TimerUnitsLinks);
             var ttunitsFiles = Directory.EnumerateFiles(Parameter.TimerUnits).ToList();
             var ttunitsLinks = Directory.EnumerateFiles(Parameter.TimerUnitsLinks).ToList();
             if(ttunitsLinks.Any() && !ttunitsFiles.Any()) {

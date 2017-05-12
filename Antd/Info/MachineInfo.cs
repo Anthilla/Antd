@@ -46,32 +46,32 @@ namespace Antd.Info {
 
         private static readonly MapToModel Mapper = new MapToModel();
 
-        public IEnumerable<CpuinfoModel> GetCpuinfo() {
+        public static IEnumerable<CpuinfoModel> GetCpuinfo() {
             var result = Mapper.FromFile<CpuinfoModel>("/proc/cpuinfo", ":");
             return result;
         }
 
-        public IEnumerable<MeminfoModel> GetMeminfo() {
+        public static IEnumerable<MeminfoModel> GetMeminfo() {
             var result = Mapper.FromFile<MeminfoModel>("/proc/meminfo", ":");
             return result;
         }
 
-        public IEnumerable<AosReleaseModel> GetAosrelease() {
+        public static IEnumerable<AosReleaseModel> GetAosrelease() {
             var result = Mapper.FromFile<AosReleaseModel>("/etc/aos-release", ":");
             return result;
         }
 
-        public IEnumerable<LosetupModel> GetLosetup() {
+        public static IEnumerable<LosetupModel> GetLosetup() {
             var result = Mapper.FromCommand<LosetupModel>("losetup --list -n").ToList();
             return result;
         }
 
-        public IEnumerable<UnitModel> GetServices() {
+        public static IEnumerable<UnitModel> GetServices() {
             var result = Mapper.FromCommand<UnitModel>("systemctl --no-pager list-unit-files").ToList().Skip(1);
             return result;
         }
 
-        public List<UnitModel> GetUnits(string type) {
+        public static List<UnitModel> GetUnits(string type) {
             var result = Mapper.FromCommand<UnitModel>($"systemctl list-units --no-legend --no-pager -t {type}", 3).ToList().Skip(1).ToList();
             foreach(var r in result) {
                 r.Type = type;
@@ -79,14 +79,12 @@ namespace Antd.Info {
             return result;
         }
 
-        public IEnumerable<ModuleModel> GetModules() {
+        public static IEnumerable<ModuleModel> GetModules() {
             var result = Mapper.FromCommand<ModuleModel>("lsmod").ToList().Skip(1);
             return result;
         }
 
-        private static readonly Bash Bash = new Bash();
-
-        public UptimeModel GetUptime() {
+        public static UptimeModel GetUptime() {
             var result = Bash.Execute("uptime");
             var values = result.Split(new[] { "," }, 3, StringSplitOptions.RemoveEmptyEntries);
             var model = new UptimeModel {
@@ -97,12 +95,12 @@ namespace Antd.Info {
             return model;
         }
 
-        public IEnumerable<FreeModel> GetFree() {
+        public static IEnumerable<FreeModel> GetFree() {
             var result = Mapper.FromCommand<FreeModel>("free -lth").ToList().Skip(1);
             return result;
         }
 
-        public IEnumerable<SystemComponentModel> GetSystemComponentModels() {
+        public static IEnumerable<SystemComponentModel> GetSystemComponentModels() {
             var repoSystem = Parameter.RepoSystem;
             var actives = Directory.EnumerateFileSystemEntries(repoSystem).Where(_ => _.Contains("active-")).ToList();
             var repoKernel = Parameter.RepoKernel;
@@ -125,6 +123,34 @@ namespace Antd.Info {
                 components.Add(comp);
             }
             return components;
+        }
+
+        public static void CheckSystemComponents() {
+            var components = GetSystemComponentModels();
+            foreach(var component in components) {
+                if(!component.Recovery.Contains("broken")) { continue; }
+                if(!component.Recovery.Contains("cannot open")) { continue; }
+                if(component.Alias == "system") {
+                    var recoveryLink = "/mnt/cdrom/System/recovery-system";
+                    var element = $"/mnt/cdrom/System/{component.Active}";
+                    if(File.Exists(element)) {
+                        if(File.Exists(recoveryLink)) {
+                            File.Delete(recoveryLink);
+                        }
+                        Bash.Execute($"ln -s {element} {recoveryLink}");
+                    }
+                }
+                else {
+                    var recoveryLink = $"/mnt/cdrom/Kernel/recovery-{component.Alias}";
+                    var element = $"/mnt/cdrom/System/{component.Active}";
+                    if(File.Exists(element)) {
+                        if(File.Exists(recoveryLink)) {
+                            File.Delete(recoveryLink);
+                        }
+                        Bash.Execute($"ln -s {element} {recoveryLink}");
+                    }
+                }
+            }
         }
     }
 }

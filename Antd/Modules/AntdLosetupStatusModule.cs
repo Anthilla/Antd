@@ -8,9 +8,8 @@ namespace Antd.Modules {
 
         public AntdLosetupStatusModule() {
             Get["/losetupstatus"] = x => {
-                var machineInfo = new MachineInfo();
                 var model = new PageLosetupStatusModel {
-                    Components = machineInfo.GetLosetup()
+                    Components = MachineInfo.GetLosetup()
                 };
                 return JsonConvert.SerializeObject(model);
             };

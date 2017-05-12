@@ -49,6 +49,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Antd.Info;
 using Antd.Tor;
 using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
@@ -565,6 +566,11 @@ namespace Antd {
             #region [    Cloud Fetch Commands    ]
             var cfcTimer = new FetchRemoteCommand();
             cfcTimer.Start(1000 * 60 * 2 + 330);
+            #endregion
+
+            #region [    Check System Components    ]
+            MachineInfo.CheckSystemComponents();
+            ConsoleLogger.Log("[system] components health checked");
             #endregion
 
             #region [    Test    ]

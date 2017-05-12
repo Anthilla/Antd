@@ -1,11 +1,12 @@
 <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">network</h1>
 
 <div ng-controller="AntdNetwork2Controller">
-    <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+    <button ng-click="restart($event)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
     <br />
     <br />
     <br />
     <button ng-click="ResponseMessageHideSelf()" ng-hide="ResponseMessageHide" class="button fg-anthilla-blue bg-anthilla-gray-1 bd-anthilla-blue width100pc" style="border: 2px solid; margin-bottom: 10px;">{{ ResponseMessage }}</button>
+    <br />
     <!--Network Interface Configuration-->
     <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
         <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
@@ -136,7 +137,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="saveInterfaceConfiguration(NewInterfaceConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                <button ng-click="saveInterfaceConfiguration($event, NewInterfaceConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -264,7 +265,7 @@
                                     <p>Delete</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="deleteInterfaceConfiguration(ic)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
+                                    <button ng-click="deleteInterfaceConfiguration($event, ic)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
                                 </div>
                             </div>
                             <div class="row cells6">
@@ -272,7 +273,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="saveInterfaceConfiguration(ic)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                    <button ng-click="saveInterfaceConfiguration($event, ic)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>
@@ -328,7 +329,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="saveGatewayConfiguration(NewGatewayConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                <button ng-click="saveGatewayConfiguration($event, NewGatewayConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -372,7 +373,7 @@
                                     <p>Delete</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="deleteGatewayConfiguration(gw)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
+                                    <button ng-click="deleteGatewayConfiguration($event, gw)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
                                 </div>
                             </div>
                             <div class="row cells6">
@@ -380,7 +381,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="saveGatewayConfiguration(gw)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                    <button ng-click="saveGatewayConfiguration($event, gw)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>
@@ -475,7 +476,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="saveDnsConfiguration(NewDnsConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                <button ng-click="saveDnsConfiguration($event, NewDnsConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -558,7 +559,7 @@
                                     <p>Delete</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="deleteDnsConfiguration(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
+                                    <button ng-click="deleteDnsConfiguration($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
                                 </div>
                             </div>
                             <div class="row cells6">
@@ -566,7 +567,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="saveDnsConfiguration(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                    <button ng-click="saveDnsConfiguration($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                             <div class="row cells6">
@@ -574,7 +575,7 @@
                                     <p>Activate</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="activateDnsConfiguration(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Activate</button>
+                                    <button ng-click="activateDnsConfiguration($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Activate</button>
                                 </div>
                             </div>
                         </div>
@@ -666,7 +667,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="save(NewInterface)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                <button ng-click="save($event, NewInterface)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -742,7 +743,7 @@
                                     <p>Delete</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="delete(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
+                                    <button ng-click="delete($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
                                 </div>
                             </div>
                             <div class="row cells6">
@@ -750,7 +751,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="save(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                    <button ng-click="save($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>
@@ -786,7 +787,7 @@
                         <p>&nbsp;</p>
                     </div>
                     <div class="cell colspan4">
-                        <button ng-click="createBridge(NewBridge)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                        <button ng-click="createBridge($event, NewBridge)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                     </div>
                 </div>
             </div>
@@ -819,7 +820,7 @@
                         <p>&nbsp;</p>
                     </div>
                     <div class="cell colspan4">
-                        <button ng-click="createBond(NewBond)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                        <button ng-click="createBond($event, NewBond)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 widt100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                     </div>
                 </div>
             </div>

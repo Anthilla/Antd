@@ -41,8 +41,7 @@ namespace Antd.Cloud {
                 var pk = Encoding.ASCII.GetString(_asymmetricKeys.PublicKey);
                 var internalIp = "";
                 var externalIp = WhatIsMyIp.Get();
-                var machineInfo = new MachineInfo();
-                var ut = machineInfo.GetUptime();
+                var ut = MachineInfo.GetUptime();
                 var uptime = ut.Uptime;
                 var loadAverage = ut.LoadAverage;
                 var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
@@ -72,7 +71,8 @@ namespace Antd.Cloud {
                 _api.Post($"{Parameter.Cloud}repo/assetinfo/save", dict);
                 //ConsoleLogger.Log($"[cloud-uptime] info sent to cloud - data gathered in {DateTime.Now - dtnow}");
             }
-            catch(Exception) {
+            catch(Exception ex) {
+                ConsoleLogger.Error(ex.Message);
             }
         }
     }

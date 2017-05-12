@@ -12,7 +12,7 @@
             <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
                 <textarea ng-model="ServicesStartStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
             </div>
-            <button ng-click="saveStart()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            <button ng-click="saveStart($event)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
         </div>
     </div>
     <br />
@@ -27,7 +27,7 @@
             <div class="input-control textarea width100pc" data-role="input" data-text-auto-resize="true">
                 <textarea ng-model="ServicesStopStr" class="bg-anthilla-gray-2 bd-anthilla-gray-3 bd-active-anthilla-green fg-white"></textarea>
             </div>
-            <button ng-click="saveStop()" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
+            <button ng-click="saveStop($event)" class="button bg-anthilla-green bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark"></span>&nbsp;{{ 'CONFIRM' | translate }}</button>
         </div>
     </div>
 </div>
