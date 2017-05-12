@@ -40,7 +40,7 @@ namespace Antd.Modules {
             Get["/log"] = x => {
                 var journalctl = new Journalctl();
                 var data = journalctl.GetAntdLog().ToList();
-                var skip = data.Count() - 50;
+                var skip = data.Count - 50;
                 var d = data.Skip(skip);
                 var model = new PageLogModel {
                     Logs = d

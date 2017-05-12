@@ -45,25 +45,15 @@ namespace AntdUi.Modules {
                 return json;
             };
 
-            Post["/dhcpd/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set");
-            };
+            Post["/dhcpd/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set");
 
-            Post["/dhcpd/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart");
-            };
+            Post["/dhcpd/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart");
 
-            Post["/dhcpd/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop");
-            };
+            Post["/dhcpd/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop");
 
-            Post["/dhcpd/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable");
-            };
+            Post["/dhcpd/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable");
 
-            Post["/dhcpd/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable");
-            };
+            Post["/dhcpd/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable");
 
             Post["/dhcpd/options"] = x => {
                 string allow = Request.Form.Allow;

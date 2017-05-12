@@ -45,25 +45,15 @@ namespace AntdUi.Modules {
                 return json;
             };
 
-            Post["/bind/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/set");
-            };
+            Post["/bind/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/set");
 
-            Post["/bind/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/restart");
-            };
+            Post["/bind/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/restart");
 
-            Post["/bind/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/stop");
-            };
+            Post["/bind/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/stop");
 
-            Post["/bind/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/enable");
-            };
+            Post["/bind/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/enable");
 
-            Post["/bind/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/disable");
-            };
+            Post["/bind/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/disable");
 
             Post["/bind/options"] = x => {
                 string notify = Request.Form.Notify;

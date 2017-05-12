@@ -55,8 +55,8 @@ namespace Antd.Cloud {
                     Api.Post($"{Parameter.Cloud}repo/assetinfo/confirmcommand", dict);
                 }
             }
-            catch(Exception) {
-
+            catch(Exception ex) {
+                ConsoleLogger.Error(ex.Message);
             }
         }
     }

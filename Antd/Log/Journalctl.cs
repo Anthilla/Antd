@@ -80,7 +80,7 @@ namespace Antd.Log {
                 try {
                     var lines = new List<string> {
                         "+================================+",
-                        $"|    Antd Report @ {DateTime.Now.ToString("yyyy-MM-dd")}    |",
+                        $"|    Antd Report @ {DateTime.Now:yyyy-MM-dd}    |",
                         "+================================+",
                         "",
                         Bash.Execute("uname -a"),

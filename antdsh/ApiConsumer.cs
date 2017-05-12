@@ -135,15 +135,8 @@ namespace antdsh {
 
         public FileInfo GetFile(string uri, string destination) {
             try {
-                //var client = new RestClient(uri);
-                //var request = new RestRequest("/", Method.GET);
-                //request.AddHeader(InstanceHeader, _instance);
-                //client.DownloadData(request).SaveAs(destination);
-                //var finfo = new FileInfo(destination);
-                //return finfo;
                 using(var writer = File.OpenWrite(destination)) {
-                    var client = new RestClient(uri);
-                    client.Timeout = 1000 * 60 * 60;
+                    var client = new RestClient(uri) { Timeout = 1000 * 60 * 60 };
                     var request = new RestRequest("/", Method.GET) {
                         ResponseWriter = responseStream => responseStream.CopyTo(writer)
                     };

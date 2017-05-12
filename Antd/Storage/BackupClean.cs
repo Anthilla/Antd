@@ -26,7 +26,7 @@ namespace Antd.Storage {
             var snapshots = new List<Model>();
             var text = Bash.Execute("zfs list -t snap -o name,used -p");
             var lines = t ?? text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Skip(1);
-            foreach (var line in lines) {
+            foreach(var line in lines) {
                 var snap = new Model();
                 var attr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
                 try {
@@ -36,16 +36,16 @@ namespace Antd.Storage {
                     snap.Created = GetSnapshotDate(snap.Name);
                     snapshots.Add(snap);
                 }
-                catch (Exception ex) {
+                catch(Exception ex) {
                     Console.WriteLine(ex);
                 }
             }
 
             var list = new HashSet<string>();
             var snapshotGroups = snapshots.GroupBy(_ => _.PoolName);
-            foreach (var snpgrp in snapshotGroups) {
+            foreach(var snpgrp in snapshotGroups) {
                 var filter = Filter(snpgrp);
-                foreach (var snp in filter) {
+                foreach(var snp in filter) {
                     list.Add(snp.Name);
                 }
             }
@@ -67,9 +67,9 @@ namespace Antd.Storage {
             var removableSnapshots = GetRemovableSnapshots(t).ToList();
             //divido in liste più piccole e più facili da gestire
             var chunks = ChunkList(removableSnapshots, 25);
-            foreach (var chunk in chunks) {
+            foreach(var chunk in chunks) {
                 var s = Stopwatch.StartNew();
-                foreach (var snapshot in chunk) {
+                foreach(var snapshot in chunk) {
                     DestroySnapshot(snapshot);
                 }
                 Thread.Sleep(1000 * 60 * 2 - Convert.ToInt32(s.ElapsedMilliseconds));
@@ -78,12 +78,7 @@ namespace Antd.Storage {
         }
 
         public bool DestroySnapshot(string snapshotName) {
-            if (snapshotName.Contains("@")) {
-                Bash.Execute($"zfs destroy {snapshotName}", false);
-            }
-            else {
-                Bash.Execute($"zfs destroy @{snapshotName}", false);
-            }
+            Bash.Execute(snapshotName.Contains("@") ? $"zfs destroy {snapshotName}" : $"zfs destroy @{snapshotName}", false);
             return true;
         }
 
@@ -103,10 +98,10 @@ namespace Antd.Storage {
             var partitions = new List<T>[totalChunks];
             var maxSize = (int)Math.Ceiling(elements.Count / (double)totalChunks);
             var k = 0;
-            for (var i = 0; i < partitions.Length; i++) {
+            for(var i = 0; i < partitions.Length; i++) {
                 partitions[i] = new List<T>();
-                for (var j = k; j < k + maxSize; j++) {
-                    if (j >= elements.Count)
+                for(var j = k; j < k + maxSize; j++) {
+                    if(j >= elements.Count)
                         break;
                     partitions[i].Add(elements[j]);
                 }
@@ -117,7 +112,7 @@ namespace Antd.Storage {
 
         private static List<List<T>> ChunkList<T>(List<T> elements, int chunkSize = 30) {
             var list = new List<List<T>>();
-            for (var i = 0; i < elements.Count; i += chunkSize) {
+            for(var i = 0; i < elements.Count; i += chunkSize) {
                 list.Add(elements.GetRange(i, Math.Min(chunkSize, elements.Count - i)));
             }
             return list;
@@ -170,14 +165,14 @@ namespace Antd.Storage {
             //questi oggetti saranno quelli da TENERE
             var indexes = new HashSet<int>();
             var snpList = snapshots.Where(snapshot => snapshot.Dimension > RangeDim);
-            foreach (var snapshot in snpList) {
+            foreach(var snapshot in snpList) {
                 indexes.Add(snapshot.Index);
                 var prevIndex = snapshot.Index - 1;
-                if (prevIndex > 0) {
+                if(prevIndex > 0) {
                     indexes.Add(prevIndex);
                 }
                 var nextIndex = snapshot.Index + 1;
-                if (nextIndex < snapshots.Length) {
+                if(nextIndex < snapshots.Length) {
                     indexes.Add(nextIndex);
                 }
             }
@@ -202,7 +197,7 @@ namespace Antd.Storage {
 
             var weeksOfPastMonth = PartitionList(pastMonthSnapshots, 4);
 
-            foreach (var elementsOfWeek in weeksOfPastMonth) {
+            foreach(var elementsOfWeek in weeksOfPastMonth) {
                 var keepThis = elementsOfWeek.OrderBy(_ => _.Dimension).LastOrDefault();
                 olderSnapshots.Add(keepThis);
             }
@@ -222,12 +217,12 @@ namespace Antd.Storage {
             var monthsOfPastYear = PartitionList(olderSnapshots.OrderBy(_ => _.Name).ToList(), 4);
             var keepThese = new List<Model>();
 
-            foreach (var elementsOfMonth in monthsOfPastYear) {
+            foreach(var elementsOfMonth in monthsOfPastYear) {
                 var keepThis = elementsOfMonth.OrderBy(_ => _.Dimension).LastOrDefault();
                 keepThese.Add(keepThis);
             }
 
-            return snapshots;
+            return keepThese;
         }
     }
 }

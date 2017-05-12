@@ -39,7 +39,7 @@ namespace antdlib.config {
     public class DirectoryWatcherRsync {
         private static List<RsyncObjectModel> _directories;
 
-        private static List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
+        private static readonly List<FileSystemWatcher> Watchers = new List<FileSystemWatcher>();
 
         public static void Start(List<RsyncObjectModel> newDirectories = null) {
             var conf = RsyncConfiguration.Get();
@@ -54,8 +54,8 @@ namespace antdlib.config {
             var paths = _directories.Select(_ => _.Type == "file" ? Path.GetDirectoryName(_.Source) : _.Source).ToArray();
             ConsoleLogger.Log("[watcher rsync] start");
             try {
-                if(!_watchers.Any()) {
-                    foreach(var w in _watchers) {
+                if(!Watchers.Any()) {
+                    foreach(var w in Watchers) {
                         w.Dispose();
                     }
                 }
@@ -70,7 +70,7 @@ namespace antdlib.config {
                     };
 
                     fsw.Changed += FileChanged;
-                    _watchers.Add(fsw);
+                    Watchers.Add(fsw);
                 }
             }
             catch(Exception ex) {

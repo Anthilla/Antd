@@ -45,25 +45,15 @@ namespace AntdUi.Modules {
                 return json;
             };
 
-            Post["/syslogng/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/set");
-            };
+            Post["/syslogng/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/set");
 
-            Post["/syslogng/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/restart");
-            };
+            Post["/syslogng/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/restart");
 
-            Post["/syslogng/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/stop");
-            };
+            Post["/syslogng/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/stop");
 
-            Post["/syslogng/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/enable");
-            };
+            Post["/syslogng/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/enable");
 
-            Post["/syslogng/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/disable");
-            };
+            Post["/syslogng/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/disable");
 
             Post["/syslogng/options"] = x => {
                 string threaded = Request.Form.Threaded;

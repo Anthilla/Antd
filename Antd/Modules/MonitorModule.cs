@@ -74,9 +74,7 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(model);
             };
 
-            Get["/configured"] = x => {
-                return JsonConvert.SerializeObject(true);
-            };
+            Get["/configured"] = x => JsonConvert.SerializeObject(true);
         }
     }
 }

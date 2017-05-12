@@ -102,12 +102,9 @@ namespace antdlib.config {
             foreach(var machine in machines) {
                 ConsoleLogger.Log($"[watcher config] send config to {machine}");
                 var status = new ApiConsumer().Post($"http://{machine}:{app.AntdUiPort}/cluster/accept", data);
-                if(status != HttpStatusCode.OK) {
-                    ConsoleLogger.Warn($"[watcher config] sync with {machine} failed");
-                }
-                else {
-                    ConsoleLogger.Warn($"[watcher config] sync with {machine} ok");
-                }
+                ConsoleLogger.Warn(status != HttpStatusCode.OK
+                    ? $"[watcher config] sync with {machine} failed"
+                    : $"[watcher config] sync with {machine} ok");
             }
         }
     }

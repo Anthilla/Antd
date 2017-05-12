@@ -45,25 +45,15 @@ namespace AntdUi.Modules {
                 return json;
             };
 
-            Post["/acl/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/set");
-            };
+            Post["/acl/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/set");
 
-            Post["/acl/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/restart");
-            };
+            Post["/acl/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/restart");
 
-            Post["/acl/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/stop");
-            };
+            Post["/acl/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/stop");
 
-            Post["/acl/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/enable");
-            };
+            Post["/acl/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/enable");
 
-            Post["/acl/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/disable");
-            };
+            Post["/acl/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/disable");
 
             Post["/acl/add"] = x => {
                 string dir = Request.Form.Path;

@@ -231,7 +231,7 @@ namespace antdlib.config {
 
         public static class AclAuto {
 
-            public static void ApplyAcl(string user) {
+            //public static void ApplyAcl(string user) {
                 //IFS=$'\n'
                 //T=$'\t'
 
@@ -320,7 +320,7 @@ namespace antdlib.config {
                 //#STARTPATH="/Data/UserData/Home/"
                 //#wbinfo -n m.zafferana
                 //#wbinfo -S S-1-5-21-1191849564-1695385468-1789397799-1773
-            }
+            //}
 
             public static string[] HomeSkel(string value) {
                 return new[] {

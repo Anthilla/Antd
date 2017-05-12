@@ -27,28 +27,18 @@ namespace antdlib.config {
         }
 
         public bool NothingIsConfigured() {
-            var b = true;
-            for(var i = 0; i < _interfaces.Length; i++) {
-                var result = CommandLauncher.Launch("ifconfig-if", new Dictionary<string, string> { { "$if", _interfaces[i] } });
-                var ip = result.FirstOrDefault(_ => _.Contains("inet"));
-                if(ip == null) {
-                    continue;
-                }
-                b = false;
-                break;
-            }
-            return b;
+            return _interfaces.Select(t => CommandLauncher.Launch("ifconfig-if", new Dictionary<string, string> { { "$if", t } })).Select(result => result.FirstOrDefault(_ => _.Contains("inet"))).All(ip => ip == null);
         }
 
         public string GetFirstInterfaceNotConfigured() {
             var netIf = string.Empty;
-            for(var i = 0; i < _interfaces.Length; i++) {
-                var result = CommandLauncher.Launch("ifconfig-if", new Dictionary<string, string> { { "$if", _interfaces[i] } });
+            foreach(var t in _interfaces) {
+                var result = CommandLauncher.Launch("ifconfig-if", new Dictionary<string, string> { { "$if", t } });
                 var ip = result.FirstOrDefault(_ => _.Contains("inet"));
                 if(ip == null) {
                     continue;
                 }
-                netIf = _interfaces[i];
+                netIf = t;
                 break;
             }
             return netIf;
@@ -56,14 +46,14 @@ namespace antdlib.config {
 
         public string GetInterfaceWithCarrier() {
             var netIf = string.Empty;
-            for(var i = 0; i < _interfaces.Length; i++) {
-                var result = CommandLauncher.Launch("net-carrier", new Dictionary<string, string> { { "$if", _interfaces[i] } }).ToList();
+            foreach(var t in _interfaces) {
+                var result = CommandLauncher.Launch("net-carrier", new Dictionary<string, string> { { "$if", t } }).ToList();
                 if(!result.Any()) {
                     continue;
                 }
                 var carrierValue = result.FirstOrDefault();
                 if(carrierValue == "1") {
-                    netIf = _interfaces[i];
+                    netIf = t;
                     break;
                 }
             }

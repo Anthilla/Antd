@@ -133,7 +133,8 @@ namespace Antd.Modules {
                 try {
                     broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
                 }
-                catch(Exception) {
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex.Message);
                 }
 
                 var model = new NetworkInterfaceConfiguration {
