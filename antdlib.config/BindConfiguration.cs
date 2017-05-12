@@ -208,8 +208,6 @@ namespace antdlib.config {
             ConsoleLogger.Log("[bind] start");
         }
 
-        private static readonly Bash Bash = new Bash();
-
         public static void RndcReconfig() {
             Bash.Execute("rndc reconfig");
         }

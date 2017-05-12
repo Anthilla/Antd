@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 
 namespace Antd.Storage {
     public  static class Zpool {
-        private static  readonly Bash Bash = new Bash();
 
         public  static List<ZpoolModel> List() {
             var result = Bash.Execute("zpool list");

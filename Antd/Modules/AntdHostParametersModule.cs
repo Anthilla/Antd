@@ -38,8 +38,6 @@ using antdlib.common;
 namespace Antd.Modules {
     public class AntdHostParametersModule : NancyModule {
 
-        private readonly HostParametersConfiguration HostParametersConfiguration = new HostParametersConfiguration();
-
         public AntdHostParametersModule() {
 
             Get["/hostparam"] = x => {

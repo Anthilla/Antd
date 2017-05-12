@@ -31,8 +31,6 @@ namespace antdlib.common {
 
     public class Systemctl {
 
-        private static readonly Bash Bash = new Bash();
-
         public static void DaemonReload() {
             Bash.Execute("systemctl daemon-reload", false);
         }

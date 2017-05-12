@@ -50,17 +50,17 @@ namespace antdsh {
         private const string UpdateVerbForAntd = "update.antd";
         private const string UpdateVerbForAntdUi = "update.antdui";
         private const string UpdateVerbForAntdsh = "update.antdsh";
-        private const string UpdateVerbForAossvc = "update.aosssvc";
+        //private const string UpdateVerbForAossvc = "update.aosssvc";
         private const string UpdateVerbForSystem = "update.system";
         private const string UpdateVerbForKernel = "update.kernel";
         private const string UpdateVerbForUnits = "update.units";
 
         private const string UnitsTargetApp = "/mnt/cdrom/Units/antd.target.wants";
-        private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
+        //private const string UnitsTargetKpl = "/mnt/cdrom/Units/kernelpkgload.target.wants";
 
         private static string _officialRepo = "https://srv.anthilla.com/repo/";
         private static string _publicRepositoryUrlHttps = _officialRepo;
-        private static string _publicRepositoryUrlHttp = _officialRepo.Replace("https", "http");
+        //private static string _publicRepositoryUrlHttp = _officialRepo.Replace("https", "http");
         private const string RepositoryFileNameZip = "repo.txt.anth";
         private static string AppsDirectory => "/mnt/cdrom/Apps";
         private static string AppsDirectoryTmp => "/tmp";
@@ -75,8 +75,8 @@ namespace antdsh {
         private static string AntdshDirectory => "/mnt/cdrom/Apps/Anthilla_antdsh";
         private static string AntdshActive => $"{AntdshDirectory}/active-version";
 
-        private static string AossvcDirectory => "/usr/sbin/aossvc.exe";
-        private static string AossvcActive => $"{AossvcDirectory}/aossvc.exe";
+        //private static string AossvcDirectory => "/usr/sbin/aossvc.exe";
+        //private static string AossvcActive => $"{AossvcDirectory}/aossvc.exe";
 
         private static string SystemDirectory => "/mnt/cdrom/System";
         private static string SystemActive => $"{SystemDirectory}/active-system";
@@ -86,9 +86,6 @@ namespace antdsh {
         private static string InitrdActive => $"{KernelDirectory}/active-initrd";
         private static string KernelActive => $"{KernelDirectory}/active-kernel";
         private static string ModulesActive => $"{KernelDirectory}/active-modules";
-        private static string XenActive => $"{KernelDirectory}/active-xen";
-
-        private static readonly Bash Bash = new Bash();
 
         #endregion Parameters
 

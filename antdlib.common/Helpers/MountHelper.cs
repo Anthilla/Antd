@@ -5,8 +5,6 @@ using System.Text.RegularExpressions;
 namespace antdlib.common.Helpers {
     public class MountHelper {
 
-        private static readonly Bash Bash = new Bash();
-
         public static string SetDirsPath(string source) {
             return $"{Parameter.RepoDirs}/DIR{source.Replace("_", "__").Replace("/", "_").Replace("\\", "/")}";
         }

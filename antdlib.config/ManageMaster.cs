@@ -1,8 +1,8 @@
-﻿using antdlib.common;
-using System;
+﻿using System;
 using System.IO;
+using antdlib.common;
 
-namespace Antd.Users {
+namespace antdlib.config {
     public class ManageMaster {
 
         public string FilePath { get; }

@@ -40,8 +40,6 @@ namespace antdlib.config {
 
         private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
-        private static readonly Bash Bash = new Bash();
-
         private static readonly Dictionary<string, string> DefaultWorkingDirectoriesWithOptions = new Dictionary<string, string> {
             {"/dev/shm", "-o remount,nodev,nosuid,mode=1777"},
             {"/hugepages", "-o mode=1770,gid=78 -t hugetlbfs hugetlbfs"},

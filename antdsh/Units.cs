@@ -15,8 +15,6 @@ namespace antdsh {
         private static readonly string Antdsh03MountServicePath = $"{Parameter.TimerUnits}/{Antdsh03MountService}";
         #endregion
 
-        private static readonly Bash Bash = new Bash();
-
         public void CreateRemountUnits() {
             if(!File.Exists(Antdsh01RemountServicePath)) {
                 CreateRemountServiceFile();

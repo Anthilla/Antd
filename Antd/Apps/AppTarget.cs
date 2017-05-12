@@ -5,8 +5,6 @@ using System.IO;
 namespace Antd.Apps {
     public class AppTarget {
 
-        private static readonly Bash Bash = new Bash();
-
         public static void Setup() {
             if(IsTargetActive())
                 return;

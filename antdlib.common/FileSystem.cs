@@ -72,8 +72,6 @@ namespace antdlib.common {
             }
         }
 
-        private static readonly Bash Bash = new Bash();
-
         public static void CopyDirectory(string source, string destination) {
             IoDir.CreateDirectory(source);
             IoDir.CreateDirectory(destination);

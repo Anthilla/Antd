@@ -7,7 +7,7 @@ namespace Antd.Tor {
         private const string BinFilePath = "/usr/bin/tor";
         private const string ConfigDirectoryPath = "/etc/tor";
         private static readonly string ConfigFilePath = $"{ConfigDirectoryPath}/torrc";
-        private const string ShareDirectoryPath = "/usr/share/tor";
+        //private const string ShareDirectoryPath = "/usr/share/tor";
         private const string HiddenServiceDirectoryPath = "/var/lib/tor/hidden_service";
         private static readonly string HostnameFilePath = $"{HiddenServiceDirectoryPath}/hostname";
 

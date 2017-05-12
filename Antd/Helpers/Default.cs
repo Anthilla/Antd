@@ -8,9 +8,6 @@ namespace Antd {
 
     public class Default {
 
-        private static readonly Host2Configuration Host2Configuration = new Host2Configuration();
-        private static readonly Network2Configuration Network2Configuration = new Network2Configuration();
-
         public static NetworkInterfaceConfiguration InternalPhysicalInterfaceConfiguration(string customIp = "") {
             var host = Host2Configuration.Host;
             var ip = string.IsNullOrEmpty(customIp) ? "10.11.254.254" : customIp;

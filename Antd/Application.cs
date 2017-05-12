@@ -36,7 +36,6 @@ using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Ui;
-using Antd.Users;
 using antdlib.common;
 using antdlib.common.Helpers;
 using antdlib.config;
@@ -57,11 +56,6 @@ using Random = anthilla.core.Random;
 
 namespace Antd {
     internal class Application {
-
-        #region [    private classes init    ]
-        private static readonly Bash Bash = new Bash();
-
-        #endregion
 
         public static string KeyName = "antd";
 

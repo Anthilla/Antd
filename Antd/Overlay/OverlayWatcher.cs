@@ -61,8 +61,6 @@ namespace Antd.Overlay {
 
         public static Dictionary<string, string> ChangedDirectories { get; } = new Dictionary<string, string>();
 
-        private static readonly Bash Bash = new Bash();
-
         private static readonly string[] Filter = {
             "cfg",
             "systemd",

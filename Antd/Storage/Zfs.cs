@@ -7,9 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Antd.Storage {
     public class Zfs {
- 
-
-        private static readonly Bash Bash = new Bash();
 
         public  List<ZfsModel> List() {
             var result = Bash.Execute("zfs list");

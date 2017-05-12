@@ -36,8 +36,6 @@ using System.Linq;
 namespace Antd.Log {
     public class Journalctl {
 
-        private static readonly Bash Bash = new Bash();
-
         public IEnumerable<string> GetAllLog() {
             var result = Bash.Execute("journalctl --no-pager --quiet").SplitBash();
             return result;

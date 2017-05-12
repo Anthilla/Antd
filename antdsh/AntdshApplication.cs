@@ -222,7 +222,6 @@ namespace antdsh {
             }
         }
 
-        private static readonly Bash Bash = new Bash();
         private static readonly Execute Execute = new Execute();
 
         private static bool IsAntdRunning() => Bash.Execute("ps -aef").Grep("Antd.exe").Any();

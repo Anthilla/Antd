@@ -11,9 +11,6 @@ namespace antdlib.config {
 
         public static HostParameters Conf => Parse();
 
-        private static readonly string _dir = Parameter.AntdCfgParameters;
-
-
         #region [    HostParameters conf   ]
         private static HostParameters Parse() {
             var hostParameters = new HostParameters {

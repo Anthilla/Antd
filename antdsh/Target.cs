@@ -7,8 +7,6 @@ namespace antdsh {
         public void Check() {
         }
 
-        private static readonly Bash Bash = new Bash();
-
         public void Setup() {
             if(IsTargetActive())
                 return;

@@ -10,7 +10,6 @@ namespace antdlib.config {
     public static class SetupConfiguration {
 
         private static readonly string FilePath = $"{Parameter.RepoConfig}/setup.conf";
-        private static readonly Bash Bash = new Bash();
 
         public static void Set() {
             if(!File.Exists(FilePath)) {

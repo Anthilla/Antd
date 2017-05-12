@@ -82,8 +82,6 @@ namespace antdlib.config {
             ConsoleLogger.Log("[sync] start");
         }
 
-        private static readonly Bash Bash = new Bash();
-
         public static void Launch() {
             var config = ServiceModel;
             foreach(var node in config.Nodes) {

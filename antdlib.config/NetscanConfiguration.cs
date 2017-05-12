@@ -64,9 +64,10 @@ namespace antdlib.config {
         #endregion
 
         public void SaveEtcNetworks() {
-            var settings = _settings.Values.Where(_ => !string.IsNullOrEmpty(_.Label)).Select(
-                _ => $"{_settings.SubnetLabel}-{_.Label} {_settings.Subnet}{_.Number}.0"
-            );
+            //todo ridefinisci questo
+            //var settings = _settings.Values.Where(_ => !string.IsNullOrEmpty(_.Label)).Select(
+            //    _ => $"{_settings.SubnetLabel}-{_.Label} {_settings.Subnet}{_.Number}.0"
+            //);
             //var hostConfiguration = new HostParametersConfiguration();
         }
     }
