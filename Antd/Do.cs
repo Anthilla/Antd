@@ -13,7 +13,6 @@ namespace Antd {
         private readonly Dictionary<string, string> _replacements;
 
         private readonly Host2Model _host;
-        private readonly DnsConfiguration _dns;
         private readonly bool _isDnsPublic;
         private readonly bool _isDnsDynamic;
         private readonly bool _isDnsExternal;
@@ -23,11 +22,11 @@ namespace Antd {
         /// </summary>
         public Do() {
             _host = Host2Configuration.Host;
-            _dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
+            var dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
 
-            _isDnsPublic = _dns?.Type == DnsType.Public;
-            _isDnsDynamic = _dns?.Mode == DnsMode.Dynamic;
-            _isDnsExternal = _dns?.Dest == DnsDestination.External;
+            _isDnsPublic = dns?.Type == DnsType.Public;
+            _isDnsDynamic = dns?.Mode == DnsMode.Dynamic;
+            _isDnsExternal = dns?.Dest == DnsDestination.External;
 
             var clusterInfo = ClusterConfiguration.GetClusterInfo();
 
@@ -49,8 +48,8 @@ namespace Antd {
                 { "$externalNetArpa", _host.ExternalArpaPrimary },
                 { "$resolvNameserver", _host.ResolvNameserver },
                 { "$resolvDomain", _host.ResolvDomain },
-                { "$dnsDomain", _dns?.Domain },
-                { "$dnsIp", _dns?.Ip },
+                { "$dnsDomain", dns?.Domain },
+                { "$dnsIp", dns?.Ip },
                 { "$secret", _host.Secret },
                 { "$virtualIp", clusterInfo.VirtualIpAddress },
                 { "$clusterPassword", clusterInfo.Password },

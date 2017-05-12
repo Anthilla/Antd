@@ -201,8 +201,8 @@ namespace antdlib.config {
                 File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
                 Export(Host);
             }
-            catch(Exception) {
-                return;
+            catch(Exception ex) {
+                ConsoleLogger.Error(ex.Message);
             }
         }
         #endregion

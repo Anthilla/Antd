@@ -34,6 +34,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using antdlib.common;
 
 namespace Antd.Modules {
     public class AntdGlusterModule : NancyModule {
@@ -100,8 +101,8 @@ namespace Antd.Modules {
                         };
                         volumelist.Add(vol);
                     }
-                    catch(Exception) {
-                        continue;
+                    catch(Exception ex) {
+                        ConsoleLogger.Error(ex.Message);
                     }
                 }
                 var config = new GlusterConfigurationModel {

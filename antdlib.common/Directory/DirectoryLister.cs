@@ -35,12 +35,10 @@ using IoDir = System.IO.Directory;
 namespace antdlib.common.Directory {
 
     public class DirectoryLister {
-        private readonly DirectoryInfo _root;
-
         public DirectoryLister(string path, bool getSubDir) {
-            _root = new DirectoryInfo(path);
-            WalkDirectoryTree(_root, getSubDir);
-            UpwalkDirectoryTree(_root);
+            var root = new DirectoryInfo(path);
+            WalkDirectoryTree(root, getSubDir);
+            UpwalkDirectoryTree(root);
         }
 
         public HashSet<string> ParentList { get; } = new HashSet<string>();
@@ -51,7 +49,7 @@ namespace antdlib.common.Directory {
                 var parent = IoDir.GetParent(root.FullName);
                 UpwalkDirectoryTree(parent);
             }
-            catch (Exception e) {
+            catch(Exception e) {
                 Console.WriteLine(e.Message);
             }
         }
@@ -65,15 +63,15 @@ namespace antdlib.common.Directory {
             try {
                 files = root.GetFiles("*.*");
             }
-            catch (UnauthorizedAccessException e) {
+            catch(UnauthorizedAccessException e) {
                 Console.WriteLine(e.Message);
             }
-            catch (DirectoryNotFoundException e) {
+            catch(DirectoryNotFoundException e) {
                 Console.WriteLine(e.Message);
             }
-            if (files == null)
+            if(files == null)
                 return;
-            foreach (var fi in files) {
+            foreach(var fi in files) {
                 FullList2.Add(new DirItemModel {
                     IsFile = true,
                     Path = fi.FullName,
@@ -82,14 +80,14 @@ namespace antdlib.common.Directory {
                 FullList.Add(fi.FullName);
             }
             var subDirs = root.GetDirectories();
-            foreach (var dirInfo in subDirs) {
+            foreach(var dirInfo in subDirs) {
                 FullList2.Add(new DirItemModel {
                     IsFile = false,
                     Path = dirInfo.FullName,
                     Name = Path.GetDirectoryName(dirInfo.FullName)
                 });
                 FullList.Add(dirInfo.FullName);
-                if (getSubDir) {
+                if(getSubDir) {
                     WalkDirectoryTree(dirInfo, true);
                 }
             }
