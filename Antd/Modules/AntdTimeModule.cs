@@ -43,11 +43,9 @@ namespace Antd.Modules {
 
             Get["/time/info"] = x => {
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
-                var bash = new Bash();
-                var launcher = new CommandLauncher();
-                var timezones = bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
-                var timedatectl = launcher.Launch("timedatectl").ToList();
-                var ntpd = launcher.Launch("cat-etc-ntp").ToArray();
+                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
+                var timedatectl = CommandLauncher.Launch("timedatectl").ToList();
+                var ntpd = CommandLauncher.Launch("cat-etc-ntp").ToArray();
                 var model = new PageTimeModel {
                     Timezones = timezones,
                     LocalTime = timedatectl.First(_ => _.Contains("Local time:")).Split(new[] { ":" }, 2, ssoree)[1],

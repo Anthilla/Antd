@@ -37,8 +37,6 @@ using System.Linq;
 namespace Antd.Modules {
     public class AntdStorageModule : NancyModule {
 
-        private readonly Bash _bash = new Bash();
-
         public AntdStorageModule() {
             Get["/storage"] = x => {
                 var disks = new Disks();
@@ -50,7 +48,7 @@ namespace Antd.Modules {
 
             Post["/storage/print"] = x => {
                 string disk = Request.Form.Disk;
-                var result = _bash.Execute($"parted /dev/{disk} print 2> /dev/null").SplitBash().Grep("'Partition Table: '").First();
+                var result = Bash.Execute($"parted /dev/{disk} print 2> /dev/null").SplitBash().Grep("'Partition Table: '").First();
                 return Response.AsText(result.Replace("Partition Table: ", ""));
             };
 
@@ -58,7 +56,7 @@ namespace Antd.Modules {
                 string disk = Request.Form.Disk;
                 string type = Request.Form.Type;
                 string yn = Request.Form.Confirm;
-                var result = _bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
+                var result = Bash.Execute($"parted -a optimal /dev/{disk} mklabel {type} {yn}");
                 return Response.AsText(result);
             };
         }

@@ -41,8 +41,6 @@ using Random = anthilla.core.Random;
 namespace Antd.Modules {
     public class AntdNetwork2Module : NancyModule {
 
-        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
-
         public AntdNetwork2Module() {
 
             Get["/network2"] = x => {
@@ -312,7 +310,7 @@ namespace Antd.Modules {
             Post["/network2/add/bond"] = x => {
                 string name = Request.Form.Name;
                 try {
-                    _commandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", name } });
+                    CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", name } });
                     ConsoleLogger.Log($"created bond {name}");
                 }
                 catch(Exception ex) {
@@ -324,7 +322,7 @@ namespace Antd.Modules {
             Post["/network2/add/bridge"] = x => {
                 string name = Request.Form.Name;
                 try {
-                    _commandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", name } });
+                    CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", name } });
                     ConsoleLogger.Log($"created bridge {name}");
                 }
                 catch(Exception ex) {

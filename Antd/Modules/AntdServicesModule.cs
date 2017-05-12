@@ -26,8 +26,7 @@ namespace Antd.Modules {
 
             Get["/services/log"] = x => {
                 string unit = Request.Query.unit;
-                var launcher = new CommandLauncher();
-                var model = launcher.Launch("journactl-service", new Dictionary<string, string> { { "$service", unit } });
+                var model = CommandLauncher.Launch("journactl-service", new Dictionary<string, string> { { "$service", unit } });
                 return JsonConvert.SerializeObject(model);
             };
 

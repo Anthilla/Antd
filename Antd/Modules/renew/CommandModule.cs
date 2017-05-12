@@ -37,13 +37,12 @@ using System.Linq;
 namespace Antd.Modules {
 
     public class CommandModule : NancyModule {
-        private readonly CommandLauncher _launcher = new CommandLauncher();
 
         public CommandModule() {
             Get["/cmd/launch/{name}"] = x => {
                 string name = x.name;
                 try {
-                    var result = _launcher.Launch(name);
+                    var result = CommandLauncher.Launch(name);
                     return JsonConvert.SerializeObject(result, Formatting.Indented);
                 }
                 catch(Exception ex) {
@@ -59,7 +58,7 @@ namespace Antd.Modules {
                         var dict = strValues.SplitToList(";")
                             .Select(kv => kv.SplitToList(":").ToArray())
                             .ToDictionary(s => s.First(), s => s.Last());
-                        var result = _launcher.Launch(name, dict);
+                        var result = CommandLauncher.Launch(name, dict);
                         return JsonConvert.SerializeObject(result, Formatting.Indented);
                     }
                     catch(Exception ex) {
@@ -77,7 +76,7 @@ namespace Antd.Modules {
                         var dict = strValues.SplitToList(";")
                             .Select(kv => kv.SplitToList(":").ToArray())
                             .ToDictionary(s => s.First(), s => s.Last());
-                        var result = _launcher.Launch(name, dict);
+                        var result = CommandLauncher.Launch(name, dict);
                         return JsonConvert.SerializeObject(result, Formatting.Indented);
                     }
                     catch(Exception ex) {
@@ -85,7 +84,7 @@ namespace Antd.Modules {
                     }
                 }
                 try {
-                    var result = _launcher.Launch(name);
+                    var result = CommandLauncher.Launch(name);
                     return JsonConvert.SerializeObject(result, Formatting.Indented);
                 }
                 catch(Exception ex) {

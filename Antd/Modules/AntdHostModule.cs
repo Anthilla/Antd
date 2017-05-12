@@ -42,8 +42,7 @@ namespace Antd.Modules {
 
             Get["/host/info"] = x => {
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
-                var launcher = new CommandLauncher();
-                var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                var hostnamectl = CommandLauncher.Launch("hostnamectl").ToList();
                 var model = new PageHostModel {
                     StaticHostname = hostnamectl.First(_ => _.Contains("Static hostname:")).Split(new[] { ":" }, 2, ssoree)[1],
                     IconName = hostnamectl.First(_ => _.Contains("Icon name:")).Split(new[] { ":" }, 2, ssoree)[1],

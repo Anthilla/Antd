@@ -95,7 +95,8 @@ namespace antdlib.common {
         public static string ApplicativeUnits => $"{RepoUnits}/applicative.target.wants";
         public static string WebsocketUnits => $"{RepoUnits}/websocket.target.wants";
         public static string KernelUnits => $"{RepoUnits}/kernelpkgload.target.wants";
-        public static string TimerUnits => $"{RepoUnits}/tt.target.wants";
+        public static string TimerUnits => $"{RepoUnits}/ttUnits";
+        public static string TimerUnitsLinks => $"{RepoUnits}/tt.target.wants";
         public static string AntdVersionsDir => $"{RepoApps}/Anthilla_Antd";
         public static string AntdshVersionsDir => $"{RepoApps}/Anthilla_antdsh";
         public static string AntdTmpDir => $"{RepoApps}/tmp";

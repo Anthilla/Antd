@@ -42,14 +42,12 @@ namespace Antd.Modules {
 
         public WizardModule() {
             Get["/wizard/data"] = x => {
-                var bash = new Bash();
-                var timezones = bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
-                var launcher = new CommandLauncher();
-                var hosts = launcher.Launch("cat-etc-hosts").ToArray();
-                var networks = launcher.Launch("cat-etc-networks").ToArray();
-                var resolv = launcher.Launch("cat-etc-resolv").ToArray();
-                var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
-                var hostnamectl = launcher.Launch("hostnamectl").ToList();
+                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
+                var hosts = CommandLauncher.Launch("cat-etc-hosts").ToArray();
+                var networks = CommandLauncher.Launch("cat-etc-networks").ToArray();
+                var resolv = CommandLauncher.Launch("cat-etc-resolv").ToArray();
+                var nsswitch = CommandLauncher.Launch("cat-etc-nsswitch").ToArray();
+                var hostnamectl = CommandLauncher.Launch("hostnamectl").ToList();
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
                 var model = new PageWizardModel {
                     Timezones = timezones,

@@ -38,14 +38,11 @@ using System.Linq;
 namespace Antd.Modules {
     public class AntdHost2Module : NancyModule {
 
-        //private readonly Host2Configuration _host2Configuration = new Host2Configuration();
-        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
-
         public AntdHost2Module() {
 
             Get["/host2"] = x => {
                 const StringSplitOptions ssoree = StringSplitOptions.RemoveEmptyEntries;
-                var hostnamectl = _commandLauncher.Launch("hostnamectl").ToList();
+                var hostnamectl = CommandLauncher.Launch("hostnamectl").ToList();
                 var model = new PageHost2Model {
                     Host = Host2Configuration.Host,
                     IconName = hostnamectl.FirstOrDefault(_ => _.Contains("Icon name:"))?.Split(new[] { ":" }, 2, ssoree)[1],

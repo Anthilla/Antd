@@ -271,8 +271,6 @@ namespace antdlib.models {
     /// </summary>
     public class HostParameter {
 
-        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
-
         public HostParameter() {
         }
 
@@ -310,7 +308,7 @@ namespace antdlib.models {
             if(IsApplied) {
                 return;
             }
-            _commandLauncher.Launch(SetCmd, StoredValues);
+            CommandLauncher.Launch(SetCmd, StoredValues);
         }
 
         /// <summary>
@@ -325,7 +323,7 @@ namespace antdlib.models {
                 return;
             }
             StoredValues = values;
-            _commandLauncher.Launch(SetCmd, StoredValues);
+            CommandLauncher.Launch(SetCmd, StoredValues);
         }
 
         /// <summary>
@@ -338,7 +336,7 @@ namespace antdlib.models {
                 if(string.IsNullOrEmpty(GetCmd)) {
                     return true;
                 }
-                var result = _commandLauncher.Launch(SetCmd, StoredValues);
+                var result = CommandLauncher.Launch(SetCmd, StoredValues);
                 return result.Contains(StoredValues.First().Value);
             }
         }

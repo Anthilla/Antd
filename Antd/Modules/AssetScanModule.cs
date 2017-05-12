@@ -59,8 +59,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(subnet)) {
                     return HttpStatusCode.BadRequest;
                 }
-                var launcher = new CommandLauncher();
-                var result = launcher.Launch("nmap-ip-sp", new Dictionary<string, string> { { "$subnet", subnet + "/24" } }).Skip(1).Reverse().Skip(1).Reverse();
+                var result = CommandLauncher.Launch("nmap-ip-sp", new Dictionary<string, string> { { "$subnet", subnet + "/24" } }).Skip(1).Reverse().Skip(1).Reverse();
                 return Response.AsJson(result.OrderBy(_ => _));
             };
         }

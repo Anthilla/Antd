@@ -469,6 +469,7 @@ namespace Antd {
             #endregion
 
             #region [    Scheduler    ]
+            Timers.MoveExistingTimers();
             Timers.Setup();
             Timers.Import();
             Timers.Export();
@@ -479,6 +480,7 @@ namespace Antd {
             new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
             new SyncTime().Start(new TimeSpan(0, 42, 00));
             new RemoveUnusedModules().Start(new TimeSpan(2, 15, 00));
+
             ConsoleLogger.Log("scheduled events ready");
             #endregion
 

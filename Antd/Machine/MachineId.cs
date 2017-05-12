@@ -38,8 +38,7 @@ namespace Antd.Machine {
             else {
                 var machineUuid = VirtualUid();
                 try {
-                    var exe = new Bash();
-                    var dmidecode = exe.Execute("dmidecode -t processor").SplitBash().ToList();
+                    var dmidecode = Bash.Execute("dmidecode -t processor").SplitBash().ToList();
                     var cpuId = dmidecode.GrepIgnore("UUID").Grep("ID").FirstOrDefault();
                     cpuId = cpuId?.Split(':').LastOrDefault()?.Trim().Replace(" ", "");
                     if(cpuId != null) {
@@ -47,7 +46,7 @@ namespace Antd.Machine {
                         var uid2 = string.Join("", cpuId.ToCharArray().Reverse().Take(6).Select(_ => _.ToString()));
                         cpuId = $"{uid1}-{uid2}";
                     }
-                    dmidecode = exe.Execute("dmidecode -t memory").SplitBash().ToList();
+                    dmidecode = Bash.Execute("dmidecode -t memory").SplitBash().ToList();
                     var mem = dmidecode.GrepIgnore("Array").Grep("Part Number").FirstOrDefault();
                     mem = mem?.Split(':').LastOrDefault()?.Trim().Replace(" ", "").Replace("/", "");
                     if(mem != null) {

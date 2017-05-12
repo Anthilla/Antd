@@ -27,7 +27,6 @@ namespace Antd.Cloud {
         }
 
         private static readonly ApiConsumer Api = new ApiConsumer();
-        private static readonly CommandLauncher Launcher = new CommandLauncher();
         private static readonly string MachineId = Machine.MachineId.Get;
 
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e) {
@@ -47,7 +46,7 @@ namespace Antd.Cloud {
                 if(!cmds.Any())
                     return;
                 foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
-                    Launcher.Launch(cmd.Command, cmd.Parameters);
+                    CommandLauncher.Launch(cmd.Command, cmd.Parameters);
                     var dict = new Dictionary<string, string> {
                         { "AppName", "Antd" },
                         { "MachineUid", MachineId },

@@ -31,7 +31,8 @@ namespace antdsh {
                 CreateMountServiceFile();
             }
             Bash.Execute($"chown -R root:wheel {Parameter.TimerUnits}/");
-            Bash.Execute($"chmod -R 664 {Parameter.TimerUnits}/");
+            Bash.Execute($"chmod 775 {Parameter.TimerUnits}/");
+            Bash.Execute($"chmod 644 {Parameter.TimerUnits}/*");
             Bash.Execute("systemctl daemon-reload");
         }
 

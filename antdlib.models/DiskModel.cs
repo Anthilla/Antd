@@ -63,8 +63,7 @@ namespace antdlib.models {
             if(Partitions.Any()) {
                 HasPartition = true;
             }
-            var bash = new Bash();
-            Partprobe = bash.Execute($"partprobe -s /dev/{Name}");
+            Partprobe = Bash.Execute($"partprobe -s /dev/{Name}");
         }
 
         public string Guid { get; set; }

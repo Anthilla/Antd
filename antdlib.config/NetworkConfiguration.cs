@@ -16,7 +16,6 @@ namespace antdlib.config {
         private static NetworkConfigurationModel _serviceModel => Load();
         private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/network.conf";
         private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
-        private static readonly CommandLauncher _launcher = new CommandLauncher();
 
         public static NetworkConfigurationModel Load() {
             if(!File.Exists(_cfgFile)) {
@@ -69,14 +68,14 @@ namespace antdlib.config {
                 return;
             }
             var netIf = InterfacePhysical.FirstOrDefault();
-            var tryStart = _launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
+            var tryStart = CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryStart.Any()) {
                 ConsoleLogger.Log("[network] dhclient started");
                 ConsoleLogger.Log($"[network] {netIf} is configured");
                 return;
             }
             var tryGateway =
-                _launcher.Launch("ip4-show-routes", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
+                CommandLauncher.Launch("ip4-show-routes", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryGateway.Any()) {
                 ConsoleLogger.Log("[network] no gateway available");
                 StartFallback();
@@ -91,7 +90,7 @@ namespace antdlib.config {
             var gatewayAddress = gateway.Replace("default", "").Trim();
             ConsoleLogger.Log($"[network] available gateway at {gatewayAddress}");
 
-            var tryDns = _launcher.Launch("cat-etc-resolv").ToList();
+            var tryDns = CommandLauncher.Launch("cat-etc-resolv").ToList();
             if(!tryGateway.Any()) {
                 ConsoleLogger.Log("[network] no dns configured");
                 SetupResolv();
@@ -103,7 +102,7 @@ namespace antdlib.config {
             }
             var dnsAddress = gateway.Replace("nameserver", "").Trim();
             ConsoleLogger.Log($"[network] configured dns is {dnsAddress}");
-            var pingDns = _launcher.Launch("ping-c", new Dictionary<string, string> { { "$net_if", dnsAddress } }).ToList();
+            var pingDns = CommandLauncher.Launch("ping-c", new Dictionary<string, string> { { "$net_if", dnsAddress } }).ToList();
             if(pingDns.Any(_ => _.ToLower().Contains("unreachable"))) {
                 ConsoleLogger.Log("[network] dns is unreachable");
                 return;
@@ -115,24 +114,24 @@ namespace antdlib.config {
             ConsoleLogger.Log("[network] setting up a default configuration");
             const string bridge = "br0";
             if(_networkInterfaces.All(_ => _ != bridge)) {
-                _launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", bridge } });
+                CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", bridge } });
                 ConsoleLogger.Log($"[network] {bridge} configured");
             }
             foreach(var phy in InterfacePhysical) {
-                _launcher.Launch("brctl-addif", new Dictionary<string, string> { { "$bridge", bridge }, { "$net_if", phy } });
+                CommandLauncher.Launch("brctl-addif", new Dictionary<string, string> { { "$bridge", bridge }, { "$net_if", phy } });
                 ConsoleLogger.Log($"[network] {phy} add to {bridge}");
             }
             foreach(var phy in InterfacePhysical) {
-                _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", phy } });
+                CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", phy } });
             }
-            _launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", bridge } });
+            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", bridge } });
             ConsoleLogger.Log("[network] interfaces up");
             const string address = "192.168.1.1";
             const string range = "24";
-            _launcher.Launch("ip4-add-addr",
+            CommandLauncher.Launch("ip4-add-addr",
                 new Dictionary<string, string> { { "$address", address }, { "$range", range }, { "$net_if", bridge } });
             var tryBridgeAddress =
-                _launcher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
+                CommandLauncher.Launch("ifconfig-if", new Dictionary<string, string> { { "$net_if", bridge } }).ToList();
             if(tryBridgeAddress.FirstOrDefault(_ => _.Contains("inet")) != null) {
                 var bridgeAddress = tryBridgeAddress.Print(2, " ");
                 ConsoleLogger.Log($"[network] {bridge} is now reachable at {bridgeAddress}");
@@ -145,11 +144,10 @@ namespace antdlib.config {
             var interfaces = new List<string>();
             interfaces.AddRange(InterfacePhysical);
             interfaces.AddRange(InterfaceBridge);
-            var launcher = new CommandLauncher();
             foreach(var netIf in interfaces) {
-                launcher.Launch("ip4-set-mtu",
+                CommandLauncher.Launch("ip4-set-mtu",
                     new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", _serviceModel.DefaultMtu } });
-                launcher.Launch("ip4-set-txqueuelen",
+                CommandLauncher.Launch("ip4-set-txqueuelen",
                     new Dictionary<string, string>
                     {
                         {"$net_if", netIf},
@@ -175,7 +173,7 @@ namespace antdlib.config {
                 };
                 File.WriteAllLines("/etc/resolv.conf", lines);
             }
-            _launcher.Launch("link-s",
+            CommandLauncher.Launch("link-s",
                 new Dictionary<string, string>
                 {
                     {"$link", "/run/systemd/resolve/resolv.conf"},
@@ -196,8 +194,8 @@ namespace antdlib.config {
                 };
                 File.WriteAllLines("/etc/systemd/resolved.conf", lines);
             }
-            _launcher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
-            _launcher.Launch("systemctl-daemonreload");
+            CommandLauncher.Launch("systemctl-restart", new Dictionary<string, string> { { "$service", "systemd-resolved" } });
+            CommandLauncher.Launch("systemctl-daemonreload");
         }
 
         #endregion
@@ -206,8 +204,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetAllNames() {
             try {
-                var bash = new Bash();
-                var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+                var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
                 return list.Select(f => f.Print(9, " ")).ToList();
             }
             catch(Exception) {
@@ -217,8 +214,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetPhysicalInterfaces() {
             var ifList = new List<string>();
-            var bash = new Bash();
-            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }
@@ -249,8 +245,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetVirtualInterfaces() {
             var ifList = new List<string>();
-            var bash = new Bash();
-            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }
@@ -281,8 +276,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetBondInterfaces() {
             var ifList = new List<string>();
-            var bash = new Bash();
-            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) {
                     var name = f.Print(9, " ");
@@ -313,8 +307,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetBridgeInterfaces() {
             var ifList = new List<string>();
-            var bash = new Bash();
-            var list = bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) {
@@ -375,7 +368,6 @@ namespace antdlib.config {
         }
 
         public static void ApplyInterfaceSetting(NetworkInterfaceConfigurationModel model) {
-            var launcher = new CommandLauncher();
             var netif = model.Interface;
 
             switch(model.Type) {
@@ -384,15 +376,15 @@ namespace antdlib.config {
                 case NetworkAdapterType.Virtual:
                     break;
                 case NetworkAdapterType.Bond:
-                    launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", netif } });
+                    CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", netif } });
                     foreach(var nif in model.InterfaceList) {
-                        launcher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", netif }, { "$net_if", nif } });
+                        CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", netif }, { "$net_if", nif } });
                     }
                     break;
                 case NetworkAdapterType.Bridge:
-                    launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", netif } });
+                    CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", netif } });
                     foreach(var nif in model.InterfaceList) {
-                        launcher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", netif }, { "$net_if", nif } });
+                        CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", netif }, { "$net_if", nif } });
                     }
                     break;
                 case NetworkAdapterType.Other:
@@ -407,11 +399,11 @@ namespace antdlib.config {
                     if(networkdIsActive) {
                         Systemctl.Stop("systemd-networkd");
                     }
-                    launcher.Launch("dhclient-killall");
-                    launcher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
+                    CommandLauncher.Launch("dhclient-killall");
+                    CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
                         { "$net_if", netif }
                     });
-                    launcher.Launch("ip4-add-addr", new Dictionary<string, string> {
+                    CommandLauncher.Launch("ip4-add-addr", new Dictionary<string, string> {
                         { "$net_if", netif },
                         { "$address", model.StaticAddress },
                         { "$range", model.StaticRange }
@@ -421,28 +413,28 @@ namespace antdlib.config {
                     }
                     break;
                 case NetworkInterfaceMode.Dynamic:
-                    launcher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netif } });
+                    CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netif } });
                     break;
                 default:
                     return;
             }
-            launcher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netif }, { "$mtu", model.Mtu } });
-            launcher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", netif }, { "$txqueuelen", model.Txqueuelen } });
+            CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", netif }, { "$mtu", model.Mtu } });
+            CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", netif }, { "$txqueuelen", model.Txqueuelen } });
 
             if(!string.IsNullOrEmpty(model.Route) && !string.IsNullOrEmpty(model.Gateway)) {
-                launcher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", netif }, { "$gateway", model.Gateway }, { "$ip_address", model.Route } });
+                CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", netif }, { "$gateway", model.Gateway }, { "$ip_address", model.Route } });
             }
             var status = model.Status;
             switch(status) {
                 case NetworkInterfaceStatus.Down:
-                    launcher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", netif } });
+                    CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", netif } });
                     break;
                 case NetworkInterfaceStatus.Up:
-                    launcher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", netif } });
+                    CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", netif } });
                     ConsoleLogger.Log($"[network] interface '{model.Interface}' configured");
                     break;
                 default:
-                    launcher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", netif } });
+                    CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", netif } });
                     break;
             }
         }

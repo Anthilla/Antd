@@ -39,9 +39,8 @@ namespace Antd.Modules {
 
         public AntdInfoModule() {
             Get["/info"] = x => {
-                var bash = new Bash();
                 var machineInfo = new MachineInfo();
-                var versionOs = bash.Execute("uname -a");
+                var versionOs = Bash.Execute("uname -a");
                 var aosInfo = machineInfo.GetAosrelease();
                 var uptime = machineInfo.GetUptime();
                 var gentooRelease = File.ReadAllText("/etc/gentoo-release");

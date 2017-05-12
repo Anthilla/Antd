@@ -88,8 +88,6 @@ namespace antdlib.config {
             }, null, timeToGo, Timeout.InfiniteTimeSpan);
         }
 
-        private static readonly Bash Bash = new Bash();
-
         private static string SetAclBackupFilePath(string directory) {
             return string.IsNullOrEmpty(directory) ? $"{StoreDir}/{Guid.NewGuid()}.acl" : $"{StoreDir}/ACL{directory.Replace("/", "_")}.acl";
         }
@@ -227,8 +225,7 @@ namespace antdlib.config {
             const string file3 = "/framework/antd/Resources/.000_define_user_acl.sh";
             if(!File.Exists(file3))
                 return;
-            var bash = new Bash();
-            bash.Execute($"./.000_define_user_acl.sh {user}", $"{Parameter.AntdCfgServices}/acls");
+            Bash.Execute($"./.000_define_user_acl.sh {user}", $"{Parameter.AntdCfgServices}/acls");
         }
         #endregion
 

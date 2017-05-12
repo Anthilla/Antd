@@ -30,9 +30,6 @@ namespace antdlib.config {
         private const string DnsConfigurationExt = ".dns";
         private const string NsUpdateConfigurationExt = ".nsu";
 
-        private static readonly CommandLauncher _launcher = new CommandLauncher();
-        private static readonly Bash _bash = new Bash();
-
         #region [    Network conf   ]
 
         private static Network2ConfigurationModel Parse() {
@@ -85,7 +82,7 @@ namespace antdlib.config {
             netif.Remove(model);
             Conf.Interfaces = netif;
             Save(Conf);
-            _launcher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", device } });
+            CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", device } });
         }
 
         #endregion
@@ -284,7 +281,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetAll() {
             try {
-                var list = _bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+                var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
                 return list.Select(f => f.Print(9, " ")).ToList();
             }
             catch(Exception) {
@@ -295,7 +292,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetPhysicalInterfaces() {
             var ifList = new List<string>();
-            var list = _bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }
@@ -310,7 +307,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetVirtualInterfaces() {
             var ifList = new List<string>();
-            var list = _bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }
@@ -325,7 +322,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetBondInterfaces() {
             var ifList = new List<string>();
-            var list = _bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) {
                     var name = f.Print(9, " ");
@@ -340,7 +337,7 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetBridgeInterfaces() {
             var ifList = new List<string>();
-            var list = _bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) {

@@ -113,10 +113,9 @@ namespace Antd.Modules {
                 string route = Request.Form.Route;
                 string gateway = Request.Form.Gateway;
                 var ifList = ifs.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                var launcher = new CommandLauncher();
-                launcher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", Interface } });
+                CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", Interface } });
                 foreach(var nif in ifList) {
-                    launcher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", Interface }, { "$net_if", nif } });
+                    CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", Interface }, { "$net_if", nif } });
                 }
                 var model = new NetworkInterfaceConfigurationModel {
                     Interface = Interface,
@@ -147,10 +146,9 @@ namespace Antd.Modules {
                 string route = Request.Form.Route;
                 string gateway = Request.Form.Gateway;
                 var ifList = ifs.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                var launcher = new CommandLauncher();
-                launcher.Launch("bond-set", new Dictionary<string, string> { { "$bond", Interface } });
+                CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", Interface } });
                 foreach(var nif in ifList) {
-                    launcher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", Interface }, { "$net_if", nif } });
+                    CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", Interface }, { "$net_if", nif } });
                 }
                 var model = new NetworkInterfaceConfigurationModel {
                     Interface = Interface,

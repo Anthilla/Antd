@@ -105,8 +105,7 @@ namespace antdlib.config {
             foreach(var dir in _caMainSubdirectories) {
                 Directory.CreateDirectory($"{_caMainDirectory}/{dir}");
             }
-            var bash = new Bash();
-            bash.Execute($"chmod 700 ${_caMainDirectory}/private");
+            Bash.Execute($"chmod 700 ${_caMainDirectory}/private");
             if(!File.Exists($"{_caMainDirectory}/index.txt")) {
                 File.WriteAllText($"{_caMainDirectory}/index.txt", "");
             }
@@ -130,10 +129,9 @@ namespace antdlib.config {
             //	Verifying - Enter pass phrase for ca.key.pem: secretpassword
             //chmod 400 private/ca.key.pem
             var file = $"{_caMainDirectory}/private/ca.key.pem";
-            var bash = new Bash();
             if(!File.Exists(file)) {
-                bash.Execute($"openssl genrsa -aes256 -out {file} -passout pass:{_serviceModel.KeyPassout} 4096");
-                bash.Execute($"chmod 400 ${file}");
+                Bash.Execute($"openssl genrsa -aes256 -out {file} -passout pass:{_serviceModel.KeyPassout} 4096");
+                Bash.Execute($"chmod 400 ${file}");
             }
         }
 
@@ -144,18 +142,16 @@ namespace antdlib.config {
             var key = $"{_caMainDirectory}/private/ca.key.pem";
             var config = $"{_caMainDirectory}/openssl.cnf";
             var file = $"{_caMainDirectory}/certs/ca.cert.pem";
-            var bash = new Bash();
             if(!File.Exists(file)) {
-                bash.Execute($"openssl req -config {config} -key {key} -new -x509 -days 7300 -sha256 -extensions v3_ca -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
-                bash.Execute($"chmod 444 ${file}");
+                Bash.Execute($"openssl req -config {config} -key {key} -new -x509 -days 7300 -sha256 -extensions v3_ca -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
+                Bash.Execute($"chmod 444 ${file}");
             }
         }
 
         public static bool VerifyRootCertificate() {
             //openssl x509 -noout -text -in certs/ca.cert.pem
-            var bash = new Bash();
             var file = $"{_caMainDirectory}/certs/ca.cert.pem";
-            bash.Execute($"openssl x509 -noout -text -in {file}");
+            Bash.Execute($"openssl x509 -noout -text -in {file}");
             return true;
         }
         #endregion
@@ -166,8 +162,7 @@ namespace antdlib.config {
             foreach(var dir in _caIntermediateSubdirectories) {
                 Directory.CreateDirectory($"{_caIntermediateDirectory}/{dir}");
             }
-            var bash = new Bash();
-            bash.Execute($"chmod 700 ${_caIntermediateDirectory}/private");
+            Bash.Execute($"chmod 700 ${_caIntermediateDirectory}/private");
             if(!File.Exists($"{_caIntermediateDirectory}/index.txt")) {
                 File.WriteAllText($"{_caIntermediateDirectory}/index.txt", "");
             }
@@ -180,8 +175,7 @@ namespace antdlib.config {
         }
 
         private static string GetThisIp() {
-            var bash = new Bash();
-            var ifconfig = bash.Execute("ifconfig").SplitBash();
+            var ifconfig = Bash.Execute("ifconfig").SplitBash();
             var first = ifconfig.FirstOrDefault(_ => _.ToLower().Contains("inet"));
             if(first == null) {
                 return "127.0.0.1";
@@ -203,10 +197,9 @@ namespace antdlib.config {
 
         public static void PrepareIntermediateKey() {
             var file = $"{_caIntermediateDirectory}/private/intermediate.key.pem";
-            var bash = new Bash();
             if(!File.Exists(file)) {
-                bash.Execute($"openssl genrsa -aes256 -out {file} -passout pass:{_serviceModel.KeyPassout} 4096");
-                bash.Execute($"chmod 400 ${file}");
+                Bash.Execute($"openssl genrsa -aes256 -out {file} -passout pass:{_serviceModel.KeyPassout} 4096");
+                Bash.Execute($"chmod 400 ${file}");
             }
         }
 
@@ -214,24 +207,22 @@ namespace antdlib.config {
             var key = $"{_caIntermediateDirectory}/private/intermediate.key.pem";
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var file = $"{_caIntermediateDirectory}/csr/intermediate.csr.pem";
-            var bash = new Bash();
             if(!File.Exists(file)) {
-                bash.Execute($"openssl req -config {config} -new -sha256 -key {key} -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
+                Bash.Execute($"openssl req -config {config} -new -sha256 -key {key} -out {file} -passin pass:{_serviceModel.KeyPassout} -subj \"/C={_serviceModel.RootCountryName}/ST={_serviceModel.RootStateOrProvinceName}/L={_serviceModel.RootLocalityName}/O={_serviceModel.RootOrganizationName}/OU={_serviceModel.RootOrganizationalUnitName}/CN={_serviceModel.RootCommonName}/emailAddress={_serviceModel.RootEmailAddress}\"");
             }
             config = $"{_caMainDirectory}/openssl.cnf";
             var fileOut = $"{_caIntermediateDirectory}/certs/intermediate.cert.pem";
             if(!File.Exists(fileOut)) {
-                bash.Execute($"openssl ca -batch -config {config} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{_serviceModel.KeyPassout} -in {file} -out {fileOut}");
-                bash.Execute($"chmod 444 ${file}");
+                Bash.Execute($"openssl ca -batch -config {config} -extensions v3_intermediate_ca -days 3650 -notext -md sha256 -passin pass:{_serviceModel.KeyPassout} -in {file} -out {fileOut}");
+                Bash.Execute($"chmod 444 ${file}");
             }
         }
 
         public static bool VerifyIntermediateCertificate() {
-            var bash = new Bash();
             var file = $"{_caIntermediateDirectory}/certs/intermediate.cert.pem";
-            bash.Execute($"openssl x509 -noout -text -in {file}");
+            Bash.Execute($"openssl x509 -noout -text -in {file}");
             var fileCa = $"{_caMainDirectory}/certs/ca.cert.pem";
-            bash.Execute($"openssl verify -CAfile {fileCa} {file}");
+            Bash.Execute($"openssl verify -CAfile {fileCa} {file}");
             return true;
         }
 
@@ -250,45 +241,42 @@ namespace antdlib.config {
 
         #region [    ca - Certificate    ]
         public static void CreateUserCertificate(string name, string passphrase, string email, string c, string st, string l, string o, string ou) {
-            var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
-                bash.Execute($"chmod 400 ${key}");
+                Bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
+                Bash.Execute($"chmod 400 ${key}");
             }
             var csr = $"{_caIntermediateDirectory}/csr/{name}.csr.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
+                Bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
             }
             var cert = $"{_caIntermediateDirectory}/certs/{name}.cert.pem";
             if(!File.Exists(cert)) {
-                bash.Execute($"openssl ca -config {config} -extensions usr_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
-                bash.Execute($"chmod 444 ${cert}");
+                Bash.Execute($"openssl ca -config {config} -extensions usr_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
+                Bash.Execute($"chmod 444 ${cert}");
             }
         }
 
         public static void CreateServerCertificate(string name, string passphrase, string email, string c, string st, string l, string o, string ou) {
-            var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
-                bash.Execute($"chmod 400 ${key}");
+                Bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
+                Bash.Execute($"chmod 400 ${key}");
             }
             var csr = $"{_caIntermediateDirectory}/csr/{name}.csr.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
+                Bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
             }
             var cert = $"{_caIntermediateDirectory}/certs/{name}.cert.pem";
             if(!File.Exists(cert)) {
-                bash.Execute($"openssl ca -config {config} -extensions server_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
-                bash.Execute($"chmod 444 ${cert}");
+                Bash.Execute($"openssl ca -config {config} -extensions server_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
+                Bash.Execute($"chmod 444 ${cert}");
             }
         }
 
         public static void CreateDomainControllerCertificate(string name, string passphrase, string dcGuid, string dcDns, string email, string c, string st, string l, string o, string ou) {
-            var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
                 var applicationSetting = new AppConfiguration().Get();
@@ -301,22 +289,21 @@ namespace antdlib.config {
             }
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
-                bash.Execute($"chmod 400 ${key}");
+                Bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
+                Bash.Execute($"chmod 400 ${key}");
             }
             var csr = $"{_caIntermediateDirectory}/csr/{name}.csr.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
+                Bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
             }
             var cert = $"{_caIntermediateDirectory}/certs/{name}.cert.pem";
             if(!File.Exists(cert)) {
-                bash.Execute($"openssl ca -config {config} -extensions usr_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
-                bash.Execute($"chmod 444 ${cert}");
+                Bash.Execute($"openssl ca -config {config} -extensions usr_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
+                Bash.Execute($"chmod 444 ${cert}");
             }
         }
 
         public static void CreateSmartCardCertificate(string name, string passphrase, string upn, string email, string c, string st, string l, string o, string ou) {
-            var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
                 var applicationSetting = new AppConfiguration().Get();
@@ -328,44 +315,41 @@ namespace antdlib.config {
             }
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
-                bash.Execute($"chmod 400 ${key}");
+                Bash.Execute($"openssl genrsa -aes256 -out {key} -passout pass:{passphrase} 2048");
+                Bash.Execute($"chmod 400 ${key}");
             }
             var csr = $"{_caIntermediateDirectory}/csr/{name}.csr.pem";
             if(!File.Exists(key)) {
-                bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
+                Bash.Execute($"openssl req -config {config} -key {key} -new -sha256 -out {csr} -passin pass:{passphrase} -subj \"/C={c}/ST={st}/L={l}/O={o}/OU={ou}/CN={name}/emailAddress={email}\"");
             }
             var cert = $"{_caIntermediateDirectory}/certs/{name}.cert.pem";
             if(!File.Exists(cert)) {
-                bash.Execute($"openssl ca -config {config} -extensions usr_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
-                bash.Execute($"chmod 444 ${cert}");
+                Bash.Execute($"openssl ca -config {config} -extensions usr_cert -days 375 -notext -md sha256 -in {csr} -out {cert}");
+                Bash.Execute($"chmod 444 ${cert}");
             }
         }
 
         public static bool VerifyCertificate(string name) {
-            var bash = new Bash();
             var cert = $"{_caIntermediateDirectory}/certs/{name}.cert.pem";
-            bash.Execute($"openssl x509 -noout -text -in {cert}");
+            Bash.Execute($"openssl x509 -noout -text -in {cert}");
             var chain = $"{_caIntermediateDirectory}/certs/ca-chain.cert.pem";
-            bash.Execute($"openssl verify -CAfile {chain} {cert}");
+            Bash.Execute($"openssl verify -CAfile {chain} {cert}");
             return true;
         }
         #endregion
 
         #region [    ca - Revocation List    ]
         public static void CreateCrl() {
-            var bash = new Bash();
             var config = $"{_caIntermediateDirectory}/openssl.cnf";
             var crl = $"{_caIntermediateDirectory}/crl/intermediate.crl.pem";
             if(!File.Exists(crl)) {
-                bash.Execute($"openssl ca -config {config} -gencrl -out {crl}");
+                Bash.Execute($"openssl ca -config {config} -gencrl -out {crl}");
             }
         }
 
-        public static string[] ChecCrl() {
-            var bash = new Bash();
+        public static string[] CheckCrl() {
             var crl = $"{_caIntermediateDirectory}/crl/intermediate.crl.pem";
-            return bash.Execute($"openssl crl -in {crl} -noout -text").SplitBash().ToArray();
+            return Bash.Execute($"openssl crl -in {crl} -noout -text").SplitBash().ToArray();
         }
         #endregion
     }

@@ -150,8 +150,7 @@ namespace antdlib.config {
         public static void Start() {
             if(!IsActive())
                 return;
-            var launcher = new CommandLauncher();
-            launcher.Launch("nft-f", new Dictionary<string, string> { { "$file", MainFilePath } });
+            CommandLauncher.Launch("nft-f", new Dictionary<string, string> { { "$file", MainFilePath } });
             ConsoleLogger.Log("[firewall] start");
         }
     }

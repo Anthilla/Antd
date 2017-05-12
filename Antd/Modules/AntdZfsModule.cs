@@ -40,8 +40,6 @@ using System.Linq;
 namespace Antd.Modules {
     public class AntdZfsModule : NancyModule {
 
-        private readonly CommandLauncher _launcher = new CommandLauncher();
-
         public AntdZfsModule() {
             Get["/zfs"] = x => {
                 var zfsSnap = new ZfsSnap();
@@ -93,7 +91,7 @@ namespace Antd.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 ConsoleLogger.Log($"[zpool] create => altroot:{altroot} poolname:{poolname} pooltype:{pooltype} disk:{disk} ");
-                _launcher.Launch("zpool-create", new Dictionary<string, string> {
+                CommandLauncher.Launch("zpool-create", new Dictionary<string, string> {
                     { "$pool_altroot", altroot },
                     { "$pool_name", poolname },
                     { "$pool_type", poolname },
@@ -109,7 +107,7 @@ namespace Antd.Modules {
                 if(string.IsNullOrEmpty(altroot) || string.IsNullOrEmpty(poolname) || string.IsNullOrEmpty(datasetname)) {
                     return HttpStatusCode.BadRequest;
                 }
-                _launcher.Launch("zfs-create", new Dictionary<string, string> {
+                CommandLauncher.Launch("zfs-create", new Dictionary<string, string> {
                     { "$pool_altroot", altroot },
                     { "$pool_name", poolname },
                     { "$dataset_name", datasetname }

@@ -54,7 +54,6 @@ namespace Antd.Apps {
             return notInstalled;
         }
 
-        private readonly Bash _bash = new Bash();
         private readonly AppsUnits _appsUnits = new AppsUnits();
 
         public void Setup(string appName) {
@@ -76,11 +75,11 @@ namespace Antd.Apps {
                     File.Delete($"{repoPath}/{squashName}");
                 }
                 ConsoleLogger.Log($">> mksquashfs {repoPath}/{name} {repoPath}/{squashName} -comp xz -Xbcj x86 -Xdict-size 75%");
-                _bash.Execute($"mksquashfs {repoPath}/{name} {repoPath}/{squashName} -comp xz -Xbcj x86 -Xdict-size 75%", false);
+                Bash.Execute($"mksquashfs {repoPath}/{name} {repoPath}/{squashName} -comp xz -Xbcj x86 -Xdict-size 75%", false);
                 ConsoleLogger.Log("compressed fs for application created");
                 var activeVersionPath = $"{repoPath}/active-version";
                 ConsoleLogger.Log($"activeVersionPath => {activeVersionPath}");
-                _bash.Execute($"ln -s {squashName} {activeVersionPath}", false);
+                Bash.Execute($"ln -s {squashName} {activeVersionPath}", false);
                 ConsoleLogger.Log("link created");
                 var frameworkDir = $"/framework/{name.ToLower().Replace("/", "-")}";
                 ConsoleLogger.Log($"frameworkDir => {frameworkDir}");
@@ -89,7 +88,7 @@ namespace Antd.Apps {
                 ConsoleLogger.Log("framework directories created");
                 if(MountHelper.IsAlreadyMounted(frameworkDir) == false) {
                     ConsoleLogger.Log($">> mount {activeVersionPath} {frameworkDir}");
-                    _bash.Execute($"mount {activeVersionPath} {frameworkDir}", false);
+                    Bash.Execute($"mount {activeVersionPath} {frameworkDir}", false);
                     ConsoleLogger.Log("application fs mounted");
                 }
                 var prepareUnitName = _appsUnits.CreatePrepareUnit(name, frameworkDir);

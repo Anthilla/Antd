@@ -47,7 +47,6 @@ namespace Antd.Modules {
                 var avahiBrowse = new AvahiBrowse();
                 avahiBrowse.DiscoverService("antd");
                 var localServices = avahiBrowse.Locals;
-                var launcher = new CommandLauncher();
                 var list = new List<AvahiServiceViewModel>();
                 var kh = new SshKnownHosts();
                 foreach(var ls in localServices) {
@@ -58,8 +57,8 @@ namespace Antd.Modules {
                         Port = arr[2].Trim(),
                         MacAddress = ""
                     };
-                    launcher.Launch("ping-c", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
-                    var result = launcher.Launch("arp", new Dictionary<string, string> { { "$ip", arr[1].Trim() } }).ToList();
+                    CommandLauncher.Launch("ping-c", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
+                    var result = CommandLauncher.Launch("arp", new Dictionary<string, string> { { "$ip", arr[1].Trim() } }).ToList();
                     if(result.Any()) {
                         var mac = result.LastOrDefault().Print(3, " ");
                         mo.MacAddress = mac;
@@ -79,8 +78,7 @@ namespace Antd.Modules {
                 const string pathToPrivateKey = "/root/.ssh/id_rsa";
                 const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
                 if(!File.Exists(pathToPublicKey)) {
-                    var bash = new Bash();
-                    var k = bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                    var k = Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
                     ConsoleLogger.Log(k);
                 }
                 var key = File.ReadAllText(pathToPublicKey);
@@ -122,9 +120,8 @@ namespace Antd.Modules {
                     else {
                         File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
                     }
-                    var bash = new Bash();
-                    bash.Execute($"chmod 600 {authorizedKeysPath}", false);
-                    bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
+                    Bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                    Bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
                     return HttpStatusCode.OK;
                 }
                 catch(Exception ex) {
@@ -135,15 +132,13 @@ namespace Antd.Modules {
 
             Post["/asset/wol"] = x => {
                 string mac = Request.Form.MacAddress;
-                var launcher = new CommandLauncher();
-                launcher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
+                CommandLauncher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
                 return HttpStatusCode.OK;
             };
 
             Get["/asset/nmap/{ip}"] = x => {
                 string ip = x.ip;
-                var launcher = new CommandLauncher();
-                var result = launcher.Launch("nmap-ip-fast", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
+                var result = CommandLauncher.Launch("nmap-ip-fast", new Dictionary<string, string> { { "$ip", ip } }).Where(_ => !_.Contains("MAC Address")).Skip(5).Reverse().Skip(1).Reverse();
                 var list = new List<NmapScanStatus>();
                 foreach(var r in result) {
                     var a = r.SplitToList(" ").ToArray();

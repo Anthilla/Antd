@@ -12,9 +12,6 @@ namespace Antd {
         private const string LocalTemplateDirectory = "/framework/antd/Templates";
         private readonly Dictionary<string, string> _replacements;
 
-        private readonly CommandLauncher _commandLauncher = new CommandLauncher();
-        private readonly Bash _bash = new Bash();
-
         private readonly Host2Model _host;
         private readonly DnsConfiguration _dns;
         private readonly bool _isDnsPublic;
@@ -215,7 +212,7 @@ namespace Antd {
 
         private void SaveHaproxy(string publicIp, List<Cluster.Node> nodes) {
             ConsoleLogger.Log("[cluster] init haproxy");
-            _commandLauncher.Launch("haproxy-stop");
+            CommandLauncher.Launch("haproxy-stop");
             if(File.Exists(_haproxyFileOutput)) {
                 File.Copy(_haproxyFileOutput, $"{_haproxyFileOutput}.bck", true);
             }
@@ -243,7 +240,7 @@ namespace Antd {
                 }
             }
             File.WriteAllLines(_haproxyFileOutput, lines);
-            _commandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
+            CommandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
             ConsoleLogger.Log("[cluster] haproxy started");
         }
         #endregion
@@ -296,25 +293,25 @@ namespace Antd {
                     case NetworkAdapterType.Virtual:
                         break;
                     case NetworkAdapterType.Bond:
-                        _commandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", deviceName } });
+                        CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", deviceName } });
                         foreach(var nif in ifConfig.ChildrenIf) {
-                            _commandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
-                            _commandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
+                            CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
+                            CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
                         }
                         break;
                     case NetworkAdapterType.Bridge:
-                        _commandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", deviceName } });
+                        CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", deviceName } });
                         foreach(var nif in ifConfig.ChildrenIf) {
-                            _commandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
-                            _commandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
+                            CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
+                            CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
                         }
                         break;
                     case NetworkAdapterType.Other:
                         continue;
                 }
 
-                _commandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", deviceName }, { "$mtu", configuration.Mtu } });
-                _commandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", deviceName }, { "$txqueuelen", configuration.Txqueuelen } });
+                CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", deviceName }, { "$mtu", configuration.Mtu } });
+                CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", deviceName }, { "$txqueuelen", configuration.Txqueuelen } });
 
                 switch(ifConfig.Mode) {
                     case NetworkInterfaceMode.Null:
@@ -324,11 +321,11 @@ namespace Antd {
                         if(networkdIsActive) {
                             Systemctl.Stop("systemd-networkd");
                         }
-                        _commandLauncher.Launch("dhclient-killall");
-                        _commandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
+                        CommandLauncher.Launch("dhclient-killall");
+                        CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
                             { "$net_if", deviceName }
                         });
-                        _commandLauncher.Launch("ip4-add-addr", new Dictionary<string, string> {
+                        CommandLauncher.Launch("ip4-add-addr", new Dictionary<string, string> {
                             { "$net_if", deviceName },
                             { "$address", ifConfig.Ip },
                             { "$range", ifConfig.Subnet }
@@ -338,7 +335,7 @@ namespace Antd {
                         }
                         break;
                     case NetworkInterfaceMode.Dynamic:
-                        _commandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", deviceName } });
                         break;
                     default:
                         continue;
@@ -346,14 +343,14 @@ namespace Antd {
 
                 switch(ifConfig.Status) {
                     case NetworkInterfaceStatus.Down:
-                        _commandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
                         continue;
                     case NetworkInterfaceStatus.Up:
-                        _commandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
                         ConsoleLogger.Log($"[network] interface '{deviceName}' configured");
                         break;
                     default:
-                        _commandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                        CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
                         continue;
                 }
 
@@ -362,7 +359,7 @@ namespace Antd {
                     continue;
                 }
 
-                _commandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$gateway", gwConfig.GatewayAddress }, { "$ip_address", gwConfig.Route } });
+                CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$gateway", gwConfig.GatewayAddress }, { "$ip_address", gwConfig.Route } });
             }
         }
 
@@ -413,20 +410,20 @@ namespace Antd {
 
         #region [    hostnamectl    ]
         private void SaveHostname() {
-            _commandLauncher.Launch("set-hostname", new Dictionary<string, string> {
+            CommandLauncher.Launch("set-hostname", new Dictionary<string, string> {
                 { "$host_name", _host.HostName }
             });
-            _commandLauncher.Launch("set-chassis", new Dictionary<string, string> {
+            CommandLauncher.Launch("set-chassis", new Dictionary<string, string> {
                 { "$host_chassis", _host.HostChassis }
             });
-            _commandLauncher.Launch("set-deployment", new Dictionary<string, string> {
+            CommandLauncher.Launch("set-deployment", new Dictionary<string, string> {
                 { "$host_deployment", _host.HostDeployment }
             });
-            _commandLauncher.Launch("set-location", new Dictionary<string, string> {
+            CommandLauncher.Launch("set-location", new Dictionary<string, string> {
                 { "$host_location", _host.HostLocation }
             });
             File.WriteAllText("/etc/hostname", _host.HostName);
-            _commandLauncher.Launch("set-timezone", new Dictionary<string, string> {
+            CommandLauncher.Launch("set-timezone", new Dictionary<string, string> {
                 { "$host_timezone", _host.Timezone }
             });
         }
@@ -434,7 +431,7 @@ namespace Antd {
 
         #region [    ntpdate    ]
         private void ApplyNtpdate() {
-            _commandLauncher.Launch("ntpdate", new Dictionary<string, string> { { "$server", _host.NtpdateServer } });
+            CommandLauncher.Launch("ntpdate", new Dictionary<string, string> { { "$server", _host.NtpdateServer } });
         }
         #endregion
 
@@ -601,8 +598,8 @@ namespace Antd {
         private void SaveBindService() {
             const string svc = "named.service";
             ActivateService(svc);
-            _commandLauncher.Launch("rndc-reconfig");
-            _commandLauncher.Launch("rndc-reload");
+            CommandLauncher.Launch("rndc-reconfig");
+            CommandLauncher.Launch("rndc-reload");
         }
         #endregion
 
@@ -708,7 +705,7 @@ namespace Antd {
                         }
                     }
                 }
-                _commandLauncher.Launch("nft-f", new Dictionary<string, string> { { "$file", NftablesFileOutput } });
+                CommandLauncher.Launch("nft-f", new Dictionary<string, string> { { "$file", NftablesFileOutput } });
             }
             catch(Exception e) {
                 Console.WriteLine(e.Message);
@@ -720,13 +717,13 @@ namespace Antd {
         private void SaveModprobes() {
             var modules = HostParametersConfiguration.Conf.Modprobes;
             foreach(var mod in modules) {
-                _commandLauncher.Launch("modprobe", new Dictionary<string, string> { { "$package", mod } });
+                CommandLauncher.Launch("modprobe", new Dictionary<string, string> { { "$package", mod } });
             }
         }
 
         private void RemoveModules() {
             var modules = string.Join(" ", HostParametersConfiguration.Conf.Rmmod);
-            _commandLauncher.Launch("rmmod", new Dictionary<string, string> { { "$modules", modules } });
+            CommandLauncher.Launch("rmmod", new Dictionary<string, string> { { "$modules", modules } });
         }
 
         private void BlacklistMudules() {
@@ -776,7 +773,6 @@ namespace Antd {
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error(ex);
-                    continue;
                 }
             }
         }
@@ -805,17 +801,17 @@ namespace Antd {
                 var firstCommand = control.FirstCommand;
                 if(string.IsNullOrEmpty(control.ControlCommand)) {
                     ConsoleLogger.Log($"[setup.conf] {control.FirstCommand}");
-                    _bash.Execute(firstCommand, false);
+                    Bash.Execute(firstCommand, false);
                     return;
                 }
                 var controlCommand = control.ControlCommand;
-                var controlResult = _bash.Execute(controlCommand);
+                var controlResult = Bash.Execute(controlCommand);
                 var firstCheck = controlResult.Contains(control.Check);
                 if(firstCheck) {
                     return;
                 }
-                _bash.Execute(firstCommand, false);
-                controlResult = _bash.Execute(controlCommand);
+                Bash.Execute(firstCommand, false);
+                controlResult = Bash.Execute(controlCommand);
                 var secondCheck = controlResult.Contains(control.Check);
                 if(secondCheck) {
                     return;

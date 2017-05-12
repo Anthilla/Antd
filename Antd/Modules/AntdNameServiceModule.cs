@@ -41,13 +41,12 @@ namespace Antd.Modules {
 
         public AntdNameServiceModule() {
             Get["/nameservice"] = x => {
-                var launcher = new CommandLauncher();
-                var hosts = launcher.Launch("cat-etc-hosts").ToArray();
-                var networks = launcher.Launch("cat-etc-networks").ToArray();
-                var resolv = launcher.Launch("cat-etc-resolv").ToArray();
-                var nsswitch = launcher.Launch("cat-etc-nsswitch").ToArray();
+                var hosts = CommandLauncher.Launch("cat-etc-hosts").ToArray();
+                var networks = CommandLauncher.Launch("cat-etc-networks").ToArray();
+                var resolv = CommandLauncher.Launch("cat-etc-resolv").ToArray();
+                var nsswitch = CommandLauncher.Launch("cat-etc-nsswitch").ToArray();
                 var model = new PageNameServiceModel {
-                    Hostname = launcher.Launch("cat-etc-hostname").JoinToString("<br />"),
+                    Hostname = CommandLauncher.Launch("cat-etc-hostname").JoinToString("<br />"),
                     DomainInt = HostConfiguration.Host.InternalDomain,
                     DomainExt = HostConfiguration.Host.ExternalDomain,
                     Hosts = hosts.JoinToString("<br />"),

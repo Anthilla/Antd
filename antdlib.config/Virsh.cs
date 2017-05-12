@@ -37,11 +37,9 @@ using System.Text.RegularExpressions;
 namespace antdlib.config {
     public class Virsh {
 
-        private readonly Bash _bash = new Bash();
-
         public IEnumerable<VirtualMachineInfo> GetVmList() {
             var vms = new List<VirtualMachineInfo>();
-            var res = _bash.Execute("virsh list --all | sed '1,2d'");
+            var res = Bash.Execute("virsh list --all | sed '1,2d'");
             if(res.Length < 1) {
                 return vms;
             }
@@ -62,7 +60,7 @@ namespace antdlib.config {
         }
 
         private KeyValuePair<string, string> GetVmVncAddress(string domain) {
-            var res = _bash.Execute($"virsh dumpxml {domain}").SplitBash().Grep("graphics type='vnc'").First();
+            var res = Bash.Execute($"virsh dumpxml {domain}").SplitBash().Grep("graphics type='vnc'").First();
             if(res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
                 return new KeyValuePair<string, string>(null, null);
             }

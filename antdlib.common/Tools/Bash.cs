@@ -34,7 +34,7 @@ using System.Linq;
 
 namespace antdlib.common {
     public class Bash {
-        public string Execute(string command, bool redirectStandard = true) {
+        public static string Execute(string command, bool redirectStandard = true) {
             try {
                 var proc = new ProcessStartInfo {
                     FileName = "/bin/bash",
@@ -62,7 +62,7 @@ namespace antdlib.common {
             }
         }
 
-        public string Execute(string command, string dir, bool redirectStandard = true) {
+        public static string Execute(string command, string dir, bool redirectStandard = true) {
             try {
                 var proc = new ProcessStartInfo {
                     FileName = "/bin/bash",
@@ -91,11 +91,11 @@ namespace antdlib.common {
             }
         }
 
-        public string Execute(IEnumerable<string> commands, bool redirectStandard = true) {
+        public static string Execute(IEnumerable<string> commands, bool redirectStandard = true) {
             return commands.Aggregate(string.Empty, (current, command) => current + Execute(command, redirectStandard));
         }
 
-        public string Execute(IEnumerable<string> commands, string dir, bool redirectStandard = true) {
+        public static string Execute(IEnumerable<string> commands, string dir, bool redirectStandard = true) {
             return commands.Aggregate(string.Empty, (current, command) => current + Execute(command, dir, redirectStandard));
         }
     }

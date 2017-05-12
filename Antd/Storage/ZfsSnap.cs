@@ -8,8 +8,7 @@ using System.Text.RegularExpressions;
 namespace Antd.Storage {
     public class ZfsSnap {
         public  List<ZfsSnapModel> List() {
-            var bash = new Bash();
-            var result = bash.Execute("zfs list -t snap");
+            var result = Bash.Execute("zfs list -t snap");
             var list = new List<ZfsSnapModel>();
             if(string.IsNullOrEmpty(result)) {
                 return list;

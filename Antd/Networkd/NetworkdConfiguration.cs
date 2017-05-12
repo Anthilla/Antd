@@ -13,8 +13,6 @@ namespace Antd.Networkd {
 
     public class NetworkdConfiguration {
 
-        private readonly Bash _bash = new Bash();
-
         private const string NetworkdFolder = "/etc/systemd/network";
 
         public void Setup() {
@@ -31,7 +29,7 @@ namespace Antd.Networkd {
                 Systemctl.Start("systemd-resolved.service");
             }
 
-            _bash.Execute("ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf", false);
+            Bash.Execute("ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf", false);
 
             if(!Directory.Exists(NetworkdFolder)) {
                 Directory.CreateDirectory(NetworkdFolder);

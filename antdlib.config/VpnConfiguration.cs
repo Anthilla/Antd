@@ -97,17 +97,16 @@ namespace antdlib.config {
 
             remoteHost = remoteHost.Split(':').FirstOrDefault();
 
-            var bash = new Bash();
-            var lsmod = bash.Execute("lsmod").SplitBash().Grep("tun").FirstOrDefault();
+            var lsmod = Bash.Execute("lsmod").SplitBash().Grep("tun").FirstOrDefault();
             if(lsmod == null) {
-                bash.Execute("modprobe tun");
+                Bash.Execute("modprobe tun");
             }
-            var lsmodRemote = bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"").SplitBash().Grep("tun").FirstOrDefault();
+            var lsmodRemote = Bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"").SplitBash().Grep("tun").FirstOrDefault();
             if(lsmodRemote == null) {
-                bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"");
+                Bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"");
             }
 
-            bash.Execute($"ssh root@{remoteHost} \"systemctl restart {ServiceName}\"");
+            Bash.Execute($"ssh root@{remoteHost} \"systemctl restart {ServiceName}\"");
 
             var unit = SetUnitForTunnel(remoteHost);
             if(unit == false) {
@@ -115,28 +114,28 @@ namespace antdlib.config {
                 return;
             }
 
-            var localTap = bash.Execute("ip link show").SplitBash().ToList();
+            var localTap = Bash.Execute("ip link show").SplitBash().ToList();
             if(!localTap.Any(_ => _.Contains("tap1"))) {
                 ConsoleLogger.Warn("[vpn] something went wrong while setting the local tunnel interface");
                 return;
             }
-            bash.Execute("ip link set dev tap1 up");
-            bash.Execute("ip addr flush dev tap1");
-            bash.Execute($"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1");
-            localTap = bash.Execute("ip link show tap1").SplitBash().ToList();
+            Bash.Execute("ip link set dev tap1 up");
+            Bash.Execute("ip addr flush dev tap1");
+            Bash.Execute($"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1");
+            localTap = Bash.Execute("ip link show tap1").SplitBash().ToList();
             if(localTap.Any(_ => _.ToLower().Contains("up"))) {
                 ConsoleLogger.Log("[vpn] local tunnel interface is up");
             }
 
-            var remoteTap = bash.Execute($"ssh root@{remoteHost} \"ip link show\"").SplitBash().ToList();
+            var remoteTap = Bash.Execute($"ssh root@{remoteHost} \"ip link show\"").SplitBash().ToList();
             if(!remoteTap.Any(_ => _.Contains("tap1"))) {
                 ConsoleLogger.Warn("[vpn] something went wrong while setting the remote tunnel interface");
                 return;
             }
-            bash.Execute($"ssh root@{remoteHost} \"ip link set dev tap1 up\"");
-            bash.Execute($"ssh root@{remoteHost} \"ip addr flush dev tap1\"");
-            bash.Execute($"ssh root@{remoteHost} \"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1\"");
-            remoteTap = bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").SplitBash().ToList();
+            Bash.Execute($"ssh root@{remoteHost} \"ip link set dev tap1 up\"");
+            Bash.Execute($"ssh root@{remoteHost} \"ip addr flush dev tap1\"");
+            Bash.Execute($"ssh root@{remoteHost} \"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1\"");
+            remoteTap = Bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").SplitBash().ToList();
             if(remoteTap.Any(_ => _.ToLower().Contains("up"))) {
                 ConsoleLogger.Log("[vpn] remote tunnel interface is up");
             }
@@ -157,8 +156,7 @@ namespace antdlib.config {
             const string pathToPrivateKey = "/root/.ssh/id_rsa";
             const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
             if(!File.Exists(pathToPublicKey)) {
-                var bash = new Bash();
-                bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
             }
             var key = File.ReadAllText(pathToPublicKey);
             if(string.IsNullOrEmpty(key)) {
@@ -178,8 +176,7 @@ namespace antdlib.config {
         }
 
         public bool TestConnection() {
-            var launcher = new CommandLauncher();
-            var r = launcher.Launch("ping-c", new Dictionary<string, string> { { "$ip", _serviceModel.RemotePoint.Address } }).Grep("From");
+            var r = CommandLauncher.Launch("ping-c", new Dictionary<string, string> { { "$ip", _serviceModel.RemotePoint.Address } }).Grep("From");
             return !r.All(_ => _.ToLower().Contains("host unreachable"));
         }
 

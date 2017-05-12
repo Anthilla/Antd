@@ -59,9 +59,8 @@ namespace Antd.Modules {
                 }
                 var line = $"{key} {remoteUser}";
                 File.AppendAllLines(authorizedKeysPath, new List<string> { line });
-                var bash = new Bash();
-                bash.Execute($"chmod 600 {authorizedKeysPath}", false);
-                bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
+                Bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                Bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
                 return HttpStatusCode.OK;
             };
 

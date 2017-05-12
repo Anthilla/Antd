@@ -17,13 +17,12 @@ namespace Antd.Tor {
             return System.IO.File.Exists(BinFilePath);
         }
 
-        private static readonly CommandLauncher Launcher = new CommandLauncher();
         private static readonly Bash Bash = new Bash();
 
         public static bool IsActive => _isActive();
 
         private static bool _isActive() {
-            var ps = Launcher.Launch("ps-aef");
+            var ps = CommandLauncher.Launch("ps-aef");
             return ps.Contains("tor");
         }
 
@@ -33,7 +32,7 @@ namespace Antd.Tor {
             Bash.Execute($"chmod -R 700 {HiddenServiceDirectoryPath}");
             if(IsActive == false) {
                 var ths = new System.Threading.ThreadStart(() => {
-                    Launcher.Launch("tor");
+                    CommandLauncher.Launch("tor");
                 });
                 var th = new System.Threading.Thread(ths);
                 th.Start();
@@ -42,17 +41,17 @@ namespace Antd.Tor {
 
         public static void Stop() {
             if(IsActive) {
-                Launcher.Launch("tor-kill");
+                CommandLauncher.Launch("tor-kill");
             }
         }
 
         public static void Restart() {
-            Launcher.Launch("tor-kill");
+            CommandLauncher.Launch("tor-kill");
             System.IO.Directory.CreateDirectory(HiddenServiceDirectoryPath);
             Bash.Execute($"chown -R tor:root {HiddenServiceDirectoryPath}");
             Bash.Execute($"chmod -R 700 {HiddenServiceDirectoryPath}");
             var ths = new System.Threading.ThreadStart(() => {
-                Launcher.Launch("tor");
+                CommandLauncher.Launch("tor");
             });
             var th = new System.Threading.Thread(ths);
             th.Start();

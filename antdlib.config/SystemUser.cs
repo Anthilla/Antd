@@ -1,10 +1,10 @@
-﻿using antdlib.common;
-using anthilla.commands;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.common;
+using anthilla.commands;
 
-namespace Antd.Users {
+namespace antdlib.config {
     public class SystemUser {
         private const string FilePath = "/etc/shadow";
 
@@ -13,13 +13,11 @@ namespace Antd.Users {
         }
 
         public void Create(string user) {
-            var bash = new Bash();
-            bash.Execute($"useradd {user}", false);
+            Bash.Execute($"useradd {user}", false);
         }
 
         public string HashPasswd(string input) {
-            var launcher = new CommandLauncher();
-            var output = launcher.Launch("mkpasswd", new Dictionary<string, string> { { "$password", input } }).FirstOrDefault();
+            var output = CommandLauncher.Launch("mkpasswd", new Dictionary<string, string> { { "$password", input } }).FirstOrDefault();
             return output;
         }
 
@@ -30,8 +28,7 @@ namespace Antd.Users {
             if(string.IsNullOrEmpty(password)) {
                 return;
             }
-            var bash = new Bash();
-            bash.Execute($"usermod -p '{password}' {user}", false);
+            Bash.Execute($"usermod -p '{password}' {user}", false);
         }
     }
 }

@@ -49,9 +49,7 @@ namespace Antd.Modules {
         public AntdUpdateModule() {
             Get["/update"] = x => {
                 var model = new PageUpdateModel();
-                var launcher = new CommandLauncher();
-                var bash = new Bash();
-                var updatecheck = launcher.Launch("mono-antdsh-update-check").ToList();
+                var updatecheck = CommandLauncher.Launch("mono-antdsh-update-check").ToList();
                 var latestAntd = updatecheck.LastOrDefault(_ => _.Contains("update.antd"));
                 var latestAntdUi = updatecheck.LastOrDefault(_ => _.Contains("update.antdui"));
                 var latestAntdsh = updatecheck.LastOrDefault(_ => _.Contains("update.antdsh"));
@@ -67,18 +65,17 @@ namespace Antd.Modules {
                 const string antdshActive = "/mnt/cdrom/Apps/Anthilla_antdsh/active-version";
                 const string systemActive = "/mnt/cdrom/System/active-system";
                 const string kernelActive = "/mnt/cdrom/Kernel/active-kernel";
-                model.AntdVersion = GetVersionDateFromFile(bash.Execute($"file {antdActive}"));
-                model.AntdUiVersion = GetVersionDateFromFile(bash.Execute($"file {antduiActive}"));
-                model.AntdshVersion = GetVersionDateFromFile(bash.Execute($"file {antdshActive}"));
-                model.SystemVersion = GetVersionDateFromFile(bash.Execute($"file {systemActive}"));
-                model.KernelVersion = GetVersionDateFromFile(bash.Execute($"file {kernelActive}"));
+                model.AntdVersion = GetVersionDateFromFile(Bash.Execute($"file {antdActive}"));
+                model.AntdUiVersion = GetVersionDateFromFile(Bash.Execute($"file {antduiActive}"));
+                model.AntdshVersion = GetVersionDateFromFile(Bash.Execute($"file {antdshActive}"));
+                model.SystemVersion = GetVersionDateFromFile(Bash.Execute($"file {systemActive}"));
+                model.KernelVersion = GetVersionDateFromFile(Bash.Execute($"file {kernelActive}"));
                 return JsonConvert.SerializeObject(model);
             };
 
             Post["/update"] = x => {
                 string context = Request.Form.Context;
-                var launcher = new CommandLauncher();
-                launcher.Launch("mono-antdsh-update", new Dictionary<string, string> { { "$context", context } });
+                CommandLauncher.Launch("mono-antdsh-update", new Dictionary<string, string> { { "$context", context } });
                 return HttpStatusCode.OK;
             };
         }

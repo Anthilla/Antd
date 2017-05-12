@@ -91,11 +91,10 @@ namespace antdlib.config {
         }
 
         public static void ApplyHostInfo() {
-            var launcher = new CommandLauncher();
-            launcher.Launch(Host.HostName.SetCmd, Host.HostName.StoredValues);
-            launcher.Launch(Host.HostChassis.SetCmd, Host.HostChassis.StoredValues);
-            launcher.Launch(Host.HostDeployment.SetCmd, Host.HostDeployment.StoredValues);
-            launcher.Launch(Host.HostLocation.SetCmd, Host.HostLocation.StoredValues);
+            CommandLauncher.Launch(Host.HostName.SetCmd, Host.HostName.StoredValues);
+            CommandLauncher.Launch(Host.HostChassis.SetCmd, Host.HostChassis.StoredValues);
+            CommandLauncher.Launch(Host.HostDeployment.SetCmd, Host.HostDeployment.StoredValues);
+            CommandLauncher.Launch(Host.HostLocation.SetCmd, Host.HostLocation.StoredValues);
             var name = Host.HostName.StoredValues["$host_name"];
             File.WriteAllText("/etc/hostname", name);
         }
@@ -113,8 +112,7 @@ namespace antdlib.config {
         }
 
         public static void ApplyTimezone() {
-            var launcher = new CommandLauncher();
-            launcher.Launch(Host.Timezone.SetCmd, Host.Timezone.StoredValues);
+            CommandLauncher.Launch(Host.Timezone.SetCmd, Host.Timezone.StoredValues);
         }
         #endregion
 
@@ -125,23 +123,20 @@ namespace antdlib.config {
         }
 
         public static void ApplyNtpdate() {
-            var launcher = new CommandLauncher();
-            launcher.Launch(Host.NtpdateServer.SetCmd, Host.NtpdateServer.StoredValues);
+            CommandLauncher.Launch(Host.NtpdateServer.SetCmd, Host.NtpdateServer.StoredValues);
         }
         #endregion
 
         #region [    sync time    ]
         public static void SyncClock(string ntpServer = "") {
-            var launcher = new CommandLauncher();
             ApplyNtpdate();
-            launcher.Launch("sync-clock");
+            CommandLauncher.Launch("sync-clock");
         }
         #endregion
 
         #region [    repo - Name Service - Hosts    ]
         public static string[] GetNsHosts() {
-            var launcher = new CommandLauncher();
-            var hosts = launcher.Launch(Host.NsHosts.GetCmd).ToArray();
+            var hosts = CommandLauncher.Launch(Host.NsHosts.GetCmd).ToArray();
             return hosts;
         }
 
@@ -162,8 +157,7 @@ namespace antdlib.config {
 
         #region [    repo - Name Service - Networks    ]
         public static string[] GetNsNetworks() {
-            var launcher = new CommandLauncher();
-            var networks = launcher.Launch(Host.NsNetworks.GetCmd).ToArray();
+            var networks = CommandLauncher.Launch(Host.NsNetworks.GetCmd).ToArray();
             return networks;
         }
 
@@ -185,8 +179,7 @@ namespace antdlib.config {
 
         #region [    repo - Name Service - Resolv    ]
         public static string[] GetNsResolv() {
-            var launcher = new CommandLauncher();
-            var resolv = launcher.Launch(Host.NsResolv.GetCmd).ToArray();
+            var resolv = CommandLauncher.Launch(Host.NsResolv.GetCmd).ToArray();
             return resolv;
         }
 
@@ -216,8 +209,7 @@ namespace antdlib.config {
 
         #region [    repo - Name Service - Switch    ]
         public static string[] GetNsSwitch() {
-            var launcher = new CommandLauncher();
-            var @switch = launcher.Launch(Host.NsSwitch.GetCmd).ToArray();
+            var @switch = CommandLauncher.Launch(Host.NsSwitch.GetCmd).ToArray();
             return @switch;
         }
 
