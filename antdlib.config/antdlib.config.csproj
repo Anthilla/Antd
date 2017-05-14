@@ -78,6 +78,7 @@
     <Compile Include="AclConfiguration.cs" />
     <Compile Include="AuthorizedKeysConfiguration.cs" />
     <Compile Include="AppsConfiguration.cs" />
+    <Compile Include="TorConfiguration.cs" />
     <Compile Include="DirectoryWatcherRsync.cs" />
     <Compile Include="DirectoryWatcherCluster.cs" />
     <Compile Include="HostParametersConfiguration.cs" />

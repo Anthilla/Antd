@@ -34,6 +34,7 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     .state("dhcpd", { cache: false, url: "^/dhcpd", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/dhcpd.html?v=" + new Date() } } })
     .state("leases", { cache: false, url: "^/leases", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/leases.html?v=" + new Date() } } })
     .state("vpn", { cache: false, url: "^/vpn", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/vpn.html?v=" + new Date() } } })
+    .state("tor", { cache: false, url: "^/tor", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/tor.html?v=" + new Date() } } })
     .state("fw", { cache: false, url: "^/fw", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/fw.html?v=" + new Date() } } })
     .state("cron", { cache: false, url: "^/cron", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/cron.html?v=" + new Date() } } })
     .state("storage", { cache: false, url: "^/storage", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/storage.html?v=" + new Date() } } })

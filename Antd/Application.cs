@@ -96,7 +96,9 @@ namespace Antd {
             Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls");
             Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template");
             Directory.CreateDirectory(Parameter.RepoConfig);
-            Directory.CreateDirectory("/mnt/cdrom/DIRS");
+            Directory.CreateDirectory(Parameter.RepoDirs);
+            Directory.CreateDirectory(Parameter.AnthillaUnits);
+            Directory.CreateDirectory(Parameter.TimerUnits);
             MountManagement.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
             #endregion
@@ -537,9 +539,9 @@ namespace Antd {
             ConsoleLogger.Log("[boot step] working procedures");
 
             #region [    Tor    ]
-            TorConfiguration.AddVirtualPort("80", $"127.0.0.1:{app.AntdUiPort}");
-            var torHostname = TorConfiguration.Hostname;
-            ConsoleLogger.Log($"[tor] hostname: {torHostname}");
+            //TorConfiguration.AddVirtualPort("80", $"127.0.0.1:{app.AntdUiPort}");
+            //var torHostname = TorConfiguration.Hostname;
+            //ConsoleLogger.Log($"[tor] hostname: {torHostname}");
             #endregion
 
             #region [    Cluster    ]
@@ -573,21 +575,27 @@ namespace Antd {
                 var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in antdUnits) {
                     var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    File.Copy(unit, trueUnit);
+                    if(!File.Exists(trueUnit)) {
+                        File.Copy(unit, trueUnit);
+                    }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
                 var appsUnits = Directory.EnumerateFiles(Parameter.AppsUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in appsUnits) {
                     var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    File.Copy(unit, trueUnit);
+                    if(!File.Exists(trueUnit)) {
+                        File.Copy(unit, trueUnit);
+                    }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
                 var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in applicativeUnits) {
                     var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    File.Copy(unit, trueUnit);
+                    if(!File.Exists(trueUnit)) {
+                        File.Copy(unit, trueUnit);
+                    }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
