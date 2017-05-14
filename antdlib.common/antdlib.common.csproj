@@ -80,6 +80,7 @@
     <Compile Include="Enum\DnsDestination.cs" />
     <Compile Include="Enum\NetworkRoleVerb.cs" />
     <Compile Include="Enum\NetworkInterfaceType.cs" />
+    <Compile Include="FileWithAcl.cs" />
     <Compile Include="Retry.cs" />
     <Compile Include="Dfp.cs" />
     <Compile Include="Enum\LicenseStatus.cs" />
