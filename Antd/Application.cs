@@ -536,9 +536,9 @@ namespace Antd {
             ConsoleLogger.Log("[boot step] working procedures");
 
             #region [    Tor    ]
-            //TorConfiguration.AddVirtualPort("80", $"127.0.0.1:{app.AntdUiPort}");
-            //var torHostname = TorConfiguration.Hostname;
-            //ConsoleLogger.Log($"[tor] hostname: {torHostname}");
+            if(TorConfiguration.IsActive()) {
+                TorConfiguration.Start();
+            }
             #endregion
 
             #region [    Cluster    ]

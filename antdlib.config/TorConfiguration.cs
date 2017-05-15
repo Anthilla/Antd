@@ -2,6 +2,7 @@
 using antdlib.models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace antdlib.config {
@@ -13,6 +14,9 @@ namespace antdlib.config {
         private const string ServiceName = "tor.service";
         private const string MainFilePath = "/etc/tor/torrc";
         private const string MainFilePathBackup = "/etc/tor/.torrc";
+
+        private const string LibDir = "/var/lib/tor";
+        private static readonly string LibDirMnt = $"{Parameter.RepoDirs}/DIR_lib_tor";
 
         private static TorConfigurationModel Load() {
             if(!File.Exists(CfgFile)) {
@@ -29,15 +33,17 @@ namespace antdlib.config {
             }
         }
 
-        public static void Save(TorConfigurationModel model) {
-            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+        public static void Save(List<TorService> model) {
+            var s = new TorConfigurationModel { IsActive = ServiceModel.IsActive, Services = model };
+            var text = JsonConvert.SerializeObject(s, Formatting.Indented);
             FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[tor] configuration saved");
         }
 
         public static void Set() {
-            Enable();
             Stop();
+            DirectoryWithAcl.CreateDirectory(LibDirMnt, "755", "root", "root");
+            MountManagement.Dir(LibDir);
             #region [    torrc generation    ]
             if(File.Exists(MainFilePath)) {
                 if(File.Exists(MainFilePathBackup)) {
@@ -45,6 +51,22 @@ namespace antdlib.config {
                 }
                 File.Copy(MainFilePath, MainFilePathBackup);
             }
+            var lines = new List<string>();
+            foreach(var svc in ServiceModel.Services) {
+                if (string.IsNullOrEmpty(svc.Name)
+                    || string.IsNullOrEmpty(svc.IpAddress)
+                    || string.IsNullOrEmpty(svc.TorPort))
+                {
+                    continue;
+                }
+                //HiddenServiceDir /var/lib/tor/hidden_service/
+                //HiddenServicePort 80 127.0.0.1:8080
+                var dire = $"{LibDirMnt}/{svc.Name}";
+                DirectoryWithAcl.CreateDirectory(dire, "755", "root", "root");
+                lines.Add($"HiddenServiceDir {dire}");
+                lines.Add($"HiddenServicePort {svc.TorPort} {svc.IpAddress}");
+            }
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "700", "tor", "root");
             #endregion
             Start();
         }
@@ -61,14 +83,17 @@ namespace antdlib.config {
         }
 
         public static void Enable() {
-            ServiceModel.IsActive = true;
-            Save(ServiceModel);
+            var s = new TorConfigurationModel { IsActive = true, Services = ServiceModel.Services };
+            var text = JsonConvert.SerializeObject(s, Formatting.Indented);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[tor] enabled");
         }
 
         public static void Disable() {
-            ServiceModel.IsActive = false;
-            Save(ServiceModel);
+            var s = new TorConfigurationModel { IsActive = false, Services = ServiceModel.Services };
+            var text = JsonConvert.SerializeObject(s, Formatting.Indented);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
+            Stop();
             ConsoleLogger.Log("[tor] disabled");
         }
 

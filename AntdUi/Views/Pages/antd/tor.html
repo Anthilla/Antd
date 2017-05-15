@@ -1,0 +1,79 @@
+<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">TOR</h1>
+
+<div ng-controller="AntdTorController">
+    <div ng-switch="isActive">
+        <div ng-switch-when="false">
+            <button ng-click="enable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-plus fg-anthilla-green"></span>&nbsp;Enable</button>
+        </div>
+        <div ng-switch-when="true">
+            <button ng-click="set()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-checkmark fg-anthilla-green"></span>&nbsp;Apply Settings</button>
+            <button ng-click="start()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-play fg-anthilla-green"></span>&nbsp;Start</button>
+            <button ng-click="restart()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+            <button ng-click="stop()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-stop fg-anthilla-orange"></span>&nbsp;Stop</button>
+            <button ng-click="disable()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-eject fg-anthilla-orange"></span>&nbsp;Disable</button>
+        </div>
+        <div ng-switch-default> </div>
+    </div>
+    <br />
+    <div class="panel margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Services
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid">
+                <div class="row cells4">
+                    <div class="cell colspan2">
+                        <button ng-click="add()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc">+ Add Service</button>
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="save($event)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                    </div>
+                </div>
+                <div class="row cells4">
+                    <div class="cell">
+                        <h3 class="fg-anthilla-green">Service Name</h3>
+                    </div>
+                    <div class="cell">
+                        <h3 class="fg-anthilla-green">Service Address</h3>
+                    </div>
+                    <div class="cell">
+                        <h3 class="fg-anthilla-green">Virtual Tor Port</h3>
+                    </div>
+                    <div class="cell">
+                    </div>
+                </div>
+                <div ng-repeat="svc in Services" class="row cells4">
+                    <div class="cell">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="svc.Name" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="svc.IpAddress" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <div class="input-control text width100pc fg-white">
+                            <input type="text" ng-model="svc.TorPort" class="bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 bd-focus-anthilla-green">
+                        </div>
+                    </div>
+                    <div class="cell">
+                        <button ng-click="remove(svc, Services)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-cross fg-anthilla-orange"></span></button>
+                    </div>
+                </div>
+                <div class="row cells4">
+                    <div class="cell colspan2">
+                        <button ng-click="add()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc">+ Add Service</button>
+                    </div>
+                    <div class="cell colspan2">
+                        <button ng-click="save($event)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -27,57 +27,40 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using antdlib.config;
+using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
-namespace Antd.Modules {
+namespace AntdUi.Modules {
     public class AntdTorModule : NancyModule {
+
+        private readonly ApiConsumer _api = new ApiConsumer();
 
         public AntdTorModule() {
             Get["/tor"] = x => {
-                var config = TorConfiguration.Get();
-                var model = new PageTorModel {
-                    TorIsActive = config.IsActive,
-                    Services = config.Services
-                };
-                return JsonConvert.SerializeObject(model);
+                var model = _api.Get<PageTorModel>($"http://127.0.0.1:{Application.ServerPort}/tor");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
 
-            Post["/tor/set"] = x => {
-                TorConfiguration.Set();
-                return HttpStatusCode.OK;
-            };
+            Post["/tor/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/set");
 
-            Post["/tor/restart"] = x => {
-                TorConfiguration.Start();
-                return HttpStatusCode.OK;
-            };
+            Post["/tor/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/restart");
 
-            Post["/tor/stop"] = x => {
-                TorConfiguration.Stop();
-                return HttpStatusCode.OK;
-            };
+            Post["/tor/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/stop");
 
-            Post["/tor/enable"] = x => {
-                TorConfiguration.Enable();
-                TorConfiguration.Start();
-                return HttpStatusCode.OK;
-            };
+            Post["/tor/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/enable");
 
-            Post["/tor/disable"] = x => {
-                TorConfiguration.Disable();
-                TorConfiguration.Stop();
-                return HttpStatusCode.OK;
-            };
+            Post["/tor/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/disable");
 
             Post["/tor/save"] = x => {
                 string config = Request.Form.Config;
-                var model = JsonConvert.DeserializeObject<List<TorService>>(config);
-                TorConfiguration.Save(model);
-                return HttpStatusCode.OK;
+                var dict = new Dictionary<string, string> {
+                    { "Config", config }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/save", dict);
             };
         }
     }

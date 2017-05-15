@@ -1256,6 +1256,73 @@ function AntdVpnController($scope, $http) {
     });
 }
 
+app.controller("AntdTorController", ["$scope", "$http", "$interval", AntdTorController]);
+
+function AntdTorController($scope, $http, $interval) {
+
+    $scope.remove = function (el, list) {
+        var index = list.indexOf(el);
+        if (index > -1) {
+            list.splice(index, 1);
+        }
+    }
+
+    $scope.add = function () {
+        var ns = { Name: "", IpAddress: "", TorPort: "" };
+        $scope.Services.push(ns);
+    }
+
+    $scope.save = function ($event) {
+        var config = angular.toJson($scope.Services);
+        var data = $.param({
+            Config: config
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/tor/save", data).then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/tor/restart").then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/tor/stop").then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/tor/enable").then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/tor/disable").then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/tor/set").then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.AppendMessageToButton = function (el, message) {
+        var originalText = el.innerHTML;
+        var newText = originalText + " - " + message;
+        el.innerHTML = newText;
+        $interval(function () {
+            el.innerHTML = originalText;
+        }, 1666);
+    }
+
+    $scope.Services = [];
+
+    $http.get("/tor").success(function (data) {
+        $scope.isActive = data.TorIsActive;
+        $scope.Services = data.Services;
+    });
+}
+
 app.controller("AntdZfsController", ["$scope", "$http", AntdZfsController]);
 
 function AntdZfsController($scope, $http) {
