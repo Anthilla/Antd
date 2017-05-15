@@ -32,10 +32,7 @@ namespace antdlib.config {
 
         public static void Save(SshdConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[sshd] configuration saved");
         }
 
@@ -130,7 +127,7 @@ namespace antdlib.config {
             lines.Add("#LpkPubKeyAttr sshPublicKey");
             lines.Add("Subsystem sftp /usr/lib64/misc/sftp");
             lines.Add("AcceptEnv LANG LC_*");
-            File.WriteAllLines(MainFilePath, lines);
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
             #endregion
             Start();
         }

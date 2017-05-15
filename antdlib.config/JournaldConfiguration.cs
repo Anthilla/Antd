@@ -37,10 +37,7 @@ namespace antdlib.config {
 
         public static void Save(JournaldConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[journald] configuration saved");
         }
 
@@ -104,7 +101,7 @@ namespace antdlib.config {
                     : $"MaxLevelConsole={fakeOptions.MaxLevelConsole}",
                 fakeOptions.MaxLevelWall == "#" ? "#MaxLevelWall=" : $"MaxLevelWall={fakeOptions.MaxLevelWall}"
             };
-            File.WriteAllLines(MainFilePath, fakeLines);
+            FileWithAcl.WriteAllLines(MainFilePath, fakeLines, "644", "root", "wheel");
             #endregion
             Start();
             Remount();
@@ -138,7 +135,7 @@ namespace antdlib.config {
             lines.Add(options.MaxLevelKMsg == "#" ? "#MaxLevelKMsg=" : $"MaxLevelKMsg={options.MaxLevelKMsg}");
             lines.Add(options.MaxLevelConsole == "#" ? "#MaxLevelConsole=" : $"MaxLevelConsole={options.MaxLevelConsole}");
             lines.Add(options.MaxLevelWall == "#" ? "#MaxLevelWall=" : $"MaxLevelWall={options.MaxLevelWall}");
-            File.WriteAllLines(MainFilePath, lines);
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
             #endregion
             Start();
         }

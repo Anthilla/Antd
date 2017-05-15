@@ -36,19 +36,13 @@ namespace antdlib.config {
             if(File.Exists(_cfgFile)) {
                 File.Copy(_cfgFile, _cfgFileBackup, true);
             }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[dhcpd] configuration saved");
         }
 
         public static void Set() {
             Stop();
             #region [    dhcpd.conf generation    ]
-            if(File.Exists(MainFilePath)) {
-                if(File.Exists(MainFilePathBackup)) {
-                    File.Delete(MainFilePathBackup);
-                }
-                File.Copy(MainFilePath, MainFilePathBackup);
-            }
             var lines = new List<string> {
                 "authoritative;"
             };
@@ -109,7 +103,7 @@ namespace antdlib.config {
             foreach(var reservation in reservations) {
                 lines.Add($"host {reservation.HostName} {{ hardware ethernet {reservation.MacAddress}; fixed-address {reservation.IpAddress}; }}");
             }
-            File.WriteAllLines(MainFilePath, lines);
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
             #endregion
             Start();
         }

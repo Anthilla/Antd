@@ -49,11 +49,8 @@ namespace antdlib.config {
 
         public static bool Save(Network2ConfigurationModel conf) {
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
             try {
-                File.WriteAllText(_cfgFile, text);
+                FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[network] configuration save error: {ex.Message}");
@@ -117,7 +114,7 @@ namespace antdlib.config {
             var file = $"{_dir}/{conf.Id}{InterfaceConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
-                File.WriteAllText(file, text);
+                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             }
             catch(Exception) {
                 return false;
@@ -169,7 +166,7 @@ namespace antdlib.config {
             var file = $"{_dir}/{conf.Id}{GatewayConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
-                File.WriteAllText(file, text);
+                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             }
             catch(Exception) {
                 return false;
@@ -253,7 +250,7 @@ namespace antdlib.config {
             lines.Add("show");
             lines.Add("send");
             try {
-                File.WriteAllLines(file, lines);
+                FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
             }
             catch(Exception) {
                 return false;
@@ -376,7 +373,7 @@ namespace antdlib.config {
             var file = $"{_dir}/{conf.Id}{DnsConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
-                File.WriteAllText(file, text);
+                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             }
             catch(Exception) {
                 return false;

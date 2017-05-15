@@ -83,8 +83,8 @@ namespace Antd.Apps {
                 ConsoleLogger.Log("link created");
                 var frameworkDir = $"/framework/{name.ToLower().Replace("/", "-")}";
                 ConsoleLogger.Log($"frameworkDir => {frameworkDir}");
-                Directory.CreateDirectory("/framework");
-                Directory.CreateDirectory(frameworkDir);
+                DirectoryWithAcl.CreateDirectory("/framework", "755", "root", "wheel");
+                DirectoryWithAcl.CreateDirectory(frameworkDir, "755", "root", "wheel");
                 ConsoleLogger.Log("framework directories created");
                 if(MountHelper.IsAlreadyMounted(frameworkDir) == false) {
                     ConsoleLogger.Log($">> mount {activeVersionPath} {frameworkDir}");

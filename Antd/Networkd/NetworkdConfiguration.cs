@@ -62,10 +62,7 @@ namespace Antd.Networkd {
                 $"DHCP={type.ToString().ToLower()}",
                 ""
             };
-            if(File.Exists(file)) {
-                File.Copy(file, $"{file}.bck");
-            }
-            File.WriteAllLines(file, lines);
+            FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
             Restart();
         }
 
@@ -97,10 +94,7 @@ namespace Antd.Networkd {
                 $"Gateway={gateway}",
                 ""
             };
-            if(File.Exists(file)) {
-                File.Copy(file, $"{file}.bck");
-            }
-            File.WriteAllLines(file, lines);
+            FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
             Restart();
         }
 
@@ -118,10 +112,7 @@ namespace Antd.Networkd {
                 "Kind=bridge",
                 ""
             };
-            if(File.Exists(bridgeFile)) {
-                File.Copy(bridgeFile, $"{bridgeFile}.bck");
-            }
-            File.WriteAllLines(bridgeFile, bridgeLines);
+            FileWithAcl.WriteAllLines(bridgeFile, bridgeLines, "644", "root", "wheel");
             Restart();
 
             foreach(var networkInterface in networkInterfaces) {
@@ -134,10 +125,7 @@ namespace Antd.Networkd {
                     $"Bridge={bridgeName}",
                     ""
                 };
-                if(File.Exists(file)) {
-                    File.Copy(file, $"{file}.bck");
-                }
-                File.WriteAllLines(file, lines);
+                FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
             }
 
             var bridgeNetworkFile = $"{NetworkdFolder}/{bridgeName}.network";
@@ -149,10 +137,7 @@ namespace Antd.Networkd {
                 $"DHCP={type.ToString().ToLower()}",
                 ""
             };
-            if(File.Exists(bridgeNetworkFile)) {
-                File.Copy(bridgeNetworkFile, $"{bridgeNetworkFile}.bck");
-            }
-            File.WriteAllLines(bridgeNetworkFile, bridgeNetworkLines);
+            FileWithAcl.WriteAllLines(bridgeNetworkFile, bridgeNetworkLines, "644", "root", "wheel");
             Restart();
         }
 
@@ -176,7 +161,7 @@ namespace Antd.Networkd {
             if(File.Exists(bridgeFile)) {
                 File.Copy(bridgeFile, $"{bridgeFile}.bck");
             }
-            File.WriteAllLines(bridgeFile, bridgeLines);
+            FileWithAcl.WriteAllLines(bridgeFile, bridgeLines, "644", "root", "wheel");
             Restart();
 
             foreach(var networkInterface in networkInterfaces) {
@@ -189,10 +174,7 @@ namespace Antd.Networkd {
                     $"Bridge={bridgeName}",
                     ""
                 };
-                if(File.Exists(file)) {
-                    File.Copy(file, $"{file}.bck");
-                }
-                File.WriteAllLines(file, lines);
+                FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
             }
 
             var bridgeNetworkFile = $"{NetworkdFolder}/{bridgeName}.network";
@@ -206,10 +188,7 @@ namespace Antd.Networkd {
                 $"Gateway={gateway}",
                 ""
             };
-            if(File.Exists(bridgeNetworkFile)) {
-                File.Copy(bridgeNetworkFile, $"{bridgeNetworkFile}.bck");
-            }
-            File.WriteAllLines(bridgeNetworkFile, bridgeNetworkLines);
+            FileWithAcl.WriteAllLines(bridgeNetworkFile, bridgeNetworkLines, "644", "root", "wheel");
             Restart();
         }
     }

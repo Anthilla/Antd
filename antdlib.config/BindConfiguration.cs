@@ -39,7 +39,7 @@ namespace antdlib.config {
             if(File.Exists(CfgFile)) {
                 File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(CfgFile, text);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[bind] configuration saved");
         }
 
@@ -164,7 +164,7 @@ namespace antdlib.config {
             lines.Add("");
 
             lines.Add("include \"/etc/bind/master/blackhole.zones\";");
-            File.WriteAllLines(MainFilePath, lines);
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
             #endregion
             Start();
             RndcReconfig();

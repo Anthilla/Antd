@@ -18,19 +18,13 @@ namespace antdlib.config {
         public void Add(string host) {
             if(Hosts.Contains(host)) { return; }
             Hosts.Add(host);
-            if(File.Exists(_filePath)) {
-                File.Copy(_filePath, _filePathBackup, true);
-            }
-            File.WriteAllText(_filePath, JsonConvert.SerializeObject(Hosts, Formatting.Indented));
+            FileWithAcl.WriteAllText(_filePath, JsonConvert.SerializeObject(Hosts, Formatting.Indented), "644", "root", "wheel");
         }
 
         public void Remove(string host) {
             if(!Hosts.Contains(host)) { return; }
             Hosts.Remove(host);
-            if(File.Exists(_filePath)) {
-                File.Copy(_filePath, _filePathBackup, true);
-            }
-            File.WriteAllText(_filePath, JsonConvert.SerializeObject(Hosts, Formatting.Indented));
+            FileWithAcl.WriteAllText(_filePath, JsonConvert.SerializeObject(Hosts, Formatting.Indented), "644", "root", "wheel");
         }
     }
 }

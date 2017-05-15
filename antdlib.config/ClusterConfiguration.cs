@@ -27,10 +27,7 @@ namespace antdlib.config {
 
         public static void Save(List<Cluster.Node> model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(CfgFile)) {
-                File.Copy(CfgFile, CfgFileBackup, true);
-            }
-            File.WriteAllText(CfgFile, text);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[cluster] configuration saved");
         }
 
@@ -40,10 +37,7 @@ namespace antdlib.config {
 
         public static void SaveClusterInfo(Cluster.Configuration model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(IpFile)) {
-                File.Copy(IpFile, IpFileBackup, true);
-            }
-            File.WriteAllText(IpFile, text);
+            FileWithAcl.WriteAllText(IpFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[cluster] configuration saved");
         }
 

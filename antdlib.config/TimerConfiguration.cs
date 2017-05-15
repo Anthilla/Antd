@@ -34,10 +34,7 @@ namespace antdlib.config {
 
         public void Save(TimerConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[timer] configuration saved");
         }
 

@@ -42,15 +42,12 @@ namespace antdlib.config {
 
         public void Setup() {
             if(!File.Exists(FilePath)) {
-                File.WriteAllText(FilePath, $"{Name} {Password}");
+                FileWithAcl.WriteAllText(FilePath, $"{Name} {Password}", "644", "root", "wheel");
             }
         }
 
         public void Export(string name, string password) {
-            if(File.Exists(FilePath)) {
-                File.Copy(FilePath, FilePathBackup, true);
-            }
-            File.WriteAllText(FilePath, $"{name} {Encryption.XHash(password)}");
+            FileWithAcl.WriteAllText(FilePath, $"{name} {Encryption.XHash(password)}", "644", "root", "wheel");
         }
 
         public void ChangeName(string name) {

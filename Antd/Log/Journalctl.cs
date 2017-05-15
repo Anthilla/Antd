@@ -71,12 +71,12 @@ namespace Antd.Log {
             private static readonly string ReportDir = Parameter.AntdCfgReport;
 
             public IEnumerable<string> Get() {
-                Directory.CreateDirectory(ReportDir);
+                DirectoryWithAcl.CreateDirectory(ReportDir, "755", "root", "wheel");
                 return Directory.EnumerateFiles(ReportDir).Where(_ => _.EndsWith("antd-report.txt"));
             }
 
             public void GenerateReport() {
-                Directory.CreateDirectory(ReportDir);
+                DirectoryWithAcl.CreateDirectory(ReportDir, "755", "root", "wheel");
                 try {
                     var lines = new List<string> {
                         "+================================+",
@@ -93,7 +93,7 @@ namespace Antd.Log {
                     };
                     lines.AddRange(GetSecurityReport());
 
-                    File.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines);
+                    FileWithAcl.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines, "644", "root", "wheel");
                 }
                 catch(Exception ex) {
                     ConsoleLogger.Error($"unable to create the log report: {ex.Message}", ConsoleLogger.Method());

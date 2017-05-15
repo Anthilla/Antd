@@ -33,7 +33,6 @@ using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using antdlib.common;
 
@@ -74,10 +73,7 @@ namespace Antd.Modules {
 
                 DirectoryWatcherCluster.Stop();
                 try {
-                    if(File.Exists(file)) {
-                        File.Copy(file, $"{file}.sbck", true);
-                    }
-                    File.WriteAllText(file, content);
+                    FileWithAcl.WriteAllText(file, content, "644", "root", "wheel");
                 }
                 catch(Exception) {
                     ConsoleLogger.Warn("");

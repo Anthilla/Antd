@@ -17,7 +17,7 @@ namespace antdlib.config.shared {
             if(!File.Exists(_file)) {
                 _model = new AppConfigurationModel();
                 var text = JsonConvert.SerializeObject(_model, Formatting.Indented);
-                File.WriteAllText(_file, text);
+                FileWithAcl.WriteAllText(_file, text, "644", "root", "wheel");
             }
             else {
                 try {
@@ -38,10 +38,7 @@ namespace antdlib.config.shared {
 
         public void Save(AppConfigurationModel model) {
             _model = model;
-            if(File.Exists(_file)) {
-                File.Copy(_file, $"{_file}.bck", true);
-            }
-            File.WriteAllText(_file, JsonConvert.SerializeObject(_model, Formatting.Indented));
+            FileWithAcl.WriteAllText(_file, JsonConvert.SerializeObject(_model, Formatting.Indented), "644", "root", "wheel");
         }
 
         public AppConfigurationModel UiGet() {

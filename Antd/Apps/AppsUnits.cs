@@ -27,7 +27,7 @@ namespace Antd.Apps {
                 "[Install]",
                 "WantedBy=applicative.target"
             };
-            File.WriteAllLines(fileName, lines);
+            FileWithAcl.WriteAllLines(fileName, lines, "644", "root", "wheel");
             Systemctl.DaemonReload();
             return unitName;
         }
@@ -54,7 +54,7 @@ namespace Antd.Apps {
                 "[Install]",
                 "WantedBy=applicative.target"
             };
-            File.WriteAllLines(fileName, lines);
+            FileWithAcl.WriteAllLines(fileName, lines, "644", "root", "wheel");
             Systemctl.DaemonReload();
             return unitName;
         }
@@ -84,7 +84,7 @@ namespace Antd.Apps {
                 "[Install]",
                 "WantedBy=applicative.target"
             };
-            File.WriteAllLines(fileName, lines);
+            FileWithAcl.WriteAllLines(fileName, lines, "644", "root", "wheel");
             Systemctl.DaemonReload();
             return unitName;
         }

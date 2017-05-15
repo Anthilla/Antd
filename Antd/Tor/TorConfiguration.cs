@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using antdlib.common;
 using anthilla.commands;
-using anthilla.commands.Utils;
 
 namespace Antd.Tor {
     public class TorConfiguration {
@@ -14,10 +15,8 @@ namespace Antd.Tor {
         public static bool IsAvailable => _isAvailable();
 
         private static bool _isAvailable() {
-            return System.IO.File.Exists(BinFilePath);
+            return File.Exists(BinFilePath);
         }
-
-        private static readonly Bash Bash = new Bash();
 
         public static bool IsActive => _isActive();
 
@@ -27,7 +26,7 @@ namespace Antd.Tor {
         }
 
         public static void Start() {
-            System.IO.Directory.CreateDirectory(HiddenServiceDirectoryPath);
+            Directory.CreateDirectory(HiddenServiceDirectoryPath);
             Bash.Execute($"chown -R tor:root {HiddenServiceDirectoryPath}");
             Bash.Execute($"chmod -R 700 {HiddenServiceDirectoryPath}");
             if(IsActive == false) {
@@ -47,7 +46,7 @@ namespace Antd.Tor {
 
         public static void Restart() {
             CommandLauncher.Launch("tor-kill");
-            System.IO.Directory.CreateDirectory(HiddenServiceDirectoryPath);
+            Directory.CreateDirectory(HiddenServiceDirectoryPath);
             Bash.Execute($"chown -R tor:root {HiddenServiceDirectoryPath}");
             Bash.Execute($"chmod -R 700 {HiddenServiceDirectoryPath}");
             var ths = new System.Threading.ThreadStart(() => {
@@ -58,10 +57,10 @@ namespace Antd.Tor {
         }
 
         public static bool AddVirtualPort(string virtualPort, string localService) {
-            if(!System.IO.File.Exists(ConfigFilePath)) {
+            if(!File.Exists(ConfigFilePath)) {
                 return false;
             }
-            var fileContent = System.IO.File.ReadAllLines(ConfigFilePath).ToList();
+            var fileContent = File.ReadAllLines(ConfigFilePath).ToList();
             var str1 = $"HiddenServiceDir {HiddenServiceDirectoryPath}";
             if(!fileContent.Contains(str1)) {
                 fileContent.Add(str1);
@@ -70,10 +69,7 @@ namespace Antd.Tor {
             if(!fileContent.Contains(str2)) {
                 fileContent.Add(str2);
             }
-            if(System.IO.File.Exists(ConfigFilePath)) {
-                System.IO.File.Copy(ConfigFilePath, $"{ConfigFilePath}.bck", true);
-            }
-            System.IO.File.WriteAllLines(ConfigFilePath, fileContent);
+            FileWithAcl.WriteAllLines(ConfigFilePath, fileContent, "644", "root", "wheel");
             Restart();
             return true;
         }
@@ -81,10 +77,10 @@ namespace Antd.Tor {
         public static string Hostname => _hostname();
 
         private static string _hostname() {
-            if(!System.IO.File.Exists(HostnameFilePath)) {
+            if(!File.Exists(HostnameFilePath)) {
                 return null;
             }
-            return System.IO.File.ReadAllText(HostnameFilePath);
+            return File.ReadAllText(HostnameFilePath);
         }
     }
 }

@@ -49,8 +49,8 @@ namespace antdlib.config {
         public  static void WorkingDirectories() {
             foreach(var dir in DefaultWorkingDirectories) {
                 var mntDir = MountHelper.SetDirsPath(dir);
-                Directory.CreateDirectory(dir);
-                Directory.CreateDirectory(mntDir);
+                DirectoryWithAcl.CreateDirectory(dir, "755", "root", "wheel");
+                DirectoryWithAcl.CreateDirectory(mntDir, "755", "root", "wheel");
                 if(MountHelper.IsAlreadyMounted(dir))
                     continue;
                 ConsoleLogger.Log($"mount {mntDir} -> {dir}");
@@ -120,8 +120,8 @@ namespace antdlib.config {
                     var dir = directoryMount.SystemPath.Replace("\\", "");
                     var mntDir = directoryMount.RepoDirsPath;
                     if(MountHelper.IsAlreadyMounted(dir) == false) {
-                        Directory.CreateDirectory(dir);
-                        Directory.CreateDirectory(mntDir);
+                        DirectoryWithAcl.CreateDirectory(dir, "755", "root", "wheel");
+                        DirectoryWithAcl.CreateDirectory(mntDir, "755", "root", "wheel");
                         SetBind(mntDir, dir);
                         ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                     }
@@ -155,8 +155,8 @@ namespace antdlib.config {
 
         public  static void Dir(string directory) {
             var mntDir = MountHelper.SetDirsPath(directory);
-            Directory.CreateDirectory(directory);
-            Directory.CreateDirectory(mntDir);
+            DirectoryWithAcl.CreateDirectory(directory, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(mntDir, "755", "root", "wheel");
             SetBind(mntDir, directory);
         }
 

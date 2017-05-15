@@ -49,7 +49,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Antd.Info;
-using Antd.Tor;
 using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
 using Random = anthilla.core.Random;
@@ -74,7 +73,7 @@ namespace Antd {
             const string limitsFile = "/etc/security/limits.conf";
             if(File.Exists(limitsFile)) {
                 if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
-                    File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
+                    FileWithAcl.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" }, "644", "root", "wheel");
                 }
             }
             Bash.Execute("ulimit -n 1024000", false);
@@ -88,17 +87,17 @@ namespace Antd {
             #endregion
 
             #region [    Working Directories    ]
-            Directory.CreateDirectory(Parameter.AntdCfg);
-            Directory.CreateDirectory(Parameter.AntdCfgServices);
-            Directory.CreateDirectory(Parameter.AntdCfgNetwork);
-            Directory.CreateDirectory(Parameter.AntdCfgParameters);
-            Directory.CreateDirectory(Parameter.AntdCfgCluster);
-            Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls");
-            Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template");
-            Directory.CreateDirectory(Parameter.RepoConfig);
-            Directory.CreateDirectory(Parameter.RepoDirs);
-            Directory.CreateDirectory(Parameter.AnthillaUnits);
-            Directory.CreateDirectory(Parameter.TimerUnits);
+            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfg, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgServices, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgNetwork, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgParameters, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgCluster, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory($"{Parameter.AntdCfgServices}/acls", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.RepoConfig, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.RepoDirs, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.AnthillaUnits, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.TimerUnits, "755", "root", "wheel");
             MountManagement.WorkingDirectories();
             ConsoleLogger.Log("working directories ready");
             #endregion
@@ -112,7 +111,7 @@ namespace Antd {
             if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
                 linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                Directory.CreateDirectory(moduleDir);
+                DirectoryWithAcl.CreateDirectory(moduleDir);
                 Bash.Execute($"mount /mnt/cdrom/Kernel/active-modules {moduleDir}", false);
             }
             Bash.Execute("systemctl restart systemd-modules-load.service", false);
@@ -145,11 +144,11 @@ namespace Antd {
 
             #region [    Secret    ]
             if(!File.Exists(Parameter.AntdCfgSecret)) {
-                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }
 
             if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
-                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }
             #endregion
 
@@ -393,12 +392,8 @@ namespace Antd {
             if(SshdConfiguration.IsActive()) {
                 SshdConfiguration.Set();
             }
-            if(!Directory.Exists(Parameter.RootSsh)) {
-                Directory.CreateDirectory(Parameter.RootSsh);
-            }
-            if(!Directory.Exists(Parameter.RootSshMntCdrom)) {
-                Directory.CreateDirectory(Parameter.RootSshMntCdrom);
-            }
+            DirectoryWithAcl.CreateDirectory(Parameter.RootSsh, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.RootSshMntCdrom, "755", "root", "wheel");
             if(!MountHelper.IsAlreadyMounted(Parameter.RootSsh)) {
                 MountManagement.Dir(Parameter.RootSsh);
             }
@@ -414,7 +409,7 @@ namespace Antd {
                 if(!File.Exists(authorizedKeysPath)) {
                     File.Create(authorizedKeysPath);
                 }
-                File.AppendAllLines(authorizedKeysPath, new List<string> { $"{storedKey.KeyValue} {storedKey.RemoteUser}" });
+                FileWithAcl.AppendAllLines(authorizedKeysPath, new List<string> { $"{storedKey.KeyValue} {storedKey.RemoteUser}" }, "644", "root", "wheel");
                 Bash.Execute($"chmod 600 {authorizedKeysPath}");
                 Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
@@ -422,13 +417,13 @@ namespace Antd {
             #endregion
 
             #region [    Avahi    ]
-            Directory.CreateDirectory("/etc/avahi/services");
+            DirectoryWithAcl.CreateDirectory("/etc/avahi/services", "755", "root", "wheel");
             const string avahiServicePath = "/etc/avahi/services/antd.service";
             if(File.Exists(avahiServicePath)) {
                 File.Delete(avahiServicePath);
             }
             var appConfiguration = new AppConfiguration().Get();
-            File.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()));
+            FileWithAcl.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()), "644", "root", "wheel");
             Bash.Execute("chmod 755 /etc/avahi/services", false);
             Bash.Execute($"chmod 644 {avahiServicePath}", false);
             Systemctl.Restart("avahi-daemon.service");
@@ -531,7 +526,7 @@ namespace Antd {
             var startupTime = DateTime.Now - startTime;
             ConsoleLogger.Log($"loaded in: {startupTime}");
             if(!File.Exists("/cfg/antd/stats.txt")) {
-                File.WriteAllText("/cfg/antd/stats.txt", "");
+                FileWithAcl.WriteAllText("/cfg/antd/stats.txt", "");
             }
             File.AppendAllLines("/cfg/antd/stats.txt", new[] { $"{startTime:yyyy MM dd HH:mm} - {startupTime}" });
             #endregion

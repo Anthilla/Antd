@@ -19,17 +19,17 @@ namespace Antd.Ui {
             var edit = false;
 
             if(!File.Exists(Service01PreparePath)) {
-                File.WriteAllLines(Service01PreparePath, Service01Prepare());
+                FileWithAcl.WriteAllLines(Service01PreparePath, Service01Prepare(), "644", "root", "wheel");
                 edit = true;
             }
 
             if(!File.Exists(Service02MountPath)) {
-                File.WriteAllLines(Service02MountPath, Service02Mount());
+                FileWithAcl.WriteAllLines(Service02MountPath, Service02Mount(), "644", "root", "wheel");
                 edit = true;
             }
 
             if(!File.Exists(Service03LauncherPath)) {
-                File.WriteAllLines(Service03LauncherPath, Service03Launcher());
+                FileWithAcl.WriteAllLines(Service03LauncherPath, Service03Launcher(), "644", "root", "wheel");
                 edit = true;
             }
 

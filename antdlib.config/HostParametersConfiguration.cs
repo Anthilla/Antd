@@ -33,11 +33,8 @@ namespace antdlib.config {
 
         public static void SetModprobesList(List<string> objects) {
             var lines = objects;
-            if(File.Exists(_modprobesFile)) {
-                File.Copy(_modprobesFile, _modprobesFileBackup, true);
-            }
             try {
-                File.WriteAllLines(_modprobesFile, lines);
+                FileWithAcl.WriteAllLines(_modprobesFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] modprobes configuration set error: {ex.Message}");
@@ -65,11 +62,8 @@ namespace antdlib.config {
 
         public static void SetRmmodList(List<string> objects) {
             var lines = objects;
-            if(File.Exists(_rmmodFile)) {
-                File.Copy(_rmmodFile, _rmmodFileBackup, true);
-            }
             try {
-                File.WriteAllLines(_rmmodFile, lines);
+                FileWithAcl.WriteAllLines(_rmmodFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] rmmod configuration set error: {ex.Message}");
@@ -97,11 +91,8 @@ namespace antdlib.config {
 
         public static void SetModulesBlacklistList(List<string> objects) {
             var lines = objects;
-            if(File.Exists(_modulesblacklistFile)) {
-                File.Copy(_modulesblacklistFile, _modulesblacklistFileBackup, true);
-            }
             try {
-                File.WriteAllLines(_modulesblacklistFile, lines);
+                FileWithAcl.WriteAllLines(_modulesblacklistFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] modulesblacklist configuration set error: {ex.Message}");
@@ -129,11 +120,8 @@ namespace antdlib.config {
 
         public static void SetOsParametersList(List<string> objects) {
             var lines = objects;
-            if(File.Exists(_osparametersFile)) {
-                File.Copy(_osparametersFile, _osparametersFileBackup, true);
-            }
             try {
-                File.WriteAllLines(_osparametersFile, lines);
+                FileWithAcl.WriteAllLines(_osparametersFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] osparameters configuration set error: {ex.Message}");
@@ -161,11 +149,8 @@ namespace antdlib.config {
 
         public static void SetServicesStartList(List<string> objects) {
             var lines = objects;
-            if(File.Exists(_servicesstartFile)) {
-                File.Copy(_servicesstartFile, _servicesstartFileBackup, true);
-            }
             try {
-                File.WriteAllLines(_servicesstartFile, lines);
+                FileWithAcl.WriteAllLines(_servicesstartFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] servicesstart configuration set error: {ex.Message}");
@@ -193,11 +178,8 @@ namespace antdlib.config {
 
         public static void SetServicesStopList(List<string> objects) {
             var lines = objects;
-            if(File.Exists(_servicesstopFile)) {
-                File.Copy(_servicesstopFile, _servicesstopFileBackup, true);
-            }
             try {
-                File.WriteAllLines(_servicesstopFile, lines);
+                FileWithAcl.WriteAllLines(_servicesstopFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] servicesstop configuration set error: {ex.Message}");
@@ -225,11 +207,8 @@ namespace antdlib.config {
 
         public static void SetStartCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
-            if(File.Exists(_startcommandsFile)) {
-                File.Copy(_startcommandsFile, _startcommandsFileBackup, true);
-            }
             try {
-                File.WriteAllText(_startcommandsFile, text);
+                FileWithAcl.WriteAllText(_startcommandsFile, text, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] startcommands configuration set error: {ex.Message}");
@@ -258,11 +237,8 @@ namespace antdlib.config {
 
         public static void SetEndCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
-            if(File.Exists(_endcommandsFile)) {
-                File.Copy(_endcommandsFile, _endcommandsFileBackup, true);
-            }
             try {
-                File.WriteAllText(_endcommandsFile, text);
+                FileWithAcl.WriteAllText(_endcommandsFile, text, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] endcommands configuration set error: {ex.Message}");

@@ -33,10 +33,7 @@ namespace antdlib.config {
 
         public static void Save(GlusterConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(CfgFile)) {
-                File.Copy(CfgFile, CfgFileBackup, true);
-            }
-            File.WriteAllText(CfgFile, text);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[sync] configuration saved");
         }
 

@@ -32,7 +32,7 @@ namespace Antd.License {
             };
             var lic = _api.Post<string>($"{cloudaddress}license/create", dict);
             if(lic != null) {
-                File.WriteAllText(_licensePath, lic);
+                FileWithAcl.WriteAllText(_licensePath, lic, "644", "root", "wheel");
             }
         }
 

@@ -34,10 +34,7 @@ namespace antdlib.config {
 
         public static void Save(AclConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(CfgFile)) {
-                File.Copy(CfgFile, CfgFileBackup, true);
-            }
-            File.WriteAllText(CfgFile, text);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[acl] configuration saved");
         }
 
@@ -95,7 +92,7 @@ namespace antdlib.config {
         public static void Backup(string dir) {
             var acls = Bash.Execute($"getfacl -R {dir}").SplitBash();
             var destination = SetAclBackupFilePath(dir);
-            File.WriteAllLines(destination, acls);
+            FileWithAcl.WriteAllLines(destination, acls, "644", "root", "wheel");
         }
 
         public static void Restore() {
@@ -120,7 +117,7 @@ namespace antdlib.config {
 
         public static void SaveTemplate(string name, string[] rules) {
             var file = $"{StoreDirTemplate}/{name}";
-            File.WriteAllLines(file, rules);
+            FileWithAcl.WriteAllLines(file, rules, "644", "root", "wheel");
         }
 
         public static string[] GetDefaultTemplate() {
@@ -153,7 +150,7 @@ namespace antdlib.config {
 
         public static void AddAcl(string dir) {
             var backupFile = SetAclBackupFilePath(dir);
-            File.WriteAllLines(backupFile, GetDefaultTemplate());
+            FileWithAcl.WriteAllLines(backupFile, GetDefaultTemplate(), "644", "root", "wheel");
             var acls = ServiceModel.Settings;
             if(acls.Any(_ => _.Path == dir)) {
                 return;
@@ -173,7 +170,7 @@ namespace antdlib.config {
             if(model == null) {
                 return;
             }
-            File.WriteAllLines(model.Acl, rules);
+            FileWithAcl.WriteAllLines(model.Acl, rules, "644", "root", "wheel");
         }
 
         public static void RemoveAcl(string guid) {

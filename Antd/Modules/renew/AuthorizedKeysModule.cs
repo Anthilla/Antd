@@ -58,7 +58,7 @@ namespace Antd.Modules {
                     File.Create(authorizedKeysPath);
                 }
                 var line = $"{key} {remoteUser}";
-                File.AppendAllLines(authorizedKeysPath, new List<string> { line });
+                FileWithAcl.AppendAllLines(authorizedKeysPath, new List<string> { line }, "644", "root", "wheel");
                 Bash.Execute($"chmod 600 {authorizedKeysPath}", false);
                 Bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
                 return HttpStatusCode.OK;

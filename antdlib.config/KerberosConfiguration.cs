@@ -37,10 +37,7 @@ namespace antdlib.config {
 
         public void Save(KerberosConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text);
             ConsoleLogger.Log("[kerberos] configuration saved");
         }
 
@@ -61,7 +58,7 @@ namespace antdlib.config {
                 "options {"
             };
 
-            File.WriteAllLines(MainFilePath, lines);
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
 
             #endregion
 

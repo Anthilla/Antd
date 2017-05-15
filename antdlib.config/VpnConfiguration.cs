@@ -38,10 +38,7 @@ namespace antdlib.config {
 
         public void Save(VpnConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[vpn] configuration saved");
         }
 
@@ -197,7 +194,7 @@ namespace antdlib.config {
             var unitName = $"/mnt/cdrom/Units/antd.target.wants/antd-{remoteHost}-vpn.service";
             ConsoleLogger.Log(unitName);
             if(!File.Exists(unitName)) {
-                File.WriteAllLines(unitName, lines);
+                FileWithAcl.WriteAllLines(unitName, lines, "644", "root", "wheel");
                 Systemctl.DaemonReload();
             }
             Systemctl.Restart($"antd-{remoteHost}-vpn.service");

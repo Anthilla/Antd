@@ -30,10 +30,7 @@ namespace antdlib.config {
 
         public static void Save(CaConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
-            }
-            File.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[ca] configuration saved");
         }
 
@@ -101,23 +98,23 @@ namespace antdlib.config {
             //chmod 700 private
             //touch index.txt
             //echo 1000 > serial
-            Directory.CreateDirectory(_caMainDirectory);
+            DirectoryWithAcl.CreateDirectory(_caMainDirectory, "755", "root", "wheel");
             foreach(var dir in _caMainSubdirectories) {
-                Directory.CreateDirectory($"{_caMainDirectory}/{dir}");
+                DirectoryWithAcl.CreateDirectory($"{_caMainDirectory}/{dir}", "755", "root", "wheel");
             }
             Bash.Execute($"chmod 700 ${_caMainDirectory}/private");
             if(!File.Exists($"{_caMainDirectory}/index.txt")) {
-                File.WriteAllText($"{_caMainDirectory}/index.txt", "");
+                FileWithAcl.WriteAllText($"{_caMainDirectory}/index.txt", "", "644", "root", "wheel");
             }
             if(!File.Exists($"{_caMainDirectory}/serial")) {
-                File.WriteAllText($"{_caMainDirectory}/serial", "1000");
+                FileWithAcl.WriteAllText($"{_caMainDirectory}/serial", "1000", "644", "root", "wheel");
             }
         }
 
         public static void PrepareConfigurationFile() {
             // /data/ca/openssl.cnf
             if(!File.Exists($"{_caMainDirectory}/openssl.cnf")) {
-                File.WriteAllLines($"{_caMainDirectory}/openssl.cnf", CaConfigurationFiles.RootCaOpensslCnf(_caMainDirectory));
+                FileWithAcl.WriteAllLines($"{_caMainDirectory}/openssl.cnf", CaConfigurationFiles.RootCaOpensslCnf(_caMainDirectory), "644", "root", "wheel");
             }
         }
 
@@ -158,19 +155,19 @@ namespace antdlib.config {
 
         #region [    ca - Intermediate    ]
         public static void PrepareIntermediateDirectory() {
-            Directory.CreateDirectory(_caIntermediateDirectory);
+            DirectoryWithAcl.CreateDirectory(_caIntermediateDirectory, "755", "root", "wheel");
             foreach(var dir in _caIntermediateSubdirectories) {
-                Directory.CreateDirectory($"{_caIntermediateDirectory}/{dir}");
+                DirectoryWithAcl.CreateDirectory($"{_caIntermediateDirectory}/{dir}", "755", "root", "wheel");
             }
             Bash.Execute($"chmod 700 ${_caIntermediateDirectory}/private");
             if(!File.Exists($"{_caIntermediateDirectory}/index.txt")) {
-                File.WriteAllText($"{_caIntermediateDirectory}/index.txt", "");
+                FileWithAcl.WriteAllText($"{_caIntermediateDirectory}/index.txt", "", "644", "root", "wheel");
             }
             if(!File.Exists($"{_caIntermediateDirectory}/serial")) {
-                File.WriteAllText($"{_caIntermediateDirectory}/serial", "1000");
+                FileWithAcl.WriteAllText($"{_caIntermediateDirectory}/serial", "1000", "644", "root", "wheel");
             }
             if(!File.Exists($"{_caIntermediateDirectory}/crlnumber")) {
-                File.WriteAllText($"{_caIntermediateDirectory}/crlnumber", "1000");
+                FileWithAcl.WriteAllText($"{_caIntermediateDirectory}/crlnumber", "1000", "644", "root", "wheel");
             }
         }
 
@@ -191,7 +188,7 @@ namespace antdlib.config {
         public static void PrepareIntermediateConfigurationFile() {
             if(!File.Exists($"{_caIntermediateDirectory}/openssl.cnf")) {
                 var applicationSetting = new AppConfiguration().Get();
-                File.WriteAllLines($"{_caIntermediateDirectory}/openssl.cnf", CaConfigurationFiles.IntermediateCaOpensslCnf(_caIntermediateDirectory, $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl"));
+                FileWithAcl.WriteAllLines($"{_caIntermediateDirectory}/openssl.cnf", CaConfigurationFiles.IntermediateCaOpensslCnf(_caIntermediateDirectory, $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl"), "644", "root", "wheel");
             }
         }
 
@@ -234,7 +231,7 @@ namespace antdlib.config {
             line2.ToList().AddRange(line1);
             var chain = $"{_caIntermediateDirectory}/certs/ca-chain.cert.pem";
             if(!File.Exists(chain)) {
-                File.WriteAllLines(chain, line2);
+                FileWithAcl.WriteAllLines(chain, line2, "644", "root", "wheel");
             }
         }
         #endregion
@@ -280,12 +277,12 @@ namespace antdlib.config {
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
                 var applicationSetting = new AppConfiguration().Get();
-                File.WriteAllLines(config, CaConfigurationFiles.IntermediateCaDomainControllerOpensslCnf(
+                FileWithAcl.WriteAllLines(config, CaConfigurationFiles.IntermediateCaDomainControllerOpensslCnf(
                         _caIntermediateDirectory,
                         $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl",
                         dcGuid,
                         dcDns
-                    ));
+                    ), "644", "root", "wheel");
             }
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {
@@ -307,11 +304,11 @@ namespace antdlib.config {
             var config = $"{_caIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
                 var applicationSetting = new AppConfiguration().Get();
-                File.WriteAllLines(config, CaConfigurationFiles.IntermediateCaSmartCardOpensslCnf(
+                FileWithAcl.WriteAllLines(config, CaConfigurationFiles.IntermediateCaSmartCardOpensslCnf(
                         _caIntermediateDirectory,
                         $"http://{GetThisIp()}:{applicationSetting.AntdPort}/services/ca/crl",
                         upn
-                    ));
+                    ), "644", "root", "wheel");
             }
             var key = $"{_caIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {

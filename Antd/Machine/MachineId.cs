@@ -64,11 +64,11 @@ namespace Antd.Machine {
                 }
                 catch(Exception) {
                     var txt = JsonConvert.SerializeObject(new MachineIdModel(machineUuid), Formatting.Indented);
-                    File.WriteAllText(IdPath, txt);
+                    FileWithAcl.WriteAllText(IdPath, txt, "644", "root", "wheel");
                     return machineUuid;
                 }
                 var txt2 = JsonConvert.SerializeObject(new MachineIdModel(machineUuid), Formatting.Indented);
-                File.WriteAllText(IdPath, txt2);
+                FileWithAcl.WriteAllText(IdPath, txt2, "644", "root", "wheel");
                 return machineUuid;
             }
             return string.Empty;

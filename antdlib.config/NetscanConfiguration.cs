@@ -36,10 +36,7 @@ namespace antdlib.config {
         }
 
         public void Save(NetscanSettingModel model) {
-            if(File.Exists(_filePath)) {
-                File.Copy(_filePath, _filePathBackup, true);
-            }
-            File.WriteAllText(_filePath, JsonConvert.SerializeObject(model, Formatting.Indented));
+            FileWithAcl.WriteAllText(_filePath, JsonConvert.SerializeObject(model, Formatting.Indented), "644", "root", "wheel");
         }
 
         #region [    repo    ] 

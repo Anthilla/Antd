@@ -9,9 +9,9 @@ namespace Antd.Apps {
             if(IsTargetActive())
                 return;
             if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
-            Directory.CreateDirectory("/etc/systemd/system/");
-            Directory.CreateDirectory("/etc/systemd/system/applicative.target.wants");
-            Directory.CreateDirectory("/mnt/cdrom/Units/applicative.target.wants");
+            DirectoryWithAcl.CreateDirectory("/etc/systemd/system/", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory("/etc/systemd/system/applicative.target.wants", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory("/mnt/cdrom/Units/applicative.target.wants", "755", "root", "wheel");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
@@ -47,7 +47,7 @@ namespace Antd.Apps {
                 "WantedBy=multi-user.target",
                 ""
             };
-            File.WriteAllLines(file, timerText);
+            FileWithAcl.WriteAllLines(file, timerText, "644", "root", "wheel");
         }
 
         private static  void WriteTimerServiceFile() {
@@ -70,7 +70,7 @@ namespace Antd.Apps {
                 "WantedBy=multi-user.target",
                 ""
             };
-            File.WriteAllLines(file, timerText);
+            FileWithAcl.WriteAllLines(file, timerText, "644", "root", "wheel");
         }
 
         private static  void WriteTimerMountFile() {
@@ -94,7 +94,7 @@ namespace Antd.Apps {
                 "WantedBy=multi-user.target",
                 ""
             };
-            File.WriteAllLines(file, timerText);
+            FileWithAcl.WriteAllLines(file, timerText, "644", "root", "wheel");
         }
         #endregion TT Target
     }

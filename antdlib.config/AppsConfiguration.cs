@@ -34,7 +34,7 @@ namespace antdlib.config {
             if(File.Exists(CfgFile)) {
                 File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(CfgFile, text);
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[apps] configuration saved");
         }
 

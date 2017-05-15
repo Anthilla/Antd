@@ -23,10 +23,7 @@ namespace antdlib.config {
         }
 
         public static void Export(Host2Model model) {
-            if(File.Exists(FilePath)) {
-                File.Copy(FilePath, $"{FilePath}.bck", true);
-            }
-            File.WriteAllText(FilePath, JsonConvert.SerializeObject(model, Formatting.Indented));
+            FileWithAcl.WriteAllText(FilePath, JsonConvert.SerializeObject(model, Formatting.Indented), "644", "root", "wheel");
         }
     }
 }

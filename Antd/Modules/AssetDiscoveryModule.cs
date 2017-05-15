@@ -109,16 +109,16 @@ namespace Antd.Modules {
                 var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
                 authorizedKeysConfiguration.AddKey(model);
                 try {
-                    Directory.CreateDirectory("/root/.ssh");
+                    DirectoryWithAcl.CreateDirectory("/root/.ssh");
                     const string authorizedKeysPath = "/root/.ssh/authorized_keys";
                     if(File.Exists(authorizedKeysPath)) {
                         var f = File.ReadAllText(authorizedKeysPath);
                         if(!f.Contains(apple)) {
-                            File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
+                            FileWithAcl.AppendAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
                         }
                     }
                     else {
-                        File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
+                        FileWithAcl.WriteAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
                     }
                     Bash.Execute($"chmod 600 {authorizedKeysPath}", false);
                     Bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);

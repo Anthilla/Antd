@@ -17,8 +17,8 @@ namespace Antd.SystemdTimer {
         }
 
         public static void MoveExistingTimers() {
-            Directory.CreateDirectory(Parameter.TimerUnits);
-            Directory.CreateDirectory(Parameter.TimerUnitsLinks);
+            DirectoryWithAcl.CreateDirectory(Parameter.TimerUnits, "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory(Parameter.TimerUnitsLinks, "755", "root", "wheel");
             var ttunitsFiles = Directory.EnumerateFiles(Parameter.TimerUnits).ToList();
             var ttunitsLinks = Directory.EnumerateFiles(Parameter.TimerUnitsLinks).ToList();
             if(ttunitsLinks.Any() && !ttunitsFiles.Any()) {
@@ -56,10 +56,10 @@ namespace Antd.SystemdTimer {
             if(IsTargetActive())
                 return;
             if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
-            Directory.CreateDirectory("/etc/systemd/system/");
-            Directory.CreateDirectory("/etc/systemd/system/tt.target.wants");
-            Directory.CreateDirectory("/mnt/cdrom/Units/tt.target.wants");
-            Directory.CreateDirectory("/mnt/cdrom/Units/ttUnits");
+            DirectoryWithAcl.CreateDirectory("/etc/systemd/system/", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory("/etc/systemd/system/tt.target.wants", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory("/mnt/cdrom/Units/tt.target.wants", "755", "root", "wheel");
+            DirectoryWithAcl.CreateDirectory("/mnt/cdrom/Units/ttUnits", "755", "root", "wheel");
             WriteTimerTargetFile();
             WriteTimerServiceFile();
             WriteTimerMountFile();
@@ -95,7 +95,7 @@ namespace Antd.SystemdTimer {
                 "WantedBy=multi-user.target",
                 ""
             };
-            File.WriteAllLines(file, timerText);
+            FileWithAcl.WriteAllLines(file, timerText, "644", "root", "wheel");
         }
 
         private static void WriteTimerServiceFile() {
@@ -118,7 +118,7 @@ namespace Antd.SystemdTimer {
                 "WantedBy=multi-user.target",
                 ""
             };
-            File.WriteAllLines(file, timerText);
+            FileWithAcl.WriteAllLines(file, timerText, "644", "root", "wheel");
         }
 
         private static void WriteTimerMountFile() {
@@ -142,7 +142,7 @@ namespace Antd.SystemdTimer {
                 "WantedBy=multi-user.target",
                 ""
             };
-            File.WriteAllLines(file, timerText);
+            FileWithAcl.WriteAllLines(file, timerText, "644", "root", "wheel");
         }
         #endregion TT Target
 
@@ -165,7 +165,7 @@ namespace Antd.SystemdTimer {
                 "WantedBy=tt.target",
                 ""
             };
-            File.WriteAllLines(timerFile, timerText);
+            FileWithAcl.WriteAllLines(timerFile, timerText, "644", "root", "wheel");
 
             var serviceFile = $"{TargetDirectory}/{name}.service";
             if(File.Exists(serviceFile)) {
@@ -184,7 +184,7 @@ namespace Antd.SystemdTimer {
                 "WantedBy=tt.target",
                 ""
             };
-            File.WriteAllLines(serviceFile, serviceText);
+            FileWithAcl.WriteAllLines(serviceFile, serviceText, "644", "root", "wheel");
 
             var schedulerConfiguration = new TimerConfiguration();
             var tryget = schedulerConfiguration.Get().Timers.FirstOrDefault(_ => _.Alias == name);
