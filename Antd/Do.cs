@@ -296,6 +296,7 @@ namespace Antd {
                         foreach(var nif in ifConfig.ChildrenIf) {
                             CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
                             CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
+                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> {{"$net_if", nif}});
                         }
                         break;
                     case NetworkAdapterType.Bridge:
@@ -303,6 +304,7 @@ namespace Antd {
                         foreach(var nif in ifConfig.ChildrenIf) {
                             CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
                             CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
+                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> {{"$net_if", nif}});
                         }
                         break;
                     case NetworkAdapterType.Other:
