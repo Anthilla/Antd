@@ -9,20 +9,19 @@ using System.Linq;
 namespace antdlib.config {
     public class DhcpdConfiguration {
 
-        private static DhcpdConfigurationModel _serviceModel => Load();
+        private static DhcpdConfigurationModel ServiceModel => Load();
 
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/dhcp.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/dhcp.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/dhcp.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/dhcp.conf.bck";
         private const string ServiceName = "dhcpd4.service";
         private const string MainFilePath = "/etc/dhcp/dhcpd.conf";
-        private const string MainFilePathBackup = "/etc/dhcp/.dhcpd.conf";
 
         private static DhcpdConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new DhcpdConfigurationModel();
             }
             try {
-                var text = File.ReadAllText(_cfgFile);
+                var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<DhcpdConfigurationModel>(text);
                 return obj;
             }
@@ -33,10 +32,10 @@ namespace antdlib.config {
 
         public static void Save(DhcpdConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[dhcpd] configuration saved");
         }
 
@@ -46,7 +45,7 @@ namespace antdlib.config {
             var lines = new List<string> {
                 "authoritative;"
             };
-            var options = _serviceModel;
+            var options = ServiceModel;
             foreach(var allow in options.Allow) {
                 lines.Add($"allow {allow};");
             }
@@ -113,25 +112,25 @@ namespace antdlib.config {
         }
 
         public static bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
         public static DhcpdConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[dhcpd] enabled");
         }
 
         public static void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[dhcpd] disabled");
         }
 
@@ -151,66 +150,66 @@ namespace antdlib.config {
         }
 
         public static void AddClass(DhcpConfigurationClassModel model) {
-            var cls = _serviceModel.Classes;
+            var cls = ServiceModel.Classes;
             if(cls.Any(_ => _.Name == model.Name)) {
                 return;
             }
             cls.Add(model);
-            _serviceModel.Classes = cls;
-            Save(_serviceModel);
+            ServiceModel.Classes = cls;
+            Save(ServiceModel);
         }
 
         public static void RemoveClass(string guid) {
-            var cls = _serviceModel.Classes;
+            var cls = ServiceModel.Classes;
             var model = cls.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             cls.Remove(model);
-            _serviceModel.Classes = cls;
-            Save(_serviceModel);
+            ServiceModel.Classes = cls;
+            Save(ServiceModel);
         }
 
         public static void AddPool(DhcpConfigurationPoolModel model) {
-            var pool = _serviceModel.Pools;
+            var pool = ServiceModel.Pools;
             if(pool.Any(_ => _.Guid == model.Guid)) {
                 return;
             }
             pool.Add(model);
-            _serviceModel.Pools = pool;
-            Save(_serviceModel);
+            ServiceModel.Pools = pool;
+            Save(ServiceModel);
         }
 
         public static void RemovePool(string guid) {
-            var pool = _serviceModel.Pools;
+            var pool = ServiceModel.Pools;
             var model = pool.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             pool.Remove(model);
-            _serviceModel.Pools = pool;
-            Save(_serviceModel);
+            ServiceModel.Pools = pool;
+            Save(ServiceModel);
         }
 
         public static void AddReservation(DhcpConfigurationReservationModel model) {
-            var hostres = _serviceModel.Reservations;
+            var hostres = ServiceModel.Reservations;
             if(hostres.Any(_ => _.Guid == model.Guid)) {
                 return;
             }
             hostres.Add(model);
-            _serviceModel.Reservations = hostres;
-            Save(_serviceModel);
+            ServiceModel.Reservations = hostres;
+            Save(ServiceModel);
         }
 
         public static void RemoveReservation(string guid) {
-            var hostres = _serviceModel.Reservations;
+            var hostres = ServiceModel.Reservations;
             var model = hostres.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             hostres.Remove(model);
-            _serviceModel.Reservations = hostres;
-            Save(_serviceModel);
+            ServiceModel.Reservations = hostres;
+            Save(ServiceModel);
         }
     }
 }

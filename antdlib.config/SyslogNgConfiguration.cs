@@ -8,20 +8,19 @@ using System.IO;
 namespace antdlib.config {
     public static class SyslogNgConfiguration {
 
-        private static SyslogNgConfigurationModel _serviceModel => Load();
+        private static SyslogNgConfigurationModel ServiceModel => Load();
 
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/syslogng.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/syslogng.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/syslogng.conf";
         private const string ServiceName = "syslog-ng.service";
         private const string MainFilePath = "/etc/syslog-ng/syslog-ng.conf";
         private const string MainFilePathBackup = "/etc/syslog-ng/.syslog-ng.conf";
 
         private static SyslogNgConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new SyslogNgConfigurationModel();
             }
             try {
-                var text = File.ReadAllText(_cfgFile);
+                var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<SyslogNgConfigurationModel>(text);
                 return obj;
             }
@@ -32,7 +31,7 @@ namespace antdlib.config {
 
         public static void Save(SyslogNgConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            FileWithAcl.WriteAllText(_cfgFile, text);
+            FileWithAcl.WriteAllText(CfgFile, text);
             ConsoleLogger.Log("[syslogng] configuration saved");
         }
 
@@ -51,7 +50,7 @@ namespace antdlib.config {
                 "@include \"scl.conf\"",
                 "options {"
             };
-            var options = _serviceModel;
+            var options = ServiceModel;
             lines.Add($"threaded({options.Threaded});");
             lines.Add($"chain_hostnames({options.ChainHostname});");
             lines.Add($"stats_freq({options.StatsFrequency});");
@@ -104,25 +103,25 @@ namespace antdlib.config {
         }
 
         public static bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
         public static SyslogNgConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[syslogng] enabled");
         }
 
         public static void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[syslogng] disabled");
         }
 

@@ -7,7 +7,6 @@ namespace antdlib.config {
     public class SshKnownHosts {
 
         private readonly string _filePath = $"{Parameter.AntdCfg}/known_hosts";
-        private readonly string _filePathBackup = $"{Parameter.AntdCfg}/known_hosts.bck";
 
         public List<string> Hosts { get; }
 

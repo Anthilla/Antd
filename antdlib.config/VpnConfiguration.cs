@@ -15,7 +15,6 @@ namespace antdlib.config {
         private readonly VpnConfigurationModel _serviceModel;
 
         private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/vpn.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/vpn.conf.bck";
         private const string ServiceName = "sshd.service";
 
         public VpnConfiguration() {

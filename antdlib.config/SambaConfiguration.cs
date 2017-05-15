@@ -9,10 +9,10 @@ using System.Linq;
 namespace antdlib.config {
     public static class SambaConfiguration {
 
-        private static SambaConfigurationModel _serviceModel => Load();
+        private static SambaConfigurationModel ServiceModel => Load();
 
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/samba.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/samba.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/samba.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/samba.conf.bck";
         private const string ServiceName1 = "smbd.service";
         private const string ServiceName2 = "nmbd.service";
         private const string ServiceName3 = "winbindd.service";
@@ -20,11 +20,11 @@ namespace antdlib.config {
         private const string MainFilePathBackup = "/etc/samba/.smb.conf";
 
         private static SambaConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new SambaConfigurationModel();
             }
             try {
-                var text = File.ReadAllText(_cfgFile);
+                var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<SambaConfigurationModel>(text);
                 return obj;
             }
@@ -35,10 +35,10 @@ namespace antdlib.config {
 
         public static void Save(SambaConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[samba] configuration saved");
         }
 
@@ -52,7 +52,7 @@ namespace antdlib.config {
                 }
                 File.Copy(MainFilePath, MainFilePathBackup);
             }
-            var global = _serviceModel;
+            var global = ServiceModel;
             var lines = new List<string> {
                 "[global]",
                 $"dos charset = {global.DosCharset}",
@@ -111,7 +111,7 @@ namespace antdlib.config {
                 ""
             };
 
-            var resources = _serviceModel.Resources;
+            var resources = ServiceModel.Resources;
             foreach(var resource in resources) {
                 lines.Add($"[{resource.Name}]");
                 if(!string.IsNullOrEmpty(resource.Comment)) {
@@ -126,25 +126,25 @@ namespace antdlib.config {
         }
 
         public static bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
         public static SambaConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[samba] enabled");
         }
 
         public static void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[samba] disabled");
         }
 
@@ -178,24 +178,24 @@ namespace antdlib.config {
         }
 
         public static void AddResource(SambaConfigurationResourceModel model) {
-            var resources = _serviceModel.Resources;
+            var resources = ServiceModel.Resources;
             if(resources.Any(_ => _.Name == model.Name)) {
                 return;
             }
             resources.Add(model);
-            _serviceModel.Resources = resources;
-            Save(_serviceModel);
+            ServiceModel.Resources = resources;
+            Save(ServiceModel);
         }
 
         public static void RemoveResource(string guid) {
-            var resources = _serviceModel.Resources;
+            var resources = ServiceModel.Resources;
             var model = resources.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             resources.Remove(model);
-            _serviceModel.Resources = resources;
-            Save(_serviceModel);
+            ServiceModel.Resources = resources;
+            Save(ServiceModel);
         }
     }
 }

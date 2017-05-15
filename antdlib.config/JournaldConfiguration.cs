@@ -9,22 +9,21 @@ using System.IO;
 namespace antdlib.config {
     public static class JournaldConfiguration {
 
-        private static JournaldConfigurationModel _serviceModel => Load();
+        private static JournaldConfigurationModel ServiceModel => Load();
 
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/journald.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/journald.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/journald.conf";
         private const string ServiceName = "systemd-journald.service";
         private const string MainFilePath = "/etc/systemd/journald.conf";
         private const string MainFilePathBackup = "/etc/systemd/.journald.conf";
         private const string DirsDirectoryPath = "/mnt/cdrom/DIRS/FILE_etc_systemd_journald.conf";
 
         public static JournaldConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new JournaldConfigurationModel();
             }
             else {
                 try {
-                    var text = File.ReadAllText(_cfgFile);
+                    var text = File.ReadAllText(CfgFile);
                     var obj = JsonConvert.DeserializeObject<JournaldConfigurationModel>(text);
                     return obj;
                 }
@@ -37,7 +36,7 @@ namespace antdlib.config {
 
         public static void Save(JournaldConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[journald] configuration saved");
         }
 
@@ -53,7 +52,7 @@ namespace antdlib.config {
             }
 
             #region [    fake journald.conf generation    ]
-            var fakeOptions = _serviceModel;
+            var fakeOptions = ServiceModel;
             fakeOptions.Storage = "volatile";
             var fakeLines = new List<string> {
                 "[Journal]",
@@ -109,7 +108,7 @@ namespace antdlib.config {
             var lines = new List<string> {
                 "[Journal]"
             };
-            var options = _serviceModel;
+            var options = ServiceModel;
             lines.Add(options.Storage == "#" ? "#Storage=" : $"Storage={options.Storage}");
             lines.Add(options.Compress == "#" ? "#Compress=" : $"Compress={options.Compress}");
             lines.Add(options.Seal == "#" ? "#Seal=" : $"Seal={options.Seal}");
@@ -141,25 +140,25 @@ namespace antdlib.config {
         }
 
         public static bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
         public static JournaldConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[journald] enabled");
         }
 
         public static void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[journald] disabled");
         }
 

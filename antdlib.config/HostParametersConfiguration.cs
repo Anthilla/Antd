@@ -28,13 +28,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    modprobes    ]
-        private static readonly string _modprobesFile = $"{Parameter.AntdCfgParameters}/modprobes.conf";
-        private static readonly string _modprobesFileBackup = $"{Parameter.AntdCfgParameters}/modprobes.conf.bck";
+        private static readonly string ModprobesFile = $"{Parameter.AntdCfgParameters}/modprobes.conf";
 
         public static void SetModprobesList(List<string> objects) {
             var lines = objects;
             try {
-                FileWithAcl.WriteAllLines(_modprobesFile, lines, "644", "root", "wheel");
+                FileWithAcl.WriteAllLines(ModprobesFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] modprobes configuration set error: {ex.Message}");
@@ -42,11 +41,11 @@ namespace antdlib.config {
         }
 
         private static List<string> GetModprobesList() {
-            if(!File.Exists(_modprobesFile)) {
+            if(!File.Exists(ModprobesFile)) {
                 return new List<string>();
             }
             try {
-                var lines = File.ReadAllLines(_modprobesFile).ToList();
+                var lines = File.ReadAllLines(ModprobesFile).ToList();
                 return lines;
             }
             catch(Exception ex) {
@@ -57,13 +56,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    rmmod    ]
-        private static readonly string _rmmodFile = $"{Parameter.AntdCfgParameters}/rmmod.conf";
-        private static readonly string _rmmodFileBackup = $"{Parameter.AntdCfgParameters}/rmmod.conf.bck";
+        private static readonly string RmmodFile = $"{Parameter.AntdCfgParameters}/rmmod.conf";
 
         public static void SetRmmodList(List<string> objects) {
             var lines = objects;
             try {
-                FileWithAcl.WriteAllLines(_rmmodFile, lines, "644", "root", "wheel");
+                FileWithAcl.WriteAllLines(RmmodFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] rmmod configuration set error: {ex.Message}");
@@ -71,11 +69,11 @@ namespace antdlib.config {
         }
 
         private static List<string> GetRmmodList() {
-            if(!File.Exists(_rmmodFile)) {
+            if(!File.Exists(RmmodFile)) {
                 return new List<string>();
             }
             try {
-                var lines = File.ReadAllLines(_rmmodFile).ToList();
+                var lines = File.ReadAllLines(RmmodFile).ToList();
                 return lines;
             }
             catch(Exception ex) {
@@ -86,13 +84,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    modulesblacklist    ]
-        private static readonly string _modulesblacklistFile = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf";
-        private static readonly string _modulesblacklistFileBackup = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf.bck";
+        private static readonly string ModulesblacklistFile = $"{Parameter.AntdCfgParameters}/modulesblacklist.conf";
 
         public static void SetModulesBlacklistList(List<string> objects) {
             var lines = objects;
             try {
-                FileWithAcl.WriteAllLines(_modulesblacklistFile, lines, "644", "root", "wheel");
+                FileWithAcl.WriteAllLines(ModulesblacklistFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] modulesblacklist configuration set error: {ex.Message}");
@@ -100,11 +97,11 @@ namespace antdlib.config {
         }
 
         private static List<string> GetModulesBlacklistList() {
-            if(!File.Exists(_modulesblacklistFile)) {
+            if(!File.Exists(ModulesblacklistFile)) {
                 return new List<string>();
             }
             try {
-                var lines = File.ReadAllLines(_modulesblacklistFile).ToList();
+                var lines = File.ReadAllLines(ModulesblacklistFile).ToList();
                 return lines;
             }
             catch(Exception ex) {
@@ -115,13 +112,12 @@ namespace antdlib.config {
         #endregion}
 
         #region [    osparameters    ]
-        private static readonly string _osparametersFile = $"{Parameter.AntdCfgParameters}/osparameters.conf";
-        private static readonly string _osparametersFileBackup = $"{Parameter.AntdCfgParameters}/osparameters.conf.bck";
+        private static readonly string OsparametersFile = $"{Parameter.AntdCfgParameters}/osparameters.conf";
 
         public static void SetOsParametersList(List<string> objects) {
             var lines = objects;
             try {
-                FileWithAcl.WriteAllLines(_osparametersFile, lines, "644", "root", "wheel");
+                FileWithAcl.WriteAllLines(OsparametersFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] osparameters configuration set error: {ex.Message}");
@@ -129,11 +125,11 @@ namespace antdlib.config {
         }
 
         private static List<string> GetOsParametersList() {
-            if(!File.Exists(_osparametersFile)) {
+            if(!File.Exists(OsparametersFile)) {
                 return new List<string>();
             }
             try {
-                var lines = File.ReadAllLines(_osparametersFile).ToList();
+                var lines = File.ReadAllLines(OsparametersFile).ToList();
                 return lines;
             }
             catch(Exception ex) {
@@ -144,13 +140,12 @@ namespace antdlib.config {
         #endregion}
 
         #region [    servicesstart    ]
-        private static readonly string _servicesstartFile = $"{Parameter.AntdCfgParameters}/servicesstart.conf";
-        private static readonly string _servicesstartFileBackup = $"{Parameter.AntdCfgParameters}/servicesstart.conf.bck";
+        private static readonly string ServicesstartFile = $"{Parameter.AntdCfgParameters}/servicesstart.conf";
 
         public static void SetServicesStartList(List<string> objects) {
             var lines = objects;
             try {
-                FileWithAcl.WriteAllLines(_servicesstartFile, lines, "644", "root", "wheel");
+                FileWithAcl.WriteAllLines(ServicesstartFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] servicesstart configuration set error: {ex.Message}");
@@ -158,11 +153,11 @@ namespace antdlib.config {
         }
 
         private static List<string> GetServicesStartList() {
-            if(!File.Exists(_servicesstartFile)) {
+            if(!File.Exists(ServicesstartFile)) {
                 return new List<string>();
             }
             try {
-                var lines = File.ReadAllLines(_servicesstartFile).ToList();
+                var lines = File.ReadAllLines(ServicesstartFile).ToList();
                 return lines;
             }
             catch(Exception ex) {
@@ -173,13 +168,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    servicesstop    ]
-        private static readonly string _servicesstopFile = $"{Parameter.AntdCfgParameters}/servicesstop.conf";
-        private static readonly string _servicesstopFileBackup = $"{Parameter.AntdCfgParameters}/servicesstop.conf.bck";
+        private static readonly string ServicesstopFile = $"{Parameter.AntdCfgParameters}/servicesstop.conf";
 
         public static void SetServicesStopList(List<string> objects) {
             var lines = objects;
             try {
-                FileWithAcl.WriteAllLines(_servicesstopFile, lines, "644", "root", "wheel");
+                FileWithAcl.WriteAllLines(ServicesstopFile, lines, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] servicesstop configuration set error: {ex.Message}");
@@ -187,11 +181,11 @@ namespace antdlib.config {
         }
 
         private static List<string> GetServicesStopList() {
-            if(!File.Exists(_servicesstopFile)) {
+            if(!File.Exists(ServicesstopFile)) {
                 return new List<string>();
             }
             try {
-                var lines = File.ReadAllLines(_servicesstopFile).ToList();
+                var lines = File.ReadAllLines(ServicesstopFile).ToList();
                 return lines;
             }
             catch(Exception ex) {
@@ -202,13 +196,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    startcommands    ]
-        private static readonly string _startcommandsFile = $"{Parameter.AntdCfgParameters}/startcommands.conf";
-        private static readonly string _startcommandsFileBackup = $"{Parameter.AntdCfgParameters}/startcommands.conf.bck";
+        private static readonly string StartcommandsFile = $"{Parameter.AntdCfgParameters}/startcommands.conf";
 
         public static void SetStartCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
             try {
-                FileWithAcl.WriteAllText(_startcommandsFile, text, "644", "root", "wheel");
+                FileWithAcl.WriteAllText(StartcommandsFile, text, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] startcommands configuration set error: {ex.Message}");
@@ -216,11 +209,11 @@ namespace antdlib.config {
         }
 
         private static List<Control> GetStartCommandsList() {
-            if(!File.Exists(_startcommandsFile)) {
+            if(!File.Exists(StartcommandsFile)) {
                 return new List<Control>();
             }
             try {
-                var text = File.ReadAllText(_startcommandsFile);
+                var text = File.ReadAllText(StartcommandsFile);
                 var objects = JsonConvert.DeserializeObject<List<Control>>(text);
                 return objects;
             }
@@ -232,13 +225,12 @@ namespace antdlib.config {
         #endregion
 
         #region [    endcommands    ]
-        private static readonly string _endcommandsFile = $"{Parameter.AntdCfgParameters}/endcommands.conf";
-        private static readonly string _endcommandsFileBackup = $"{Parameter.AntdCfgParameters}/endcommands.conf.bck";
+        private static readonly string EndcommandsFile = $"{Parameter.AntdCfgParameters}/endcommands.conf";
 
         public static void SetEndCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
             try {
-                FileWithAcl.WriteAllText(_endcommandsFile, text, "644", "root", "wheel");
+                FileWithAcl.WriteAllText(EndcommandsFile, text, "644", "root", "wheel");
             }
             catch(Exception ex) {
                 ConsoleLogger.Error($"[host parameters] endcommands configuration set error: {ex.Message}");
@@ -246,11 +238,11 @@ namespace antdlib.config {
         }
 
         private static List<Control> GetEndCommandsList() {
-            if(!File.Exists(_endcommandsFile)) {
+            if(!File.Exists(EndcommandsFile)) {
                 return new List<Control>();
             }
             try {
-                var text = File.ReadAllText(_endcommandsFile);
+                var text = File.ReadAllText(EndcommandsFile);
                 var objects = JsonConvert.DeserializeObject<List<Control>>(text);
                 return objects;
             }

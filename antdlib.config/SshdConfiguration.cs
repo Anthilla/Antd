@@ -8,20 +8,19 @@ using System.IO;
 namespace antdlib.config {
     public static class SshdConfiguration {
 
-        private static SshdConfigurationModel _serviceModel => Load();
+        private static SshdConfigurationModel ServiceModel => Load();
 
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/sshd.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/sshd.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/sshd.conf";
         private const string ServiceName = "sshd.service";
         private const string MainFilePath = "/etc/ssh/sshd_config";
         private const string MainFilePathBackup = "/etc/ssh/.sshd_config";
 
         private static SshdConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new SshdConfigurationModel();
             }
             try {
-                var text = File.ReadAllText(_cfgFile);
+                var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<SshdConfigurationModel>(text);
                 return obj;
             }
@@ -32,7 +31,7 @@ namespace antdlib.config {
 
         public static void Save(SshdConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[sshd] configuration saved");
         }
 
@@ -47,7 +46,7 @@ namespace antdlib.config {
                 File.Copy(MainFilePath, MainFilePathBackup);
             }
             var lines = new List<string>();
-            var options = _serviceModel;
+            var options = ServiceModel;
             lines.Add($"Port {options.Port}");
             lines.Add($"PermitRootLogin {options.PermitRootLogin}");
             lines.Add($"PermitTunnel {options.PermitTunnel}");
@@ -133,25 +132,25 @@ namespace antdlib.config {
         }
 
         public static bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
         public static SshdConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[sshd] enabled");
         }
 
         public static void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[sshd] disabled");
         }
 

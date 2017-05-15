@@ -143,6 +143,8 @@ namespace Antd {
             #endregion
 
             #region [    Secret    ]
+            var importSecret = "";
+
             if(!File.Exists(Parameter.AntdCfgSecret)) {
                 FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }

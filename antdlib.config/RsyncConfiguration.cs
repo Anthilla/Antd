@@ -8,17 +8,16 @@ using System.Linq;
 namespace antdlib.config {
     public static class RsyncConfiguration {
 
-        private static RsyncConfigurationModel _serviceModel => Load();
+        private static RsyncConfigurationModel ServiceModel => Load();
 
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/rsync.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/rsync.conf.bck";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/rsync.conf";
 
         public static RsyncConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new RsyncConfigurationModel();
             }
             try {
-                var text = File.ReadAllText(_cfgFile);
+                var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<RsyncConfigurationModel>(text);
                 return obj;
             }
@@ -29,7 +28,7 @@ namespace antdlib.config {
 
         public static void Save(RsyncConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            FileWithAcl.WriteAllText(_cfgFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             ConsoleLogger.Log("[rsync] configuration saved");
         }
 
@@ -38,45 +37,45 @@ namespace antdlib.config {
         }
 
         public static bool IsActive() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return false;
             }
-            return _serviceModel != null && _serviceModel.IsActive;
+            return ServiceModel != null && ServiceModel.IsActive;
         }
 
         public static RsyncConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Enable() {
-            _serviceModel.IsActive = true;
-            Save(_serviceModel);
+            ServiceModel.IsActive = true;
+            Save(ServiceModel);
             ConsoleLogger.Log("[rsync] enabled");
         }
 
         public static void Disable() {
-            _serviceModel.IsActive = false;
-            Save(_serviceModel);
+            ServiceModel.IsActive = false;
+            Save(ServiceModel);
             ConsoleLogger.Log("[rsync] disabled");
         }
 
         public static void AddDirectory(RsyncObjectModel model) {
-            var dirs = _serviceModel.Directories;
+            var dirs = ServiceModel.Directories;
             dirs.Add(model);
-            _serviceModel.Directories = dirs;
-            Save(_serviceModel);
+            ServiceModel.Directories = dirs;
+            Save(ServiceModel);
             DirectoryWatcherRsync.Start(dirs);
         }
 
         public static void RemoveDirectory(string guid) {
-            var dirs = _serviceModel.Directories;
+            var dirs = ServiceModel.Directories;
             var model = dirs.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             dirs.Remove(model);
-            _serviceModel.Directories = dirs;
-            Save(_serviceModel);
+            ServiceModel.Directories = dirs;
+            Save(ServiceModel);
         }
     }
 }

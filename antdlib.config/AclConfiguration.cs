@@ -15,7 +15,6 @@ namespace antdlib.config {
         private static readonly string StoreDir = $"{Parameter.AntdCfgServices}/acls";
         private static readonly string StoreDirTemplate = $"{Parameter.AntdCfgServices}/acls/template";
         private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/acl.conf";
-        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/acl.conf.bck";
         public static Timer Timer { get; private set; }
 
         private static AclConfigurationModel Load() {

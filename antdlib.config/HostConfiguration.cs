@@ -33,21 +33,21 @@ namespace antdlib.config {
         }
 
         #region [    repo - Confirm Configuration    ]
-        private static readonly string _isConfiguredPath = $"{Parameter.AntdCfg}/configured";
+        private static readonly string IsConfiguredPath = $"{Parameter.AntdCfg}/configured";
 
         public static bool IsHostConfiguredByUser() {
-            if(!File.Exists(_isConfiguredPath)) {
+            if(!File.Exists(IsConfiguredPath)) {
                 return false;
             }
-            var text = File.ReadAllBytes(_isConfiguredPath);
+            var text = File.ReadAllBytes(IsConfiguredPath);
             return text.Length > 0;
         }
 
         public static void SetHostAsConfigured() {
-            if(File.Exists(_isConfiguredPath)) {
+            if(File.Exists(IsConfiguredPath)) {
                 return;
             }
-            File.WriteAllBytes(_isConfiguredPath, new[] { (byte)0 });
+            File.WriteAllBytes(IsConfiguredPath, new[] { (byte)0 });
         }
         #endregion
 

@@ -12,7 +12,6 @@ namespace antdlib.config {
         private readonly AuthorizedKeysConfigurationModel _serviceModel;
 
         private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/authorizedkeys.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/authorizedkeys.conf.bck";
 
         public AuthorizedKeysConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);

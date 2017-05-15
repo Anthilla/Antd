@@ -11,7 +11,6 @@ namespace antdlib.config {
 
         private static FirewallConfigurationModel ServiceModel => Load();
         private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/firewall.conf";
-        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/firewall.conf.bck";
         private const string MainFilePath = "/etc/nftables.conf";
 
         private static FirewallConfigurationModel Load() {

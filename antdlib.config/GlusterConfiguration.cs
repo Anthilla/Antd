@@ -14,7 +14,6 @@ namespace antdlib.config {
         private static GlusterConfigurationModel ServiceModel => Load();
 
         private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/gluster.conf";
-        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/gluster.conf.bck";
         private const string ServiceName = "glusterd.service";
 
         private static GlusterConfigurationModel Load() {

@@ -13,16 +13,16 @@ namespace antdlib.config {
     /// </summary>
     public static class NetworkConfiguration {
 
-        private static NetworkConfigurationModel _serviceModel => Load();
-        private static readonly string _cfgFile = $"{Parameter.AntdCfgServices}/network.conf";
-        private static readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
+        private static NetworkConfigurationModel ServiceModel => Load();
+        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/network.conf";
+        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/network.conf.bck";
 
         public static NetworkConfigurationModel Load() {
-            if(!File.Exists(_cfgFile)) {
+            if(!File.Exists(CfgFile)) {
                 return new NetworkConfigurationModel();
             }
             try {
-                var text = File.ReadAllText(_cfgFile);
+                var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<NetworkConfigurationModel>(text);
                 return obj;
             }
@@ -45,15 +45,15 @@ namespace antdlib.config {
 
         public static void Save(NetworkConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
-            if(File.Exists(_cfgFile)) {
-                File.Copy(_cfgFile, _cfgFileBackup, true);
+            if(File.Exists(CfgFile)) {
+                File.Copy(CfgFile, CfgFileBackup, true);
             }
-            File.WriteAllText(_cfgFile, text);
+            File.WriteAllText(CfgFile, text);
             ConsoleLogger.Log("[network] configuration saved");
         }
 
         public static NetworkConfigurationModel Get() {
-            return _serviceModel;
+            return ServiceModel;
         }
 
         public static void Start() {
@@ -146,18 +146,18 @@ namespace antdlib.config {
             interfaces.AddRange(InterfaceBridge);
             foreach(var netIf in interfaces) {
                 CommandLauncher.Launch("ip4-set-mtu",
-                    new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", _serviceModel.DefaultMtu } });
+                    new Dictionary<string, string> { { "$net_if", netIf }, { "$mtu", ServiceModel.DefaultMtu } });
                 CommandLauncher.Launch("ip4-set-txqueuelen",
                     new Dictionary<string, string>
                     {
                         {"$net_if", netIf},
-                        {"$txqueuelen", _serviceModel.DefaultTxqueuelen}
+                        {"$txqueuelen", ServiceModel.DefaultTxqueuelen}
                     });
             }
         }
 
         public static bool HasConfiguration() {
-            var netif = _serviceModel.Interfaces;
+            var netif = ServiceModel.Interfaces;
             return netif.Any(_ => _.Status == NetworkInterfaceStatus.Up);
         }
 
@@ -228,7 +228,7 @@ namespace antdlib.config {
         }
 
         private static IEnumerable<NetworkInterfaceConfigurationModel> GetPhysicalInterfacesModel() {
-            var netifs = _serviceModel.Interfaces;
+            var netifs = ServiceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfacePhysical) {
                 if(netifs.Any(_ => _.Interface == pi)) {
@@ -259,7 +259,7 @@ namespace antdlib.config {
         }
 
         private static IEnumerable<NetworkInterfaceConfigurationModel> GetVirtualInterfacesModel() {
-            var netifs = _serviceModel.Interfaces;
+            var netifs = ServiceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfaceVirtual) {
                 if(netifs.Any(_ => _.Interface == pi)) {
@@ -290,7 +290,7 @@ namespace antdlib.config {
         }
 
         private static IEnumerable<NetworkInterfaceConfigurationModel> GetBondInterfacesModel() {
-            var netifs = _serviceModel.Interfaces;
+            var netifs = ServiceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfaceBond) {
                 if(netifs.Any(_ => _.Interface == pi)) {
@@ -321,7 +321,7 @@ namespace antdlib.config {
         }
 
         private static IEnumerable<NetworkInterfaceConfigurationModel> GetBridgeInterfacesModel() {
-            var netifs = _serviceModel.Interfaces;
+            var netifs = ServiceModel.Interfaces;
             var list = new List<NetworkInterfaceConfigurationModel>();
             foreach(var pi in InterfaceBridge) {
                 if(netifs.Any(_ => _.Interface == pi)) {
@@ -339,29 +339,29 @@ namespace antdlib.config {
 
         #region [    Network Interface    ]
         public static void AddInterfaceSetting(NetworkInterfaceConfigurationModel model) {
-            var netif = _serviceModel.Interfaces;
+            var netif = ServiceModel.Interfaces;
             var check = netif.Where(_ => _.Interface == model.Interface).ToList();
             if(check.Any()) {
                 check.ForEach(_ => RemoveInterfaceSetting(_.Guid));
             }
             netif.Add(model);
-            _serviceModel.Interfaces = netif;
-            Save(_serviceModel);
+            ServiceModel.Interfaces = netif;
+            Save(ServiceModel);
         }
 
         public static void RemoveInterfaceSetting(string guid) {
-            var netif = _serviceModel.Interfaces;
+            var netif = ServiceModel.Interfaces;
             var model = netif.First(_ => _.Guid == guid);
             if(model == null) {
                 return;
             }
             netif.Remove(model);
-            _serviceModel.Interfaces = netif;
-            Save(_serviceModel);
+            ServiceModel.Interfaces = netif;
+            Save(ServiceModel);
         }
 
         public static void ApplyInterfaceSetting() {
-            var netifs = _serviceModel.Interfaces;
+            var netifs = ServiceModel.Interfaces;
             foreach(var netif in netifs) {
                 ApplyInterfaceSetting(netif);
             }

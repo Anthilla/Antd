@@ -12,7 +12,6 @@ namespace antdlib.config {
         private readonly TimerConfigurationModel _serviceModel;
 
         private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/timer.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/timer.conf.bck";
 
         public TimerConfiguration() {
             IoDir.CreateDirectory(Parameter.AntdCfgServices);

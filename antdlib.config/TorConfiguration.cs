@@ -10,7 +10,6 @@ namespace antdlib.config {
         private static TorConfigurationModel ServiceModel => Load();
 
         private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/tor.conf";
-        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/tor.conf.bck";
         private const string ServiceName = "tor.service";
         private const string MainFilePath = "/etc/tor/torrc";
         private const string MainFilePathBackup = "/etc/tor/.torrc";

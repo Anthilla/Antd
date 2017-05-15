@@ -9,7 +9,6 @@ namespace antdlib.config {
     public static class ClusterConfiguration {
 
         private static readonly string CfgFile = $"{Parameter.AntdCfgCluster}/cluster.conf";
-        private static readonly string CfgFileBackup = $"{Parameter.AntdCfgCluster}/cluster.conf.bck";
 
         private static List<Cluster.Node> Load() {
             if(!File.Exists(CfgFile)) {

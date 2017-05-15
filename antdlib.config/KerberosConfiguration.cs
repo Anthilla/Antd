@@ -12,7 +12,6 @@ namespace antdlib.config {
         private readonly KerberosConfigurationModel _serviceModel;
 
         private readonly string _cfgFile = $"{Parameter.AntdCfgServices}/kerberos.conf";
-        private readonly string _cfgFileBackup = $"{Parameter.AntdCfgServices}/kerberos.conf.bck";
         private const string ServiceName = "named.service";
         private const string MainFilePath = "/etc/kerberos/kkk.conf";
         private const string MainFilePathBackup = "/etc/kerberos/.kkk.conf";

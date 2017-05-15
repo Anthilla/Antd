@@ -10,7 +10,6 @@ namespace antdlib.config {
     public class NetscanConfiguration {
 
         private readonly string _filePath = $"{Parameter.AntdCfg}/services/netscan.conf";
-        private readonly string _filePathBackup = $"{Parameter.AntdCfg}/services/netscan.conf.bck";
         private readonly NetscanSettingModel _settings;
 
         private static List<NetscanLabelModel> Values() {
