@@ -87,19 +87,20 @@ namespace Antd {
             #endregion
 
             #region [    Working Directories    ]
-            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfg, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgServices, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgNetwork, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgParameters, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.AntdCfgCluster, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory($"{Parameter.AntdCfgServices}/acls", "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template", "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.RepoConfig, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.RepoDirs, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.AnthillaUnits, "755", "root", "wheel");
-            DirectoryWithAcl.CreateDirectory(Parameter.TimerUnits, "755", "root", "wheel");
+            Directory.CreateDirectory(Parameter.AntdCfg);
+            Directory.CreateDirectory(Parameter.AntdCfgServices);
+            Directory.CreateDirectory(Parameter.AntdCfgNetwork);
+            Directory.CreateDirectory(Parameter.AntdCfgParameters);
+            Directory.CreateDirectory(Parameter.AntdCfgCluster);
+            Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls");
+            Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls/template");
+            Directory.CreateDirectory(Parameter.RepoConfig);
+            Directory.CreateDirectory(Parameter.RepoDirs);
+            Directory.CreateDirectory(Parameter.AnthillaUnits);
+            Directory.CreateDirectory(Parameter.TimerUnits);
+            ConsoleLogger.Log("working directories created");
             MountManagement.WorkingDirectories();
-            ConsoleLogger.Log("working directories ready");
+            ConsoleLogger.Log("working directories mounted");
             #endregion
 
             #region [    Mounts    ]
@@ -614,6 +615,11 @@ namespace Antd {
                 Bash.Execute($"chown root:wheel {file}");
             }
             ConsoleLogger.Log("[check] app-file acl");
+            #endregion
+
+            #region [    Cloud Send Uptime    ]
+            var ncc = new ConfigurationCheck();
+            ncc.Start(1000 * 10);
             #endregion
 
             #region [    Test    ]

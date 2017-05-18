@@ -91,19 +91,16 @@ namespace Antd {
             SaveNsswitchFile();
             SaveNetworksFile();
             SaveHostsFile();
-            Directory.CreateDirectory("/etc/dhcp");
-            SaveDhcpdFile();
-            SaveDhcpdService();
-            Directory.CreateDirectory("/etc/bind");
-            SaveNamedFile();
-            SaveRndcFile();
-            SaveBindFiles();
-            SaveBindZones();
-            SaveBindService();
-            SaveNftablesFile();
+
+            //SaveDhcpdFile();
+
+            //SaveNamedFile();
+
+            //SaveNftablesFile();
         }
 
         public void NetworkChanges() {
+            AppluDefaultNetworkConfiguration();
             ApplyNetworkConfiguration();
         }
 
@@ -115,11 +112,15 @@ namespace Antd {
         public void ParametersChangesPre() {
             LaunchStart();
             SaveOsParameters();
+            ModulesChanges();
+            StartService();
+            StopService();
+        }
+
+        public void ModulesChanges() {
             SaveModprobes();
             RemoveModules();
             BlacklistMudules();
-            StartService();
-            StopService();
         }
 
         public void ParametersChangesPost() {
@@ -270,6 +271,16 @@ namespace Antd {
         #endregion
 
         #region [    network    ]
+        private void AppluDefaultNetworkConfiguration() {
+            var ifs = Network2Configuration.InterfacePhysical;
+            foreach(var nif in ifs) {
+                CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", nif }, { "$mtu", "6000" } });
+                CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", nif }, { "$txqueuelen", "10000" } });
+                CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", nif } });
+                CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
+            }
+        }
+
         private void ApplyNetworkConfiguration() {
             var configurations = Network2Configuration.Conf.Interfaces;
             if(!configurations.Any()) {
@@ -296,7 +307,7 @@ namespace Antd {
                         foreach(var nif in ifConfig.ChildrenIf) {
                             CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
                             CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
-                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> {{"$net_if", nif}});
+                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
                         }
                         break;
                     case NetworkAdapterType.Bridge:
@@ -304,7 +315,7 @@ namespace Antd {
                         foreach(var nif in ifConfig.ChildrenIf) {
                             CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
                             CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
-                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> {{"$net_if", nif}});
+                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
                         }
                         break;
                     case NetworkAdapterType.Other:
@@ -313,6 +324,7 @@ namespace Antd {
 
                 CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", deviceName }, { "$mtu", configuration.Mtu } });
                 CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", deviceName }, { "$txqueuelen", configuration.Txqueuelen } });
+                CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", deviceName } });
 
                 switch(ifConfig.Mode) {
                     case NetworkInterfaceMode.Null:
@@ -357,10 +369,10 @@ namespace Antd {
 
                 var gwConfig = gatewayConfigurations.FirstOrDefault(_ => _.Id == configuration.GatewayConfiguration);
                 if(gwConfig == null) {
+                    ConsoleLogger.Warn($"no route is set for interface {deviceName}");
                     continue;
                 }
-
-                CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$gateway", gwConfig.GatewayAddress }, { "$ip_address", gwConfig.Route } });
+                CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", gwConfig.Route }, { "$gateway", gwConfig.GatewayAddress } });
             }
         }
 
@@ -561,67 +573,154 @@ namespace Antd {
         }
         #endregion
 
-        #region [    dhcpd service    ]
-        private void SaveDhcpdService() {
-            const string svc = "dhcpd4.service";
-            ActivateService(svc);
-        }
-        #endregion
-
         #region [    dhcpd.conf    ]
-        private readonly string _dhcpdDynamicExternalFileInput = $"{LocalTemplateDirectory}/dhcpd.dynamic.external.conf.tmlp";
-        private readonly string _dhcpdDynamicInternalFileInput = $"{LocalTemplateDirectory}/dhcpd.dynamic.internal.conf.tmlp";
-        private readonly string _dhcpdStaticExternalFileInput = $"{LocalTemplateDirectory}/dhcpd.static.external.conf.tmlp";
-        private readonly string _dhcpdStaticInternalFileInput = $"{LocalTemplateDirectory}/dhcpd.static.internal.conf.tmlp";
-        private const string DhcpdFileOutput = "/etc/dhcp/dhcpd.conf";
-
         private void SaveDhcpdFile() {
-            try {
-                var dhcpdFileInput = _isDnsDynamic ?
-                    (_isDnsExternal ? _dhcpdDynamicExternalFileInput : _dhcpdDynamicInternalFileInput) :
-                    (_isDnsExternal ? _dhcpdStaticExternalFileInput : _dhcpdStaticInternalFileInput);
-                using(var reader = new StreamReader(dhcpdFileInput)) {
-                    using(TextWriter writer = File.CreateText(DhcpdFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
-                    }
-                }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
-            }
-        }
-        #endregion
-
-        #region [    bind service    ]
-        private void SaveBindService() {
-            const string svc = "named.service";
-            ActivateService(svc);
-            CommandLauncher.Launch("rndc-reconfig");
-            CommandLauncher.Launch("rndc-reload");
+            Directory.CreateDirectory("/etc/dhcp");
+            Directory.CreateDirectory(BindDirectory);
+            Directory.CreateDirectory(BindZonesDirectory);
+            var newModel = DhcpdConfiguration.Get();
+            newModel.ZoneName = _host.InternalDomainPrimary;
+            newModel.ZonePrimaryAddress = _host.InternalHostIpPrimary;
+            newModel.SubnetIpFamily = _host.InternalHostIpPrimary.Split('.').Take(2).JoinToString(".").TrimEnd('.') + ".0.0";
+            newModel.SubnetIpMask = _host.InternalBroadcastPrimary;
+            newModel.SubnetOptionRouters = _host.InternalHostIpPrimary;
+            newModel.SubnetNtpServers = _host.InternalHostIpPrimary;
+            newModel.SubnetTimeServers = _host.InternalHostIpPrimary;
+            newModel.SubnetDomainNameServers = _host.InternalHostIpPrimary;
+            newModel.SubnetBroadcastAddress = _host.InternalHostIpPrimary;
+            newModel.SubnetMask = _host.InternalBroadcastPrimary;
+            newModel.DdnsDomainName = _host.InternalDomainPrimary;
+            DhcpdConfiguration.Save(newModel);
+            DhcpdConfiguration.Set();
         }
         #endregion
 
         #region [    named.conf    ]
-        private readonly string _namedFileInput = $"{LocalTemplateDirectory}/named.conf.tmlp";
-        private const string NamedFileOutput = "/etc/bind/named.conf";
+        private const string BindDirectory = "/etc/bind";
+        private const string BindZonesDirectory = "/etc/bind/zones";
 
         private void SaveNamedFile() {
-            try {
-                using(var reader = new StreamReader(_namedFileInput)) {
-                    using(TextWriter writer = File.CreateText(NamedFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
-                    }
-                }
+            Directory.CreateDirectory(BindDirectory);
+            Directory.CreateDirectory(BindZonesDirectory);
+            var newModel = BindConfiguration.Get();
+            if(!newModel.Forwarders.Contains(_host.InternalHostIpPrimary)) {
+                newModel.Forwarders.Add(_host.InternalHostIpPrimary);
             }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
+            if(!newModel.Forwarders.Contains(_host.ExternalHostIpPrimary)) {
+                newModel.Forwarders.Add(_host.ExternalHostIpPrimary);
             }
+            newModel.ControlIp = _host.InternalHostIpPrimary;
+            if(!newModel.AclInternalInterfaces.Contains(_host.InternalHostIpPrimary)) {
+                newModel.AclInternalInterfaces.Add(_host.InternalHostIpPrimary);
+            }
+            if(!newModel.AclExternalInterfaces.Contains(_host.ExternalHostIpPrimary)) {
+                newModel.AclExternalInterfaces.Add(_host.ExternalHostIpPrimary);
+            }
+            if(!newModel.AclInternalNetworks.Contains(_host.InternalNetPrimary)) {
+                newModel.AclInternalNetworks.Add(_host.InternalNetPrimary);
+            }
+            if(!newModel.AclExternalNetworks.Contains(_host.ExternalNetPrimary)) {
+                newModel.AclExternalNetworks.Add(_host.ExternalNetPrimary);
+            }
+            var zones = newModel.Zones;
+            var internalZoneName = _host.InternalDomainPrimary;
+            if(newModel.Zones.FirstOrDefault(_ => _.Name == internalZoneName) == null) {
+                var filePath = $"{BindZonesDirectory}/host.{internalZoneName}.db";
+                var z = new BindConfigurationZoneModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    File = filePath,
+                    SerialUpdateMethod = "unixtime",
+                    AllowUpdate = new List<string> { "loif", "iif", "lonet", "inet", "onet", "key updbindkey" },
+                    AllowQuery = new List<string> { "any" },
+                    AllowTransfer = new List<string> { "loif", "iif", "lonet", "inet", "onet" }
+                };
+                zones.Add(z);
+            }
+            var internalReverseZoneName = _host.InternalArpaPrimary;
+            if(newModel.Zones.FirstOrDefault(_ => _.Name == internalReverseZoneName) == null) {
+                var filePath = $"{BindZonesDirectory}/rev.{internalReverseZoneName}.db";
+                var z = new BindConfigurationZoneModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    File = filePath,
+                    SerialUpdateMethod = "unixtime",
+                    AllowUpdate = new List<string> { "loif", "iif", "lonet", "inet", "onet", "key updbindkey" },
+                    AllowQuery = new List<string> { "any" },
+                    AllowTransfer = new List<string> { "loif", "iif", "lonet", "inet", "onet" }
+                };
+                zones.Add(z);
+            }
+            var externalZoneName = _host.ExternalDomainPrimary;
+            if(newModel.Zones.FirstOrDefault(_ => _.Name == externalZoneName) == null) {
+                var filePath = $"{BindZonesDirectory}/host.{externalZoneName}.db";
+                var z = new BindConfigurationZoneModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    File = filePath,
+                    SerialUpdateMethod = "unixtime",
+                    AllowUpdate = new List<string> { "loif", "iif", "lonet", "inet", "onet", "key updbindkey" },
+                    AllowQuery = new List<string> { "any" },
+                    AllowTransfer = new List<string> { "loif", "iif", "lonet", "inet", "onet" }
+                };
+                zones.Add(z);
+            }
+            var externalReverseZoneName = _host.ExternalArpaPrimary;
+            if(newModel.Zones.FirstOrDefault(_ => _.Name == externalReverseZoneName) == null) {
+                var filePath = $"{BindZonesDirectory}/rev.{externalReverseZoneName}.db";
+                var z = new BindConfigurationZoneModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    File = filePath,
+                    SerialUpdateMethod = "unixtime",
+                    AllowUpdate = new List<string> { "loif", "iif", "lonet", "inet", "onet", "key updbindkey" },
+                    AllowQuery = new List<string> { "any" },
+                    AllowTransfer = new List<string> { "loif", "iif", "lonet", "inet", "onet" }
+                };
+                zones.Add(z);
+            }
+            newModel.Zones = zones;
+
+            var zonesFile = newModel.ZoneFiles;
+            if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/host.{internalZoneName}.db") == null) {
+                var filePath = $"{BindZonesDirectory}/host.{internalZoneName}.db";
+                var z = new BindConfigurationZoneFileModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    Name = filePath,
+                    Configuration = "unixtime"
+                };
+                zonesFile.Add(z);
+                File.WriteAllLines(filePath, BindConfiguration.GetHostZone(_host.HostName, _host.InternalDomainPrimary, _host.InternalHostIpPrimary));
+            }
+            if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/rev.{internalReverseZoneName}.db") == null) {
+                var filePath = $"{BindZonesDirectory}/rev.{internalReverseZoneName}.db";
+                var z = new BindConfigurationZoneFileModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    Name = filePath,
+                    Configuration = "unixtime"
+                };
+                zonesFile.Add(z);
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
+            }
+            if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/host.{externalZoneName}.db") == null) {
+                var filePath = $"{BindZonesDirectory}/host.{externalZoneName}.db";
+                var z = new BindConfigurationZoneFileModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    Name = filePath,
+                    Configuration = "unixtime"
+                };
+                zonesFile.Add(z);
+                File.WriteAllLines(filePath, BindConfiguration.GetHostZone(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalHostIpPrimary));
+            }
+            if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/rev.{externalReverseZoneName}.db") == null) {
+                var filePath = $"{BindZonesDirectory}/rev.{externalReverseZoneName}.db";
+                var z = new BindConfigurationZoneFileModel {
+                    Guid = Guid.NewGuid().ToString(),
+                    Name = filePath,
+                    Configuration = "unixtime"
+                };
+                zonesFile.Add(z);
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, _host.ExternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
+            }
+            newModel.ZoneFiles = zonesFile;
+            BindConfiguration.Save(newModel);
+            BindConfiguration.Set();
         }
         #endregion
 

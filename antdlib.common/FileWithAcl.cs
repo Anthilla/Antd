@@ -5,13 +5,13 @@ namespace antdlib.common {
     public class DirectoryWithAcl {
         public static void CreateDirectory(string directory, string acl = "", string owner = "", string group = "") {
             System.IO.Directory.CreateDirectory(directory);
-            if(!string.IsNullOrEmpty(acl)) {
-                Bash.Execute($"chmod {acl} {directory}");
+            //if(!string.IsNullOrEmpty(acl)) {
+            //    Bash.Execute($"chmod {acl} {directory}");
 
-            }
-            if(!string.IsNullOrEmpty(owner) && !string.IsNullOrEmpty(group)) {
-                Bash.Execute($"chown {owner}:{group} {directory}");
-            }
+            //}
+            //if(!string.IsNullOrEmpty(owner) && !string.IsNullOrEmpty(group)) {
+            //    Bash.Execute($"chown {owner}:{group} {directory}");
+            //}
         }
     }
 

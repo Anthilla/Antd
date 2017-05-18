@@ -1,4 +1,13 @@
-﻿authoritative;
+﻿key "updbindkey" {
+    algorithm hmac-md5;
+    secret "ND991KFHCCA9tUrafsf29uxDM3ZKfnrVR4f1I2J27Ow=";
+};
+
+class "unifi" {
+   match if binary-to-ascii(16,8,":",substring(hardware, 1, 2)) = "80:2a";
+}
+
+authoritative;
 allow client-updates;
 allow unknown-clients;
 update-static-leases on;
@@ -19,15 +28,6 @@ ddns-update-style interim;
 ddns-updates on;
 ddns-domainname "fondazionescola.local";
 ddns-rev-domainname "in-addr.arpa.";
-
-key "updbindkey" {
-    algorithm hmac-md5;
-    secret "ND991KFHCCA9tUrafsf29uxDM3ZKfnrVR4f1I2J27Ow=";
-};
-
-class "unifi" {
-   match if binary-to-ascii(16,8,":",substring(hardware, 1, 2)) = "80:2a";
-}
 
 subnet 10.11.0.0 netmask 255.255.0.0 {
     option routers 10.11.254.254;

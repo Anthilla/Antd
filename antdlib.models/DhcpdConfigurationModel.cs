@@ -8,11 +8,11 @@ namespace antdlib.models {
 
         public List<string> Allow { get; set; } = new List<string> { "client-updates", "unknown-clients" };
         public string UpdateStaticLeases { get; set; } = "on";
-        public string UpdateConflictDetection { get; set; } = "";
+        public string UpdateConflictDetection { get; set; } = "false";
         public string UseHostDeclNames { get; set; } = "on";
         public string DoForwardUpdates { get; set; } = "on";
         public string DoReverseUpdates { get; set; } = "on";
-        public string LogFacility { get; set; } = "";
+        public string LogFacility { get; set; } = "local7";
         public List<string> Option { get; set; } = new List<string> { "routers eth0", "local-proxy-config code 252 = text" };
         public string ZoneName { get; set; } = "";
         public string ZonePrimaryAddress { get; set; } = "";
@@ -20,8 +20,8 @@ namespace antdlib.models {
         public string DdnsUpdates { get; set; } = "on";
         public string DdnsDomainName { get; set; } = "";
         public string DdnsRevDomainName { get; set; } = "in-addr.arpa.";
-        public string DefaultLeaseTime { get; set; } = "";
-        public string MaxLeaseTime { get; set; } = "";
+        public string DefaultLeaseTime { get; set; } = "7200";
+        public string MaxLeaseTime { get; set; } = "7200";
         public string KeyName { get; set; } = "updbindkey";
         public string KeySecret { get; set; } = "";
 

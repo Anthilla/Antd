@@ -1,4 +1,9 @@
-﻿authoritative;
+﻿key "updbindkey" {
+    algorithm hmac-md5;
+    secret "$secret";
+};
+
+authoritative;
 allow client-updates;
 allow unknown-clients;
 update-static-leases on;
@@ -19,11 +24,6 @@ ddns-update-style interim;
 ddns-updates on;
 ddns-domainname "$internalDomain";
 ddns-rev-domainname "in-addr.arpa.";
-
-key "updbindkey" {
-    algorithm hmac-md5;
-    secret "$secret";
-};
 
 subnet $internalNet netmask $internalMask {
     option routers $routerIp;

@@ -56,7 +56,7 @@ namespace Antd.Cloud {
                 }
             }
             catch(Exception ex) {
-                ConsoleLogger.Error(ex.Message);
+                //ConsoleLogger.Error(ex.Message);
             }
         }
     }

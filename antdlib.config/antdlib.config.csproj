@@ -76,6 +76,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AclConfiguration.cs" />
+    <Compile Include="Antd_SVCS\Bind\BindConfig.cs" />
+    <Compile Include="Antd_SVCS\Bind\BindModel2.cs" />
+    <Compile Include="Antd_SVCS\Bind\BindParser.cs" />
+    <Compile Include="Antd_SVCS\ServiceDataType.cs" />
+    <Compile Include="Antd_SVCS\Dhcp\DhcpConfig.cs" />
+    <Compile Include="Antd_SVCS\Dhcp\DhcpParser.cs" />
+    <Compile Include="Antd_SVCS\Samba\SambaCommandModel.cs" />
+    <Compile Include="Antd_SVCS\Samba\SambaConfig.cs" />
     <Compile Include="AuthorizedKeysConfiguration.cs" />
     <Compile Include="AppsConfiguration.cs" />
     <Compile Include="TorConfiguration.cs" />
@@ -118,6 +126,9 @@
     <Compile Include="VpnConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Antd_SVCS\Samba\json-schema1.json" />
+    <None Include="Antd_SVCS\Samba\samba.command.list" />
+    <None Include="Antd_SVCS\Samba\samba.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

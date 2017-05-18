@@ -72,7 +72,7 @@ namespace Antd.Cloud {
                 //ConsoleLogger.Log($"[cloud-uptime] info sent to cloud - data gathered in {DateTime.Now - dtnow}");
             }
             catch(Exception ex) {
-                ConsoleLogger.Error(ex.Message);
+                //ConsoleLogger.Error(ex.Message);
             }
         }
     }

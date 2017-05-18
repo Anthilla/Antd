@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace antdlib.common {
     public static class StringExtensions {
@@ -69,6 +70,30 @@ namespace antdlib.common {
             var rowDivider = new[] { "\n" };
             var rowList = text.Split(rowDivider, StringSplitOptions.None).ToArray();
             return rowList.Where(row => !string.IsNullOrEmpty(row)).ToList();
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, char end) {
+            var r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end.ToString()));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, string end) {
+            var r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, char start, string end) {
+            var r = new Regex(Regex.Escape(start.ToString()) + "(.*?)" + Regex.Escape(end));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
+        }
+
+        public static IEnumerable<string> SplitAndGetTextBetween(this string input, string start, char end) {
+            var r = new Regex(Regex.Escape(start) + "(.*?)" + Regex.Escape(end.ToString()));
+            var matches = r.Matches(input);
+            return from Match match in matches select match.Groups[1].Value;
         }
     }
 }

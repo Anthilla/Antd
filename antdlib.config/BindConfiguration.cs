@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using IoDir = System.IO.Directory;
 
 namespace antdlib.config {
     public class BindConfiguration {
@@ -21,7 +20,6 @@ namespace antdlib.config {
         private static BindConfigurationModel Load() {
             if(!File.Exists(CfgFile)) {
                 return new BindConfigurationModel();
-
             }
             try {
                 var text = File.ReadAllText(CfgFile);
@@ -33,7 +31,6 @@ namespace antdlib.config {
             }
         }
 
-
         public static void Save(BindConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             if(File.Exists(CfgFile)) {
@@ -44,7 +41,6 @@ namespace antdlib.config {
         }
 
         public static void Set() {
-            Enable();
             Stop();
             #region [    named.conf generation    ]
             if(File.Exists(MainFilePath)) {
@@ -182,14 +178,16 @@ namespace antdlib.config {
         }
 
         public static void Enable() {
-            ServiceModel.IsActive = true;
-            //Save(_serviceModel);
+            var mo = ServiceModel;
+            mo.IsActive = true;
+            Save(mo);
             ConsoleLogger.Log("[bind] enabled");
         }
 
         public static void Disable() {
-            ServiceModel.IsActive = false;
-            //Save(_serviceModel);
+            var mo = ServiceModel;
+            mo.IsActive = false;
+            Save(mo);
             ConsoleLogger.Log("[bind] disabled");
         }
 
@@ -235,6 +233,85 @@ namespace antdlib.config {
             zones.Remove(model);
             ServiceModel.Zones = zones;
             Save(ServiceModel);
+        }
+
+        public static List<string> GetHostZone(string hostname, string domain, string ip) {
+            var list = new List<string> {"$ORIGIN .",
+                "$TTL 3600	; 1 hour",
+                $"{domain}			IN SOA	{hostname}.{domain}. hostmaster.{domain}. (",
+                "				1000	   ; serial",
+                "				900        ; refresh (15 minutes)",
+                "				600        ; retry (10 minutes)",
+                "				86400      ; expire (1 day)",
+                "				3600       ; minimum (1 hour)",
+                "				)",
+                $"			NS	{hostname}.{domain}.",
+                "$TTL 600	; 10 minutes",
+                $"			A	{ip}",
+                $"$ORIGIN _tcp.DefaultSite._sites.{domain}.",
+                $"_gc			SRV	0 100 3268 {hostname}.{domain}.",
+                $"_kerberos		SRV	0 100 88 {hostname}.{domain}.",
+                $"_ldap			SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN _tcp.{domain}.",
+                $"_gc			SRV	0 100 3268 {hostname}.{domain}.",
+                $"_kerberos		SRV	0 100 88 {hostname}.{domain}.",
+                $"_kpasswd		SRV	0 100 464 {hostname}.{domain}.",
+                $"_ldap			SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN _udp.{domain}.",
+                $"_kerberos		SRV	0 100 88 {hostname}.{domain}.",
+                $"_kpasswd		SRV	0 100 464 {hostname}.{domain}.",
+                $"$ORIGIN {domain}.",
+                "$TTL 600	; 10 minutes",
+                $"domaindnszones		A	{ip}",
+                $"$ORIGIN domaindnszones.{domain}.",
+                $"_ldap._tcp.DefaultSite._sites	SRV	0 100 389 {hostname}.{domain}.",
+                $"_ldap._tcp		SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN {domain}.",
+                "$TTL 1200	; 20 minutes",
+                $"forestdnszones		A	{ip}",
+                $"$ORIGIN forestdnszones.{domain}.",
+                $"_ldap._tcp.DefaultSite._sites	SRV	0 100 389 {hostname}.{domain}.",
+                $"_ldap._tcp		SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN _tcp.DefaultSite._sites.dc._msdcs.{domain}.",
+                "$TTL 3600       ; 1 hour",
+                $"_kerberos		SRV	0 100 88 {hostname}.{domain}.",
+                $"_ldap			SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN _tcp.dc._msdcs.{domain}.",
+                "$TTL 3600       ; 1 hour",
+                $"_kerberos		SRV	0 100 88 {hostname}.{domain}.",
+                $"_ldap			SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN _msdcs.{domain}.",
+                "$TTL 3600       ; 1 hour",
+                $"_ldap._tcp		SRV 0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN gc._msdcs.{domain}.",
+                "$TTL 3600       ; 1 hour",
+                $"_ldap._tcp.DefaultSite._sites SRV	0 100 3268 {hostname}.{domain}.",
+                $"_ldap._tcp		SRV	0 100 3268 {hostname}.{domain}.",
+                $"$ORIGIN _msdcs.{domain}.",
+                "$TTL 3600       ; 1 hour",
+                $"_ldap._tcp.pdc		SRV	0 100 389 {hostname}.{domain}.",
+                $"$ORIGIN {domain}.",};
+            return list;
+        }
+
+        public static List<string> GetReverseZone(string hostname, string domain, string arpaNet, string arpaIp) {
+            var list = new List<string> {
+                "$ORIGIN .",
+                "$TTL 3600	; 1 hour",
+                $"{arpaNet}.in-addr.arpa   IN SOA	{hostname}.{domain}. hostmaster.{domain}. (",
+                "				1111	   ; serial",
+                "				900        ; refresh (15 minutes)",
+                "				600        ; retry (10 minutes)",
+                "				86400      ; expire (1 day)",
+                "				3600       ; minimum (1 hour)",
+                "				900        ; refresh (15 minutes)",
+                "				)",
+                $"			NS  {hostname}.{domain}.",
+                $"$ORIGIN {arpaNet}.in-addr.arpa.",
+                $"{arpaIp} PTR	{hostname}.{domain}."
+            };
+
+            return list;
         }
     }
 }
