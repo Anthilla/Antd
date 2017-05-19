@@ -48,42 +48,42 @@ namespace Antd.Modules {
             Post["/hostparam/set/modprobeslist"] = x => {
                 string data = Request.Form.Data;
                 HostParametersConfiguration.SetModprobesList(data.SplitToList(";"));
-                new Do().ParametersChanges();
+                new Do().SaveModprobes();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/rmmodlist"] = x => {
                 string data = Request.Form.Data;
                 HostParametersConfiguration.SetRmmodList(data.SplitToList(";"));
-                new Do().ParametersChanges();
+                new Do().RemoveModules();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/modulesblacklistlist"] = x => {
                 string data = Request.Form.Data;
                 HostParametersConfiguration.SetModulesBlacklistList(data.SplitToList(";"));
-                new Do().ParametersChanges();
+                new Do().BlacklistMudules();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/osparameters"] = x => {
                 string data = Request.Form.Data;
                 HostParametersConfiguration.SetOsParametersList(data.SplitToList(";"));
-                new Do().ParametersChanges();
+                new Do().SaveOsParameters();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/servicesstartlist"] = x => {
                 string data = Request.Form.Data;
                 HostParametersConfiguration.SetServicesStartList(data.SplitToList(";"));
-                new Do().ParametersChanges();
+                new Do().StartService();
                 return HttpStatusCode.OK;
             };
 
             Post["/hostparam/set/servicesstoplist"] = x => {
                 string data = Request.Form.Data;
                 HostParametersConfiguration.SetServicesStopList(data.SplitToList(";"));
-                new Do().ParametersChanges();
+                new Do().StopService();
                 return HttpStatusCode.OK;
             };
 
@@ -102,7 +102,7 @@ namespace Antd.Modules {
                     list.Add(mo);
                 }
                 HostParametersConfiguration.SetStartCommandsList(list);
-                new Do().ParametersChanges();
+                new Do().LaunchStart();
                 return HttpStatusCode.OK;
             };
 
@@ -121,7 +121,7 @@ namespace Antd.Modules {
                     list.Add(mo);
                 }
                 HostParametersConfiguration.SetEndCommandsList(list);
-                new Do().ParametersChanges();
+                new Do().LaunchEnd();
                 return HttpStatusCode.OK;
             };
         }

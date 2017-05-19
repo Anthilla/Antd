@@ -814,26 +814,28 @@ namespace Antd {
         #endregion
 
         #region [    modules    ]
-        private void SaveModprobes() {
+        public void SaveModprobes() {
             var modules = HostParametersConfiguration.Conf.Modprobes;
             foreach(var mod in modules) {
+                ConsoleLogger.Log($"load module: {mod}");
+                Bash.Execute($"modprobe {mod}");
                 CommandLauncher.Launch("modprobe", new Dictionary<string, string> { { "$package", mod } });
             }
         }
 
-        private void RemoveModules() {
+        public void RemoveModules() {
             var modules = string.Join(" ", HostParametersConfiguration.Conf.Rmmod);
             CommandLauncher.Launch("rmmod", new Dictionary<string, string> { { "$modules", modules } });
         }
 
-        private void BlacklistMudules() {
+        public void BlacklistMudules() {
             if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
             File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist);
         }
         #endregion
 
         #region [    services    ]
-        private void StartService() {
+        public void StartService() {
             var svcs = HostParametersConfiguration.Conf.ServicesStart;
             foreach(var svc in svcs) {
                 if(Systemctl.IsEnabled(svc) == false) {
@@ -845,7 +847,7 @@ namespace Antd {
             }
         }
 
-        private void StopService() {
+        public void StopService() {
             var svcs = HostParametersConfiguration.Conf.ServicesStop;
             foreach(var svc in svcs) {
                 if(Systemctl.IsEnabled(svc)) {
@@ -859,7 +861,7 @@ namespace Antd {
         #endregion
 
         #region [    os parameters    ]
-        private void SaveOsParameters() {
+        public void SaveOsParameters() {
             var parameters = HostParametersConfiguration.Conf.OsParameters;
             foreach(var par in parameters) {
                 if(!par.Contains(" ")) { continue; }
@@ -879,14 +881,14 @@ namespace Antd {
         #endregion
 
         #region [    commands    ]
-        private void LaunchStart() {
+        public void LaunchStart() {
             var controls = HostParametersConfiguration.Conf.StartCommands;
             foreach(var control in controls) {
                 Launch(control);
             }
         }
 
-        private void LaunchEnd() {
+        public void LaunchEnd() {
             var controls = HostParametersConfiguration.Conf.EndCommands;
             foreach(var control in controls) {
                 Launch(control);

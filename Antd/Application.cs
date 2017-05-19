@@ -144,8 +144,7 @@ namespace Antd {
             #endregion
 
             #region [    Secret    ]
-            var importSecret = "";
-
+            //var importSecret = "";
             if(!File.Exists(Parameter.AntdCfgSecret)) {
                 FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }
@@ -279,15 +278,14 @@ namespace Antd {
             }
             if(!File.Exists($"{Parameter.AntdCfgParameters}/rmmod.conf")) {
                 var ddd = tmpHost.RemoveModules.StoredValues.FirstOrDefault().Value.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                HostParametersConfiguration.SetModprobesList(ddd.ToList());
+                HostParametersConfiguration.SetRmmodList(ddd.ToList());
             }
             if(!File.Exists($"{Parameter.AntdCfgParameters}/modulesblacklist.conf")) {
                 var ddd = tmpHost.ModulesBlacklist;
-                HostParametersConfiguration.SetModprobesList(ddd.ToList());
+                HostParametersConfiguration.SetModulesBlacklistList(ddd.ToList());
             }
             if(!File.Exists($"{Parameter.AntdCfgParameters}/osparameters.conf")) {
-                var list = new List<string>
-                {
+                var list = new List<string> {
                     "/proc/sys/fs/file-max 1024000",
                     "/proc/sys/net/bridge/bridge-nf-call-arptables 0",
                     "/proc/sys/net/bridge/bridge-nf-call-ip6tables 0",
@@ -329,7 +327,6 @@ namespace Antd {
 
                 ConsoleLogger.Log("[data import] parameters");
             }
-
             #endregion
 
             #endregion

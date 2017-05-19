@@ -96,24 +96,22 @@ namespace Antd.Timer {
                 CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", nif } });
             }
 
-            pingReply = p.Send("8.8.8.8");
-            if(pingReply?.Status == IPStatus.Success) {
-                ConsoleLogger.Log("[check] internet status: ok");
-            }
-
-            var dhclientFirst = Network2Configuration.InterfacePhysical.FirstOrDefault();
-            ConsoleLogger.Log($"[check] configuring {dhclientFirst} via dhclient");
-            CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", dhclientFirst } });
-            CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", dhclientFirst }, { "$mtu", "6000" } });
-            CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", dhclientFirst }, { "$txqueuelen", "10000" } });
-            CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", dhclientFirst } });
-
-            foreach(var br in Network2Configuration.InterfaceBridge) {
-                CommandLauncher.Launch("brctl-del-if", new Dictionary<string, string> { { "$bridge", br }, { "$net_if", dhclientFirst } });
-            }
-            foreach(var bond in Network2Configuration.InterfaceBond) {
-                CommandLauncher.Launch("bond-del-if", new Dictionary<string, string> { { "$bond", bond }, { "$net_if", dhclientFirst } });
-            }
+            //pingReply = p.Send("8.8.8.8");
+            //if(pingReply?.Status == IPStatus.Success) {
+            //    ConsoleLogger.Log("[check] internet status: ok");
+            //}
+            //var dhclientFirst = Network2Configuration.InterfacePhysical.FirstOrDefault();
+            //ConsoleLogger.Log($"[check] configuring {dhclientFirst} via dhclient");
+            //CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", dhclientFirst } });
+            //CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", dhclientFirst }, { "$mtu", "6000" } });
+            //CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", dhclientFirst }, { "$txqueuelen", "10000" } });
+            //CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", dhclientFirst } });
+            //foreach(var br in Network2Configuration.InterfaceBridge) {
+            //    CommandLauncher.Launch("brctl-del-if", new Dictionary<string, string> { { "$bridge", br }, { "$net_if", dhclientFirst } });
+            //}
+            //foreach(var bond in Network2Configuration.InterfaceBond) {
+            //    CommandLauncher.Launch("bond-del-if", new Dictionary<string, string> { { "$bond", bond }, { "$net_if", dhclientFirst } });
+            //}
 
             pingReply = p.Send("8.8.8.8");
             if(pingReply?.Status == IPStatus.Success) {
