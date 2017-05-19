@@ -64,9 +64,14 @@ namespace antdlib.config {
             if(check.Any()) {
                 check.ForEach(_ => RemoveInterfaceSetting(_.Device));
             }
-            netif.Add(model);
-            Conf.Interfaces = netif;
-            Save(Conf);
+            var list = new List<NetworkInterface>();
+            foreach(var n in netif) {
+                list.Add(n);
+            }
+            list.Add(model);
+            Conf.Interfaces = list;
+            var m = new Network2ConfigurationModel { Interfaces = list, ActiveDnsConfiguration = Conf.ActiveDnsConfiguration };
+            Save(m);
         }
 
         public static void RemoveInterfaceSetting(string device) {

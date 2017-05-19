@@ -619,7 +619,7 @@ namespace Antd {
 
             #region [    Cloud Send Uptime    ]
             var ncc = new ConfigurationCheck();
-            ncc.Start(1000 * 10);
+            ncc.Start(1000 * 60 * 2);
             #endregion
 
             #region [    Test    ]
