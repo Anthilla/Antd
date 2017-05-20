@@ -93,9 +93,7 @@ namespace Antd {
             SaveHostsFile();
 
             //SaveDhcpdFile();
-
             //SaveNamedFile();
-
             //SaveNftablesFile();
         }
 
@@ -830,7 +828,7 @@ namespace Antd {
 
         public void BlacklistMudules() {
             if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
-            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist);
+            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist.Select(_=> $"blacklist {_}"));
         }
         #endregion
 

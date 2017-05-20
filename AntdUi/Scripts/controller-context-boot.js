@@ -53,7 +53,7 @@ function BootCommandsController($scope, $http, $interval) {
     $scope.saveEnd = function ($event) {
         var commands = "";
         angular.forEach($scope.EndCommands, function (v) {
-            commands += v.Index + "," + v.FirstCommand + ";";
+            commands += v.FirstCommand + ";";
         });
         var data = $.param({
             Data: commands
@@ -65,7 +65,7 @@ function BootCommandsController($scope, $http, $interval) {
     $scope.saveStart = function ($event) {
         var commands = "";
         angular.forEach($scope.StartCommands, function (v) {
-            commands += v.Index + "," + v.FirstCommand + ";";
+            commands += v.FirstCommand + ";";
         });
         var data = $.param({
             Data: commands

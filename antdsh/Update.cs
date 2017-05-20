@@ -280,15 +280,22 @@ namespace antdsh {
             Bash.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory).ToList();
             foreach(var downloadedUnit in downloadedUnits) {
-                var fullPath = Path.GetFullPath(downloadedUnit);
-                Console.WriteLine($"copy {fullPath} to {unitsTargetDir}/{Path.GetFileName(fullPath)}");
-                File.Copy(fullPath, $"{unitsTargetDir}/{Path.GetFileName(fullPath)}", true);
-                if(!string.IsNullOrEmpty(linkDirForAntd) && File.Exists(fullPath)) {
-                    var linkedFile = fullPath.Replace(unitsTargetDir, linkDirForAntd);
+                var downloadUnitPath = Path.GetFullPath(downloadedUnit);
+                var unitName = Path.GetFileName(downloadUnitPath);
+                var destUnitPath = $"{unitsTargetDir}/{unitName}";
+                Console.WriteLine($"copy {downloadUnitPath} to {destUnitPath}");
+                File.Copy(downloadUnitPath, destUnitPath, true);
+                if(!string.IsNullOrEmpty(linkDirForAntd) && File.Exists(destUnitPath)) {
+                    var linkedFile = $"{linkDirForAntd}/{unitName}";
                     if(File.Exists(linkedFile)) {
-                        File.Delete(linkedFile);
+                        try {
+                            File.Delete(linkedFile);
+                        }
+                        catch(Exception e) {
+                            Console.WriteLine(e);
+                        }
                     }
-                    Bash.Execute($"ln -s {fullPath} {linkedFile}");
+                    Bash.Execute($"ln -s {downloadUnitPath} {linkedFile}");
                 }
             }
             Bash.Execute("systemctl daemon-reload");

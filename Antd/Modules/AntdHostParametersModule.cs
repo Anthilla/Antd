@@ -92,12 +92,11 @@ namespace Antd.Modules {
                 var list = new List<Control>();
                 var arr1 = data.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                 for(var i = 0; i < arr1.Length; i++) {
-                    var arr2 = arr1[i].Split(',');
                     var mo = new Control {
                         Index = i,
-                        FirstCommand = arr2[1],
-                        ControlCommand = arr2.Length < 3 ? "" : arr2[2],
-                        Check = arr2.Length < 4 ? "" : arr2[3]
+                        FirstCommand = arr1[i],
+                        ControlCommand = "",
+                        Check = ""
                     };
                     list.Add(mo);
                 }
@@ -111,12 +110,11 @@ namespace Antd.Modules {
                 var list = new List<Control>();
                 var arr1 = data.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                 for(var i = 0; i < arr1.Length; i++) {
-                    var arr2 = arr1[i].Split(',');
                     var mo = new Control {
                         Index = i,
-                        FirstCommand = arr2[1],
-                        ControlCommand = arr2.Length < 3 ? "" : arr2[2],
-                        Check = arr2.Length < 4 ? "" : arr2[3]
+                        FirstCommand = arr1[i],
+                        ControlCommand = "",
+                        Check = ""
                     };
                     list.Add(mo);
                 }
