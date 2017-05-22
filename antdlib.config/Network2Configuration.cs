@@ -29,17 +29,68 @@ namespace antdlib.config {
         private static readonly string Dir = Parameter.AntdCfgNetwork;
         private static readonly string CfgFile = $"{Parameter.AntdCfgNetwork}/network.conf";
 
+        private static readonly string InterfaceDir = $"{Dir}/addr";
         private const string InterfaceConfigurationExt = ".nif";
+        private static readonly string GatewayDir = $"{Dir}/gateway";
         private const string GatewayConfigurationExt = ".gw";
-        //private static string RouteDir = $"{Dir}/routes";
+        private static readonly string RouteDir = $"{Dir}/route";
         private const string RouteConfigurationExt = ".rt";
+        private static readonly string DnsDir = $"{Dir}/dns";
         private const string DnsConfigurationExt = ".dns";
+        private static readonly string NsUpdateDir = $"{Dir}/nsu";
         private const string NsUpdateConfigurationExt = ".nsu";
+        private static readonly string NetworkHardwareDir = $"{Dir}/hw";
         private const string NetworkHardwareConfigurationExt = ".nhc";
+        private static readonly string NetworkAggregatedInterfaceDir = $"{Dir}/aggregate";
         private const string NetworkAggregatedInterfaceConfigurationExt = ".lag";
 
-        #region [    Network conf   ]
+        public static void SetWorkingDirectory() {
+            Directory.CreateDirectory(Dir);
+            Directory.CreateDirectory(InterfaceDir);
+            Directory.CreateDirectory(GatewayDir);
+            Directory.CreateDirectory(RouteDir);
+            Directory.CreateDirectory(DnsDir);
+            Directory.CreateDirectory(NsUpdateDir);
+            Directory.CreateDirectory(NetworkHardwareDir);
+            Directory.CreateDirectory(NetworkAggregatedInterfaceDir);
 
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{InterfaceConfigurationExt}*")) {
+                MoveFile(file, InterfaceDir);
+            }
+
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{GatewayConfigurationExt}*")) {
+                MoveFile(file, GatewayDir);
+            }
+
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{RouteConfigurationExt}*")) {
+                MoveFile(file, RouteDir);
+            }
+
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{NsUpdateConfigurationExt}*")) {
+                MoveFile(file, NsUpdateDir);
+            }
+
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{DnsConfigurationExt}*")) {
+                MoveFile(file, DnsDir);
+            }
+
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{NetworkHardwareConfigurationExt}*")) {
+                MoveFile(file, NetworkHardwareDir);
+            }
+
+            foreach(var file in Directory.EnumerateFiles(Dir, $"*{NetworkAggregatedInterfaceConfigurationExt}*")) {
+                MoveFile(file, NetworkAggregatedInterfaceDir);
+            }
+        }
+
+        private static void MoveFile(string src, string destinationDir) {
+            var fname = Path.GetFileName(src);
+            if(string.IsNullOrEmpty(fname)) { return; }
+            var dst = Path.Combine(destinationDir, fname);
+            File.Move(src, dst);
+        }
+
+        #region [    Network conf   ]
         private static Network2ConfigurationModel Parse() {
             var conf = new Network2ConfigurationModel();
             if(!File.Exists(CfgFile)) {
@@ -94,14 +145,12 @@ namespace antdlib.config {
             Save(Conf);
             CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", device } });
         }
-
         #endregion
 
         #region [    NetworkInterfaceConfiguration    ]
-
         private static List<NetworkInterfaceConfiguration> GetInterfaceConfiguration() {
             var list = new List<NetworkInterfaceConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{InterfaceConfigurationExt}");
+            var files = Directory.EnumerateFiles(InterfaceDir, $"*{InterfaceConfigurationExt}");
             var ints = Conf.Interfaces;
             foreach(var file in files) {
                 try {
@@ -124,7 +173,7 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{InterfaceConfigurationExt}";
+            var file = $"{InterfaceDir}/{conf.Id}{InterfaceConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
                 FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
@@ -136,7 +185,7 @@ namespace antdlib.config {
         }
 
         public static bool RemoveInterfaceConfiguration(string id) {
-            var file = $"{Dir}/{id}{InterfaceConfigurationExt}";
+            var file = $"{InterfaceDir}/{id}{InterfaceConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }
@@ -148,14 +197,12 @@ namespace antdlib.config {
             }
             return !File.Exists(file);
         }
-
         #endregion
 
         #region [    NetworkGatewayConfiguration    ]
-
         private static List<NetworkGatewayConfiguration> GetGatewayConfiguration() {
             var list = new List<NetworkGatewayConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{GatewayConfigurationExt}");
+            var files = Directory.EnumerateFiles(GatewayDir, $"*{GatewayConfigurationExt}");
             foreach(var file in files) {
                 try {
                     var text = File.ReadAllText(file);
@@ -173,7 +220,7 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{GatewayConfigurationExt}";
+            var file = $"{GatewayDir}/{conf.Id}{GatewayConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
                 FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
@@ -185,7 +232,7 @@ namespace antdlib.config {
         }
 
         public static bool RemoveGatewayConfiguration(string id) {
-            var file = $"{Dir}/{id}{GatewayConfigurationExt}";
+            var file = $"{GatewayDir}/{id}{GatewayConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }
@@ -200,10 +247,9 @@ namespace antdlib.config {
         #endregion
 
         #region [    NetworkRouteConfiguration    ]
-
         private static List<NetworkRouteConfiguration> GetRouteConfiguration() {
             var list = new List<NetworkRouteConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{RouteConfigurationExt}");
+            var files = Directory.EnumerateFiles(RouteDir, $"*{RouteConfigurationExt}");
             foreach(var file in files) {
                 try {
                     var text = File.ReadAllText(file);
@@ -221,7 +267,7 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{RouteConfigurationExt}";
+            var file = $"{RouteDir}/{conf.Id}{RouteConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
                 FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
@@ -233,7 +279,7 @@ namespace antdlib.config {
         }
 
         public static bool RemoveRouteConfiguration(string id) {
-            var file = $"{Dir}/{id}{RouteConfigurationExt}";
+            var file = $"{RouteDir}/{id}{RouteConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }
@@ -248,10 +294,9 @@ namespace antdlib.config {
         #endregion
 
         #region [    NsUpdateConfiguration    ]
-
         private static List<NsUpdateConfiguration> GetNsUpdateConfiguration() {
             var list = new List<NsUpdateConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{NsUpdateConfigurationExt}");
+            var files = Directory.EnumerateFiles(NsUpdateDir, $"*{NsUpdateConfigurationExt}");
             foreach(var file in files) {
                 try {
                     var text = File.ReadAllText(file);
@@ -269,7 +314,7 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{NsUpdateConfigurationExt}";
+            var file = $"{NsUpdateDir}/{conf.Id}{NsUpdateConfigurationExt}";
             var lines = new List<string>();
             if(!string.IsNullOrEmpty(conf.ServerName)) {
                 lines.Add($"server {conf.ServerName} {conf.ServerPort}");
@@ -316,7 +361,7 @@ namespace antdlib.config {
         }
 
         public static bool RemoveNsUpdateConfiguration(string id) {
-            var file = $"{Dir}/{id}{NsUpdateConfigurationExt}";
+            var file = $"{NsUpdateDir}/{id}{NsUpdateConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }
@@ -332,7 +377,6 @@ namespace antdlib.config {
         #endregion
 
         #region [    Network Devices Mapping    ]
-
         private static IEnumerable<string> GetAll() {
             try {
                 var list = BashExtension.SplitBash(Bash.Execute("ls -la /sys/class/net")).Where(_ => _.Contains("->"));
@@ -409,7 +453,7 @@ namespace antdlib.config {
         #region [    DnsConfiguration    ]
         private static List<DnsConfiguration> GetDnsConfiguration() {
             var list = new List<DnsConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{DnsConfigurationExt}");
+            var files = Directory.EnumerateFiles(DnsDir, $"*{DnsConfigurationExt}");
             foreach(var file in files) {
                 try {
                     var text = File.ReadAllText(file);
@@ -427,7 +471,7 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{DnsConfigurationExt}";
+            var file = $"{DnsDir}/{conf.Id}{DnsConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
                 FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
@@ -439,7 +483,7 @@ namespace antdlib.config {
         }
 
         public static bool RemoveDnsConfiguration(string id) {
-            var file = $"{Dir}/{id}{DnsConfigurationExt}";
+            var file = $"{DnsDir}/{id}{DnsConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }
@@ -466,7 +510,7 @@ namespace antdlib.config {
         #region [    NetworkHardwareConfiguration    ]
         private static List<NetworkHardwareConfiguration> GetNetworkHardwareConfiguration() {
             var list = new List<NetworkHardwareConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{NetworkHardwareConfigurationExt}");
+            var files = Directory.EnumerateFiles(NetworkHardwareDir, $"*{NetworkHardwareConfigurationExt}");
             foreach(var file in files) {
                 try {
                     var text = File.ReadAllText(file);
@@ -484,7 +528,7 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{NetworkHardwareConfigurationExt}";
+            var file = $"{NetworkHardwareDir}/{conf.Id}{NetworkHardwareConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
             try {
                 FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
@@ -496,7 +540,7 @@ namespace antdlib.config {
         }
 
         public static bool RemoveNetworkHardwareConfiguration(string id) {
-            var file = $"{Dir}/{id}{NetworkHardwareConfigurationExt}";
+            var file = $"{NetworkHardwareDir}/{id}{NetworkHardwareConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }
@@ -512,10 +556,9 @@ namespace antdlib.config {
         #endregion
 
         #region [    NetworkAggregatedInterfaceConfiguration    ]
-
         private static List<NetworkAggregatedInterfaceConfiguration> GetAggregatedInterfaceConfiguration() {
             var list = new List<NetworkAggregatedInterfaceConfiguration>();
-            var files = Directory.EnumerateFiles(Dir, $"*{NetworkAggregatedInterfaceConfigurationExt}");
+            var files = Directory.EnumerateFiles(NetworkAggregatedInterfaceDir, $"*{NetworkAggregatedInterfaceConfigurationExt}");
             foreach(var file in files) {
                 try {
                     var conf = Json.Read<NetworkAggregatedInterfaceConfiguration>(file);
@@ -532,13 +575,13 @@ namespace antdlib.config {
             if(string.IsNullOrEmpty(conf.Id)) {
                 return false;
             }
-            var file = $"{Dir}/{conf.Id}{NetworkAggregatedInterfaceConfigurationExt}";
+            var file = $"{NetworkAggregatedInterfaceDir}/{conf.Id}{NetworkAggregatedInterfaceConfigurationExt}";
             Json.Save(conf, file);
             return File.Exists(file);
         }
 
         public static bool RemoveAggregatedInterfaceConfiguration(string id) {
-            var file = $"{Dir}/{id}{NetworkAggregatedInterfaceConfigurationExt}";
+            var file = $"{NetworkAggregatedInterfaceDir}/{id}{NetworkAggregatedInterfaceConfigurationExt}";
             if(!File.Exists(file)) {
                 return false;
             }

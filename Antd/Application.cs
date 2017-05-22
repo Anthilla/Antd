@@ -328,6 +328,8 @@ namespace Antd {
             }
             #endregion
 
+            Network2Configuration.SetWorkingDirectory();
+
             #endregion
 
             #region [    Adjustments    ]
