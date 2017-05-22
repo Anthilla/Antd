@@ -92,6 +92,7 @@ namespace Antd {
             Directory.CreateDirectory(Parameter.AntdCfg);
             Directory.CreateDirectory(Parameter.AntdCfgServices);
             Directory.CreateDirectory(Parameter.AntdCfgNetwork);
+            Network2Configuration.CreateWorkingDirectories();
             Directory.CreateDirectory(Parameter.AntdCfgParameters);
             Directory.CreateDirectory(Parameter.AntdCfgCluster);
             Directory.CreateDirectory($"{Parameter.AntdCfgServices}/acls");
@@ -172,6 +173,8 @@ namespace Antd {
             #endregion
 
             #region [    Import Existing Configuration    ]
+
+            Network2Configuration.SetWorkingDirectories();
 
             #region import host2model
             var tmpHost = HostConfiguration.Host;
@@ -327,8 +330,6 @@ namespace Antd {
                 ConsoleLogger.Log("[data import] parameters");
             }
             #endregion
-
-            Network2Configuration.SetWorkingDirectory();
 
             #endregion
 

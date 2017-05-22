@@ -44,7 +44,7 @@ namespace antdlib.config {
         private static readonly string NetworkAggregatedInterfaceDir = $"{Dir}/aggregate";
         private const string NetworkAggregatedInterfaceConfigurationExt = ".lag";
 
-        public static void SetWorkingDirectory() {
+        public static void CreateWorkingDirectories() {
             Directory.CreateDirectory(Dir);
             Directory.CreateDirectory(InterfaceDir);
             Directory.CreateDirectory(GatewayDir);
@@ -53,7 +53,9 @@ namespace antdlib.config {
             Directory.CreateDirectory(NsUpdateDir);
             Directory.CreateDirectory(NetworkHardwareDir);
             Directory.CreateDirectory(NetworkAggregatedInterfaceDir);
+        }
 
+        public static void SetWorkingDirectories() {
             foreach(var file in Directory.EnumerateFiles(Dir, $"*{InterfaceConfigurationExt}*")) {
                 MoveFile(file, InterfaceDir);
             }
