@@ -67,6 +67,7 @@
 */Style/themes/base/images/*	linguist-vendored
 *metro*.(eot|svg|ttf|woff|js|css|less|scss|styl)	linguist-vendored
 *font-awesome*.(css|less|scss|styl)	linguist-vendored
+*angular*	linguist-vendored
 *angular*.(css|js)	linguist-vendored
 *select2*.(css|js)	linguist-vendored
 *selectize*.(css|js)	linguist-vendored
