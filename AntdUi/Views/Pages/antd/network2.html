@@ -25,7 +25,7 @@
                     </div>
                     <div class="cell colspan4">
                         <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                            <input type="text" ng-model="Host.InternalDomainPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <input type="text" ng-model="Variables.InternalDomainPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
                             <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                         </div>
                     </div>
@@ -34,20 +34,15 @@
                     <div class="cell colspan2 uppercase fg-anthilla-green">
                         <p>Internal Primary Ip</p>
                     </div>
-                    <div class="cell colspan4">
+                    <div class="cell colspan2">
                         <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                            <input type="text" ng-model="Host.InternalHostIpPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <input type="text" ng-model="Variables.InternalHostIpPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
                             <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                         </div>
                     </div>
-                </div>
-                <div class="row cells6">
-                    <div class="cell colspan2 uppercase fg-anthilla-green">
-                        <p>Internal Primary Bits (Subnet)</p>
-                    </div>
-                    <div class="cell colspan4">
+                    <div class="cell colspan2">
                         <div class="input-control select width100pc">
-                            <select name="singleSelect" ng-model="Host.InternalNetPrimaryBits" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                            <select name="singleSelect" ng-model="Variables.InternalNetPrimaryBits" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -83,14 +78,6 @@
                                 <option value="32">32</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-                <div class="row cells6">
-                    <div class="cell colspan2 uppercase fg-anthilla-green">
-                        <p>Internal Primary net</p>
-                    </div>
-                    <div class="cell colspan4">
-                        <p>{{ Host.InternalNetPrimary }}</p>
                     </div>
                 </div>
                 <div class="row cells6">
@@ -99,29 +86,24 @@
                     </div>
                     <div class="cell colspan4">
                         <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                            <input type="text" ng-model="Host.ExternalDomainPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <input type="text" ng-model="Variables.ExternalDomainPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
                             <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                         </div>
                     </div>
                 </div>
                 <div class="row cells6">
                     <div class="cell colspan2 uppercase fg-anthilla-green">
-                        <p>External Primary Ip</p>
+                        <p>External Primary Ip / Range</p>
                     </div>
-                    <div class="cell colspan4">
+                    <div class="cell colspan2">
                         <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                            <input type="text" ng-model="Host.ExternalHostIpPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <input type="text" ng-model="Variables.ExternalHostIpPrimary" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
                             <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                         </div>
                     </div>
-                </div>
-                <div class="row cells6">
-                    <div class="cell colspan2 uppercase fg-anthilla-green">
-                        <p>External Primary Bits (Subnet)</p>
-                    </div>
-                    <div class="cell colspan4">
+                    <div class="cell colspan2">
                         <div class="input-control select width100pc">
-                            <select name="singleSelect" ng-model="Host.ExternalNetPrimaryBits" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                            <select ng-model="Variables.ExternalNetPrimaryBits" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -157,14 +139,6 @@
                                 <option value="32">32</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-                <div class="row cells6">
-                    <div class="cell colspan2 uppercase fg-anthilla-green">
-                        <p>External Primary net</p>
-                    </div>
-                    <div class="cell colspan4">
-                        <p>{{ Host.ExternalNetPrimary }}</p>
                     </div>
                 </div>
                 <div class="row cells6">
