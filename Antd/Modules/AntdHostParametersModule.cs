@@ -33,7 +33,7 @@ using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using antdlib.common;
+using anthilla.core;
 
 namespace Antd.Modules {
     public class AntdHostParametersModule : NancyModule {

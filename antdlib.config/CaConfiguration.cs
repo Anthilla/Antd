@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public class CaConfiguration {

@@ -32,6 +32,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.Log {
     public class Journalctl {

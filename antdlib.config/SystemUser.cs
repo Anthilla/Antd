@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.common;
 using anthilla.commands;
+using anthilla.core;
 
 namespace antdlib.config {
     public class SystemUser {

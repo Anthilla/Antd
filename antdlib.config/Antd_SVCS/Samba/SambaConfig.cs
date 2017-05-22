@@ -31,8 +31,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.common;
-using antdlib.common.Helpers;
+using anthilla.core;
+using anthilla.core.Helpers;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config.Antd_SVCS.Samba {
     public class SambaConfig {

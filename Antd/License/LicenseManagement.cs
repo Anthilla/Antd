@@ -4,6 +4,8 @@ using antdlib.models;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.License {
     public class LicenseManagement {

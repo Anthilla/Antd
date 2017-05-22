@@ -65,6 +65,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj">
+      <Project>{FAF895F3-2EA3-44CC-ABE8-D54DC2AE0927}</Project>
+      <Name>anthilla.core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
       <Name>antdlib.common</Name>

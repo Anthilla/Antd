@@ -27,13 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
-using antdlib.common.Helpers;
 using antdlib.config;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
+using anthilla.core.Helpers;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.Overlay {
     public class OverlayWatcher {
@@ -70,7 +71,7 @@ namespace Antd.Overlay {
 
         private static void OnChanged(object source, FileSystemEventArgs e) {
             var directory = Path.GetDirectoryName(e.FullPath);
-            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.ContainsAny(Filter)) {
+            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !StringExtensions.ContainsAny(directory, Filter)) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList("/").First();
                 ChangedDirectories.Add(directory, du);
             }
@@ -78,7 +79,7 @@ namespace Antd.Overlay {
 
         private static void OnRenamed(object source, RenamedEventArgs e) {
             var directory = Path.GetDirectoryName(e.FullPath);
-            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !directory.ContainsAny(Filter)) {
+            if(directory != null && !ChangedDirectories.ContainsKey(directory) && !StringExtensions.ContainsAny(directory, Filter)) {
                 var du = Bash.Execute($"du -msh {directory}/").SplitToList("/").First();
                 ChangedDirectories.Add(directory, du);
             }

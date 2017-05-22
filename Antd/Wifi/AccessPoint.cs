@@ -1,5 +1,5 @@
-﻿using antdlib.common;
-using System.Linq;
+﻿using System.Linq;
+using anthilla.core;
 
 namespace Antd.Wifi {
     public class AccessPoint {

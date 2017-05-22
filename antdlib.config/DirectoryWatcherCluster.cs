@@ -27,13 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.config.shared;
+using anthilla.core;
 using Nancy;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public class DirectoryWatcherCluster {

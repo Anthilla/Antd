@@ -1,12 +1,12 @@
-﻿using antdlib.common;
-using System;
+﻿using System;
+using anthilla.core;
 
 namespace Antd.Cloud {
     public class WhatIsMyIp {
         public static string Get() {
             try {
                 var api = new ApiConsumer();
-                var ip = api.Get("http://whatismyip.akamai.com/");
+                var ip = api.GetString("http://whatismyip.akamai.com/");
                 return ip;
             }
             catch(Exception) {

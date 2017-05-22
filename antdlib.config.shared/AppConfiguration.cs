@@ -3,6 +3,8 @@ using antdlib.models;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config.shared {
     public class AppConfiguration {
@@ -49,7 +51,7 @@ namespace antdlib.config.shared {
         public void UiSave(AppConfigurationModel model) {
             var savedModel = Get();
             _model = model;
-            _api.Post2($"http://localhost:{savedModel.AntdPort}/config", _model.ToDictionary());
+            _api.Post2($"http://localhost:{savedModel.AntdPort}/config", ObjectExtensions.ToDictionary(_model));
         }
     }
 }

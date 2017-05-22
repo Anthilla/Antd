@@ -38,6 +38,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
 
 namespace Antd.Modules {
     public class AssetDiscoveryModule : NancyModule {

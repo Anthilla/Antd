@@ -3,7 +3,9 @@ using System;
 using System.IO;
 using System.Linq;
 using antdlib.models;
+using anthilla.core;
 using Newtonsoft.Json;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.Machine {
     public class MachineId {

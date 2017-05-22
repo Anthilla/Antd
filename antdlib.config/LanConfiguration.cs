@@ -1,7 +1,7 @@
-﻿using antdlib.common;
-using anthilla.commands;
+﻿using anthilla.commands;
 using System.Collections.Generic;
 using System.Linq;
+using anthilla.core;
 
 namespace antdlib.config {
     public class LanConfiguration {

@@ -1,10 +1,11 @@
-﻿using antdlib.common;
-using antdlib.models;
+﻿using antdlib.models;
 using anthilla.commands;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public static class HostConfiguration {
@@ -162,7 +163,7 @@ namespace antdlib.config {
         }
 
         public static void SetNsNetworks(string[] networks) {
-            Host.NsNetworks.StoredValues["$value"] = networks.JoinToString("\n");
+            Host.NsNetworks.StoredValues["$value"] = EnumerableExtensions.JoinToString(networks, "\n");
             Host.NsNetworksContent = networks;
             Export(Host);
         }
@@ -185,7 +186,7 @@ namespace antdlib.config {
 
         public static void SetNsResolv(string[] resolv) {
             Host.NsResolvContent = resolv;
-            Host.NsResolv.StoredValues["$value"] = resolv.JoinToString("\n");
+            Host.NsResolv.StoredValues["$value"] = EnumerableExtensions.JoinToString(resolv, "\n");
             Export(Host);
         }
 
@@ -215,7 +216,7 @@ namespace antdlib.config {
 
         public static void SetNsSwitch(string[] @switch) {
             Host.NsSwitchContent = @switch;
-            Host.NsSwitch.StoredValues["$value"] = @switch.JoinToString("\n");
+            Host.NsSwitch.StoredValues["$value"] = EnumerableExtensions.JoinToString(@switch, "\n");
             Export(Host);
         }
 

@@ -27,13 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using antdlib.models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.Info {
     public class MachineInfo {

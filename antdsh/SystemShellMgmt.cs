@@ -27,10 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using System;
 using System.IO;
 using System.Linq;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdsh {
     public class SystemShellMgmt {

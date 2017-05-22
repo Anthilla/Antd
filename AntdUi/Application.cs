@@ -1,7 +1,7 @@
-﻿using antdlib.common;
-using antdlib.config.shared;
+﻿using antdlib.config.shared;
 using Nancy.Hosting.Self;
 using System;
+using anthilla.core;
 
 namespace AntdUi {
     internal class Application {

@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using anthilla.commands;
@@ -35,6 +34,7 @@ using Nancy;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using anthilla.core;
 
 namespace Antd.Modules {
     public class AntdTimeModule : NancyModule {
@@ -56,8 +56,8 @@ namespace Antd.Modules {
                     Ntpsync = timedatectl.First(_ => _.Contains("NTP synchronized:")).Split(new[] { ":" }, 2, ssoree)[1],
                     Rtcintz = timedatectl.First(_ => _.Contains("RTC in local TZ:")).Split(new[] { ":" }, 2, ssoree)[1],
                     NtpServer = HostConfiguration.Host.NtpdateServer.StoredValues["$server"],
-                    Ntpd = ntpd.JoinToString("<br />"),
-                    NtpdEdit = ntpd.JoinToString(Environment.NewLine)
+                    Ntpd = EnumerableExtensions.JoinToString(ntpd, "<br />"),
+                    NtpdEdit = EnumerableExtensions.JoinToString(ntpd, Environment.NewLine)
                 };
                 return JsonConvert.SerializeObject(model);
             };

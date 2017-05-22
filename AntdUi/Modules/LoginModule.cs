@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using AntdUi.Auth;
 using Nancy;
 using Nancy.Authentication.Forms;
@@ -36,6 +35,7 @@ using Nancy.Extensions;
 using System;
 using System.Dynamic;
 using System.Linq;
+using anthilla.core;
 
 namespace AntdUi.Modules {
     public class LoginModule : NancyModule {
@@ -65,10 +65,10 @@ namespace AntdUi.Modules {
                 if(validationGuid == null) {
                     return Context.GetRedirect("/login");
                 }
-                var sessionCookie = new NancyCookie("antd-session", validationGuid.ToGuid().ToString(), expiration);
+                var sessionCookie = new NancyCookie("antd-session", GuidExtensions.ToGuid(validationGuid).ToString(), expiration);
                 ConsoleLogger.Log($"{username} logged in successfully");
                 var returnUrl = (string)Request.Form.Return;
-                return this.LoginAndRedirect(validationGuid.ToGuid(), expiration, returnUrl).WithCookie(sessionCookie);
+                return this.LoginAndRedirect(GuidExtensions.ToGuid(validationGuid), expiration, returnUrl).WithCookie(sessionCookie);
             };
 
             Get["/logout"] = x => {

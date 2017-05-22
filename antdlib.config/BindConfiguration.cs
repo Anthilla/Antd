@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public class BindConfiguration {
@@ -64,18 +66,18 @@ namespace antdlib.config {
                 }
                 lines.Add("}");
             }
-            lines.Add($"forwarders {{ {options.Forwarders.JoinToString("; ")} }}");
-            lines.Add($"allow-notify {{ {options.AllowNotify.JoinToString("; ")} }}");
-            lines.Add($"allow-transfer {{ {options.AllowTransfer.JoinToString("; ")} }}");
+            lines.Add($"forwarders {{ {EnumerableExtensions.JoinToString(options.Forwarders, "; ")} }}");
+            lines.Add($"allow-notify {{ {EnumerableExtensions.JoinToString(options.AllowNotify, "; ")} }}");
+            lines.Add($"allow-transfer {{ {EnumerableExtensions.JoinToString(options.AllowTransfer, "; ")} }}");
             lines.Add($"recursion {options.Recursion};");
             lines.Add($"transfer-format {options.TransferFormat};");
             lines.Add($"query-source address {options.QuerySourceAddress} port {options.QuerySourcePort};");
             lines.Add($"version {options.Version};");
-            lines.Add($"allow-query {{ {options.AllowQuery.JoinToString("; ")} }}");
-            lines.Add($"allow-recursion {{ {options.AllowRecursion.JoinToString("; ")} }}");
+            lines.Add($"allow-query {{ {EnumerableExtensions.JoinToString(options.AllowQuery, "; ")} }}");
+            lines.Add($"allow-recursion {{ {EnumerableExtensions.JoinToString(options.AllowRecursion, "; ")} }}");
             lines.Add($"ixfr-from-differences {options.IxfrFromDifferences};");
-            lines.Add($"listen-on-v6 {{ {options.ListenOnV6.JoinToString("; ")} }}");
-            lines.Add($"listen-on port 53 {{ {options.ListenOnPort53.JoinToString("; ")} }}");
+            lines.Add($"listen-on-v6 {{ {EnumerableExtensions.JoinToString(options.ListenOnV6, "; ")} }}");
+            lines.Add($"listen-on port 53 {{ {EnumerableExtensions.JoinToString(options.ListenOnPort53, "; ")} }}");
             lines.Add($"dnssec-enable {options.DnssecEnabled};");
             lines.Add($"dnssec-validation {options.DnssecValidation};");
             lines.Add($"dnssec-lookaside {options.DnssecLookaside};");
@@ -89,15 +91,15 @@ namespace antdlib.config {
             lines.Add("};");
             lines.Add("");
 
-            lines.Add($"controls {{ {options.ControlAcl} {options.ControlIp} port {options.ControlPort} allow {{ {options.ControlAllow.JoinToString("; ")} }}");
+            lines.Add($"controls {{ {options.ControlAcl} {options.ControlIp} port {options.ControlPort} allow {{ {EnumerableExtensions.JoinToString(options.ControlAllow, "; ")} }}");
             lines.Add("");
 
-            lines.Add($"acl loif {{ {options.AclLocalInterfaces.JoinToString("; ")} }}");
-            lines.Add($"acl iif {{ {options.AclInternalInterfaces.JoinToString("; ")} }}");
-            lines.Add($"acl oif {{ {options.AclExternalInterfaces.JoinToString("; ")} }}");
-            lines.Add($"acl lonet {{ {options.AclLocalNetworks.JoinToString("; ")} }}");
-            lines.Add($"acl inet {{ {options.AclInternalNetworks.JoinToString("; ")} }}");
-            lines.Add($"acl onet {{ {options.AclExternalNetworks.JoinToString("; ")} }}");
+            lines.Add($"acl loif {{ {EnumerableExtensions.JoinToString(options.AclLocalInterfaces, "; ")} }}");
+            lines.Add($"acl iif {{ {EnumerableExtensions.JoinToString(options.AclInternalInterfaces, "; ")} }}");
+            lines.Add($"acl oif {{ {EnumerableExtensions.JoinToString(options.AclExternalInterfaces, "; ")} }}");
+            lines.Add($"acl lonet {{ {EnumerableExtensions.JoinToString(options.AclLocalNetworks, "; ")} }}");
+            lines.Add($"acl inet {{ {EnumerableExtensions.JoinToString(options.AclInternalNetworks, "; ")} }}");
+            lines.Add($"acl onet {{ {EnumerableExtensions.JoinToString(options.AclExternalNetworks, "; ")} }}");
             lines.Add("");
 
             lines.Add("logging {");
@@ -146,13 +148,13 @@ namespace antdlib.config {
                     lines.Add($"serial-update-method {zone.SerialUpdateMethod};");
                 }
                 if(zone.AllowUpdate.Any()) {
-                    lines.Add($"allow-update {{ {zone.AllowUpdate.JoinToString("; ")} }}");
+                    lines.Add($"allow-update {{ {EnumerableExtensions.JoinToString(zone.AllowUpdate, "; ")} }}");
                 }
                 if(zone.AllowQuery.Any()) {
-                    lines.Add($"allow-query {{ {zone.AllowQuery.JoinToString("; ")} }}");
+                    lines.Add($"allow-query {{ {EnumerableExtensions.JoinToString(zone.AllowQuery, "; ")} }}");
                 }
                 if(zone.AllowTransfer.Any()) {
-                    lines.Add($"allow-transfer {{ {zone.AllowTransfer.JoinToString("; ")} }}");
+                    lines.Add($"allow-transfer {{ {EnumerableExtensions.JoinToString(zone.AllowTransfer, "; ")} }}");
                     lines.Add($"allow-transfer {zone.AllowTransfer};");
                 }
                 lines.Add("};");

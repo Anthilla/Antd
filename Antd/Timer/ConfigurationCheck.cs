@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Timers;
-using antdlib.common;
 using antdlib.config;
 using anthilla.commands;
+using anthilla.core;
 
 namespace Antd.Timer {
     public class ConfigurationCheck {
@@ -75,8 +75,8 @@ namespace Antd.Timer {
                             ConsoleLogger.Log($"[check] gateway {gwConf.GatewayAddress} unreachable");
                             continue;
                         }
-                        ConsoleLogger.Log($"[check] applying {gwConf.Route} route at {deviceName} via {gwConf.GatewayAddress}");
-                        CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", gwConf.Route }, { "$gateway", gwConf.GatewayAddress } });
+                        ConsoleLogger.Log($"[check] applying default route at {deviceName} via {gwConf.GatewayAddress}");
+                        CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", "default" }, { "$gateway", host.InternalHostIpPrimary } });
                         routingOk = true;
                     }
                 }

@@ -1,6 +1,8 @@
-﻿using antdlib.common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using anthilla.core;
+using Newtonsoft.Json;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.models {
     public class Network2ConfigurationModel {
@@ -10,11 +12,11 @@ namespace antdlib.models {
 
     public class NetworkInterface {
         public string Device { get; set; } = string.Empty;
+        public NetworkInterfaceStatus Status { get; set; } = NetworkInterfaceStatus.Up;
         public string Configuration { get; set; } = string.Empty; //Id
         public List<string> AdditionalConfigurations { get; set; } = new List<string>(); //Ids
         public string GatewayConfiguration { get; set; } = string.Empty; //Id
-        public string Txqueuelen { get; set; } = "10000";
-        public string Mtu { get; set; } = "6000";
+        public string HardwareConfiguration { get; set; } = string.Empty; //Id
     }
 
     public class NetworkInterfaceConfiguration {
@@ -26,8 +28,8 @@ namespace antdlib.models {
         public NetworkRoleVerb RoleVerb { get; set; }
         public string Alias { get; set; } = string.Empty; //extif
         public NetworkInterfaceMode Mode { get; set; } = NetworkInterfaceMode.Static;
-        public NetworkInterfaceStatus Status { get; set; } = NetworkInterfaceStatus.Up;
         public string Ip { get; set; } = string.Empty; //192.168.111.2
+        public string Range { get; set; } = string.Empty;
         /// <summary>
         /// Subnet noted as its bit value 1..32
         /// </summary>
@@ -35,24 +37,29 @@ namespace antdlib.models {
         public string Broadcast { get; set; } = string.Empty; //192.168.111.255
         public NetworkAdapterType Adapter { get; set; } = NetworkAdapterType.Physical;
         public List<string> ChildrenIf { get; set; } = new List<string>(); // bridge / bond
+        [JsonIgnore]
         public bool IsUsed { get; set; } //viene calcolato
     }
 
     public class NetworkGatewayConfiguration {
         public string Id { get; set; } = string.Empty;
-        public string Route { get; set; } = "default";
         public string GatewayAddress { get; set; } = string.Empty;
-        public bool IsUsed { get; set; } //viene calcolato
+        public string Description { get; set; } = string.Empty;
+        public bool IsDefault { get; set; }
+    }
+
+    public class NetworkRouteConfiguration {
+        public string Id { get; set; } = string.Empty;
+        public string DestinationIp { get; set; } = string.Empty;
+        public string DestinationRange { get; set; } = string.Empty;
+        public string Gateway { get; set; } = string.Empty; //Id
     }
 
     public class DnsConfiguration {
         public string Id { get; set; } = string.Empty;
         public DnsType Type { get; set; } = DnsType.Public;
-        public DnsMode Mode { get; set; } = DnsMode.Dynamic;
-        public DnsDestination Dest { get; set; } = DnsDestination.Internal;
         public string Domain { get; set; } = string.Empty;
         public string Ip { get; set; } = string.Empty;
-        public bool AuthenticationEnabled { get; set; } = true;
     }
 
     public class NsUpdateConfiguration {
@@ -71,5 +78,18 @@ namespace antdlib.models {
         public string YxRrset { get; set; } = string.Empty;
         public string Delete { get; set; } = string.Empty;
         public string Add { get; set; } = string.Empty;
+    }
+
+    public class NetworkAggregatedInterfaceConfiguration {
+        public string Id { get; set; } = string.Empty;
+        public string Parent { get; set; } = string.Empty;
+        public List<string> Children { get; set; } = new List<string>();
+    }
+
+    public class NetworkHardwareConfiguration {
+        public string Id { get; set; } = string.Empty;
+        public string Txqueuelen { get; set; } = "10000";
+        public string Mtu { get; set; } = "6000";
+        public string MacAddress { get; set; } = string.Empty;
     }
 }

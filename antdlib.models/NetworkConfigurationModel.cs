@@ -1,5 +1,5 @@
-﻿using antdlib.common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using anthilla.core;
 
 namespace antdlib.models {
     public class NetworkConfigurationModel {

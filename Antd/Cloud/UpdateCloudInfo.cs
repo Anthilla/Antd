@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
-using antdlib.common;
 using anthilla.commands;
+using anthilla.core;
 using anthilla.crypto;
 using Antd.Info;
 using Antd.Storage;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.Cloud {
     public class UpdateCloudInfo {

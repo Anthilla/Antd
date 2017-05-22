@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using anthilla.commands;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd {
     public class Do {
@@ -14,8 +15,6 @@ namespace Antd {
 
         private readonly Host2Model _host;
         private readonly bool _isDnsPublic;
-        private readonly bool _isDnsDynamic;
-        private readonly bool _isDnsExternal;
 
         /// <summary>
         /// Constructor
@@ -25,8 +24,6 @@ namespace Antd {
             var dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
 
             _isDnsPublic = dns?.Type == DnsType.Public;
-            _isDnsDynamic = dns?.Mode == DnsMode.Dynamic;
-            _isDnsExternal = dns?.Dest == DnsDestination.External;
 
             var clusterInfo = ClusterConfiguration.GetClusterInfo();
 
@@ -53,7 +50,7 @@ namespace Antd {
                 { "$secret", _host.Secret },
                 { "$virtualIp", clusterInfo.VirtualIpAddress },
                 { "$clusterPassword", clusterInfo.Password },
-                { "$internalArpaIpAddress", _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
+                { "$internalArpaIpAddress", EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".") }, //se internalIp: 10.11.19.111 -> 19.111
             };
 
             var interfaces = Network2Configuration.Conf.Interfaces;
@@ -62,13 +59,13 @@ namespace Antd {
             var activeNetworkConfs = activeNetworkConfsIds.Select(_ => networkConfs.FirstOrDefault(__ => __.Id == _)).ToList();
             var internalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.Internal);
             var internalActiveNetworkConfsIds = internalActiveNetworkConfs.Select(_ => _.Id);
-            var internalInterfaces = internalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
+            var internalInterfaces = EnumerableExtensions.JoinToString(internalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList(), ", ");
             _replacements["$internalInterface"] = internalInterfaces;
             var externalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.External);
             var externalActiveNetworkConfsIds = externalActiveNetworkConfs.Select(_ => _.Id);
-            var externalInterfaces = externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
+            var externalInterfaces = EnumerableExtensions.JoinToString(externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList(), ", ");
             _replacements["$externalInterface"] = externalInterfaces;
-            var allInterfaces = interfaces.Select(_ => _.Device).ToList().JoinToString(", ");
+            var allInterfaces = EnumerableExtensions.JoinToString(interfaces.Select(_ => _.Device).ToList(), ", ");
             _replacements["$allInterface"] = allInterfaces;
         }
 
@@ -289,89 +286,118 @@ namespace Antd {
             var gatewayConfigurations = Network2Configuration.GatewayConfigurationList;
             foreach(var configuration in configurations) {
                 var deviceName = configuration.Device;
-
                 var ifConfig = interfaceConfigurations.FirstOrDefault(_ => _.Id == configuration.Configuration);
                 if(ifConfig == null) {
                     continue;
                 }
-
-                switch(ifConfig.Adapter) {
-                    case NetworkAdapterType.Physical:
-                        break;
-                    case NetworkAdapterType.Virtual:
-                        break;
-                    case NetworkAdapterType.Bond:
-                        CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", deviceName } });
-                        foreach(var nif in ifConfig.ChildrenIf) {
-                            CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
-                            CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
-                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
-                        }
-                        break;
-                    case NetworkAdapterType.Bridge:
-                        CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", deviceName } });
-                        foreach(var nif in ifConfig.ChildrenIf) {
-                            CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
-                            CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
-                            CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
-                        }
-                        break;
-                    case NetworkAdapterType.Other:
-                        continue;
-                }
-
-                CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", deviceName }, { "$mtu", configuration.Mtu } });
-                CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", deviceName }, { "$txqueuelen", configuration.Txqueuelen } });
-                CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", deviceName } });
-
-                switch(ifConfig.Mode) {
-                    case NetworkInterfaceMode.Null:
-                        continue;
-                    case NetworkInterfaceMode.Static:
-                        var networkdIsActive = Systemctl.IsActive("systemd-networkd");
-                        if(networkdIsActive) {
-                            Systemctl.Stop("systemd-networkd");
-                        }
-                        CommandLauncher.Launch("dhclient-killall");
-                        CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
-                            { "$net_if", deviceName }
-                        });
-                        CommandLauncher.Launch("ip4-add-addr", new Dictionary<string, string> {
-                            { "$net_if", deviceName },
-                            { "$address", ifConfig.Ip },
-                            { "$range", ifConfig.Subnet }
-                        });
-                        if(networkdIsActive) {
-                            Systemctl.Start("systemd-networkd");
-                        }
-                        break;
-                    case NetworkInterfaceMode.Dynamic:
-                        CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", deviceName } });
-                        break;
-                    default:
-                        continue;
-                }
-
-                switch(ifConfig.Status) {
-                    case NetworkInterfaceStatus.Down:
-                        CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
-                        continue;
-                    case NetworkInterfaceStatus.Up:
-                        CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
-                        ConsoleLogger.Log($"[network] interface '{deviceName}' configured");
-                        break;
-                    default:
-                        CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
-                        continue;
-                }
-
                 var gwConfig = gatewayConfigurations.FirstOrDefault(_ => _.Id == configuration.GatewayConfiguration);
-                if(gwConfig == null) {
-                    ConsoleLogger.Warn($"no route is set for interface {deviceName}");
-                    continue;
+                SetInterface(configuration, ifConfig, gwConfig);
+                foreach(var confGuid in configuration.AdditionalConfigurations) {
+                    var conf = interfaceConfigurations.FirstOrDefault(_ => _.Id == confGuid);
+                    if(conf == null) {
+                        continue;
+                    }
+                    SetInterface(configuration, conf, null);
                 }
-                CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", gwConfig.Route }, { "$gateway", gwConfig.GatewayAddress } });
             }
+        }
+
+        private void SetInterface(NetworkInterface configuration, NetworkInterfaceConfiguration interfaceConfiguration, NetworkGatewayConfiguration gatewayConfiguration) {
+            if(interfaceConfiguration == null) {
+                return;
+            }
+
+            var deviceName = configuration.Device;
+
+            var nAt = NetworkAdapterType.Other;
+            if(Network2Configuration.InterfacePhysical.Contains(deviceName)) {
+                nAt = NetworkAdapterType.Physical;
+            }
+            else if(Network2Configuration.InterfaceBridge.Contains(deviceName)) {
+                nAt = NetworkAdapterType.Bridge;
+            }
+            else if(Network2Configuration.InterfaceBond.Contains(deviceName)) {
+                nAt = NetworkAdapterType.Bond;
+            }
+            else if(Network2Configuration.InterfaceVirtual.Contains(deviceName)) {
+                nAt = NetworkAdapterType.Virtual;
+            }
+
+            switch(nAt) {
+                case NetworkAdapterType.Physical:
+                    break;
+                case NetworkAdapterType.Virtual:
+                    break;
+                case NetworkAdapterType.Bond:
+                    CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", deviceName } });
+                    foreach(var nif in interfaceConfiguration.ChildrenIf) {
+                        CommandLauncher.Launch("bond-add-if", new Dictionary<string, string> { { "$bond", deviceName }, { "$net_if", nif } });
+                        CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
+                        CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
+                    }
+                    break;
+                case NetworkAdapterType.Bridge:
+                    CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", deviceName } });
+                    foreach(var nif in interfaceConfiguration.ChildrenIf) {
+                        CommandLauncher.Launch("brctl-add-if", new Dictionary<string, string> { { "$bridge", deviceName }, { "$net_if", nif } });
+                        CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", nif } });
+                        CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", nif } });
+                    }
+                    break;
+                case NetworkAdapterType.Other:
+                    return;
+            }
+
+            CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", deviceName }, { "$mtu", "6000" } });
+            CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", deviceName }, { "$txqueuelen", "10000" } });
+            CommandLauncher.Launch("ip4-promisc-on", new Dictionary<string, string> { { "$net_if", deviceName } });
+
+            switch(interfaceConfiguration.Mode) {
+                case NetworkInterfaceMode.Null:
+                    return;
+                case NetworkInterfaceMode.Static:
+                    var networkdIsActive = Systemctl.IsActive("systemd-networkd");
+                    if(networkdIsActive) {
+                        Systemctl.Stop("systemd-networkd");
+                    }
+                    CommandLauncher.Launch("dhclient-killall");
+                    CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
+                        { "$net_if", deviceName}
+                    });
+                    CommandLauncher.Launch("ip4-add-addr", new Dictionary<string, string> {
+                        { "$net_if", deviceName},
+                        { "$address", interfaceConfiguration.Ip },
+                        { "$range", interfaceConfiguration.Subnet }
+                    });
+                    if(networkdIsActive) {
+                        Systemctl.Start("systemd-networkd");
+                    }
+                    break;
+                case NetworkInterfaceMode.Dynamic:
+                    CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", deviceName } });
+                    break;
+                default:
+                    return;
+            }
+
+            switch(configuration.Status) {
+                case NetworkInterfaceStatus.Down:
+                    CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                    return;
+                case NetworkInterfaceStatus.Up:
+                    CommandLauncher.Launch("ip4-enable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                    ConsoleLogger.Log($"[network] interface '{deviceName}' configured");
+                    break;
+                default:
+                    CommandLauncher.Launch("ip4-disable-if", new Dictionary<string, string> { { "$net_if", deviceName } });
+                    return;
+            }
+
+            if(gatewayConfiguration == null) {
+                return;
+            }
+            CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", "default" }, { "$gateway", gatewayConfiguration.GatewayAddress } });
+
         }
 
         private void CreateDefaultNetworkConfiguration() {
@@ -384,7 +410,7 @@ namespace Antd {
             Network2Configuration.AddDnsConfiguration(Default.PrivateInternalDnsConfiguration());
             Network2Configuration.AddDnsConfiguration(Default.PrivateExternalDnsConfiguration());
             var devs = Network2Configuration.InterfacePhysical.ToList();
-            var partIp = Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3).JoinToString(".");
+            var partIp = EnumerableExtensions.JoinToString(Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3), ".");
             var counter = 200;
             foreach(var dev in devs) {
                 var conf = Default.InternalPhysicalInterfaceConfiguration($"{partIp}.{counter}");
@@ -393,9 +419,7 @@ namespace Antd {
                     Device = dev,
                     Configuration = conf.Id,
                     GatewayConfiguration = Default.GatewayConfiguration().Id,
-                    AdditionalConfigurations = new List<string>(),
-                    Mtu = "6000",
-                    Txqueuelen = "10000"
+                    AdditionalConfigurations = new List<string>()
                 };
                 Network2Configuration.AddInterfaceSetting(networkInterface);
                 counter = counter + 1;
@@ -479,21 +503,11 @@ namespace Antd {
                 };
             }
             else {
-                if(_isDnsExternal) {
-                    lines = new[] {
-                        $"nameserver {_host.ExternalHostIpPrimary}",
-                        $"nameserver {_host.ResolvNameserver}",
-                        $"search {_host.ResolvDomain}",
-                        $"domain {_host.ResolvDomain}"
-                    };
-                }
-                else {
-                    lines = new[] {
-                        $"nameserver {_host.ResolvNameserver}",
-                        $"search {_host.ResolvDomain}",
-                        $"domain {_host.ResolvDomain}"
-                    };
-                }
+                lines = new[] {
+                    $"nameserver {_host.ResolvNameserver}",
+                    $"search {_host.ResolvDomain}",
+                    $"domain {_host.ResolvDomain}"
+                };
             }
             try {
                 using(TextWriter writer = File.CreateText(ResolvFileOutput)) {
@@ -579,7 +593,7 @@ namespace Antd {
             var newModel = DhcpdConfiguration.Get();
             newModel.ZoneName = _host.InternalDomainPrimary;
             newModel.ZonePrimaryAddress = _host.InternalHostIpPrimary;
-            newModel.SubnetIpFamily = _host.InternalHostIpPrimary.Split('.').Take(2).JoinToString(".").TrimEnd('.') + ".0.0";
+            newModel.SubnetIpFamily = EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Take(2), ".").TrimEnd('.') + ".0.0";
             newModel.SubnetIpMask = _host.InternalBroadcastPrimary;
             newModel.SubnetOptionRouters = _host.InternalHostIpPrimary;
             newModel.SubnetNtpServers = _host.InternalHostIpPrimary;
@@ -694,7 +708,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".")));
             }
             if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/host.{externalZoneName}.db") == null) {
                 var filePath = $"{BindZonesDirectory}/host.{externalZoneName}.db";
@@ -714,7 +728,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, _host.ExternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, EnumerableExtensions.JoinToString(_host.ExternalHostIpPrimary.Split('.').Skip(2), ".")));
             }
             newModel.ZoneFiles = zonesFile;
             BindConfiguration.Save(newModel);
@@ -828,7 +842,7 @@ namespace Antd {
 
         public void BlacklistMudules() {
             if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
-            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist.Select(_=> $"blacklist {_}"));
+            File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist.Select(_ => $"blacklist {_}"));
         }
         #endregion
 

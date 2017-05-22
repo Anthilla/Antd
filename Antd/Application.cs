@@ -37,7 +37,6 @@ using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Ui;
 using antdlib.common;
-using antdlib.common.Helpers;
 using antdlib.config;
 using antdlib.config.shared;
 using antdlib.models;
@@ -48,9 +47,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
+using anthilla.core.Helpers;
 using Antd.Info;
 using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
+using Parameter = antdlib.common.Parameter;
 using Random = anthilla.core.Random;
 
 namespace Antd {
@@ -144,7 +146,6 @@ namespace Antd {
             #endregion
 
             #region [    Secret    ]
-            //var importSecret = "";
             if(!File.Exists(Parameter.AntdCfgSecret)) {
                 FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }
@@ -226,7 +227,6 @@ namespace Antd {
                     Alias = "import " + cif.Interface,
                     Ip = cif.StaticAddress,
                     Subnet = subnet,
-                    Status = cif.Status,
                     Mode = cif.Mode,
                     ChildrenIf = cif.InterfaceList,
                     Broadcast = broadcast,
@@ -246,9 +246,7 @@ namespace Antd {
                     Device = cif.Interface,
                     Configuration = networkConfiguration.Id,
                     AdditionalConfigurations = new List<string>(),
-                    GatewayConfiguration = "",
-                    Mtu = "6000",
-                    Txqueuelen = "10000"
+                    GatewayConfiguration = ""
                 };
 
                 var tryget2 = Network2Configuration.Conf.Interfaces.FirstOrDefault(_ => _.Device == cif.Interface);
@@ -260,8 +258,9 @@ namespace Antd {
             if(!Network2Configuration.GatewayConfigurationList.Any()) {
                 var defaultGatewayConfiguration = new NetworkGatewayConfiguration {
                     Id = Random.ShortGuid(),
-                    Route = "default",
-                    GatewayAddress = vars.InternalHostIpPrimary
+                    IsDefault = true,
+                    GatewayAddress = vars.InternalHostIpPrimary,
+                    Description = "DFGW"
                 };
                 Network2Configuration.AddGatewayConfiguration(defaultGatewayConfiguration);
             }

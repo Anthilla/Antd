@@ -31,8 +31,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using antdlib.common;
-using antdlib.common.Helpers;
+using anthilla.core;
+using anthilla.core.Helpers;
 
 namespace antdlib.config.Antd_SVCS.Dhcp {
     public class DhcpConfig {

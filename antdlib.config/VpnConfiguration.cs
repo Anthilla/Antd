@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
 using IoDir = System.IO.Directory;
+using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public class VpnConfiguration {

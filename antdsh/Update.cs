@@ -27,13 +27,14 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using anthilla.core;
+using Random = System.Random;
 
 namespace antdsh {
     public class Update {

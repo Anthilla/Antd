@@ -28,11 +28,11 @@
 //-------------------------------------------------------------------------------------
 
 using Antd.Info;
-using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 using System.IO;
+using anthilla.core;
 
 namespace Antd.Modules {
     public class AntdInfoModule : NancyModule {

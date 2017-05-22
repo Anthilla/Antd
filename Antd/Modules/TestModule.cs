@@ -28,8 +28,8 @@
 //-------------------------------------------------------------------------------------
 
 using Nancy;
-using antdlib.common;
 using antdlib.config.Antd_SVCS.Bind;
+using anthilla.core;
 
 namespace Antd.Modules {
     public class TestModule : NancyModule {

@@ -27,11 +27,11 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using anthilla.core;
 
 namespace AntdUi.Modules {
     public class AntdNetwork2Module : NancyModule {
@@ -54,22 +54,18 @@ namespace AntdUi.Modules {
                 string id = Request.Form.Id;
                 string type = Request.Form.Type;
                 string description = Request.Form.Description;
-                string verb = Request.Form.Verb;
                 string mode = Request.Form.Mode;
                 string status = Request.Form.Status;
                 string ip = Request.Form.Ip;
-                string adapter = Request.Form.Adapter;
-                string children = Request.Form.Ifs;
+                string range = Request.Form.Range;
                 var dict = new Dictionary<string, string> {
                     { "Id", id },
                     { "Type", type },
                     { "Description", description },
-                    { "Verb", verb },
                     { "Mode", mode },
                     { "Status", status },
                     { "Ip", ip },
-                    { "Adapter", adapter },
-                    { "Ifs", children }
+                    { "Range", range }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interfaceconfiguration", dict);
             };
@@ -84,12 +80,14 @@ namespace AntdUi.Modules {
 
             Post["/network2/gatewayconfiguration"] = x => {
                 string id = Request.Form.Id;
-                string route = Request.Form.Route;
+                string description = Request.Form.Description;
                 string gatewayAddress = Request.Form.GatewayAddress;
+                string def = Request.Form.Default;
                 var dict = new Dictionary<string, string> {
                     { "Id", id },
-                    { "Route", route },
-                    { "GatewayAddress", gatewayAddress }
+                    { "Description", description },
+                    { "GatewayAddress", gatewayAddress },
+                    { "Default", def }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/gatewayconfiguration", dict);
             };
@@ -102,22 +100,58 @@ namespace AntdUi.Modules {
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/gatewayconfiguration/del", dict);
             };
 
+            Post["/network2/lagconfiguration"] = x => {
+                string id = Request.Form.Id;
+                string parent = Request.Form.Parent;
+                string children = Request.Form.Children;
+                var dict = new Dictionary<string, string> {
+                    { "Id", id },
+                    { "Parent", parent },
+                    { "Children", children }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/lagconfiguration", dict);
+            };
+
+            Post["/network2/lagconfiguration/del"] = x => {
+                string guid = Request.Form.Guid;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/lagconfiguration/del", dict);
+            };
+
+            Post["/network2/routeconfiguration"] = x => {
+                string id = Request.Form.Id;
+                string destinationIp = Request.Form.DestinationIp;
+                string destinationRange = Request.Form.DestinationRange;
+                string gateway = Request.Form.Gateway;
+                var dict = new Dictionary<string, string> {
+                    { "Id", id },
+                    { "DestinationIp", destinationIp },
+                    { "DestinationRange", destinationRange },
+                    { "Gateway", gateway }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/routeconfiguration", dict);
+            };
+
+            Post["/network2/routeconfiguration/del"] = x => {
+                string guid = Request.Form.Guid;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/routeconfiguration/del", dict);
+            };
+
             Post["/network2/dnsconfiguration"] = x => {
                 string id = Request.Form.Id;
                 string type = Request.Form.Type;
-                string mode = Request.Form.Mode;
-                string dest = Request.Form.Destination;
                 string domain = Request.Form.Domain;
                 string ip = Request.Form.Ip;
-                string auth = Request.Form.Auth;
                 var dict = new Dictionary<string, string> {
                     { "Id", id },
                     { "Type", type },
-                    { "Mode", mode },
-                    { "Destination", dest },
                     { "Domain", domain },
-                    { "Ip", ip },
-                    { "Auth", auth }
+                    { "Ip", ip }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration", dict);
             };
@@ -136,14 +170,6 @@ namespace AntdUi.Modules {
                     { "Guid", guid }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/active", dict);
-            };
-
-            Post["/network2/dnsconfiguration/active/del"] = x => {
-                string guid = Request.Form.Guid;
-                var dict = new Dictionary<string, string> {
-                    { "Guid", guid }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/active/del", dict);
             };
 
             Post["/network2/nsupdateconfiguration"] = x => {
@@ -186,20 +212,42 @@ namespace AntdUi.Modules {
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration/active/del", dict);
             };
 
+            Post["/network2/hardwareconfiguration"] = x => {
+                string id = Request.Form.Id;
+                string txqueuelen = Request.Form.Txqueuelen;
+                string mtu = Request.Form.Mtu;
+                string macAddress = Request.Form.MacAddress;
+                var dict = new Dictionary<string, string> {
+                    { "Id", id },
+                    { "MacAddress", macAddress },
+                    { "Mtu", mtu },
+                    { "Txqueuelen", txqueuelen }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/hardwareconfiguration", dict);
+            };
+
+            Post["/network2/hardwareconfiguration/del"] = x => {
+                string guid = Request.Form.Guid;
+                var dict = new Dictionary<string, string> {
+                    { "Guid", guid }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/hardwareconfiguration/del", dict);
+            };
+
             Post["/network2/interface"] = x => {
                 string dev = Request.Form.Device;
                 string conf = Request.Form.Configuration;
                 string confs = Request.Form.AdditionalConfigurations;
                 string gwConf = Request.Form.GatewayConfiguration;
-                string txqueuelen = Request.Form.Txqueuelen;
-                string mtu = Request.Form.Mtu;
+                string hwc = Request.Form.HardwareConfiguration;
+                string status = Request.Form.Status;
                 var dict = new Dictionary<string, string> {
                     { "Device", dev },
                     { "Configuration", conf },
                     { "AdditionalConfigurations", confs },
                     { "GatewayConfiguration", gwConf },
-                    { "Txqueuelen", txqueuelen },
-                    { "Mtu", mtu }
+                    { "Status", status },
+                    { "HardwareConfiguration", hwc }
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface", dict);
             };

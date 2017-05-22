@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using antdlib.common;
 using antdlib.config;
 using antdlib.models;
+using anthilla.core;
 
 namespace Antd {
 
@@ -25,7 +25,6 @@ namespace Antd {
                 RoleVerb = verb,
                 Alias = alias,
                 Mode = NetworkInterfaceMode.Static,
-                Status = NetworkInterfaceStatus.Up,
                 Ip = ip,
                 Subnet = subnet,
                 Broadcast = broadcast,
@@ -52,7 +51,6 @@ namespace Antd {
                 RoleVerb = verb,
                 Alias = alias,
                 Mode = NetworkInterfaceMode.Static,
-                Status = NetworkInterfaceStatus.Up,
                 Ip = ip,
                 Subnet = subnet,
                 Broadcast = broadcast,
@@ -79,7 +77,6 @@ namespace Antd {
                 RoleVerb = verb,
                 Alias = alias,
                 Mode = NetworkInterfaceMode.Static,
-                Status = NetworkInterfaceStatus.Up,
                 Ip = ip,
                 Subnet = subnet,
                 Broadcast = broadcast,
@@ -106,7 +103,6 @@ namespace Antd {
                 RoleVerb = verb,
                 Alias = alias,
                 Mode = NetworkInterfaceMode.Static,
-                Status = NetworkInterfaceStatus.Up,
                 Ip = ip,
                 Subnet = subnet,
                 Broadcast = broadcast,
@@ -120,8 +116,9 @@ namespace Antd {
             var ip = string.IsNullOrEmpty(customIp) ? "10.11.254.254" : customIp;
             var gatewayConfiguration = new NetworkGatewayConfiguration {
                 Id = "BpwyyChBvkalUcdxNIL8yQ",
-                Route = "default",
-                GatewayAddress = ip
+                GatewayAddress = ip,
+                Description = "DFGW",
+                IsDefault = true
             };
             return gatewayConfiguration;
         }
@@ -130,9 +127,6 @@ namespace Antd {
             var dnsConfiguration = new DnsConfiguration {
                 Id = "J8Ho6CGgFUydXUuWf58J-A",
                 Type = DnsType.Public,
-                Mode = DnsMode.Dynamic,
-                AuthenticationEnabled = false,
-                Dest = DnsDestination.External,
                 Domain = "",
                 Ip = "8.8.8.8"
             };
@@ -144,9 +138,6 @@ namespace Antd {
             var dnsConfiguration = new DnsConfiguration {
                 Id = "BhfPEkstWUmACT6rL5vO-w",
                 Type = DnsType.Private,
-                Mode = DnsMode.Dynamic,
-                AuthenticationEnabled = false,
-                Dest = DnsDestination.Internal,
                 Domain = host.InternalDomainPrimary,
                 Ip = host.InternalHostIpPrimary
             };
@@ -158,9 +149,6 @@ namespace Antd {
             var dnsConfiguration = new DnsConfiguration {
                 Id = "FD1tT-TJZku93WFXt9Ldfw",
                 Type = DnsType.Private,
-                Mode = DnsMode.Dynamic,
-                AuthenticationEnabled = false,
-                Dest = DnsDestination.External,
                 Domain = host.ExternalDomainPrimary,
                 Ip = host.ExternalHostIpPrimary
             };

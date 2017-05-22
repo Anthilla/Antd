@@ -27,13 +27,13 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using antdlib.models;
 using anthilla.commands;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using anthilla.core;
 
 namespace antdlib.config {
     public class DirectoryWatcherRsync {

@@ -1,11 +1,12 @@
 ﻿using System;
-using antdlib.common;
 using antdlib.config.shared;
 using antdlib.models;
 using anthilla.commands;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using anthilla.core;
+using Parameter = antdlib.common.Parameter;
 
 namespace Antd.Cloud {
     public class FetchRemoteCommand {

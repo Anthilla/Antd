@@ -1,0 +1,184 @@
+<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">Interface Aggregation</h1>
+
+<div ng-controller="AntdNetwork2Controller">
+    <button ng-click="restart($event)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-loop fg-anthilla-green"></span>&nbsp;Restart</button>
+    <br />
+    <br />
+    <br />
+    <button ng-click="ResponseMessageHideSelf()" ng-hide="ResponseMessageHide" class="button fg-anthilla-blue bg-anthilla-gray-1 bd-anthilla-blue width100pc" style="border: 2px solid; margin-bottom: 10px;">{{ ResponseMessage }}</button>
+    <br />
+
+    <!--Ip Configuration-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Interface Aggregation Configuration Manager
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <!--new configuration-->
+            <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+                <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                    <span class="icon mif-plus fg-anthilla-blue bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                    <span class="title">
+                        Add Interface Aggregation Configuration
+                    </span>
+                </div>
+                <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                    <div class="grid fg-white">
+                        <div class="row cells6">
+                            <div class="cell colspan2 uppercase fg-anthilla-green">
+                                <p>Parent</p>
+                            </div>
+                            <div class="cell colspan4">
+                                <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                    <input type="text" ng-model="NewLagConfiguration.Parent" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                    <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row cells6">
+                            <div class="cell colspan2 uppercase fg-anthilla-green">
+                                <p>Children</p>
+                            </div>
+                            <div class="cell colspan4">
+                                <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                    <input type="text" ng-model="NewLagConfiguration.Children" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                    <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row cells6">
+                            <div class="cell colspan2 uppercase fg-anthilla-green">
+                                <p>Save</p>
+                            </div>
+                            <div class="cell colspan4">
+                                <button ng-click="saveLagConfiguration($event, NewLagConfiguration)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--configuration list-->
+            <div ng-repeat="el in LagConfigurationList">
+                <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+                    <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+                        <span class="icon mif-file-text fg-anthilla-blue bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+                        <span class="title">
+                            {{ el.Parent }}&nbsp;[{{ el.Children }}]
+                        </span>
+                    </div>
+                    <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                        <div class="grid fg-white">
+                            <div class="row cells6">
+                                <div class="cell colspan2 uppercase fg-anthilla-green">
+                                    <p>Parent</p>
+                                </div>
+                                <div class="cell colspan4">
+                                    <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                        <input type="text" ng-model="el.Parent" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                        <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row cells6">
+                                <div class="cell colspan2 uppercase fg-anthilla-green">
+                                    <p>Children</p>
+                                </div>
+                                <div class="cell colspan4">
+                                    <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                        <input type="text" ng-model="el.Children" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                        <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row cells6">
+                                <div class="cell colspan2 uppercase fg-anthilla-green">
+                                    <p>Delete</p>
+                                </div>
+                                <div class="cell colspan4">
+                                    <button ng-click="deleteLagConfiguration($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
+                                </div>
+                            </div>
+                            <div class="row cells6">
+                                <div class="cell colspan2 uppercase fg-anthilla-green">
+                                    <p>Save</p>
+                                </div>
+                                <div class="cell colspan4">
+                                    <button ng-click="saveLagConfiguration($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Create Bridge-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Create Bridge
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid fg-white">
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Bridge Name</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="NewBridge.Name" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <button ng-click="createBridge($event, NewBridge)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Create Bond-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Create Bond
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid fg-white">
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Bond Name</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="NewBond.Name" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <button ng-click="createBond($event, NewBond)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

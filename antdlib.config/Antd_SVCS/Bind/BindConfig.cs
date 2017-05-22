@@ -28,13 +28,12 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using antdlib.common;
-using antdlib.common.Helpers;
+using anthilla.core;
+using anthilla.core.Helpers;
 
 namespace antdlib.config.Antd_SVCS.Bind {
     public class BindConfig {

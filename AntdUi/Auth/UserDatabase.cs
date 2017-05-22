@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.common;
 using antdlib.config.shared;
 using antdlib.models;
 using Nancy;
@@ -36,6 +35,7 @@ using Nancy.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using anthilla.core;
 
 namespace AntdUi.Auth {
     public class UserDatabase : IUserMapper {

@@ -35,6 +35,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using antdlib.common;
+using anthilla.core;
 
 namespace Antd.Modules {
     public class AssetClusterModule : NancyModule {
