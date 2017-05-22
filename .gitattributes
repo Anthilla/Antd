@@ -62,9 +62,9 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-*\Style\themes\*												linguist-vendored
-*\Style\themes\base\*											linguist-vendored
-*\Style\themes\base\images\*									linguist-vendored
+*/Style/themes/*												linguist-vendored
+*/Style/themes/base/*											linguist-vendored
+*/Style/themes/base/images/*									linguist-vendored
 *metro*.(eot|svg|ttf|woff|js|css|less|scss|styl)	linguist-vendored
 *font-awesome*.(css|less|scss|styl)						linguist-vendored
 *angular*.(css|js)								linguist-vendored
