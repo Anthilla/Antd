@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace antdlib.models {
     public class NginxConfigurationModel {
@@ -37,7 +33,7 @@ namespace antdlib.models {
         public string TcpNodelay { get; set; }
         public string Include { get; set; } = "/etc/nginx/mime.types";
         public string DefaultType { get; set; }
-        public string LogFormat { get; set; } = "log_format main \'$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\" \"$gzip_ratio\"\'";
+        public string LogFormat { get; set; } = "main \'$remote_addr - $remote_user [$time_local] \"$request\" $status $bytes_sent \"$http_referer\" \"$http_user_agent\" \"$gzip_ratio\"\'";
         public string RequestPoolSize { get; set; }
         public string OutputBuffers { get; set; }
         public string PostponeOutput { get; set; }
@@ -87,6 +83,7 @@ namespace antdlib.models {
     }
 
     public class NginxLocation {
+        public string Path { get; set; }
         public string Autoindex { get; set; }
         public string Root { get; set; }
         public string Aio { get; set; } = "threads";
@@ -100,12 +97,6 @@ namespace antdlib.models {
         public string ClientMaxBodySize { get; set; } = "0";
         public string ProxyRedirect { get; set; } = "off";
         public string ProxyHttpVersion { get; set; } = "1.1";
-
-        //proxy_set_header Host $host;
-        //proxy_set_header X-Frame-Options SAMEORIGIN;
-        //proxy_set_header X-Real-IP $remote_addr;
-        //proxy_set_header X-Forwarded-Proto $scheme;
-        //proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        //proxy_set_header Connection "";
+        public string ProxySslSessionReuse { get; set; }
     }
 }

@@ -27,9 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using antdlib.models;
 
@@ -163,15 +161,19 @@ namespace antdlib.config.Parsers {
             var regex = new Regex("(location[\\s]+[\\/\\w]+[\\s]+{[\\s]+[\\w\\s_\\/:;$\\-\".]+[\\s]+})");
             var matches = regex.Matches(text);
             foreach(var match in matches) {
+                var path = CaptureGroup(match.ToString(), "location[\\s]+[\\/\\w\\d]+[\\s]+{");
                 var autoindex = CaptureGroup(match.ToString(), "autoindex[\\s]+([\\w\\d]+);");
                 var root = CaptureGroup(match.ToString(), "root[\\s]+([\\w\\d\\/._-]+);");
                 var mp4 = CaptureGroup(match.ToString(), "mp4;");
                 var proxyPass = CaptureGroup(match.ToString(), "proxy_pass[\\s]+([\\w\\d\\/._\\-:]+);");
+                var proxysslsession = CaptureGroup(match.ToString(), "proxy_ssl_session_reuse[\\s]+([\\w\\d\\/._\\-:]+);");
                 var location = new NginxLocation {
+                    Path = path,
                     Autoindex = autoindex,
                     Root = root,
                     Mp4 = !string.IsNullOrEmpty(mp4),
-                    ProxyPass = proxyPass
+                    ProxyPass = proxyPass,
+                    ProxySslSessionReuse = proxysslsession
                 };
 
                 list.Add(location);
