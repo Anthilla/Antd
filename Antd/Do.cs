@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.common;
 using antdlib.config;
 using antdlib.models;
 using anthilla.commands;
@@ -25,7 +26,6 @@ namespace Antd {
 
             _isDnsPublic = dns?.Type == DnsType.Public;
 
-            var clusterInfo = ClusterConfiguration.GetClusterInfo();
 
             _replacements = new Dictionary<string, string> {
                 { "$hostname", _host.HostName },
@@ -48,8 +48,6 @@ namespace Antd {
                 { "$dnsDomain", dns?.Domain },
                 { "$dnsIp", dns?.Ip },
                 { "$secret", _host.Secret },
-                { "$virtualIp", clusterInfo.VirtualIpAddress },
-                { "$clusterPassword", clusterInfo.Password },
                 { "$internalArpaIpAddress", EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".") }, //se internalIp: 10.11.19.111 -> 19.111
             };
 
@@ -140,7 +138,6 @@ namespace Antd {
         }
 
         #region [    keepalived    ]
-        private readonly string _keepalivedFileInput = $"{LocalTemplateDirectory}/keepalived.conf.tmpl";
         private const string KeepalivedFileOutput = "/etc/keepalived/keepalived.conf";
 
         private void SaveKeepalived(string publicIp, List<Cluster.Node> nodes) {
@@ -151,23 +148,39 @@ namespace Antd {
                 Systemctl.Stop(keepalivedService);
             }
             ConsoleLogger.Log("[cluster] set configuration file");
-            try {
-                using(var reader = new StreamReader(_keepalivedFileInput)) {
-                    using(TextWriter writer = File.CreateText(KeepalivedFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
-                    }
-                }
-            }
-            catch(Exception e) {
-                ConsoleLogger.Error("[cluster] error:");
-                ConsoleLogger.Error(e.Message);
-                return;
-            }
 
-            var additionalLines = new List<string> {
+            var clusterInfo = ClusterConfiguration.GetClusterInfo();
+            var lines = new List<string> {
+                "global_defs {",
+                "   notification_email {",
+                "      admin@example.com",
+                "   }",
+                "   notification_email_from noreply@example.com",
+                "   smtp_server 127.0.0.1",
+                "   smtp_connect_timeout 60",
+                "   router_id LVS_DEVEL",
+                "}",
+                "",
+                "vrrp_sync_group VG1 {",
+                "   group {",
+                "      RH_INT",
+                "   }",
+                "}",
+                "",
+                "vrrp_instance RH_INT {",
+                "   state MASTER",
+                $"   interface {clusterInfo.NetworkInterface}",
+                "   virtual_router_id 50",
+                "   priority 100",
+                "   advert_int 1",
+                "   authentication {",
+                "      auth_type PASS",
+                $"      auth_pass {clusterInfo.Password}",
+                "   }",
+                "   virtual_ipaddress {",
+                $"      {clusterInfo.VirtualIpAddress}",
+                "   }",
+                "}",
                 $"virtual_server {publicIp} 80 {{",
                 "    delay_loop 6",
                 "    lb_algo rr",
@@ -175,19 +188,18 @@ namespace Antd {
                 "    protocol TCP",
                 ""
             };
-            foreach(var node in nodes) {
-                foreach(var svc in node.Services) {
-                    additionalLines.Add($"    real_server {node.IpAddress} {svc.Port} {{");
-                    additionalLines.Add("        TCP_CHECK {");
-                    additionalLines.Add("                connect_timeout 10");
-                    additionalLines.Add("        }");
-                    additionalLines.Add("    }");
-                }
-            }
-            additionalLines.Add("}");
-            additionalLines.Add("");
 
-            File.AppendAllLines(KeepalivedFileOutput, additionalLines);
+            foreach(var node in nodes) {
+                lines.Add($"    real_server {node.IpAddress} {{");
+                lines.Add("        TCP_CHECK {");
+                lines.Add("                connect_timeout 10");
+                lines.Add("        }");
+                lines.Add("    }");
+            }
+            lines.Add("}");
+            lines.Add("");
+
+            FileWithAcl.WriteAllLines(KeepalivedFileOutput, lines);
             //if(Systemctl.IsEnabled(keepalivedService) == false) {
             //    Systemctl.Enable(keepalivedService);
             //    ConsoleLogger.Log("[cluster] keepalived enabled");
@@ -200,7 +212,6 @@ namespace Antd {
             ConsoleLogger.Log("[cluster] keepalived enabled");
             Systemctl.Restart(keepalivedService);
             ConsoleLogger.Log("[cluster] keepalived restarted");
-            //ConsoleLogger.Log("[cluster] keepalived started");
         }
 
         private readonly string _haproxyFileOutput = $"{Parameter.AntdCfgCluster}/haproxy.conf";
@@ -230,9 +241,7 @@ namespace Antd {
                 "backend servers"
             };
             foreach(var node in nodes) {
-                foreach(var svc in node.Services) {
-                    lines.Add($"    server {node.Hostname} {node.IpAddress}:{svc.Port} maxconn 32");
-                }
+                lines.Add($"    server {node.Hostname} {node.IpAddress} maxconn 32");
             }
             File.WriteAllLines(_haproxyFileOutput, lines);
             CommandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });

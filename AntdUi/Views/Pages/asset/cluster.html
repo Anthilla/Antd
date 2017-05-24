@@ -8,6 +8,7 @@
         <li><input placeholder="public ip" ng-model="Info.VirtualIpAddress" type="text" /></li>
         <li><input placeholder="password" ng-model="Info.Password" type="text" /></li>
         <li><input placeholder="guid" ng-model="Info.Guid" type="text" /></li>
+        <li><input placeholder="network interface" ng-model="Info.NetworkInterface" type="text" /></li>
         <li></li>
 
         <li ng-repeat="node in ClusterNodes">
@@ -15,20 +16,6 @@
                 <li>{{ $index }}</li>
                 <li><input placeholder="name" ng-model="node.Hostname" type="text" /></li>
                 <li><input placeholder="ip" ng-model="node.IpAddress" type="text" /></li>
-
-                <li>
-                    <ul>
-                        <li ng-repeat="svc in node.Services">
-                            <ul>
-                                <li><input placeholder="name" ng-model="svc.Name" type="text" /></li>
-                                <li><input placeholder="port" ng-model="svc.Port" type="text" /></li>
-                            </ul>
-                        </li>
-
-                        <li><button ng-click="addService(node)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ svc</button></li>
-                    </ul>
-                </li>
-
             </ul>
         </li>
 

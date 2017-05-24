@@ -39,19 +39,10 @@ function AssetClusterController($scope, $http, $interval) {
         $http.post("/cluster/set").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $scope.addService = function (node) {
-        var svc = {
-            Name: "",
-            Port: ""
-        };
-        node.Services.push(svc);
-    };
-
     $scope.addNode = function () {
         var node = {
             Hostname: "",
-            IpAddress: "",
-            Services: []
+            IpAddress: ""
         };
         $scope.ClusterNodes.push(node);
     }

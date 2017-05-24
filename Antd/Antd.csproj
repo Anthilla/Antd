@@ -197,9 +197,7 @@
     <None Include="Templates\haproxy.conf.tmpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\keepalived.conf.tmpl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Templates\keepalived.conf.tmpl" />
     <None Include="Templates\nftables.conf.tmpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -224,21 +222,11 @@
     <None Include="Templates\zones_localhost-reverse.db.tmpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\dhcpd.dynamic.internal.conf.tmlp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\dhcpd.static.external.conf.tmlp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\dhcpd.static.internal.conf.tmlp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\dhcpd.dynamic.external.conf.tmlp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\dhcpd.conf.tmlp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Templates\dhcpd.dynamic.internal.conf.tmlp" />
+    <None Include="Templates\dhcpd.static.external.conf.tmlp" />
+    <None Include="Templates\dhcpd.static.internal.conf.tmlp" />
+    <None Include="Templates\dhcpd.dynamic.external.conf.tmlp" />
+    <None Include="Templates\dhcpd.conf.tmlp" />
     <None Include="Templates\nsswitch.conf.tmlp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
