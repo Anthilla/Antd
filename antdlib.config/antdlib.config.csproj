@@ -49,6 +49,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DnsZone, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DnsZone.1.0.7\lib\net45\DnsZone.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LukeSkywalker.IPNetwork, Version=1.3.2.0, Culture=neutral, PublicKeyToken=764160545cf0d618, processorArchitecture=MSIL">
       <HintPath>..\packages\IPNetwork.1.3.2.0\lib\LukeSkywalker.IPNetwork.dll</HintPath>
       <Private>True</Private>
@@ -76,12 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AclConfiguration.cs" />
-    <Compile Include="Antd_SVCS\Bind\BindConfig.cs" />
-    <Compile Include="Antd_SVCS\Bind\BindModel2.cs" />
-    <Compile Include="Antd_SVCS\Bind\BindParser.cs" />
+    <Compile Include="Parsers\BindParser.cs" />
     <Compile Include="Antd_SVCS\ServiceDataType.cs" />
-    <Compile Include="Antd_SVCS\Dhcp\DhcpConfig.cs" />
-    <Compile Include="Antd_SVCS\Dhcp\DhcpParser.cs" />
+    <Compile Include="Parsers\DhcpParser.cs" />
     <Compile Include="Antd_SVCS\Samba\SambaCommandModel.cs" />
     <Compile Include="Antd_SVCS\Samba\SambaConfig.cs" />
     <Compile Include="AuthorizedKeysConfiguration.cs" />

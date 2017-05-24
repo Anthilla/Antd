@@ -141,23 +141,20 @@ namespace Antd.Modules {
                     AuthNxdomain = authNxdomain,
                     KeyName = keyName,
                     KeySecret = keySecret,
-                    ControlAcl = controlAcl,
                     ControlIp = controlIp,
                     ControlPort = controlPort,
                     ControlAllow = controlAllow.SplitToList().Select(_ => _.Trim()).ToList(),
-                    LoggingChannel = loggingChannel,
-                    LoggingDaemon = loggingDaemon,
-                    LoggingSeverity = loggingSeverity,
-                    LoggingPrintCategory = loggingPrintCategory,
-                    LoggingPrintSeverity = loggingPrintSeverity,
-                    LoggingPrintTime = loggingPrintTime,
+                    SyslogSeverity = loggingSeverity,
+                    SyslogPrintCategory = loggingPrintCategory,
+                    SyslogPrintSeverity = loggingPrintSeverity,
+                    SyslogPrintTime = loggingPrintTime,
                     TrustedKeys = trustedKeys,
-                    AclLocalInterfaces = aclLocalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
-                    AclInternalInterfaces = aclInternalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
-                    AclExternalInterfaces = aclExternalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
-                    AclLocalNetworks = aclLocalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
-                    AclInternalNetworks = aclInternalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
-                    AclExternalNetworks = aclExternalNetworks.SplitToList().Select(_ => _.Trim()).ToList()
+                    //AclLocalInterfaces = aclLocalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
+                    //AclInternalInterfaces = aclInternalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
+                    //AclExternalInterfaces = aclExternalInterfaces.SplitToList().Select(_ => _.Trim()).ToList(),
+                    //AclLocalNetworks = aclLocalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
+                    //AclInternalNetworks = aclInternalNetworks.SplitToList().Select(_ => _.Trim()).ToList(),
+                    //AclExternalNetworks = aclExternalNetworks.SplitToList().Select(_ => _.Trim()).ToList()
                 };
                 BindConfiguration.Save(model);
                 return HttpStatusCode.OK;

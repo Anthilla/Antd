@@ -372,12 +372,15 @@ namespace Antd {
             #endregion
 
             #region [    Dhcpd    ]
+            DhcpdConfiguration.TryImport();
             if(DhcpdConfiguration.IsActive()) {
                 DhcpdConfiguration.Set();
             }
             #endregion
 
             #region [    Bind    ]
+            BindConfiguration.TryImport();
+            BindConfiguration.DownloadRootServerHits();
             if(BindConfiguration.IsActive()) {
                 BindConfiguration.Set();
             }

@@ -593,14 +593,14 @@ namespace Antd {
             var newModel = DhcpdConfiguration.Get();
             newModel.ZoneName = _host.InternalDomainPrimary;
             newModel.ZonePrimaryAddress = _host.InternalHostIpPrimary;
-            newModel.SubnetIpFamily = EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Take(2), ".").TrimEnd('.') + ".0.0";
-            newModel.SubnetIpMask = _host.InternalBroadcastPrimary;
-            newModel.SubnetOptionRouters = _host.InternalHostIpPrimary;
-            newModel.SubnetNtpServers = _host.InternalHostIpPrimary;
-            newModel.SubnetTimeServers = _host.InternalHostIpPrimary;
-            newModel.SubnetDomainNameServers = _host.InternalHostIpPrimary;
-            newModel.SubnetBroadcastAddress = _host.InternalHostIpPrimary;
-            newModel.SubnetMask = _host.InternalBroadcastPrimary;
+            //newModel.SubnetIpFamily = EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Take(2), ".").TrimEnd('.') + ".0.0";
+            //newModel.SubnetIpMask = _host.InternalBroadcastPrimary;
+            //newModel.SubnetOptionRouters = _host.InternalHostIpPrimary;
+            //newModel.SubnetNtpServers = _host.InternalHostIpPrimary;
+            //newModel.SubnetTimeServers = _host.InternalHostIpPrimary;
+            //newModel.SubnetDomainNameServers = _host.InternalHostIpPrimary;
+            //newModel.SubnetBroadcastAddress = _host.InternalHostIpPrimary;
+            //newModel.SubnetMask = _host.InternalBroadcastPrimary;
             newModel.DdnsDomainName = _host.InternalDomainPrimary;
             DhcpdConfiguration.Save(newModel);
             DhcpdConfiguration.Set();
@@ -622,18 +622,18 @@ namespace Antd {
                 newModel.Forwarders.Add(_host.ExternalHostIpPrimary);
             }
             newModel.ControlIp = _host.InternalHostIpPrimary;
-            if(!newModel.AclInternalInterfaces.Contains(_host.InternalHostIpPrimary)) {
-                newModel.AclInternalInterfaces.Add(_host.InternalHostIpPrimary);
-            }
-            if(!newModel.AclExternalInterfaces.Contains(_host.ExternalHostIpPrimary)) {
-                newModel.AclExternalInterfaces.Add(_host.ExternalHostIpPrimary);
-            }
-            if(!newModel.AclInternalNetworks.Contains(_host.InternalNetPrimary)) {
-                newModel.AclInternalNetworks.Add(_host.InternalNetPrimary);
-            }
-            if(!newModel.AclExternalNetworks.Contains(_host.ExternalNetPrimary)) {
-                newModel.AclExternalNetworks.Add(_host.ExternalNetPrimary);
-            }
+            //if(!newModel.AclInternalInterfaces.Contains(_host.InternalHostIpPrimary)) {
+            //    newModel.AclInternalInterfaces.Add(_host.InternalHostIpPrimary);
+            //}
+            //if(!newModel.AclExternalInterfaces.Contains(_host.ExternalHostIpPrimary)) {
+            //    newModel.AclExternalInterfaces.Add(_host.ExternalHostIpPrimary);
+            //}
+            //if(!newModel.AclInternalNetworks.Contains(_host.InternalNetPrimary)) {
+            //    newModel.AclInternalNetworks.Add(_host.InternalNetPrimary);
+            //}
+            //if(!newModel.AclExternalNetworks.Contains(_host.ExternalNetPrimary)) {
+            //    newModel.AclExternalNetworks.Add(_host.ExternalNetPrimary);
+            //}
             var zones = newModel.Zones;
             var internalZoneName = _host.InternalDomainPrimary;
             if(newModel.Zones.FirstOrDefault(_ => _.Name == internalZoneName) == null) {
@@ -698,7 +698,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetHostZone(_host.HostName, _host.InternalDomainPrimary, _host.InternalHostIpPrimary));
+                File.WriteAllLines(filePath, BindConfiguration.GetHostZoneText(_host.HostName, _host.InternalDomainPrimary, _host.InternalHostIpPrimary));
             }
             if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/rev.{internalReverseZoneName}.db") == null) {
                 var filePath = $"{BindZonesDirectory}/rev.{internalReverseZoneName}.db";
@@ -708,7 +708,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".")));
             }
             if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/host.{externalZoneName}.db") == null) {
                 var filePath = $"{BindZonesDirectory}/host.{externalZoneName}.db";
@@ -718,7 +718,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetHostZone(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalHostIpPrimary));
+                File.WriteAllLines(filePath, BindConfiguration.GetHostZoneText(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalHostIpPrimary));
             }
             if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/rev.{externalReverseZoneName}.db") == null) {
                 var filePath = $"{BindZonesDirectory}/rev.{externalReverseZoneName}.db";
@@ -728,7 +728,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZone(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, EnumerableExtensions.JoinToString(_host.ExternalHostIpPrimary.Split('.').Skip(2), ".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, EnumerableExtensions.JoinToString(_host.ExternalHostIpPrimary.Split('.').Skip(2), ".")));
             }
             newModel.ZoneFiles = zonesFile;
             BindConfiguration.Save(newModel);

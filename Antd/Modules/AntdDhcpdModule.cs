@@ -44,7 +44,6 @@ namespace Antd.Modules {
                     DhcpdIsActive = dhcpdIsActive,
                     DhcpdOptions = DhcpdConfiguration.Get() ?? new DhcpdConfigurationModel(),
                     DhcpdClass = DhcpdConfiguration.Get()?.Classes,
-                    DhcpdPools = DhcpdConfiguration.Get()?.Pools,
                     DhcpdReservation = DhcpdConfiguration.Get()?.Reservations
                 };
                 return JsonConvert.SerializeObject(model);
@@ -113,7 +112,6 @@ namespace Antd.Modules {
                     DoForwardUpdates = doForwardUpdates,
                     DoReverseUpdates = doReverseUpdates,
                     LogFacility = logFacility,
-                    Option = option.SplitToList().Select(_ => _.Trim()).ToList(),
                     ZoneName = zoneName,
                     ZonePrimaryAddress = zonePrimaryAddress,
                     DdnsUpdateStyle = ddnsUpdateStyle,
@@ -123,15 +121,7 @@ namespace Antd.Modules {
                     DefaultLeaseTime = defaultLeaseTime,
                     MaxLeaseTime = maxLeaseTime,
                     KeyName = keyName,
-                    KeySecret = keySecret,
-                    SubnetIpFamily = ipFamily,
-                    SubnetIpMask = ipMask,
-                    SubnetOptionRouters = optionRouters,
-                    SubnetNtpServers = ntpServers,
-                    SubnetTimeServers = timeServers,
-                    SubnetDomainNameServers = domainNameServers,
-                    SubnetBroadcastAddress = broadcastAddress,
-                    SubnetMask = subnetMask,
+                    KeySecret = keySecret
                 };
                 DhcpdConfiguration.Save(model);
                 return HttpStatusCode.OK;
@@ -140,9 +130,9 @@ namespace Antd.Modules {
             Post["/dhcpd/class"] = x => {
                 string name = Request.Form.Name;
                 string macVendor = Request.Form.MacVendor;
-                var model = new DhcpConfigurationClassModel {
+                var model = new DhcpdClass {
                     Name = name,
-                    MacVendor = macVendor
+                    VendorMacAddress = macVendor
                 };
                 DhcpdConfiguration.AddClass(model);
                 return HttpStatusCode.OK;
@@ -155,17 +145,17 @@ namespace Antd.Modules {
             };
 
             Post["/dhcpd/pool"] = x => {
-                string option = Request.Form.Option;
-                var model = new DhcpConfigurationPoolModel {
-                    Options = option.SplitToList().Select(_ => _.Trim()).ToList()
-                };
-                DhcpdConfiguration.AddPool(model);
+                //string option = Request.Form.Option;
+                //var model = new DhcpdPool {
+                //    Options = option.SplitToList().Select(_ => _.Trim()).ToList()
+                //};
+                //DhcpdConfiguration.AddPool(model);
                 return HttpStatusCode.OK;
             };
 
             Post["/dhcpd/pool/del"] = x => {
                 string guid = Request.Form.Guid;
-                DhcpdConfiguration.RemovePool(guid);
+                //DhcpdConfiguration.RemovePool(guid);
                 return HttpStatusCode.OK;
             };
 
@@ -173,7 +163,7 @@ namespace Antd.Modules {
                 string hostName = Request.Form.HostName;
                 string macAddress = Request.Form.MacAddress;
                 string ipAddress = Request.Form.IpAddress;
-                var model = new DhcpConfigurationReservationModel {
+                var model = new DhcpdReservation {
                     HostName = hostName,
                     MacAddress = macAddress,
                     IpAddress = ipAddress

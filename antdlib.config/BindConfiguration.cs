@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using antdlib.config.Parsers;
 using anthilla.core;
+using DnsZone;
 using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
@@ -16,8 +18,60 @@ namespace antdlib.config {
         private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/bind.conf";
         private static readonly string CfgFileBackup = $"{Parameter.AntdCfgServices}/bind.conf.bck";
         private const string ServiceName = "named.service";
+        private const string MainZonesPath = "/etc/bind/zones";
         private const string MainFilePath = "/etc/bind/named.conf";
         private const string MainFilePathBackup = "/etc/bind/.named.conf";
+        private const string RndcConfFile = "/etc/bind/rndc.conf";
+        private const string RndcKeyFile = "/etc/bind/rndc-key";
+
+        public static void TryImport() {
+            if(File.Exists(CfgFile)) {
+                return;
+            }
+            if(!File.Exists(MainFilePath)) {
+                return;
+            }
+            var text = File.ReadAllText(MainFilePath);
+            if(!text.Contains("options")) {
+                return;
+            }
+            var model = Parse(text);
+            Save(model);
+            ConsoleLogger.Log("[bind] import existing configuration");
+        }
+
+        private static BindConfigurationModel Parse(string text) {
+            var model = new BindConfigurationModel { IsActive = false };
+            model = BindParser.ParseOptions(model, text);
+            model = BindParser.ParseControl(model, text);
+            model = BindParser.ParseKeySecret(model, text);
+            model = BindParser.ParseLogging(model, text);
+            var acls = BindParser.ParseAcl(text).ToList();
+            model.AclList = acls;
+            var simpleZone = BindParser.ParseSimpleZones(text).ToList();
+            var complexZone = BindParser.ParseComplexZones(text).ToList();
+            complexZone.AddRange(simpleZone);
+            model.Zones = complexZone;
+            var includes = BindParser.ParseInclude(text).ToList();
+            model.IncludeFiles = includes;
+            model.ZoneFiles = Directory.EnumerateFiles(MainZonesPath, "*.db").Select(_ => new BindConfigurationZoneFileModel { Name = _ }).ToList();
+            ParseZoneFile("");
+            return model;
+        }
+
+        public static void ParseZoneFile(string filePath) {
+            //var content = File.ReadAllText(@"D:\etc\bind\zones\host.intd01.local.db");
+            //var zone = DnsZoneFile.Parse(content);
+            //ConsoleLogger.Log(zone.Records.Count);
+        }
+
+        public static void DownloadRootServerHits() {
+            var apiConsumer = new ApiConsumer();
+            var text = apiConsumer.GetString("https://www.internic.net/domain/named.named");
+            const string namedHintsFile = "/etc/bind/named.named";
+            FileWithAcl.WriteAllText(namedHintsFile, text, "644", "named", "named");
+            RndcReload();
+        }
 
         private static BindConfigurationModel Load() {
             if(!File.Exists(CfgFile)) {
@@ -34,11 +88,15 @@ namespace antdlib.config {
         }
 
         public static void Save(BindConfigurationModel model) {
-            var text = JsonConvert.SerializeObject(model, Formatting.Indented);
+            var settings = new JsonSerializerSettings {
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                Formatting = Formatting.Indented
+            };
+            var text = JsonConvert.SerializeObject(model, settings);
             if(File.Exists(CfgFile)) {
                 File.Copy(CfgFile, CfgFileBackup, true);
             }
-            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "named", "named");
             ConsoleLogger.Log("[bind] configuration saved");
         }
 
@@ -66,18 +124,18 @@ namespace antdlib.config {
                 }
                 lines.Add("}");
             }
-            lines.Add($"forwarders {{ {EnumerableExtensions.JoinToString(options.Forwarders, "; ")} }}");
-            lines.Add($"allow-notify {{ {EnumerableExtensions.JoinToString(options.AllowNotify, "; ")} }}");
-            lines.Add($"allow-transfer {{ {EnumerableExtensions.JoinToString(options.AllowTransfer, "; ")} }}");
+            lines.Add($"forwarders {{ {options.Forwarders.JoinToString("; ")} }}");
+            lines.Add($"allow-notify {{ {options.AllowNotify.JoinToString("; ")} }}");
+            lines.Add($"allow-transfer {{ {options.AllowTransfer.JoinToString("; ")} }}");
             lines.Add($"recursion {options.Recursion};");
             lines.Add($"transfer-format {options.TransferFormat};");
             lines.Add($"query-source address {options.QuerySourceAddress} port {options.QuerySourcePort};");
             lines.Add($"version {options.Version};");
-            lines.Add($"allow-query {{ {EnumerableExtensions.JoinToString(options.AllowQuery, "; ")} }}");
-            lines.Add($"allow-recursion {{ {EnumerableExtensions.JoinToString(options.AllowRecursion, "; ")} }}");
+            lines.Add($"allow-query {{ {options.AllowQuery.JoinToString("; ")} }}");
+            lines.Add($"allow-recursion {{ {options.AllowRecursion.JoinToString("; ")} }}");
             lines.Add($"ixfr-from-differences {options.IxfrFromDifferences};");
-            lines.Add($"listen-on-v6 {{ {EnumerableExtensions.JoinToString(options.ListenOnV6, "; ")} }}");
-            lines.Add($"listen-on port 53 {{ {EnumerableExtensions.JoinToString(options.ListenOnPort53, "; ")} }}");
+            lines.Add($"listen-on-v6 {{ {options.ListenOnV6.JoinToString("; ")} }}");
+            lines.Add($"listen-on port 53 {{ {options.ListenOnPort53.JoinToString("; ")} }}");
             lines.Add($"dnssec-enable {options.DnssecEnabled};");
             lines.Add($"dnssec-validation {options.DnssecValidation};");
             lines.Add($"dnssec-lookaside {options.DnssecLookaside};");
@@ -91,46 +149,47 @@ namespace antdlib.config {
             lines.Add("};");
             lines.Add("");
 
-            lines.Add($"controls {{ {options.ControlAcl} {options.ControlIp} port {options.ControlPort} allow {{ {EnumerableExtensions.JoinToString(options.ControlAllow, "; ")} }}");
+            lines.Add(
+                options.ControlKeys.Any()
+                    ? $"controls {{ inet {options.ControlIp} port {options.ControlPort} allow {{ {options.ControlAllow.JoinToString("; ")} }} keys {{ {options.ControlKeys.Select(_ => "\"" + _ + "\"").JoinToString(";")} }}"
+                    : $"controls {{ inet {options.ControlIp} port {options.ControlPort} allow {{ {options.ControlAllow.JoinToString("; ")} }}");
+
             lines.Add("");
 
-            lines.Add($"acl loif {{ {EnumerableExtensions.JoinToString(options.AclLocalInterfaces, "; ")} }}");
-            lines.Add($"acl iif {{ {EnumerableExtensions.JoinToString(options.AclInternalInterfaces, "; ")} }}");
-            lines.Add($"acl oif {{ {EnumerableExtensions.JoinToString(options.AclExternalInterfaces, "; ")} }}");
-            lines.Add($"acl lonet {{ {EnumerableExtensions.JoinToString(options.AclLocalNetworks, "; ")} }}");
-            lines.Add($"acl inet {{ {EnumerableExtensions.JoinToString(options.AclInternalNetworks, "; ")} }}");
-            lines.Add($"acl onet {{ {EnumerableExtensions.JoinToString(options.AclExternalNetworks, "; ")} }}");
+            foreach(var acl in options.AclList) {
+                lines.Add($"acl {acl.Name} {{ {acl.InterfaceList.JoinToString("; ")} }}");
+            }
             lines.Add("");
 
             lines.Add("logging {");
-            lines.Add($"channel {options.LoggingChannel} {{");
-            lines.Add($"{options.LoggingDaemon};");
-            lines.Add($"severity {options.LoggingSeverity};");
-            lines.Add($"print-category {options.LoggingPrintCategory};");
-            lines.Add($"print-severity {options.LoggingPrintSeverity};");
-            lines.Add($"print-time {options.LoggingPrintTime};");
+            lines.Add("channel syslog {");
+            lines.Add("syslog daemon;");
+            lines.Add($"severity {options.SyslogSeverity};");
+            lines.Add($"print-category {options.SyslogPrintCategory};");
+            lines.Add($"print-severity {options.SyslogPrintSeverity};");
+            lines.Add($"print-time {options.SyslogPrintTime};");
             lines.Add("};");
-            lines.Add($"category client {{ {options.LoggingChannel} }};");
-            lines.Add($"category config {{ {options.LoggingChannel} }};");
-            lines.Add($"category database {{ {options.LoggingChannel} }};");
-            lines.Add($"category default {{ {options.LoggingChannel} }};");
-            lines.Add($"category delegation-only {{ {options.LoggingChannel} }};");
-            lines.Add($"category dispatch {{ {options.LoggingChannel} }};");
-            lines.Add($"category dnssec {{ {options.LoggingChannel} }};");
-            lines.Add($"category general {{ {options.LoggingChannel} }};");
-            lines.Add($"category lame-servers {{ {options.LoggingChannel} }};");
-            lines.Add($"category network {{ {options.LoggingChannel} }};");
-            lines.Add($"category notify {{ {options.LoggingChannel} }};");
-            lines.Add($"category queries {{ {options.LoggingChannel} }};");
-            lines.Add($"category resolver {{ {options.LoggingChannel} }};");
-            lines.Add($"category rpz {{ {options.LoggingChannel} }};");
-            lines.Add($"category rate-limit {{ {options.LoggingChannel} }};");
-            lines.Add($"category security {{ {options.LoggingChannel} }};");
-            lines.Add($"category unmatched {{ {options.LoggingChannel} }};");
-            lines.Add($"category update {{ {options.LoggingChannel} }};");
-            lines.Add($"category update-security {{ {options.LoggingChannel} }};");
-            lines.Add($"category xfer-in {{ {options.LoggingChannel} }};");
-            lines.Add($"category xfer-out {{ {options.LoggingChannel} }};");
+            lines.Add("category client { syslog };");
+            lines.Add("category config { syslog };");
+            lines.Add("category database { syslog };");
+            lines.Add("category default { syslog };");
+            lines.Add("category delegation-only { syslog };");
+            lines.Add("category dispatch { syslog };");
+            lines.Add("category dnssec { syslog };");
+            lines.Add("category general { syslog };");
+            lines.Add("category lame-servers { syslog };");
+            lines.Add("category network { syslog };");
+            lines.Add("category notify { syslog };");
+            lines.Add("category queries { syslog };");
+            lines.Add("category resolver { syslog };");
+            lines.Add("category rpz { syslog };");
+            lines.Add("category rate-limit { syslog };");
+            lines.Add("category security { syslog };");
+            lines.Add("category unmatched { syslog };");
+            lines.Add("category update { syslog };");
+            lines.Add("category update-security { syslog };");
+            lines.Add("category xfer-in { syslog };");
+            lines.Add("category xfer-out { syslog };");
             lines.Add("};");
             lines.Add("");
 
@@ -148,13 +207,13 @@ namespace antdlib.config {
                     lines.Add($"serial-update-method {zone.SerialUpdateMethod};");
                 }
                 if(zone.AllowUpdate.Any()) {
-                    lines.Add($"allow-update {{ {EnumerableExtensions.JoinToString(zone.AllowUpdate, "; ")} }}");
+                    lines.Add($"allow-update {{ {zone.AllowUpdate.JoinToString("; ")} }}");
                 }
                 if(zone.AllowQuery.Any()) {
-                    lines.Add($"allow-query {{ {EnumerableExtensions.JoinToString(zone.AllowQuery, "; ")} }}");
+                    lines.Add($"allow-query {{ {zone.AllowQuery.JoinToString("; ")} }}");
                 }
                 if(zone.AllowTransfer.Any()) {
-                    lines.Add($"allow-transfer {{ {EnumerableExtensions.JoinToString(zone.AllowTransfer, "; ")} }}");
+                    lines.Add($"allow-transfer {{ {zone.AllowTransfer.JoinToString("; ")} }}");
                     lines.Add($"allow-transfer {zone.AllowTransfer};");
                 }
                 lines.Add("};");
@@ -162,7 +221,31 @@ namespace antdlib.config {
             lines.Add("");
 
             lines.Add("include \"/etc/bind/master/blackhole.zones\";");
-            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
+            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "named", "named");
+
+            var keyLines = new List<string> {
+                $"key \"{options.KeyName}\" {{",
+                "algorithm hmac-md5;",
+                $"secret \"{options.KeySecret}\";",
+                "};",
+                ""
+            };
+            FileWithAcl.WriteAllLines(RndcKeyFile, keyLines, "644", "named", "named");
+
+            var rndcConfLines = new List<string>{
+                $"key \"{options.KeyName}\" {{",
+                "algorithm hmac-md5;",
+                $"secret \"{options.KeySecret}\";",
+                "};",
+                "",
+                "options {",
+                $"default-key \"{options.KeyName}\";",
+                $"default-server \"{options.ControlIp}\";",
+                $"default-port \"{options.ControlPort}\";",
+                "};"
+            };
+            FileWithAcl.WriteAllLines(RndcConfFile, rndcConfLines, "644", "named", "named");
+
             #endregion
             Start();
             RndcReconfig();
@@ -237,7 +320,7 @@ namespace antdlib.config {
             Save(ServiceModel);
         }
 
-        public static List<string> GetHostZone(string hostname, string domain, string ip) {
+        public static List<string> GetHostZoneText(string hostname, string domain, string ip) {
             var list = new List<string> {"$ORIGIN .",
                 "$TTL 3600	; 1 hour",
                 $"{domain}			IN SOA	{hostname}.{domain}. hostmaster.{domain}. (",
@@ -296,7 +379,7 @@ namespace antdlib.config {
             return list;
         }
 
-        public static List<string> GetReverseZone(string hostname, string domain, string arpaNet, string arpaIp) {
+        public static List<string> GetReverseZoneText(string hostname, string domain, string arpaNet, string arpaIp) {
             var list = new List<string> {
                 "$ORIGIN .",
                 "$TTL 3600	; 1 hour",
