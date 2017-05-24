@@ -393,6 +393,13 @@ namespace Antd {
             ConsoleLogger.Log("machine configured (apply setup.conf)");
             #endregion
 
+            #region [    Nginx    ]
+            NginxConfiguration.TryImport();
+            if(NginxConfiguration.IsActive()) {
+                NginxConfiguration.Set();
+            }
+            #endregion
+
             #region [    Ssh    ]
             if(SshdConfiguration.IsActive()) {
                 SshdConfiguration.Set();

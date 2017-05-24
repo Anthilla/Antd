@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AclConfiguration.cs" />
+    <Compile Include="NginxConfiguration.cs" />
+    <Compile Include="Parsers\NginxParser.cs" />
     <Compile Include="Parsers\BindParser.cs" />
     <Compile Include="Antd_SVCS\ServiceDataType.cs" />
     <Compile Include="Parsers\DhcpParser.cs" />
@@ -99,7 +101,6 @@
     <Compile Include="ConfigurationFlow.cs" />
     <Compile Include="DhcpdConfiguration.cs" />
     <Compile Include="DhcpdLeases.cs" />
-    <Compile Include="DirectoryWatcher.cs" />
     <Compile Include="FirewallConfiguration.cs" />
     <Compile Include="GlusterConfiguration.cs" />
     <Compile Include="HostConfiguration.cs" />

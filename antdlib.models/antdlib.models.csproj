@@ -72,6 +72,7 @@
     <Compile Include="ClusterConfigurationModel.cs" />
     <Compile Include="HostParameters.cs" />
     <Compile Include="Network2ConfigurationModel.cs" />
+    <Compile Include="NginxConfigurationModel.cs" />
     <Compile Include="RemoteCommand.cs" />
     <Compile Include="AclConfigurationModel.cs" />
     <Compile Include="AntdConfigurationModel.cs" />
