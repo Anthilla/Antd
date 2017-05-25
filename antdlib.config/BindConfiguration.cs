@@ -53,8 +53,10 @@ namespace antdlib.config {
             model.Zones = complexZone;
             var includes = BindParser.ParseInclude(text).ToList();
             model.IncludeFiles = includes;
-            model.ZoneFiles = Directory.EnumerateFiles(MainZonesPath, "*.db").Select(_ => new BindConfigurationZoneFileModel { Name = _ }).ToList();
-            ParseZoneFile("");
+            if(Directory.Exists(MainZonesPath)) {
+                model.ZoneFiles = Directory.EnumerateFiles(MainZonesPath, "*.db").Select(_ => new BindConfigurationZoneFileModel { Name = _ }).ToList();
+                ParseZoneFile("");
+            }
             return model;
         }
 

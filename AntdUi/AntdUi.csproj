@@ -137,7 +137,7 @@
     <Compile Include="Modules\AntdDhcpLeasesModule.cs" />
     <Compile Include="Modules\AntdDiskUsageModule.cs" />
     <Compile Include="Modules\AntdFirewallModule.cs" />
-    <Compile Include="Modules\AntdGlusterModule.cs" />
+    <Compile Include="Modules\AssetGlusterModule.cs" />
     <Compile Include="Modules\AntdHostParametersModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNameServiceModule.cs" />
@@ -822,7 +822,7 @@
     <Content Include="Views\Pages\antd\svcs.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Pages\antd\sync.html">
+    <Content Include="Views\Pages\asset\gluster.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\system.html">

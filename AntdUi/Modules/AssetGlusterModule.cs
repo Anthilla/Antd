@@ -34,65 +34,33 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace AntdUi.Modules {
-    public class AntdGlusterModule : NancyModule {
+    public class AssetGlusterModule : NancyModule {
 
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public AntdGlusterModule() {
+        public AssetGlusterModule() {
             Get["/gluster"] = x => {
                 var model = _api.Get<PageGlusterModel>($"http://127.0.0.1:{Application.ServerPort}/gluster");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/gluster/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set");
-            };
+            Post["/gluster/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set");
 
-            Post["/gluster/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart");
-            };
+            Post["/gluster/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart");
 
-            Post["/gluster/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop");
-            };
+            Post["/gluster/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop");
 
-            Post["/gluster/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable");
-            };
+            Post["/gluster/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable");
 
-            Post["/gluster/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable");
-            };
+            Post["/gluster/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable");
 
-            Post["/gluster/options"] = x => {
-                string nodes = Request.Form.GlusterNode;
-                string volumeNames = Request.Form.GlusterVolumeName;
-                string volumeBrick = Request.Form.GlusterVolumeBrick;
-                string volumeMountPoint = Request.Form.GlusterVolumeMountPoint;
+            Post["/gluster/save"] = x => {
+                string config = Request.Form.Config;
                 var dict = new Dictionary<string, string> {
-                    { "GlusterNode", nodes },
-                    { "GlusterVolumeName", volumeNames },
-                    { "GlusterVolumeBrick", volumeBrick },
-                    { "GlusterVolumeMountPoint", volumeMountPoint },
+                    { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/options", dict);
-            };
-
-            Post["/gluster/node"] = x => {
-                string node = Request.Form.Node;
-                var dict = new Dictionary<string, string> {
-                    { "Node", node }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/node", dict);
-            };
-
-            Post["/gluster/node/del"] = x => {
-                string node = Request.Form.Node;
-                var dict = new Dictionary<string, string> {
-                    { "Node", node }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/node/del", dict);
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/save", dict);
             };
         }
     }

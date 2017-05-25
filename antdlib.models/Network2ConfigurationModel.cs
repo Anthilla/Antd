@@ -7,7 +7,6 @@ using Parameter = antdlib.common.Parameter;
 namespace antdlib.models {
     public class Network2ConfigurationModel {
         public List<NetworkInterface> Interfaces { get; set; } = new List<NetworkInterface>();
-        public string ActiveDnsConfiguration { get; set; } = string.Empty; //Id
     }
 
     public class NetworkInterface {
@@ -53,6 +52,10 @@ namespace antdlib.models {
         public string DestinationIp { get; set; } = string.Empty;
         public string DestinationRange { get; set; } = string.Empty;
         public string Gateway { get; set; } = string.Empty; //Id
+    }
+
+    public class ActiveDnsConfiguration {
+        public string Value { get; set; } = string.Empty; //Id
     }
 
     public class DnsConfiguration {

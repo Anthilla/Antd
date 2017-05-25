@@ -2,20 +2,19 @@
 using antdlib.models;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using anthilla.core;
 using anthilla.core.Helpers;
-using IoDir = System.IO.Directory;
 using Parameter = antdlib.common.Parameter;
-
 
 namespace antdlib.config {
     public static class GlusterConfiguration {
 
         private static GlusterConfigurationModel ServiceModel => Load();
 
-        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/gluster.conf";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgCluster}/gluster.conf";
         private const string ServiceName = "glusterd.service";
 
         private static GlusterConfigurationModel Load() {
@@ -35,14 +34,11 @@ namespace antdlib.config {
         public static void Save(GlusterConfigurationModel model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
-            ConsoleLogger.Log("[sync] configuration saved");
+            ConsoleLogger.Log("[gluster] configuration saved");
         }
 
-
         public static void Set() {
-            Enable();
             Stop();
-            Start();
             Launch();
         }
 
@@ -56,18 +52,18 @@ namespace antdlib.config {
 
         public static void Enable() {
             Save(ServiceModel);
-            ConsoleLogger.Log("[sync] enabled");
+            ConsoleLogger.Log("[gluster] enabled");
         }
 
         public static void Disable() {
             ServiceModel.IsActive = false;
             Save(ServiceModel);
-            ConsoleLogger.Log("[sync] disabled");
+            ConsoleLogger.Log("[gluster] disabled");
         }
 
         public static void Stop() {
             Systemctl.Stop(ServiceName);
-            ConsoleLogger.Log("[sync] stop");
+            ConsoleLogger.Log("[gluster] stop");
         }
 
         public static void Start() {
@@ -77,90 +73,59 @@ namespace antdlib.config {
             if(Systemctl.IsActive(ServiceName) == false) {
                 Systemctl.Restart(ServiceName);
             }
-            ConsoleLogger.Log("[sync] start");
+            ConsoleLogger.Log("[gluster] start");
         }
 
         public static void Launch() {
             var config = ServiceModel;
+            SetHostnameFile(config);
+            Systemctl.Enable(ServiceName);
+            Systemctl.Start(ServiceName);
+            ConsoleLogger.Log("[gluster] include nodes");
             foreach(var node in config.Nodes) {
-                Console.WriteLine($"glusterfs: setup {node} node");
-                Console.WriteLine(Bash.Execute($"gluster peer probe {node}"));
+                IncludeNode(node.Hostname);
             }
-            var numberOfNodes = ServiceModel.Nodes.Length;
+            ConsoleLogger.Log("[gluster] start volumes");
             foreach(var volume in config.Volumes) {
-                Console.WriteLine($"glusterfs: setup {volume.Name} volume");
-                var volumePath = $"{volume.Brick}{volume.Name}";
-                IoDir.CreateDirectory(volumePath);
-                //Terminal.Execute($"setfattr -x trusted.gfid {volumePath}");
-                //Terminal.Execute($"setfattr -x trusted.glusterfs.volume-id {volumePath}");
-                //Terminal.Execute($"rm -fR {volumePath}/.glusterfs");
-                VolumeCreate(volume.Name, numberOfNodes.ToString(), config.Nodes.Select(node => $"{node}:{volumePath}").ToArray());
-                VolumeStart(volume.Name);
-                IoDir.CreateDirectory(volume.MountPoint);
-                foreach(var node in config.Nodes) {
-                    VolumeMount(node, volume.Name, volume.MountPoint);
+                SetVolume(volume, config.Nodes);
+            }
+        }
+
+        private static readonly Host2Model Host = Host2Configuration.Host;
+
+        private static void SetHostnameFile(GlusterConfigurationModel conf) {
+            var linesToAdd = new List<string>();
+            foreach(var node in conf.Nodes) {
+                linesToAdd.Add($"{node.Ip} {node.Hostname}.{Host.InternalDomainPrimary} {node.Hostname}");
+            }
+            const string file = "/etc/hosts";
+            var hostsLines = File.ReadAllLines(file).ToList();
+            foreach(var line in linesToAdd) {
+                if(!hostsLines.Contains(line)) {
+                    hostsLines.Add(line);
+                }
+            }
+            FileWithAcl.WriteAllLines(file, hostsLines, "644", "root", "wheel");
+        }
+
+
+        #region [    Private - Volumes Management    ]
+        private static void IncludeNode(string node) {
+            Bash.Execute($"gluster peer probe {node}", false);
+        }
+
+        private static void SetVolume(GlusterVolume volumeInfo, List<GlusterNode> nodes) {
+            Directory.CreateDirectory(volumeInfo.MountPoint);
+            var replicaNodes = string.Join(" ", nodes.Select(_ => $"{_.Hostname}:{volumeInfo.Brick}")).TrimEnd();
+            Bash.Execute($"gluster volume create {volumeInfo.Name} replica {nodes.Count} transport tcp {replicaNodes} force", false);
+            Bash.Execute($"gluster volume start {volumeInfo.Name}", false);
+
+            foreach(var node in nodes) {
+                if(MountHelper.IsAlreadyMounted(volumeInfo.MountPoint) == false) {
+                    Bash.Execute($"mount -t glusterfs {node}:{volumeInfo.Brick} {volumeInfo.MountPoint}", false);
                 }
             }
         }
-
-        #region [    Private - Volumes Management    ]
-        private static void VolumeCreate(string volumeName, string numberOfNodes, string[] volumesList) {
-            var volString = string.Join(" ", volumesList);
-            Console.WriteLine($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force");
-            Bash.Execute($"gluster volume create {volumeName} replica {numberOfNodes} {volString} force", false);
-        }
-
-        private static void VolumeStart(string volumeName) {
-            Bash.Execute($"gluster volume start {volumeName}", false);
-        }
-
-        private static void VolumeMount(string node, string volumeName, string mountPoint) {
-            if(MountHelper.IsAlreadyMounted(mountPoint) == false) {
-                Bash.Execute($"mount -t glusterfs {node}:/{volumeName} {mountPoint}", false);
-            }
-        }
         #endregion
-
-        public static void AddNode(string model) {
-            var node = ServiceModel.Nodes;
-            if(node.Any(_ => _ == model)) {
-                return;
-            }
-            node.ToList().Add(model);
-            ServiceModel.Nodes = node;
-            Save(ServiceModel);
-        }
-
-        public static void RemoveNode(string guid) {
-            var volume = ServiceModel.Volumes;
-            var model = volume.First(_ => _.Guid == guid);
-            if(model == null) {
-                return;
-            }
-            volume.ToList().Remove(model);
-            ServiceModel.Volumes = volume;
-            Save(ServiceModel);
-        }
-
-        public static void AddVolume(GlusterVolume model) {
-            var volume = ServiceModel.Volumes;
-            if(volume.Any(_ => _.Name == model.Name)) {
-                return;
-            }
-            volume.ToList().Add(model);
-            ServiceModel.Volumes = volume;
-            Save(ServiceModel);
-        }
-
-        public static void RemoveVolume(string guid) {
-            var volume = ServiceModel.Volumes;
-            var model = volume.First(_ => _.Guid == guid);
-            if(model == null) {
-                return;
-            }
-            volume.ToList().Remove(model);
-            ServiceModel.Volumes = volume;
-            Save(ServiceModel);
-        }
     }
 }

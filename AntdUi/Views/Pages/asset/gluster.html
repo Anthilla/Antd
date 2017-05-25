@@ -1,0 +1,40 @@
+<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">sync</h1>
+
+<div ng-controller="AssetGlusterController">
+    <button ng-click="ResponseMessageHideSelf()" ng-hide="ResponseMessageHide" class="button fg-anthilla-blue bg-anthilla-gray-1 bd-anthilla-blue width100pc" style="border: 2px solid; margin-bottom: 10px;">{{ ResponseMessage }}</button>
+    <br />
+    <ul class="fg-white">
+        <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
+        <li>
+            <label class="input-control checkbox">
+                <input type="checkbox" ng-model="Gluster.IsActive" checked>
+                <span class="check"></span>
+                <span class="caption">gluster sync active</span>
+            </label>
+        </li>
+        <li></li>
+
+        <li ng-repeat="node in Gluster.Nodes">
+            <ul>
+                <li>node #{{ $index }} - <p ng-click="removeNode($index)">remove</p></li>
+                <li><input placeholder="name" ng-model="node.Hostname" type="text" /></li>
+                <li><input placeholder="ip" ng-model="node.Ip" type="text" /></li>
+            </ul>
+        </li>
+        
+        <li ng-repeat="volume in Gluster.Volumes">
+            <ul>
+                <li>volume #{{ $index }} - <p ng-click="removeVolume($index)">remove</p></li>
+                <li><input placeholder="name" ng-model="volume.Name" type="text" /></li>
+                <li><input placeholder="brick" ng-model="volume.Brick" type="text" /></li>
+                <li><input placeholder="mountpoint" ng-model="volume.MountPoint" type="text" /></li>
+            </ul>
+        </li>
+
+        <li>
+            <button ng-click="addNode()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ node</button>
+            <button ng-click="addVolume()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ volume</button>
+        </li>
+        <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
+    </ul>
+</div>

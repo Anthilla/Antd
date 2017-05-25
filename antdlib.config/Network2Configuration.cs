@@ -1,6 +1,5 @@
 ﻿using antdlib.common;
 using antdlib.models;
-using anthilla.commands;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -120,32 +119,12 @@ namespace antdlib.config {
             return true;
         }
 
-        public static void AddInterfaceSetting(NetworkInterface model) {
-            var netif = Conf.Interfaces.ToList();
-            var check = netif.Where(_ => _.Device == model.Device).ToList();
-            if(check.Any()) {
-                check.ForEach(_ => RemoveInterfaceSetting(_.Device));
-            }
-            var list = new List<NetworkInterface>();
-            foreach(var n in netif) {
-                list.Add(n);
-            }
-            list.Add(model);
-            Conf.Interfaces = list;
-            var m = new Network2ConfigurationModel { Interfaces = list, ActiveDnsConfiguration = Conf.ActiveDnsConfiguration };
-            Save(m);
-        }
-
-        public static void RemoveInterfaceSetting(string device) {
-            var netif = Conf.Interfaces.ToList();
-            var model = netif.First(_ => _.Device == device);
-            if(model == null) {
-                return;
-            }
-            netif.Remove(model);
-            Conf.Interfaces = netif;
-            Save(Conf);
-            CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> { { "$net_if", device } });
+        public static void SaveInterfaceSetting(List<NetworkInterface> model) {
+            var n = new Network2ConfigurationModel {
+                Interfaces = model
+            };
+            Json.Save(n, CfgFile);
+            ConsoleLogger.Error("[network] configuration saved");
         }
         #endregion
 
@@ -499,13 +478,13 @@ namespace antdlib.config {
         }
 
         public static void SetDnsConfigurationActive(string id) {
-            Conf.ActiveDnsConfiguration = id;
-            Save(Conf);
+            //Conf.ActiveDnsConfiguration = id;
+            //Save(Conf);
         }
 
         public static void RemoveDnsConfigurationActive(string id) {
-            Conf.ActiveDnsConfiguration = string.Empty;
-            Save(Conf);
+            //Conf.ActiveDnsConfiguration = string.Empty;
+            //Save(Conf);
         }
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Timers;
@@ -12,7 +13,12 @@ namespace Antd.Timer {
         public System.Timers.Timer Timer { get; private set; }
 
         public void Start(int milliseconds) {
-            Action();
+            try {
+                Action();
+            }
+            catch(Exception) {
+                ConsoleLogger.Log("[check] internet status: something went wrong");
+            }
             Timer = new System.Timers.Timer(milliseconds);
             Timer.Elapsed += Elapsed;
             Timer.Enabled = true;
@@ -23,7 +29,12 @@ namespace Antd.Timer {
         }
 
         private static void Elapsed(object sender, ElapsedEventArgs e) {
-            Action();
+            try {
+                Action();
+            }
+            catch(Exception) {
+                ConsoleLogger.Log("[check] internet status: something went wrong");
+            }
         }
 
         private static void Action() {

@@ -46,7 +46,6 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     .state("om", { cache: false, url: "^/om", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/om.html?v=" + new Date() } } })
     .state("overlay", { cache: false, url: "^/overlay", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/overlay.html?v=" + new Date() } } })
     .state("acl", { cache: false, url: "^/acl", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/acl.html?v=" + new Date() } } })
-    .state("sync", { cache: false, url: "^/sync", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/sync.html?v=" + new Date() } } })
     .state("rsync", { cache: false, url: "^/rsync", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/rsync.html?v=" + new Date() } } })
     .state("vm", { cache: false, url: "^/vm", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/vm.html?v=" + new Date() } } })
     .state("samba", { cache: false, url: "^/samba", views: { 'menu': { templateUrl: "pages/menus/antd.html?v=" + new Date() }, 'content': { templateUrl: "pages/antd/samba.html?v=" + new Date() } } })
@@ -89,7 +88,8 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
             'content': { templateUrl: "pages/asset/discovery.html?v=" + new Date() }
         }
     })
-    .state("cluster", { cache: false, url: "^/discovery", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/cluster.html?v=" + new Date() } } })
+    .state("cluster", { cache: false, url: "^/cluster", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/cluster.html?v=" + new Date() } } })
+    .state("gluster", { cache: false, url: "^/gluster", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/gluster.html?v=" + new Date() } } })
     .state("discovery", { cache: false, url: "^/discovery", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/discovery.html?v=" + new Date() } } })
     .state("scan", { cache: false, url: "^/scan", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/scan.html?v=" + new Date() } } })
     .state("assetsync", { cache: false, url: "^/assetsync", views: { 'menu': { templateUrl: "pages/menus/asset.html?v=" + new Date() }, 'content': { templateUrl: "pages/asset/assetsync.html?v=" + new Date() } } })

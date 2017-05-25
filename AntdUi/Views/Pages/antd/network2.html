@@ -43,6 +43,7 @@
                     <div class="cell colspan2">
                         <div class="input-control select width100pc">
                             <select name="singleSelect" ng-model="Variables.InternalNetPrimaryBits" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                <option value="">_</option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -104,6 +105,7 @@
                     <div class="cell colspan2">
                         <div class="input-control select width100pc">
                             <select ng-model="Variables.ExternalNetPrimaryBits" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                <option value="">_</option>
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -222,6 +224,7 @@
                             <div class="cell colspan2">
                                 <div class="input-control select width100pc">
                                     <select ng-model="NewInterfaceConfiguration.Range" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                        <option value="">_</option>
                                         <option value="0">0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -344,6 +347,7 @@
                                 <div class="cell colspan2">
                                     <div class="input-control select width100pc">
                                         <select ng-model="ic.Range" class="bg-anthilla-gray-2 bd-anthilla-green fg-white" convert-to-number>
+                                            <option value="">_</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -548,7 +552,7 @@
                             </div>
                         </div>
 
-                        <div class="row cells6">
+                        <!--<div class="row cells6">
                             <div class="cell colspan2 uppercase fg-anthilla-green">
                                 <p>Secondary Ip Configuration(s)</p>
                             </div>
@@ -570,7 +574,7 @@
                             <div class="cell">
                                 <button ng-click="DelIpConfiguration($event, sec, NewInterface.AdditionalConfigurations)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-cross fg-anthilla-orange"></span>&nbsp;Remove</button>
                             </div>
-                        </div>
+                        </div>-->
 
 
                         <div class="row cells6">
@@ -615,7 +619,7 @@
                                 <p>Save</p>
                             </div>
                             <div class="cell colspan4">
-                                <button ng-click="save($event, NewInterface)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                <button ng-click="addAndSave($event, NewInterface)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                             </div>
                         </div>
                     </div>
@@ -647,7 +651,7 @@
                                 <div class="cell colspan4">
                                     <div class="input-control select width100pc">
                                         <select ng-model="el.Configuration" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
-                                            <option ng-repeat="v in InterfaceConfigurationList" value="{{ v.Id }}">{{ v.Ip }}/{{ v.Range }}</option>
+                                            <option ng-repeat="v in InterfaceConfigurationList" value="{{ v.Id }}">{{ v.Ip }}/{{ v.Range }} &nbsp;{{ v.Description }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -695,7 +699,7 @@
                                     <p>Delete</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="delete($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
+                                    <button ng-click="delete($index)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-cross fg-red"></span>&nbsp;Delete</button>
                                 </div>
                             </div>
                             <div class="row cells6">
@@ -703,7 +707,7 @@
                                     <p>Save</p>
                                 </div>
                                 <div class="cell colspan4">
-                                    <button ng-click="save($event, el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
+                                    <button ng-click="save($event)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-checkmark fg-green"></span>&nbsp;Save</button>
                                 </div>
                             </div>
                         </div>

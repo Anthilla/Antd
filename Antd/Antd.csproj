@@ -134,7 +134,7 @@
     <Compile Include="Modules\AssetDiscoveryModule.cs" />
     <Compile Include="Modules\AntdVmModule.cs" />
     <Compile Include="Modules\AntdRsyncModule.cs" />
-    <Compile Include="Modules\AntdGlusterModule.cs" />
+    <Compile Include="Modules\AssetGlusterModule.cs" />
     <Compile Include="Modules\AntdDiskUsageModule.cs" />
     <Compile Include="Modules\AntdZfsModule.cs" />
     <Compile Include="Modules\AntdStorageModule.cs" />

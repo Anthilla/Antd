@@ -22,49 +22,50 @@ namespace Antd {
         /// </summary>
         public Do() {
             _host = Host2Configuration.Host;
-            var dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
+            //var dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
 
-            _isDnsPublic = dns?.Type == DnsType.Public;
+            _isDnsPublic = true; //dns?.Type == DnsType.Public;
 
 
-            _replacements = new Dictionary<string, string> {
-                { "$hostname", _host.HostName },
-                { "$internalIp", _host.InternalHostIpPrimary },
-                { "$externalIp", _host.ExternalHostIpPrimary },
-                { "$internalNet", _host.InternalNetPrimary },
-                { "$externalNet", _host.ExternalNetPrimary },
-                { "$internalMask", _host.InternalNetMaskPrimary },
-                { "$externalMask", _host.ExternalNetMaskPrimary },
-                { "$internalNetBits", _host.InternalNetPrimaryBits },
-                { "$externalNetBits", _host.ExternalNetPrimaryBits },
-                { "$internalDomain", _host.InternalDomainPrimary },
-                { "$externalDomain", _host.ExternalDomainPrimary },
-                { "$internalBroadcast", _host.InternalBroadcastPrimary },
-                { "$externalBroadcast", _host.ExternalBroadcastPrimary },
-                { "$internalNetArpa", _host.InternalArpaPrimary },
-                { "$externalNetArpa", _host.ExternalArpaPrimary },
-                { "$resolvNameserver", _host.ResolvNameserver },
-                { "$resolvDomain", _host.ResolvDomain },
-                { "$dnsDomain", dns?.Domain },
-                { "$dnsIp", dns?.Ip },
-                { "$secret", _host.Secret },
-                { "$internalArpaIpAddress", EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".") }, //se internalIp: 10.11.19.111 -> 19.111
-            };
+            _replacements = new Dictionary<string, string>();
+            //{
+            //{ "$hostname", _host.HostName },
+            //{ "$internalIp", _host.InternalHostIpPrimary },
+            //{ "$externalIp", _host.ExternalHostIpPrimary },
+            //{ "$internalNet", _host.InternalNetPrimary },
+            //{ "$externalNet", _host.ExternalNetPrimary },
+            //{ "$internalMask", _host.InternalNetMaskPrimary },
+            //{ "$externalMask", _host.ExternalNetMaskPrimary },
+            //{ "$internalNetBits", _host.InternalNetPrimaryBits },
+            //{ "$externalNetBits", _host.ExternalNetPrimaryBits },
+            //{ "$internalDomain", _host.InternalDomainPrimary },
+            //{ "$externalDomain", _host.ExternalDomainPrimary },
+            //{ "$internalBroadcast", _host.InternalBroadcastPrimary },
+            //{ "$externalBroadcast", _host.ExternalBroadcastPrimary },
+            //{ "$internalNetArpa", _host.InternalArpaPrimary },
+            //{ "$externalNetArpa", _host.ExternalArpaPrimary },
+            //{ "$resolvNameserver", _host.ResolvNameserver },
+            //{ "$resolvDomain", _host.ResolvDomain },
+            //{ "$dnsDomain", dns?.Domain },
+            //{ "$dnsIp", dns?.Ip },
+            //{ "$secret", _host.Secret },
+            //{ "$internalArpaIpAddress", _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
+            //};
 
-            var interfaces = Network2Configuration.Conf.Interfaces;
-            var activeNetworkConfsIds = interfaces.Select(_ => _.Configuration);
-            var networkConfs = Network2Configuration.InterfaceConfigurationList;
-            var activeNetworkConfs = activeNetworkConfsIds.Select(_ => networkConfs.FirstOrDefault(__ => __.Id == _)).ToList();
-            var internalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.Internal);
-            var internalActiveNetworkConfsIds = internalActiveNetworkConfs.Select(_ => _.Id);
-            var internalInterfaces = EnumerableExtensions.JoinToString(internalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList(), ", ");
-            _replacements["$internalInterface"] = internalInterfaces;
-            var externalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.External);
-            var externalActiveNetworkConfsIds = externalActiveNetworkConfs.Select(_ => _.Id);
-            var externalInterfaces = EnumerableExtensions.JoinToString(externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList(), ", ");
-            _replacements["$externalInterface"] = externalInterfaces;
-            var allInterfaces = EnumerableExtensions.JoinToString(interfaces.Select(_ => _.Device).ToList(), ", ");
-            _replacements["$allInterface"] = allInterfaces;
+            //var interfaces = Network2Configuration.Conf.Interfaces;
+            //var activeNetworkConfsIds = interfaces.Select(_ => _.Configuration);
+            //var networkConfs = Network2Configuration.InterfaceConfigurationList;
+            //var activeNetworkConfs = activeNetworkConfsIds.Select(_ => networkConfs.FirstOrDefault(__ => __.Id == _)).ToList();
+            //var internalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.Internal);
+            //var internalActiveNetworkConfsIds = internalActiveNetworkConfs.Select(_ => _.Id);
+            //var internalInterfaces = internalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
+            //_replacements["$internalInterface"] = internalInterfaces;
+            //var externalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.External);
+            //var externalActiveNetworkConfsIds = externalActiveNetworkConfs.Select(_ => _.Id);
+            //var externalInterfaces = externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
+            //_replacements["$externalInterface"] = externalInterfaces;
+            //var allInterfaces = interfaces.Select(_ => _.Device).ToList().JoinToString(", ");
+            //_replacements["$allInterface"] = allInterfaces;
         }
 
         /// <summary>
@@ -264,18 +265,18 @@ namespace Antd {
             }
         }
 
-        private void ActivateService(string svc) {
-            if(Systemctl.IsEnabled(svc) == false) {
-                Systemctl.Enable(svc);
-            }
-            if(Systemctl.IsActive(svc) == false) {
-                Systemctl.Restart(svc);
-            }
-        }
+        //private void ActivateService(string svc) {
+        //    if(Systemctl.IsEnabled(svc) == false) {
+        //        Systemctl.Enable(svc);
+        //    }
+        //    if(Systemctl.IsActive(svc) == false) {
+        //        Systemctl.Restart(svc);
+        //    }
+        //}
         #endregion
 
         #region [    network    ]
-        private void AppluDefaultNetworkConfiguration() {
+        private static void AppluDefaultNetworkConfiguration() {
             var ifs = Network2Configuration.InterfacePhysical;
             foreach(var nif in ifs) {
                 CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", nif }, { "$mtu", "6000" } });
@@ -294,7 +295,6 @@ namespace Antd {
             var interfaceConfigurations = Network2Configuration.InterfaceConfigurationList;
             var gatewayConfigurations = Network2Configuration.GatewayConfigurationList;
             foreach(var configuration in configurations) {
-                var deviceName = configuration.Device;
                 var ifConfig = interfaceConfigurations.FirstOrDefault(_ => _.Id == configuration.Configuration);
                 if(ifConfig == null) {
                     continue;
@@ -406,7 +406,6 @@ namespace Antd {
                 return;
             }
             CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", "default" }, { "$gateway", gatewayConfiguration.GatewayAddress } });
-
         }
 
         private void CreateDefaultNetworkConfiguration() {
@@ -419,8 +418,9 @@ namespace Antd {
             Network2Configuration.AddDnsConfiguration(Default.PrivateInternalDnsConfiguration());
             Network2Configuration.AddDnsConfiguration(Default.PrivateExternalDnsConfiguration());
             var devs = Network2Configuration.InterfacePhysical.ToList();
-            var partIp = EnumerableExtensions.JoinToString(Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3), ".");
+            var partIp = Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3).JoinToString(".");
             var counter = 200;
+            var list = new List<NetworkInterface>();
             foreach(var dev in devs) {
                 var conf = Default.InternalPhysicalInterfaceConfiguration($"{partIp}.{counter}");
                 Network2Configuration.AddInterfaceConfiguration(conf);
@@ -430,9 +430,10 @@ namespace Antd {
                     GatewayConfiguration = Default.GatewayConfiguration().Id,
                     AdditionalConfigurations = new List<string>()
                 };
-                Network2Configuration.AddInterfaceSetting(networkInterface);
+                list.Add(networkInterface);
                 counter = counter + 1;
             }
+            Network2Configuration.SaveInterfaceSetting(list);
             Network2Configuration.SetDnsConfigurationActive(Default.PublicDnsConfiguration().Id);
         }
 
@@ -717,7 +718,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, EnumerableExtensions.JoinToString(_host.InternalHostIpPrimary.Split('.').Skip(2), ".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
             }
             if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/host.{externalZoneName}.db") == null) {
                 var filePath = $"{BindZonesDirectory}/host.{externalZoneName}.db";
@@ -737,7 +738,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, EnumerableExtensions.JoinToString(_host.ExternalHostIpPrimary.Split('.').Skip(2), ".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, _host.ExternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
             }
             newModel.ZoneFiles = zonesFile;
             BindConfiguration.Save(newModel);

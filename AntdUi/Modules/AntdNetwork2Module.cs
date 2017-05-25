@@ -260,6 +260,14 @@ namespace AntdUi.Modules {
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface/del", dict);
             };
 
+            Post["/network2/interface2"] = x => {
+                string conf = Request.Form.Config;
+                var dict = new Dictionary<string, string> {
+                    { "Config", conf }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface2", dict);
+            };
+
             Post["/network2/add/bond"] = x => {
                 string name = Request.Form.Name;
                 var dict = new Dictionary<string, string> {

@@ -442,72 +442,6 @@ function AntdFirewallController($scope, $http) {
     });
 }
 
-app.controller("AntdGlusterController", ["$scope", "$http", AntdGlusterController]);
-
-function AntdGlusterController($scope, $http) {
-    $scope.toggle = function (el) {
-        $(el).toggle();
-    }
-
-    $scope.deleteNode = function (el) {
-        var data = $.param({
-            Node: el.Node
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/node/del", data).then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.addNode = function (el) {
-        var data = $.param({
-            Node: el.Node
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/node", data).then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.saveOptions = function (gluster) {
-        var data = $.param({
-            GlusterNode: gluster.GlusterNode,
-            GlusterVolumeName: gluster.GlusterVolumeName,
-            GlusterVolumeBrick: gluster.GlusterVolumeBrick,
-            GlusterVolumeMountPoint: gluster.GlusterVolumeMountPoint
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/options", data).then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.restart = function () {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/restart").then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.stop = function () {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/stop").then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.enable = function () {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/enable").then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.disable = function () {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/disable").then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $scope.set = function () {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/gluster/set").then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
-
-    $http.get("/gluster").success(function (data) {
-        $scope.isActive = data.GlusterIsActive;
-        $scope.GlusterNodes = data.Nodes;
-        $scope.GlusterVolumes = data.Volumes;
-    });
-}
-
 app.controller("AntdNameServiceController", ["$scope", "$http", AntdNameServiceController]);
 
 function AntdNameServiceController($scope, $http) {
@@ -779,22 +713,22 @@ function AntdNetwork2Controller($scope, $http, $interval) {
         $http.post("/network2/dnsconfiguration", data).then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
     }
 
-    $scope.AddIpConfiguration = function ($event, el) {
-        console.log(el.AdditionalConfigurations);
-        el.AdditionalConfigurations.push(el.AdditionalConfigurations.length);
-        console.log(el.AdditionalConfigurations);
-    }
+    //$scope.AddIpConfiguration = function ($event, el) {
+    //    console.log(el.AdditionalConfigurations);
+    //    el.AdditionalConfigurations.push(el.AdditionalConfigurations.length);
+    //    console.log(el.AdditionalConfigurations);
+    //}
 
-    $scope.AddThisIpConfigurationToList = function (index, el, conf) {
-        el.AdditionalConfigurations.push(conf);
-    }
+    //$scope.AddThisIpConfigurationToList = function (index, el, conf) {
+    //    el.AdditionalConfigurations.push(conf);
+    //}
 
-    $scope.DelIpConfiguration = function ($event, el, list) {
-        var index = list.indexOf(el);
-        if (index > -1) {
-            list.splice(index, 1);
-        }
-    }
+    //$scope.DelIpConfiguration = function ($event, el, list) {
+    //    var index = list.indexOf(el);
+    //    if (index > -1) {
+    //        list.splice(index, 1);
+    //    }
+    //}
 
     $scope.NewInterface = {
         Device: "",
@@ -806,30 +740,24 @@ function AntdNetwork2Controller($scope, $http, $interval) {
         ManagedInterfaces: []
     };
 
-    $scope.delete = function ($event, el) {
-        var data = $.param({
-            Device: el.Device
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/interface/del", data).then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+    $scope.delete = function (index) {
+        console.log($scope.Configuration.length);
+        $scope.Configuration.splice(index, 1);
+        console.log($scope.Configuration.length);
     }
 
-    $scope.save = function ($event, el) {
-        console.log(el.AdditionalConfigurations);
-        var addcnf = "";
-        angular.forEach(el.AdditionalConfigurations, function (v) {
-            addcnf += v + ",";
-        });
+    $scope.addAndSave = function ($event, el) {
+        $scope.Configuration.push(el);
+        $scope.save();
+    }
+
+    $scope.save = function ($event) {
+        var config = angular.toJson($scope.Configuration, true);
         var data = $.param({
-            Device: el.Device,
-            Configuration: el.Configuration,
-            Status: el.Status,
-            AdditionalConfigurations: addcnf,
-            GatewayConfiguration: el.GatewayConfiguration,
-            HardwareConfiguration: el.HardwareConfiguration
+            Config: config
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network2/interface", data).then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
+        $http.post("/network2/interface2", data).then(function () { $scope.AppendMessageToButton($event.currentTarget, "ok"); }, function (r) { console.log(r); });
     }
 
     $scope.NewRouteConfiguration = {
@@ -925,7 +853,7 @@ function AntdNetwork2Controller($scope, $http, $interval) {
         Verb: "",
         Mode: "2",
         Ip: "",
-        Range: "16",
+        Range: "",
         Adapter: "",
         Ifs: "",
         PostIfs: ""

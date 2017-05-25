@@ -31,21 +31,14 @@ using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using anthilla.core;
 
 namespace Antd.Modules {
-    public class AntdGlusterModule : NancyModule {
+    public class AssetGlusterModule : NancyModule {
 
-        public AntdGlusterModule() {
+        public AssetGlusterModule() {
             Get["/gluster"] = x => {
-                var glusterIsActive = GlusterConfiguration.IsActive();
                 var model = new PageGlusterModel {
-                    GlusterIsActive = glusterIsActive,
-                    Nodes = GlusterConfiguration.Get()?.Nodes,
-                    Volumes = GlusterConfiguration.Get()?.Volumes
+                    Gluster = GlusterConfiguration.Get()
                 };
                 return JsonConvert.SerializeObject(model);
             };
@@ -56,7 +49,7 @@ namespace Antd.Modules {
             };
 
             Post["/gluster/restart"] = x => {
-                GlusterConfiguration.Start();
+                GlusterConfiguration.Launch();
                 return HttpStatusCode.OK;
             };
 
@@ -77,57 +70,10 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/gluster/options"] = x => {
-                string nodes = Request.Form.GlusterNode;
-                var nodelist = nodes.Split(new[] { "," }, StringSplitOptions.None).ToList();
-                string volumeNames = Request.Form.GlusterVolumeName;
-                string volumeBrick = Request.Form.GlusterVolumeBrick;
-                string volumeMountPoint = Request.Form.GlusterVolumeMountPoint;
-                var volumeNamesList = volumeNames.Split(new[] { "," }, StringSplitOptions.None);
-                var volumeBrickList = volumeBrick.Split(new[] { "," }, StringSplitOptions.None);
-                var volumeMountPointList = volumeMountPoint.Split(new[] { "," }, StringSplitOptions.None);
-                var volumelist = new List<GlusterVolume>();
-                for(var i = 0; i < 20; i++) {
-                    if(volumeNamesList.Length < i - 1 ||
-                        volumeBrickList.Length < i - 1 ||
-                        volumeMountPointList.Length < i - 1) {
-                        continue;
-                    }
-                    try {
-                        var vol = new GlusterVolume {
-                            Name = volumeNamesList[i],
-                            Brick = volumeBrickList[i],
-                            MountPoint = volumeMountPointList[i],
-                        };
-                        volumelist.Add(vol);
-                    }
-                    catch(Exception ex) {
-                        ConsoleLogger.Error(ex.Message);
-                    }
-                }
-                var config = new GlusterConfigurationModel {
-                    Nodes = nodelist.ToArray(),
-                    Volumes = volumelist.ToArray()
-                };
-                GlusterConfiguration.Save(config);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/gluster/node"] = x => {
-                string node = Request.Form.Node;
-                if(string.IsNullOrWhiteSpace(node)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                GlusterConfiguration.AddNode(node);
-                return HttpStatusCode.OK;
-            };
-
-            Post["/gluster/node/del"] = x => {
-                string node = Request.Form.Node;
-                if(string.IsNullOrWhiteSpace(node)) {
-                    return HttpStatusCode.BadRequest;
-                }
-                GlusterConfiguration.RemoveNode(node);
+            Post["/gluster/save"] = x => {
+                string config = Request.Form.Config;
+                var model = JsonConvert.DeserializeObject<GlusterConfigurationModel>(config);
+                GlusterConfiguration.Save(model);
                 return HttpStatusCode.OK;
             };
         }

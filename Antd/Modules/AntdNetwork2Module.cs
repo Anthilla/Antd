@@ -73,7 +73,7 @@ namespace Antd.Modules {
                     NetworkHardwareConfigurationList = Network2Configuration.NetworkHardwareConfigurationList,
                     LagConfigurationList = Network2Configuration.NetworkAggregatedInterfaceConfigurationList,
                     Variables = Host2Configuration.Host,
-                    ActiveDnsConfiguration = Network2Configuration.Conf.ActiveDnsConfiguration
+                    //ActiveDnsConfiguration = Network2Configuration.Conf.ActiveDnsConfiguration
                 };
                 return JsonConvert.SerializeObject(model);
             };
@@ -295,31 +295,38 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
-            Post["/network2/interface"] = x => {
-                string dev = Request.Form.Device;
-                string conf = Request.Form.Configuration;
-                string confs = Request.Form.AdditionalConfigurations;
-                string gwConf = Request.Form.GatewayConfiguration;
-                string hwConf = Request.Form.HardwareConfiguration;
-                string status = Request.Form.Status;
-                var typedStatus = status?.ToEnum<NetworkInterfaceStatus>() ?? NetworkInterfaceStatus.Down;
-                var model = new NetworkInterface {
-                    Device = dev,
-                    Configuration = conf,
-                    HardwareConfiguration = hwConf,
-                    Status = typedStatus,
-                    AdditionalConfigurations = confs == null ? new List<string>() : StringExtensions.SplitToList(confs),
-                    GatewayConfiguration = gwConf
-                };
-                Network2Configuration.AddInterfaceSetting(model);
+            //Post["/network2/interface"] = x => {
+            //    string dev = Request.Form.Device;
+            //    string conf = Request.Form.Configuration;
+            //    string confs = Request.Form.AdditionalConfigurations;
+            //    string gwConf = Request.Form.GatewayConfiguration;
+            //    string hwConf = Request.Form.HardwareConfiguration;
+            //    string status = Request.Form.Status;
+            //    var typedStatus = status?.ToEnum<NetworkInterfaceStatus>() ?? NetworkInterfaceStatus.Down;
+            //    var model = new NetworkInterface {
+            //        Device = dev,
+            //        Configuration = conf,
+            //        HardwareConfiguration = hwConf,
+            //        Status = typedStatus,
+            //        AdditionalConfigurations = confs == null ? new List<string>() : StringExtensions.SplitToList(confs),
+            //        GatewayConfiguration = gwConf
+            //    };
+            //    Network2Configuration.AddInterfaceSetting(model);
+            //    return HttpStatusCode.OK;
+            //};
+
+            Post["/network2/interface2"] = x => {
+                string conf = Request.Form.Config;
+                var model = JsonConvert.DeserializeObject<List<NetworkInterface>>(conf);
+                Network2Configuration.SaveInterfaceSetting(model);
                 return HttpStatusCode.OK;
             };
 
-            Post["/network2/interface/del"] = x => {
-                string dev = Request.Form.Device;
-                Network2Configuration.RemoveInterfaceSetting(dev);
-                return HttpStatusCode.OK;
-            };
+            //Post["/network2/interface/del"] = x => {
+            //    string dev = Request.Form.Device;
+            //    Network2Configuration.RemoveInterfaceSetting(dev);
+            //    return HttpStatusCode.OK;
+            //};
 
             Post["/network2/add/bond"] = x => {
                 string name = Request.Form.Name;

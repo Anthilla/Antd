@@ -47,7 +47,7 @@ namespace antdlib.config {
             }
             ConsoleLogger.Log("[watcher config] start");
             try {
-                _fileSystemWatcher = new FileSystemWatcher(Parameter.RepoDirs) {
+                _fileSystemWatcher = new FileSystemWatcher(Parameter.AntdCfgServices) {
                     NotifyFilter = NotifyFilters.LastWrite,
                     IncludeSubdirectories = true,
                     EnableRaisingEvents = true

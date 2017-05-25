@@ -48,11 +48,103 @@ function AssetClusterController($scope, $http, $interval) {
     }
 
     $scope.PublicIp = "";
-    $scope.ClusterNodes =[];
+    $scope.ClusterNodes = [];
     $scope.Get = function () {
         $http.get("/cluster").success(function (data) {
             $scope.Info = data.Info;
             $scope.ClusterNodes = data.ClusterNodes;
+        });
+    }
+    $scope.Get();
+
+    //$scope.ShowResponseMessage("ok");
+    $scope.ResponseMessage = "";
+    $scope.ResponseMessageHide = true;
+    $scope.ShowResponseMessage = function (message) {
+        $scope.ResponseMessageHide = false;
+        $scope.ResponseMessage = message;
+        $interval(function () {
+            $scope.ResponseMessageHide = true;
+        }, 1666);
+        $scope.Get();
+    }
+
+    $scope.ResponseMessageHideSelf = function () {
+        $scope.ResponseMessage = "";
+        $scope.ResponseMessageHide = true;
+    }
+}
+
+app.controller("AssetGlusterController", ["$scope", "$http", AssetGlusterController]);
+
+function AssetGlusterController($scope, $http) {
+
+    $scope.save = function () {
+        var config = angular.toJson($scope.Gluster, true);
+        var data = $.param({
+            Config: config
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/save", data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.removeVolume = function (index) {
+        if (index > -1) {
+            $scope.Gluster.Volumes.splice(index, 1);
+        }
+    }
+
+    $scope.addVolume = function () {
+        var volume = {
+            Name: "",
+            Brick: "",
+            MountPoint: ""
+        };
+        $scope.Gluster.Volumes.push(volume);
+    }
+
+    $scope.removeNode = function (index) {
+        if (index > -1) {
+            $scope.Gluster.Nodes.splice(index, 1);
+        }
+    }
+
+    $scope.addNode = function () {
+        var node = {
+            Hostname: "",
+            Ip: ""
+        };
+        $scope.Gluster.Nodes.push(node);
+    }
+
+    $scope.restart = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/restart").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.stop = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/stop").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.enable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/enable").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.disable = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/disable").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.set = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/gluster/set").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+    }
+
+    $scope.Get = function () {
+        $http.get("/gluster").success(function (data) {
+            $scope.Gluster = data.Gluster;
         });
     }
     $scope.Get();

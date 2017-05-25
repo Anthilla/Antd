@@ -212,6 +212,7 @@ namespace Antd {
             #region import network2model
             var tmpNet = NetworkConfiguration.Get();
             var tmpHost2 = Host2Configuration.Host;
+            var niflist = new List<NetworkInterface>();
             foreach(var cif in tmpNet.Interfaces) {
                 ConsoleLogger.Log($"[data import] network configuration for '{cif.Interface}'");
                 var broadcast = "";
@@ -254,10 +255,12 @@ namespace Antd {
 
                 var tryget2 = Network2Configuration.Conf.Interfaces.FirstOrDefault(_ => _.Device == cif.Interface);
                 if(tryget2 == null) {
-                    Network2Configuration.AddInterfaceSetting(ifConfig);
+                    niflist.Add(ifConfig);
                 }
             }
-
+            if(niflist.Any()) {
+                Network2Configuration.SaveInterfaceSetting(niflist);
+            }
             if(!Network2Configuration.GatewayConfigurationList.Any()) {
                 var defaultGatewayConfiguration = new NetworkGatewayConfiguration {
                     Id = Random.ShortGuid(),
@@ -497,7 +500,7 @@ namespace Antd {
 
             #region [    Sync    ]
             if(GlusterConfiguration.IsActive()) {
-                GlusterConfiguration.Set();
+                GlusterConfiguration.Launch();
             }
             if(RsyncConfiguration.IsActive()) {
                 RsyncConfiguration.Set();
