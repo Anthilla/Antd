@@ -1,12 +1,11 @@
 Antd: Anthilla System Daemon: 
 =============================
 
-A Linux .net c# System Manager, use kernel directly, systemd (not for network), and commands. High Availability, Fault Tolerance on WIP
-
-Can use "Templated Standalone Applications" as APPs and an App Store Repository is in WIP.
-
+A Linux .net c# System Manager, use kernel directly, systemd (not for network), and commands. High Availability, Fault Tolerance on WIP. Can use "Templated Standalone Applications" as APPs and an App Store Repository is in WIP.
 ----------------------------------------------------------------------------------------
+
 Based on latest .net and tested on lates MONO, selfhosted on Nancy (nancyfx), standalone and developed to be delivered in a squash.xz package.
+----------------------------------------------------------------------------------------
 
 (This project it's linked to AnthillaOS, but with OS manual fixes can run on any linux)
 
