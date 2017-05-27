@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using anthilla.core;
-using anthilla.core.Helpers;
 using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
@@ -77,6 +76,7 @@ namespace antdlib.config {
         }
 
         public static void Launch() {
+            ConsoleLogger.Log("[gluster] launch");
             var config = ServiceModel;
             SetHostnameFile(config);
             Systemctl.Enable(ServiceName);
@@ -108,8 +108,6 @@ namespace antdlib.config {
             FileWithAcl.WriteAllLines(file, hostsLines, "644", "root", "wheel");
         }
 
-
-        #region [    Private - Volumes Management    ]
         private static void IncludeNode(string node) {
             Bash.Execute($"gluster peer probe {node}", false);
         }
@@ -117,15 +115,15 @@ namespace antdlib.config {
         private static void SetVolume(GlusterVolume volumeInfo, List<GlusterNode> nodes) {
             Directory.CreateDirectory(volumeInfo.MountPoint);
             var replicaNodes = string.Join(" ", nodes.Select(_ => $"{_.Hostname}:{volumeInfo.Brick}")).TrimEnd();
+            ConsoleLogger.Log($"[gluster] create {volumeInfo.Name}");
             Bash.Execute($"gluster volume create {volumeInfo.Name} replica {nodes.Count} transport tcp {replicaNodes} force", false);
             Bash.Execute($"gluster volume start {volumeInfo.Name}", false);
 
             foreach(var node in nodes) {
-                if(MountHelper.IsAlreadyMounted(volumeInfo.MountPoint) == false) {
-                    Bash.Execute($"mount -t glusterfs {node}:{volumeInfo.Brick} {volumeInfo.MountPoint}", false);
-                }
+                ConsoleLogger.Log($"[gluster] mount {volumeInfo.Name} {volumeInfo.MountPoint}");
+                ConsoleLogger.Log($"mount -t glusterfs {node.Hostname}:{volumeInfo.Name} {volumeInfo.MountPoint}");
+                Bash.Execute($"mount -t glusterfs {node.Hostname}:{volumeInfo.Name} {volumeInfo.MountPoint}", false);
             }
         }
-        #endregion
     }
 }
