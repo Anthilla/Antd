@@ -1,4 +1,10 @@
-Antd
+Antd: Anthilla System Daemon, 
+
+A Linux .net c# System Manager, binded with systemd. High Availability, Fault Tolerance,
+Based on latest .net and tested on lates MONO, selfhosted on Nancy (nancyfx), standalone and developed to be delivered in a squash.xz package.
+
+(This project it's linked to AnthillaOS, but with OS manual fixes can run on any linux)
+
 ====
 
 About
