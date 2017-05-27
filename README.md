@@ -1,7 +1,7 @@
 Antd: Anthilla System Daemon: 
 =============================
 
-A Linux .net c# System Manager, binded with systemd. High Availability, Fault Tolerance,
+A Linux .net c# System Manager, use kernel directly, systemd(not for networl), and commands. High Availability, Fault Tolerance on WIP
 ----------------------------------------------------------------------------------------
 Based on latest .net and tested on lates MONO, selfhosted on Nancy (nancyfx), standalone and developed to be delivered in a squash.xz package.
 
