@@ -21,6 +21,8 @@ namespace Antd.Cloud {
             Timer = new System.Timers.Timer(milliseconds);
             Timer.Elapsed += _timer_Elapsed;
             Timer.Enabled = true;
+            Timer.Start();
+            Do();
         }
 
         public void Stop() {
@@ -28,9 +30,13 @@ namespace Antd.Cloud {
         }
 
         private static readonly ApiConsumer Api = new ApiConsumer();
-        private static readonly string MachineId = Machine.MachineIds.Get.MachineUid;
+        private static readonly MachineIdsModel MachineId = Machine.MachineIds.Get;
 
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e) {
+            Do();
+        }
+
+        private static void Do() {
             try {
                 //ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
                 var cloudaddress = new AppConfiguration().Get().CloudAddress;
@@ -43,20 +49,25 @@ namespace Antd.Cloud {
                 if(Parameter.Cloud.Contains("localhost")) {
                     return;
                 }
-                var cmds = Api.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetinfo/fetchcommand/Antd/" + MachineId);
+                //fetchcommand/{partnum}/{serialnum}/{machineuid}/{appname}
+                var cmds = Api.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetinfo/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
+                if(cmds == null)
+                    return;
                 if(!cmds.Any())
                     return;
                 foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
                     CommandLauncher.Launch(cmd.Command, cmd.Parameters);
                     var dict = new Dictionary<string, string> {
                         { "AppName", "Antd" },
-                        { "MachineUid", MachineId },
+                        { "PartNumber", MachineId.PartNumber },
+                        { "SerialNumber", MachineId.SerialNumber },
+                        { "MachineUid", MachineId.MachineUid },
                         { "Command", cmd.CommandCode }
                     };
-                    Api.Post($"{Parameter.Cloud}repo/assetinfo/confirmcommand", dict);
+                    Api.Post($"{cloudaddress}repo/assetinfo/confirmcommand", dict);
                 }
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 //ConsoleLogger.Error(ex.Message);
             }
         }

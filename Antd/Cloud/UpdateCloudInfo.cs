@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
+using antdlib.models;
 using anthilla.commands;
 using anthilla.core;
 using anthilla.crypto;
@@ -35,7 +36,7 @@ namespace Antd.Cloud {
 
         private readonly ApiConsumer _api = new ApiConsumer();
         private readonly AsymmetricKeys _asymmetricKeys = new AsymmetricKeys(Parameter.AntdCfgKeys, Application.KeyName);
-        private readonly string _machineId = Machine.MachineIds.Get.MachineUid;
+        private readonly MachineIdsModel _machineId = Machine.MachineIds.Get;
 
         private void Action(object sender, ElapsedEventArgs e) {
             try {
@@ -54,7 +55,9 @@ namespace Antd.Cloud {
                 var kernelVersion = GetVersionDateFromFile(Bash.Execute("file /mnt/cdrom/Kernel/active-kernel"));
                 var dict = new Dictionary<string, string> {
                     { "AppName", "Antd" },
-                    { "MachineUid", _machineId },
+                    { "PartNumber", _machineId.PartNumber },
+                    { "SerialNumber", _machineId.SerialNumber },
+                    { "Uid", _machineId.MachineUid },
                     { "KeyValue", pk },
                     { "InternalIp", internalIp },
                     { "ExternalIp", externalIp },
