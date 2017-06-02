@@ -36,7 +36,6 @@ using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Ui;
-using antdlib.common;
 using antdlib.config;
 using antdlib.config.shared;
 using antdlib.models;
@@ -132,11 +131,13 @@ namespace Antd {
             var appconfig = new AppConfiguration().Get();
             ConsoleLogger.Log($"[cloud] {appconfig.CloudAddress}");
             try {
-                var machineId = Machine.MachineId.Get;
+                var machineIds = Machine.MachineIds.Get;
+                ConsoleLogger.Log($"[machineid] {machineIds.PartNumber}");
+                ConsoleLogger.Log($"[machineid] {machineIds.SerialNumber}");
+                ConsoleLogger.Log($"[machineid] {machineIds.MachineUid}");
                 var licenseManagement = new LicenseManagement();
-                licenseManagement.Download("Antd", machineId, pub);
-                ConsoleLogger.Log($"[machineid] {machineId}");
-                var licenseStatus = licenseManagement.Check("Antd", machineId, pub);
+                licenseManagement.Download("Antd", machineIds, pub);
+                var licenseStatus = licenseManagement.Check("Antd", machineIds, pub);
                 ConsoleLogger.Log(licenseStatus == null
                     ? "[license] license results null"
                     : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
@@ -190,7 +191,7 @@ namespace Antd {
                 ExternalHostIpPrimary = "",
                 Timezone = tmpHost.Timezone.StoredValues.FirstOrDefault().Value,
                 NtpdateServer = tmpHost.NtpdateServer.StoredValues.FirstOrDefault().Value,
-                MachineUid = Machine.MachineId.Get,
+                MachineUid = Machine.MachineIds.Get.MachineUid,
                 Cloud = Parameter.Cloud
             };
 

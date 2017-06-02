@@ -114,6 +114,7 @@
     <Compile Include="Helpers\Default.cs" />
     <Compile Include="Helpers\Dicts.cs" />
     <Compile Include="License\LicenseManagement.cs" />
+    <Compile Include="Machine\MachineIds.cs" />
     <Compile Include="Modules\AntdTorModule.cs" />
     <Compile Include="Modules\AntdHostParametersModule.cs" />
     <Compile Include="Modules\AntdHost2Module.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
     <Compile Include="Apps\AppTarget.cs" />
-    <Compile Include="Machine\MachineId.cs" />
     <Compile Include="Timer\RemoveUnusedModules.cs" />
     <Compile Include="Modules\AppConfigurationModule.cs" />
     <Compile Include="Asset\AvahiBrowse.cs" />

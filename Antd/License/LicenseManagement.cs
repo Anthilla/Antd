@@ -1,5 +1,4 @@
-﻿using antdlib.common;
-using antdlib.config.shared;
+﻿using antdlib.config.shared;
 using antdlib.models;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +12,7 @@ namespace Antd.License {
         private readonly string _licensePath = $"{Parameter.AntdCfg}/license.lic";
         private readonly ApiConsumer _api = new ApiConsumer();
 
-        public void Download(string appName, string machineUid, byte[] publicKey) {
+        public void Download(string appName, MachineIdsModel machineUid, byte[] publicKey) {
             if(File.Exists(_licensePath))
                 return;
             var cloudaddress = new AppConfiguration().Get().CloudAddress;
@@ -29,7 +28,9 @@ namespace Antd.License {
             var pk = Encoding.ASCII.GetString(publicKey);
             var dict = new Dictionary<string, string> {
                 { "AppName", appName },
-                { "Uid", machineUid },
+                { "PartNumber", machineUid.PartNumber },
+                { "SerialNumber", machineUid.SerialNumber },
+                { "Uid", machineUid.MachineUid },
                 { "PublicKey", pk}
             };
             var lic = _api.Post<string>($"{cloudaddress}license/create", dict);
@@ -38,7 +39,7 @@ namespace Antd.License {
             }
         }
 
-        public ResponseLicenseStatusModel Check(string appName, string machineUid, byte[] publicKey) {
+        public ResponseLicenseStatusModel Check(string appName, MachineIdsModel machineUid, byte[] publicKey) {
             var cloudaddress = new AppConfiguration().Get().CloudAddress;
             if(string.IsNullOrEmpty(cloudaddress)) {
                 return null;
@@ -52,7 +53,9 @@ namespace Antd.License {
             var pk = Encoding.ASCII.GetString(publicKey);
             var dict = new Dictionary<string, string> {
                 { "AppName", appName },
-                { "Uid", machineUid },
+                { "PartNumber", machineUid.PartNumber },
+                { "SerialNumber", machineUid.SerialNumber },
+                { "Uid", machineUid.MachineUid },
                 { "PublicKey", pk }
             };
             var status = _api.Post<ResponseLicenseStatusModel>($"{cloudaddress}license/check", dict);

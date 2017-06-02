@@ -35,7 +35,7 @@ namespace Antd.Cloud {
 
         private readonly ApiConsumer _api = new ApiConsumer();
         private readonly AsymmetricKeys _asymmetricKeys = new AsymmetricKeys(Parameter.AntdCfgKeys, Application.KeyName);
-        private readonly string _machineId = Machine.MachineId.Get;
+        private readonly string _machineId = Machine.MachineIds.Get.MachineUid;
 
         private void Action(object sender, ElapsedEventArgs e) {
             try {

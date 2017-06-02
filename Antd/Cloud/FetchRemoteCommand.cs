@@ -28,7 +28,7 @@ namespace Antd.Cloud {
         }
 
         private static readonly ApiConsumer Api = new ApiConsumer();
-        private static readonly string MachineId = Machine.MachineId.Get;
+        private static readonly string MachineId = Machine.MachineIds.Get.MachineUid;
 
         private static void _timer_Elapsed(object sender, ElapsedEventArgs e) {
             try {

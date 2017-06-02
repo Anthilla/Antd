@@ -90,7 +90,7 @@ namespace Antd.Modules {
                     ResolvDomain = resolvDomain ?? old.ResolvDomain,
                     Timezone = timezone ?? old.Timezone,
                     NtpdateServer = ntpdateServer ?? old.NtpdateServer,
-                    MachineUid = Machine.MachineId.Get,
+                    MachineUid = Machine.MachineIds.Get.MachineUid,
                     Cloud = cloud ?? old.Cloud
                 };
                 Host2Configuration.Export(vars);
