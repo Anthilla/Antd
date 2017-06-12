@@ -32,7 +32,6 @@ namespace antdlib.config {
         }
 
         private static readonly string IpFile = $"{Parameter.AntdCfgCluster}/cluster-info.conf";
-        //private static readonly string IpFileBackup = $"{Parameter.AntdCfgCluster}/cluster-info.conf.bck";
 
         public static void SaveClusterInfo(Cluster.Configuration model) {
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
