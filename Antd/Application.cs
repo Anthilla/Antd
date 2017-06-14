@@ -556,6 +556,7 @@ namespace Antd {
             #endregion
 
             #region [    Cluster    ]
+            ClusterConfiguration.Prepare();
             new Do().ClusterChanges();
             ConsoleLogger.Log("[cluster] active");
             #endregion

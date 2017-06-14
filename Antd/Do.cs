@@ -148,7 +148,6 @@ namespace Antd {
                 Systemctl.Stop(keepalivedService);
             }
             ConsoleLogger.Log("[cluster] set configuration file");
-
             var clusterInfo = ClusterConfiguration.GetClusterInfo();
             var lines = new List<string> {
                 "global_defs {",
@@ -156,8 +155,6 @@ namespace Antd {
                 "      admin@example.com",
                 "   }",
                 "   notification_email_from noreply@example.com",
-                "   smtp_server 127.0.0.1",
-                "   smtp_connect_timeout 60",
                 "   router_id LVS_DEVEL",
                 "}",
                 "",
@@ -173,13 +170,13 @@ namespace Antd {
                 "   virtual_router_id 50",
                 "   priority 100",
                 "   advert_int 1",
-                "   authentication {",
-                "      auth_type PASS",
-                $"      auth_pass {clusterInfo.Password}",
-                "   }",
-                "   virtual_ipaddress {",
-                $"      {clusterInfo.VirtualIpAddress}",
-                "   }",
+                "  authentication {",
+                "    auth_type PASS",
+                $"    auth_pass {clusterInfo.Password}",
+                "  }",
+                "  virtual_ipaddress {",
+                $"    {clusterInfo.VirtualIpAddress}",
+                "  }",
                 "}",
                 $"virtual_server {publicIp} 80 {{",
                 "    delay_loop 6",
@@ -192,7 +189,7 @@ namespace Antd {
             foreach(var node in nodes) {
                 lines.Add($"    real_server {node.IpAddress} {{");
                 lines.Add("        TCP_CHECK {");
-                lines.Add("                connect_timeout 10");
+                lines.Add("                connect_timeout 1");
                 lines.Add("        }");
                 lines.Add("    }");
             }
@@ -226,22 +223,29 @@ namespace Antd {
             var lines = new List<string> {
                 "global",
                 "    daemon",
-                "    maxconn 256",
+                "    maxconn 5000",
+                "    nbproc 4",
+                "    chroot /var/lib/haproxy",
+                "    user haproxy",
+                "    group haproxy",
                 "",
                 "defaults",
                 "    mode http",
-                "    timeout connect 5000ms",
-                "    timeout client 50000ms",
-                "    timeout server 50000ms",
+                "    timeout connect 101ms",
+                "    timeout client 112ms",
+                "    timeout server 123ms",
                 "",
-                "frontend http-in",
-                $"    bind {publicIp}:80",
-                "    default_backend servers",
+                "frontend antdfe",
+                "    mode http",
+                $"    bind :8888 transparent",
+                "    default_backend antdbe",
                 "",
-                "backend servers"
+                "backend servers",
+                "    mode http",
+                "    balance static-rr"
             };
             foreach(var node in nodes) {
-                lines.Add($"    server {node.Hostname} {node.IpAddress} maxconn 32");
+                lines.Add($"    server {node.Hostname} {node.IpAddress} check");
             }
             File.WriteAllLines(_haproxyFileOutput, lines);
             CommandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
