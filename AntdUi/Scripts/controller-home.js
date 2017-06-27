@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("templateApp", ["pascalprecht.translate", "ui.router", "selectize", "trumbowyg-ng", "ngMaterial"]);
+var app = angular.module("templateApp", ["pascalprecht.translate", "ui.router", "selectize", "trumbowyg-ng"]);
 
 app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     $translateProvider.useUrlLoader("/translate");
@@ -60,6 +60,8 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     })
     .state("appsmgmt", { cache: false, url: "^/appsmgmt", views: { 'menu': { templateUrl: "pages/menus/apps.html?v=" + new Date() }, 'content': { templateUrl: "pages/apps/appsmgmt.html?v=" + new Date() } } })
     .state("appsdetect", { cache: false, url: "^/appsdetect", views: { 'menu': { templateUrl: "pages/menus/apps.html?v=" + new Date() }, 'content': { templateUrl: "pages/apps/appsdetect.html?v=" + new Date() } } })
+    .state("vfs", { cache: false, url: "^/vfs", views: { 'menu': { templateUrl: "pages/menus/vfs.html?v=" + new Date() }, 'content': { templateUrl: "pages/vfs/vfs.html?v=" + new Date() } } })
+    .state("vfsconfig", { cache: false, url: "^/vfsconfig", views: { 'menu': { templateUrl: "pages/menus/vfs.html?v=" + new Date() }, 'content': { templateUrl: "pages/vfs/vfsconfig.html?v=" + new Date() } } })
     .state("log", {
         cache: false,
         url: "^/log",

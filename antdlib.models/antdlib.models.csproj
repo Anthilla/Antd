@@ -68,6 +68,7 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="VfsContainerInfo.cs" />
     <Compile Include="MachineIdsModel.cs" />
     <Compile Include="ClusterConfigurationModel.cs" />
     <Compile Include="HostParameters.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="ViewModels\PageAssetScanModel.cs" />
     <Compile Include="ViewModels\PageJournaldModel.cs" />
     <Compile Include="ViewModels\PageWizardModel.cs" />
+    <Compile Include="ViewModels\PageVfsModel.cs" />
     <Compile Include="VirtualMachineInfo.cs" />
     <Compile Include="CpuinfoModel.cs" />
     <Compile Include="DhcpdConfigurationModel.cs" />
@@ -188,12 +190,17 @@
       <Project>{faf895f3-2ea3-44cc-abe8-d54dc2ae0927}</Project>
       <Name>anthilla.core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
+      <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
+      <Name>StorageServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
       <Name>antdlib.common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

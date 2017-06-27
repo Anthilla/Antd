@@ -53,6 +53,8 @@ using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
 using Parameter = antdlib.common.Parameter;
 using Random = anthilla.core.Random;
+using System.Threading;
+using Kvpbase;
 
 namespace Antd {
     internal class Application {
@@ -568,6 +570,14 @@ namespace Antd {
             #region [    Directory Watchers    ]
             DirectoryWatcherCluster.Start();
             DirectoryWatcherRsync.Start();
+            #endregion
+
+            #region [    Storage Server    ]
+            new Thread(() => {
+                var settings = VfsConfiguration.GetSystemConfiguration();
+                var srv = new StorageServer(settings);
+                srv.Start();
+            }).Start();
             #endregion
 
             #region [    Cloud Send Uptime    ]

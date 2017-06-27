@@ -168,6 +168,7 @@
     <Compile Include="Modules\AntdTorModule.cs" />
     <Compile Include="Modules\AntdVpnModule.cs" />
     <Compile Include="Modules\AntdZfsModule.cs" />
+    <Compile Include="Modules\VfsModule.cs" />
     <Compile Include="Modules\WizardModule.cs" />
     <Compile Include="Modules\_MainModule.cs" />
     <Compile Include="Modules\AppsDetectModule.cs" />
@@ -220,6 +221,42 @@
     </Content>
     <Content Include="..\..\_shared\anthilla.uicontent\Images\favicon.png">
       <Link>Images\favicon.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\FileAPI.flash.swf">
+      <Link>Scripts\FileAPI.flash.swf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\FileAPI.js">
+      <Link>Scripts\FileAPI.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\FileAPI.min.js">
+      <Link>Scripts\FileAPI.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\ng-file-upload-all.js">
+      <Link>Scripts\ng-file-upload-all.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\ng-file-upload-all.min.js">
+      <Link>Scripts\ng-file-upload-all.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\ng-file-upload-shim.js">
+      <Link>Scripts\ng-file-upload-shim.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\ng-file-upload-shim.min.js">
+      <Link>Scripts\ng-file-upload-shim.min.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\ng-file-upload.js">
+      <Link>Scripts\ng-file-upload.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\_shared\anthilla.uicontent\Script\ng-file-upload.min.js">
+      <Link>Scripts\ng-file-upload.min.js</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\_shared\anthilla.uicontent\Style\themes\base\accordion.css">
@@ -386,13 +423,6 @@
       <Link>Style\themes\base\tooltip.css</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\angular-material.css" />
-    <Content Include="Content\angular-material.layout-attributes.css" />
-    <Content Include="Content\angular-material.layout-attributes.min.css" />
-    <Content Include="Content\angular-material.layouts.css" />
-    <Content Include="Content\angular-material.layouts.ie_fixes.css" />
-    <Content Include="Content\angular-material.layouts.min.css" />
-    <Content Include="Content\angular-material.min.css" />
     <Content Include="novnc\base.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -504,31 +534,10 @@
     <Content Include="novnc\webutil.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\angular-animate\angular-animate.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-animate\angular-animate.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\angular-aria.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\angular-aria.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-aria\angular-aria.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-aria\angular-aria.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-material\angular-material-mocks.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-material\angular-material.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-material\angular-material.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\angular-messages.js">
@@ -537,10 +546,7 @@
     <Content Include="Scripts\angular-messages.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\angular\angular.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular\angular.min.js">
+    <Content Include="Scripts\controller-context-vfs.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\controller-wizard.js">
@@ -933,13 +939,7 @@
     <Content Include="Scripts\jquery-3.1.1.slim.min.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\angular-animate\angular-animate.min.js.map">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Scripts\angular-aria.min.js.map">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\angular-aria\angular-aria.min.js.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\angular-messages.min.js.map">
@@ -998,6 +998,9 @@
     <Content Include="Views\Pages\menus\boot.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Pages\menus\vfs.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\Pages\menus\vnc.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1011,6 +1014,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\menus\antd.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Pages\vfs\vfs.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Pages\vfs\vfsconfig.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\vnc\content.html">
@@ -1039,6 +1048,10 @@
     <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj">
       <Project>{FAF895F3-2EA3-44CC-ABE8-D54DC2AE0927}</Project>
       <Name>anthilla.core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
+      <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
+      <Name>StorageServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>

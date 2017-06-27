@@ -66,6 +66,10 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="KvpbaseSDK, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KvpbaseSDK.2.0.2\lib\KvpbaseSDK.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\packages\LiteDB.3.1.0\lib\net35\LiteDB.dll</HintPath>
       <Private>True</Private>
@@ -128,6 +132,7 @@
     <Compile Include="Modules\AntdHost2Module.cs" />
     <Compile Include="Modules\AntdNetwork2Module.cs" />
     <Compile Include="Modules\CaModule.cs" />
+    <Compile Include="Modules\VfsModule.cs" />
     <Compile Include="Modules\LogSyslogNgModule.cs" />
     <Compile Include="Modules\LogJournaldModule.cs" />
     <Compile Include="Modules\LogReportModule.cs" />
@@ -202,6 +207,7 @@
     <Compile Include="SystemdTimer\Timers.cs" />
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
+    <Compile Include="VFS\VfsClient.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
     <None Include="Templates\haproxy.conf.tmpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -308,6 +314,10 @@
       <Project>{3165c749-fe75-4c8a-80b6-47b8ed286e37}</Project>
       <Name>anthilla.logger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
+      <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
+      <Name>StorageServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>antdlib.common</Name>
@@ -335,9 +345,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="VFS\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del *.pdb
