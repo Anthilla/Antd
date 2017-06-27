@@ -39,15 +39,23 @@ function AssetClusterController($scope, $http, $interval) {
         $http.post("/cluster/set").then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $scope.addNode = function () {
-        var node = {
+    $scope.addPortMapping = function () {
+        var portMap = {
             Hostname: "",
             IpAddress: ""
+        };
+        $scope.Info.PortMapping.push(portMap);
+    }
+
+    $scope.addNode = function () {
+        var node = {
+            VirtualPort: "",
+            ServicePort: ""
         };
         $scope.ClusterNodes.push(node);
     }
 
-    $scope.PublicIp = "";
+    //$scope.PublicIp = "";
     $scope.ClusterNodes = [];
     $scope.Get = function () {
         $http.get("/cluster").success(function (data) {

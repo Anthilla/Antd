@@ -21,55 +21,11 @@ namespace Antd {
         /// </summary>
         public Do() {
             _host = Host2Configuration.Host;
-            //var dns = Network2Configuration.DnsConfigurationList.FirstOrDefault(_ => _.Id == Network2Configuration.Conf.ActiveDnsConfiguration);
-
-            _isDnsPublic = true; //dns?.Type == DnsType.Public;
-
-
+            _isDnsPublic = true;
             _replacements = new Dictionary<string, string>();
-            //{
-            //{ "$hostname", _host.HostName },
-            //{ "$internalIp", _host.InternalHostIpPrimary },
-            //{ "$externalIp", _host.ExternalHostIpPrimary },
-            //{ "$internalNet", _host.InternalNetPrimary },
-            //{ "$externalNet", _host.ExternalNetPrimary },
-            //{ "$internalMask", _host.InternalNetMaskPrimary },
-            //{ "$externalMask", _host.ExternalNetMaskPrimary },
-            //{ "$internalNetBits", _host.InternalNetPrimaryBits },
-            //{ "$externalNetBits", _host.ExternalNetPrimaryBits },
-            //{ "$internalDomain", _host.InternalDomainPrimary },
-            //{ "$externalDomain", _host.ExternalDomainPrimary },
-            //{ "$internalBroadcast", _host.InternalBroadcastPrimary },
-            //{ "$externalBroadcast", _host.ExternalBroadcastPrimary },
-            //{ "$internalNetArpa", _host.InternalArpaPrimary },
-            //{ "$externalNetArpa", _host.ExternalArpaPrimary },
-            //{ "$resolvNameserver", _host.ResolvNameserver },
-            //{ "$resolvDomain", _host.ResolvDomain },
-            //{ "$dnsDomain", dns?.Domain },
-            //{ "$dnsIp", dns?.Ip },
-            //{ "$secret", _host.Secret },
-            //{ "$internalArpaIpAddress", _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".") }, //se internalIp: 10.11.19.111 -> 19.111
-            //};
-
-            //var interfaces = Network2Configuration.Conf.Interfaces;
-            //var activeNetworkConfsIds = interfaces.Select(_ => _.Configuration);
-            //var networkConfs = Network2Configuration.InterfaceConfigurationList;
-            //var activeNetworkConfs = activeNetworkConfsIds.Select(_ => networkConfs.FirstOrDefault(__ => __.Id == _)).ToList();
-            //var internalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.Internal);
-            //var internalActiveNetworkConfsIds = internalActiveNetworkConfs.Select(_ => _.Id);
-            //var internalInterfaces = internalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
-            //_replacements["$internalInterface"] = internalInterfaces;
-            //var externalActiveNetworkConfs = activeNetworkConfs.Where(_ => _.Type == NetworkInterfaceType.External);
-            //var externalActiveNetworkConfsIds = externalActiveNetworkConfs.Select(_ => _.Id);
-            //var externalInterfaces = externalActiveNetworkConfsIds.Select(_ => interfaces.FirstOrDefault(__ => __.Configuration == _)).Select(_ => _.Device).ToList().JoinToString(", ");
-            //_replacements["$externalInterface"] = externalInterfaces;
-            //var allInterfaces = interfaces.Select(_ => _.Device).ToList().JoinToString(", ");
-            //_replacements["$allInterface"] = allInterfaces;
         }
 
-        /// <summary>
-        /// Main function
-        /// </summary>
+        #region [    Main Functions    ]
         public void AllChanges() {
             ParametersChangesPre();
             NetworkChanges();
@@ -122,6 +78,7 @@ namespace Antd {
 
         public void ClusterChanges() {
             ConsoleLogger.Log("[cluster] applying changes");
+            ClusterConfiguration.Prepare();
             var publicIp = ClusterConfiguration.GetClusterInfo().VirtualIpAddress;
             if(string.IsNullOrEmpty(publicIp)) {
                 ConsoleLogger.Warn("[cluster] public ip not valid");
@@ -136,6 +93,7 @@ namespace Antd {
             SaveKeepalived(publicIp, nodes);
             SaveHaproxy(publicIp, nodes);
         }
+        #endregion
 
         #region [    keepalived    ]
         private const string KeepalivedFileOutput = "/etc/keepalived/keepalived.conf";
@@ -150,52 +108,25 @@ namespace Antd {
             ConsoleLogger.Log("[cluster] set configuration file");
             var clusterInfo = ClusterConfiguration.GetClusterInfo();
             var lines = new List<string> {
-                "global_defs {",
-                "   notification_email {",
-                "      admin@example.com",
-                "   }",
-                "   notification_email_from noreply@example.com",
-                "   router_id LVS_DEVEL",
-                "}",
-                "",
-                "vrrp_sync_group VG1 {",
-                "   group {",
-                "      RH_INT",
-                "   }",
+                "vrrp_script chk_haproxy {",
+                "    script \"killall -0 haproxy\"",
+                "    interval 2",
+                "    weight 2",
                 "}",
                 "",
                 "vrrp_instance RH_INT {",
-                "   state MASTER",
-                $"   interface {clusterInfo.NetworkInterface}",
-                "   virtual_router_id 50",
-                "   priority 100",
-                "   advert_int 1",
-                "  authentication {",
-                "    auth_type PASS",
-                $"    auth_pass {clusterInfo.Password}",
-                "  }",
-                "  virtual_ipaddress {",
-                $"    {clusterInfo.VirtualIpAddress}",
-                "  }",
+                $"    interface {clusterInfo.NetworkInterface}",
+                "    state MASTER",
+                "    virtual_router_id 51",
+                $"    priority {clusterInfo.Priority}",
+                "    virtual_ipaddress {",
+                $"        {clusterInfo.VirtualIpAddress}",
+                "    }",
+                "    track_script {",
+                "        chk_haproxy",
+                "    }",
                 "}",
-                $"virtual_server {publicIp} 80 {{",
-                "    delay_loop 6",
-                "    lb_algo rr",
-                "    lb_kind NAT",
-                "    protocol TCP",
-                ""
             };
-
-            foreach(var node in nodes) {
-                lines.Add($"    real_server {node.IpAddress} {{");
-                lines.Add("        TCP_CHECK {");
-                lines.Add("                connect_timeout 1");
-                lines.Add("        }");
-                lines.Add("    }");
-            }
-            lines.Add("}");
-            lines.Add("");
-
             FileWithAcl.WriteAllLines(KeepalivedFileOutput, lines);
             //if(Systemctl.IsEnabled(keepalivedService) == false) {
             //    Systemctl.Enable(keepalivedService);
@@ -220,33 +151,56 @@ namespace Antd {
                 File.Copy(_haproxyFileOutput, $"{_haproxyFileOutput}.bck", true);
             }
             ConsoleLogger.Log("[cluster] set haproxy file");
+            var clusterInfo = ClusterConfiguration.GetClusterInfo();
+            var ports = clusterInfo.PortMapping;
+            if(!ports.Any()) {
+                return;
+            }
             var lines = new List<string> {
                 "global",
                 "    daemon",
-                "    maxconn 5000",
-                "    nbproc 4",
-                "    chroot /var/lib/haproxy",
+                "    log 127.0.0.1   local0",
+                "    log 127.0.0.1   local1 notice",
+                "    maxconn 4096",
                 "    user haproxy",
                 "    group haproxy",
                 "",
                 "defaults",
-                "    mode http",
-                "    timeout connect 101ms",
-                "    timeout client 112ms",
-                "    timeout server 123ms",
-                "",
-                "frontend antdfe",
-                "    mode http",
-                $"    bind :8888 transparent",
-                "    default_backend antdbe",
-                "",
-                "backend servers",
-                "    mode http",
-                "    balance static-rr"
+                "    log     global",
+                "    mode    http",
+                "    option  httplog",
+                "    option  dontlognull",
+                "    retries 3",
+                "    option  redispatch",
+                "    maxconn 2000",
+                "    timeout connect 5000",
+                "    timeout client  50000",
+                "    timeout server  50000",
+                ""
             };
-            foreach(var node in nodes) {
-                lines.Add($"    server {node.Hostname} {node.IpAddress} check");
+
+            foreach(var port in ports) {
+                var frontEndLabel = $"fe_in{port.ServicePort}_out{port.VirtualPort}";
+                var backEndLabel = $"be_in{port.ServicePort}_out{port.VirtualPort}";
+                lines.Add($"frontend {frontEndLabel}");
+                lines.Add("    mode http");
+                lines.Add($"    bind {clusterInfo.VirtualIpAddress}:{port.VirtualPort} transparent");
+                lines.Add("    stats enable");
+                lines.Add("    stats auth admin:Anthilla");
+                lines.Add("    option httpclose");
+                lines.Add("    option forwardfor");
+                lines.Add($"    default_backend {backEndLabel}");
+                lines.Add("");
+                lines.Add($"backend {backEndLabel}");
+                lines.Add("    balance roundrobin");
+                lines.Add("    cookie JSESSIONID prefix");
+                lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
+                foreach(var node in nodes) {
+                    lines.Add($"    server {node.Hostname} {node.IpAddress}:{port.ServicePort} check");
+                }
+                lines.Add("");
             }
+
             File.WriteAllLines(_haproxyFileOutput, lines);
             CommandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
             ConsoleLogger.Log("[cluster] haproxy started");

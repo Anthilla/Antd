@@ -6,9 +6,17 @@
     <ul class="fg-white">
         <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
         <li><input placeholder="public ip" ng-model="Info.VirtualIpAddress" type="text" /></li>
-        <li><input placeholder="password" ng-model="Info.Password" type="text" /></li>
         <li><input placeholder="guid" ng-model="Info.Guid" type="text" /></li>
         <li><input placeholder="network interface" ng-model="Info.NetworkInterface" type="text" /></li>
+        <li><input placeholder="priority" ng-model="Info.Priority" type="text" /></li>
+        <li></li>
+        <li><button ng-click="addPortMapping()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ port</button></li>
+        <li ng-repeat="port in Info.PortMapping">
+            <ul>
+                <li><input placeholder="virtual port" ng-model="port.VirtualPort" type="text" /></li>
+                <li><input placeholder="service port" ng-model="port.ServicePort" type="text" /></li>
+            </ul>
+        </li>
         <li></li>
 
         <li ng-repeat="node in ClusterNodes">

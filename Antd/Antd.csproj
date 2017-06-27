@@ -90,8 +90,16 @@
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Renci.SshNet, Version=2016.0.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2016.0.0\lib\net40\Renci.SshNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rssdp, Version=3.5.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rssdp.3.5.5\lib\net45\Rssdp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -166,6 +174,7 @@
     <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Cloud\FetchRemoteCommand.cs" />
     <Compile Include="Networkd\NetworkdConfiguration.cs" />
+    <Compile Include="ServiceDiscovery\Rssdp.cs" />
     <Compile Include="Timer\UpdateBindHints.cs" />
     <Compile Include="Timer\ConfigurationCheck.cs" />
     <Compile Include="Ui\UiService.cs" />
@@ -325,6 +334,9 @@
     <None Include="Templates\networks.tmlp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VFS\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

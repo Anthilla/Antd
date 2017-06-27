@@ -16,6 +16,10 @@ namespace antdlib.config {
             Directory.CreateDirectory(dir);
             Bash.Execute($"chown haproxy:haproxy {dir}");
             Bash.Execute($"chmod 755 {dir}");
+            //net.ipv4.ip_nonlocal_bind=1
+            if(File.Exists("/proc/sys/net/ipv4/ip_nonlocal_bind")) {
+                File.WriteAllText("/proc/sys/net/ipv4/ip_nonlocal_bind", "1");
+            }
         }
 
         private static List<Cluster.Node> Load() {

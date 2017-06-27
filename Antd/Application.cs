@@ -433,6 +433,10 @@ namespace Antd {
             #endregion
 
             #region [    Avahi    ]
+            Antd.ServiceDiscovery.Rssdp.PublishThisDevice();
+            Antd.ServiceDiscovery.Rssdp.SearchForDevices();
+            ConsoleLogger.Log("[rssdp] published this devices");
+
             DirectoryWithAcl.CreateDirectory("/etc/avahi/services", "755", "root", "wheel");
             const string avahiServicePath = "/etc/avahi/services/antd.service";
             if(File.Exists(avahiServicePath)) {
