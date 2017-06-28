@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("templateApp", ["pascalprecht.translate", "ui.router", "selectize", "trumbowyg-ng"]);
+var app = angular.module("templateApp", ["pascalprecht.translate", "ui.router", "selectize", "trumbowyg-ng", "ngFileUpload"]);
 
 app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
     $translateProvider.useUrlLoader("/translate");

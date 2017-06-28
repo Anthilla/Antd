@@ -102,6 +102,7 @@ namespace Antd {
             Directory.CreateDirectory(Parameter.RepoDirs);
             Directory.CreateDirectory(Parameter.AnthillaUnits);
             Directory.CreateDirectory(Parameter.TimerUnits);
+            Directory.CreateDirectory(Parameter.AntdCfgVfs);
             ConsoleLogger.Log("working directories created");
             MountManagement.WorkingDirectories();
             ConsoleLogger.Log("working directories mounted");
@@ -573,10 +574,16 @@ namespace Antd {
             #endregion
 
             #region [    Storage Server    ]
+            //todo copy preset .json files...
+            VfsConfiguration.SetDefaults();
             new Thread(() => {
-                var settings = VfsConfiguration.GetSystemConfiguration();
-                var srv = new StorageServer(settings);
-                srv.Start();
+                try {
+                    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
+                    srv.Start();
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex.Message);
+                }
             }).Start();
             #endregion
 

@@ -4,9 +4,20 @@ using anthilla.core;
 using Parameter = antdlib.common.Parameter;
 using Kvpbase;
 using System.IO;
+using antdlib.models;
 
 namespace antdlib.config {
     public class VfsConfiguration {
+
+        public static void SetDefaults() {
+            if(!File.Exists(_systemFile)) {
+                File.WriteAllText(_systemFile, JsonConvert.SerializeObject(new VfsDefaults.DefaltSystem(), Formatting.Indented));
+                File.WriteAllText(_apiKeyFile, JsonConvert.SerializeObject(new List<VfsDefaults.ApiKey>() { new VfsDefaults.ApiKey() }, Formatting.Indented));
+                File.WriteAllText(_apiKeyPermissionFile, JsonConvert.SerializeObject(new List<VfsDefaults.ApiKeyPermission>() { new VfsDefaults.ApiKeyPermission() }, Formatting.Indented));
+                File.WriteAllText(_userMasterFile, JsonConvert.SerializeObject(new List<VfsDefaults.UserMaster>() { new VfsDefaults.UserMaster() }, Formatting.Indented));
+                File.WriteAllText(_topologyFile, JsonConvert.SerializeObject(new VfsDefaults.ListTopology(), Formatting.Indented));
+            }
+        }
 
         private static readonly string _systemFile = $"{Parameter.AntdCfgVfs}/system.json";
 

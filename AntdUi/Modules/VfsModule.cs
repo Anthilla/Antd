@@ -43,6 +43,7 @@ namespace AntdUi.Modules {
 
         public VfsModule() : base("/vfs") {
 
+            #region [    Config    ]
             Get["/"] = x => {
                 var model = _api.Get<PageVfsModel>($"http://127.0.0.1:{Application.ServerPort}{Request.Path}");
                 var json = JsonConvert.SerializeObject(model);
@@ -88,6 +89,7 @@ namespace AntdUi.Modules {
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
+            #endregion
 
             #region [    Object Actions    ]
             ///VfsClient.CreateObject(Client kvp, string containerPath, string fileType, byte[] data, string fileName = "")
@@ -97,8 +99,8 @@ namespace AntdUi.Modules {
                     return HttpStatusCode.BadRequest;
                 }
                 string containerPath = Request.Form.ContainerPath;
-                string fileType = Request.Form.FileType;
-                string fileName = Request.Form.FileName;
+                string fileName = file.Name;
+                var fileType = Kvpbase.MimeTypes.GetFromExtension(Path.GetExtension(fileName));
 
                 var client = new RestClient($"http://127.0.0.1:{Application.ServerPort}{Request.Path}");
                 var request = new RestRequest("/", Method.POST);
@@ -122,11 +124,12 @@ namespace AntdUi.Modules {
 
             ///VfsClient.RetrieveObject(Client kvp, string objectPath)
             Get["/client/{userguid}/{server}/{port}/0/1"] = x => {
-                string objectPath = Request.Form.ObjectPath;
-                string file = Request.Form.File;
+                string objectPath = Request.Query.path;
+                string file = Request.Query.file;
+                var fileType = Kvpbase.MimeTypes.GetFromExtension(Path.GetExtension(file));
                 var response = new Response();
                 response.Headers.Add("Content-Disposition", "attachment; filename=" + file);
-                response.ContentType = "text/plain";
+                response.ContentType = fileType;
                 response.Contents = stream => {
                     using(var memoryStream = new MemoryStream()) {
                         var client = new RestClient($"http://127.0.0.1:{Application.ServerPort}{Request.Path}");
@@ -195,7 +198,7 @@ namespace AntdUi.Modules {
             };
 
             ///VfsClient.GetContainer(Client kvp, string containerPath)
-            Get["/client/{userguid}/{server}/{port}/1/1"] = x => {
+            Post["/client/{userguid}/{server}/{port}/1/1"] = x => {
                 string containerPath = Request.Form.ContainerPath;
                 var dict = new Dictionary<string, string> {
                     { "ContainerPath", containerPath }

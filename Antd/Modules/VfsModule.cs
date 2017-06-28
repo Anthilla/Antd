@@ -62,7 +62,7 @@ namespace Antd.Modules {
 
             Post["/save/topology"] = x => {
                 string config = Request.Form.Config;
-                var model = JsonConvert.DeserializeObject<Topology>(config);
+                var model = JsonConvert.DeserializeObject<Kvpbase.Topology>(config);
                 VfsConfiguration.SaveTopologyConfiguration(model);
                 return HttpStatusCode.OK;
             };
@@ -233,7 +233,7 @@ namespace Antd.Modules {
             };
 
             ///VfsClient.GetContainer(Client kvp, string containerPath)
-            Get["/client/{userguid}/{server}/{port}/1/1"] = x => {
+            Post["/client/{userguid}/{server}/{port}/1/1"] = x => {
                 string userguid = x.userguid;
                 string server = x.server;
                 string port = x.port;

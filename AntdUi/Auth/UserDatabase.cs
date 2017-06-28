@@ -64,7 +64,7 @@ namespace AntdUi.Auth {
 
         public static Guid? ValidateUser(string userIdentity, string password) {
             try {
-                var hash = Encryption.XHash(password);
+                var hash = anthilla.core.Encryption.XHash(password);
                 var user = Users().FirstOrDefault(_ => _.UserName == userIdentity && _.Claims.Contains(hash));
                 return user?.UserGuid;
             }
