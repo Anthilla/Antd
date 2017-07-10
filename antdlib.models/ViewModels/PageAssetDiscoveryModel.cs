@@ -2,6 +2,6 @@
 
 namespace antdlib.models {
     public class PageAssetDiscoveryModel {
-        public IEnumerable<AvahiServiceViewModel> AntdAvahiServices { get; set; }
+        public List<RssdpDeviceModel> List { get; set; }
     }
 }

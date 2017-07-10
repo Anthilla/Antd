@@ -28,7 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using Antd.Apps;
-using Antd.Asset;
 using Antd.Cloud;
 using Antd.License;
 using Antd.Overlay;
@@ -435,23 +434,14 @@ namespace Antd {
             ConsoleLogger.Log("ssh ready");
             #endregion
 
-            #region [    Avahi    ]
-            Antd.ServiceDiscovery.Rssdp.PublishThisDevice();
-            Antd.ServiceDiscovery.Rssdp.SearchForDevices();
-            ConsoleLogger.Log("[rssdp] published this devices");
-
-            DirectoryWithAcl.CreateDirectory("/etc/avahi/services", "755", "root", "wheel");
-            const string avahiServicePath = "/etc/avahi/services/antd.service";
-            if(File.Exists(avahiServicePath)) {
-                File.Delete(avahiServicePath);
+            #region [    Service Discovery    ]
+            try {
+                ServiceDiscovery.Rssdp.PublishThisDevice();
+                ConsoleLogger.Log("[rssdp] published device");
             }
-            var appConfiguration = new AppConfiguration().Get();
-            FileWithAcl.WriteAllLines(avahiServicePath, AvahiCustomXml.Generate(appConfiguration.AntdUiPort.ToString()), "644", "root", "wheel");
-            Bash.Execute("chmod 755 /etc/avahi/services", false);
-            Bash.Execute($"chmod 644 {avahiServicePath}", false);
-            Systemctl.Restart("avahi-daemon.service");
-            Systemctl.Restart("avahi-daemon.socket");
-            ConsoleLogger.Log("avahi ready");
+            catch(Exception ex) {
+                ConsoleLogger.Log($"[rssdp] {ex.Message}");
+            }
             #endregion
 
             #region [    AntdUI    ]
@@ -574,7 +564,6 @@ namespace Antd {
             #endregion
 
             #region [    Storage Server    ]
-            //todo copy preset .json files...
             VfsConfiguration.SetDefaults();
             new Thread(() => {
                 try {

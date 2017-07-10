@@ -76,20 +76,22 @@ namespace antdlib.models {
             public int Port { get; set; }
             public int Ssl { get; set; }
             public int NumFailures { get; set; }
+            public int[] Neighbors { get; set; }
         }
 
         public class ListTopology {
             public int CurrNodeId { get; set; } = 1;
             public List<Node> Nodes { get; set; } = new List<Node>() {
-            new Node() {
-                NodeId= 1,
-                Name="localhost",
-                DnsHostname="127.0.0.1",
-                Port= 7080,
-                Ssl= 0,
-                NumFailures =0
-            }
-        };
+                new Node() {
+                    NodeId= 1,
+                    Name="localhost",
+                    DnsHostname="127.0.0.1",
+                    Port= 7080,
+                    Ssl = 0,
+                    NumFailures = 0,
+                    Neighbors = new int[] { 0 }
+                }
+            };
         }
 
         public class Files {

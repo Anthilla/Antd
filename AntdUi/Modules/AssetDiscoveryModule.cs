@@ -45,6 +45,11 @@ namespace AntdUi.Modules {
                 return json;
             };
 
+            Get["/device/description"] = x => {
+                var model = _api.Get<ServiceDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/device/description");
+                return Response.AsXml(model);
+            };
+
             Post["/asset/handshake/start"] = x => {
                 var hostIp = Request.Form.Host;
                 var hostPort = Request.Form.Port;

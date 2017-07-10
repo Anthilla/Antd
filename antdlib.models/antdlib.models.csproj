@@ -66,8 +66,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RssdpXml.cs" />
     <Compile Include="VfsContainerInfo.cs" />
     <Compile Include="MachineIdsModel.cs" />
     <Compile Include="ClusterConfigurationModel.cs" />
@@ -83,7 +85,7 @@
     <Compile Include="BindConfigurationModel.cs" />
     <Compile Include="CaConfigurationModel.cs" />
     <Compile Include="CertificateModel.cs" />
-    <Compile Include="AvahiServiceViewModel.cs" />
+    <Compile Include="ViewModels\PageAssetDiscoveryModel.cs" />
     <Compile Include="AppInfo.cs" />
     <Compile Include="AppsConfigurationModel.cs" />
     <Compile Include="ResponseAssetCommandModel.cs" />
@@ -148,7 +150,6 @@
     <Compile Include="ViewModels\PageDhcpLeasesModel.cs" />
     <Compile Include="ViewModels\PageNetworkModel.cs" />
     <Compile Include="ViewModels\PageSambaModel.cs" />
-    <Compile Include="ViewModels\PageAssetDiscoveryModel.cs" />
     <Compile Include="ViewModels\PageSshdModel.cs" />
     <Compile Include="ViewModels\PageCpuStatusModel.cs" />
     <Compile Include="ViewModels\PageBindModel.cs" />

@@ -27,7 +27,6 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using Antd.Asset;
 using antdlib.config;
 using antdlib.models;
 using anthilla.commands;
@@ -43,32 +42,16 @@ namespace Antd.Modules {
     public class AssetDiscoveryModule : NancyModule {
 
         public AssetDiscoveryModule() {
-            Get["/discovery"] = x => {
-                var avahiBrowse = new AvahiBrowse();
-                avahiBrowse.DiscoverService("antd");
-                var localServices = avahiBrowse.Locals;
-                var list = new List<AvahiServiceViewModel>();
-                var kh = new SshKnownHosts();
-                foreach(var ls in localServices) {
-                    var arr = ls.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
-                    var mo = new AvahiServiceViewModel {
-                        HostName = arr[0].Trim(),
-                        Ip = arr[1].Trim(),
-                        Port = arr[2].Trim(),
-                        MacAddress = ""
-                    };
-                    CommandLauncher.Launch("ping-c", new Dictionary<string, string> { { "$ip", arr[1].Trim() } });
-                    var result = CommandLauncher.Launch("arp", new Dictionary<string, string> { { "$ip", arr[1].Trim() } }).ToList();
-                    if(result.Any()) {
-                        var mac = result.LastOrDefault().Print(3, " ");
-                        mo.MacAddress = mac;
-                    }
-                    mo.IsKnown = kh.Hosts.Contains(arr[1].Trim());
-                    list.Add(mo);
-                }
+            Get["/discovery", true] = async (x, ct) => {
+                var devices = await Antd.ServiceDiscovery.Rssdp.Discover();
                 var model = new PageAssetDiscoveryModel {
-                    AntdAvahiServices = list
+                    List = devices
                 };
+                return JsonConvert.SerializeObject(model);
+            };
+
+            Get["/device/description"] = x => {
+                var model = ServiceDiscovery.Rssdp.GetDeviceDescription();
                 return JsonConvert.SerializeObject(model);
             };
 
