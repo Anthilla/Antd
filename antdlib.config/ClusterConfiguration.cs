@@ -36,7 +36,7 @@ namespace antdlib.config {
             }
         }
 
-        public static void Save(List<Cluster.Node> model) {
+        public static void SaveNodes(List<Cluster.Node> model) {
             Prepare();
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
@@ -45,7 +45,7 @@ namespace antdlib.config {
 
         private static readonly string IpFile = $"{Parameter.AntdCfgCluster}/cluster-info.conf";
 
-        public static void SaveClusterInfo(Cluster.Configuration model) {
+        public static void SaveConfiguration(Cluster.Configuration model) {
             Prepare();
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             FileWithAcl.WriteAllText(IpFile, text, "644", "root", "wheel");
@@ -66,7 +66,7 @@ namespace antdlib.config {
             }
         }
 
-        public static List<Cluster.Node> Get() {
+        public static List<Cluster.Node> GetNodes() {
             return Load();
         }
     }

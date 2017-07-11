@@ -75,13 +75,14 @@ namespace antdlib.models {
     public class RssdpDeviceModel {
         public string MachineUid { get; set; }
         public string DescriptionLocation { get; set; }
-
         public string DeviceType { get; set; }
         public string FriendlyName { get; set; }
+        public string PublicIp { get; set; }
         public string Manufacturer { get; set; }
         public string ModelName { get; set; }
         public string ModelDescription { get; set; }
         public string ModelNumber { get; set; }
+        public string ModelUrl { get; set; }
         public string SerialNumber { get; set; }
         public List<RssdpServiceModel> Services { get; set; }
     }

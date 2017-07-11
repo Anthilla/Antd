@@ -30,7 +30,6 @@
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using anthilla.core;
 
 namespace AntdUi.Modules {
@@ -48,38 +47,6 @@ namespace AntdUi.Modules {
             Get["/device/description"] = x => {
                 var model = _api.Get<ServiceDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/device/description");
                 return Response.AsXml(model);
-            };
-
-            Post["/asset/handshake/start"] = x => {
-                var hostIp = Request.Form.Host;
-                var hostPort = Request.Form.Port;
-                var dict = new Dictionary<string, string> {
-                    { "Host", hostIp },
-                    { "Port", hostPort }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake/start", dict);
-            };
-
-            Post["/asset/handshake"] = x => {
-                string apple = Request.Form.ApplePie;
-                var dict = new Dictionary<string, string> {
-                    { "ApplePie", apple }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake", dict);
-            };
-
-            Post["/asset/wol"] = x => {
-                string mac = Request.Form.MacAddress;
-                var dict = new Dictionary<string, string> {
-                    { "MacAddress", mac }
-                };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/wol", dict);
-            };
-
-            Get["/asset/nmap/{ip}"] = x => {
-                string ip = x.ip;
-                var model = _api.Get<List<NmapScanStatus>>($"http://127.0.0.1:{Application.ServerPort}/asset/nmap/" + ip);
-                return JsonConvert.SerializeObject(model);
             };
         }
     }

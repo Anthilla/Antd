@@ -84,7 +84,7 @@ namespace Antd {
                 ConsoleLogger.Warn("[cluster] public ip not valid");
                 return;
             }
-            var nodes = ClusterConfiguration.Get();
+            var nodes = ClusterConfiguration.GetNodes();
             if(!nodes.Any()) {
                 ConsoleLogger.Warn("[cluster] configuration not valid");
                 return;

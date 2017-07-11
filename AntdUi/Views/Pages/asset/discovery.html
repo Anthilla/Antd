@@ -1,4 +1,4 @@
-<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">Discovery&nbsp;<small>Local Network - Antd Managed</small></h1>
+<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">Discovery</h1>
 
 <div ng-controller="AssetDiscoveryController">
     <button ng-click="reload()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-loop2 fg-anthilla-blue"></span>&nbsp;Reload</button>
@@ -8,50 +8,41 @@
             <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
                 <span class="icon mif-display fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
                 <span class="title">
-                    {{el.HostName}}&nbsp;-&nbsp;
-                    {{el.Ip}}&nbsp;-&nbsp;
-                    {{el.MacAddress}}
+                    {{el.MachineUid}}&nbsp;-&nbsp;
+                    {{el.FriendlyName}}&nbsp;-&nbsp;
+                    {{el.PublicIp}}
                 </span>
             </div>
-            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;" ng-init="el.Ports=[]">
-                <a href="http://{{el.Ip}}:{{el.Port}}/" target="_blank" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Open Antd</a>
-                <button ng-click="sync(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-sync-problem fg-pink"></span>&nbsp;Sync</button>
-                <button ng-click="shareKey(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-key fg-anthilla-green"></span>&nbsp;Share Key</button>
-                <button ng-click="wol(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-power fg-yellow"></span>&nbsp;W O L</button>
-                <button ng-click="scanPort(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-search fg-anthilla-blue"></span>&nbsp;Scan</button>
+            <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+                <a href="{{el.ModelUrl}}" target="_blank" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Open Antd</a>
+                <button ng-click="addToCluster(el)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20"><span class="mif-sync-problem fg-pink"></span>&nbsp;Add to Cluster</button>
 
                 <!--<i data-hint="|Open VNC" data-hint-position="bottom" id="NoVncConnect" class="fg-orange icon-monitor-2" style="margin-left: -2px; float: right; cursor: pointer; border: 2px solid #FA6800; padding: 5px; margin-top: 5px;"></i>-->
                 <!--<input id="NoVncPort" data-role="novnc-setup" type="text" style="float: right; width: 75px; margin-left: 8px; margin-top: 5px !important; border: 2px solid #FA6800 !important; height: 27px; text-align: center;" value="5900" />-->
                 <!--<input id="NoVncHost" type="hidden" data-role="novnc-setup" value="@Current.Ip" />-->
 
-                <table class="table fg-white" style="table-layout: fixed">
+                <!--<table class="table fg-white" style="table-layout: fixed">
                     <thead>
                         <tr>
                             <td>
-                                <p class="fg-anthilla-green uppercase">Port/Protocol</p>
+                                <p class="fg-anthilla-green uppercase">Service Type</p>
                             </td>
                             <td>
-                                <p class="fg-anthilla-green uppercase">Status</p>
-                            </td>
-                            <td>
-                                <p class="fg-anthilla-green uppercase">Type</p>
+                                <p class="fg-anthilla-green uppercase">URL</p>
                             </td>
                         </tr>
                     </thead>
-                    <tbody ng-repeat="port in el.Ports">
+                    <tbody ng-repeat="port in el.Services">
                         <tr>
                             <td>
-                                <p>{{port.Protocol}}</p>
+                                <p>{{port.ServiceType}}</p>
                             </td>
                             <td>
-                                <p>{{port.Status}}</p>
-                            </td>
-                            <td>
-                                <p>{{port.Type}}</p>
+                                <p>{{port.ControlURL}}</p>
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table>-->
             </div>
         </div>
     </div>

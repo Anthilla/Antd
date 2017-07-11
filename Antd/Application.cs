@@ -102,6 +102,7 @@ namespace Antd {
             Directory.CreateDirectory(Parameter.AnthillaUnits);
             Directory.CreateDirectory(Parameter.TimerUnits);
             Directory.CreateDirectory(Parameter.AntdCfgVfs);
+            Directory.CreateDirectory(Parameter.AntdCfgRssdp);
             ConsoleLogger.Log("working directories created");
             MountManagement.WorkingDirectories();
             ConsoleLogger.Log("working directories mounted");
@@ -437,6 +438,8 @@ namespace Antd {
             #region [    Service Discovery    ]
             try {
                 ServiceDiscovery.Rssdp.PublishThisDevice();
+                //var rssdp = new ServiceDiscovery.Rssdp();
+                //rssdp.BeginSearch();
                 ConsoleLogger.Log("[rssdp] published device");
             }
             catch(Exception ex) {
@@ -563,33 +566,33 @@ namespace Antd {
             DirectoryWatcherRsync.Start();
             #endregion
 
-            #region [    Storage Server    ]
-            VfsConfiguration.SetDefaults();
-            new Thread(() => {
-                try {
-                    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
-                    srv.Start();
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex.Message);
-                }
-            }).Start();
-            #endregion
+            //#region [    Storage Server    ]
+            //VfsConfiguration.SetDefaults();
+            //new Thread(() => {
+            //    try {
+            //        var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
+            //        srv.Start();
+            //    }
+            //    catch(Exception ex) {
+            //        ConsoleLogger.Error(ex.Message);
+            //    }
+            //}).Start();
+            //#endregion
 
-            #region [    Cloud Send Uptime    ]
-            var csuTimer = new UpdateCloudInfo();
-            csuTimer.Start(1000 * 60 * 5);
-            #endregion
+            //#region [    Cloud Send Uptime    ]
+            //var csuTimer = new UpdateCloudInfo();
+            //csuTimer.Start(1000 * 60 * 5);
+            //#endregion
 
-            #region [    Cloud Fetch Commands    ]
-            var cfcTimer = new FetchRemoteCommand();
-            cfcTimer.Start(1000 * 60 * 2 + 330);
-            #endregion
+            //#region [    Cloud Fetch Commands    ]
+            //var cfcTimer = new FetchRemoteCommand();
+            //cfcTimer.Start(1000 * 60 * 2 + 330);
+            //#endregion
 
-            #region [    Check System Components    ]
-            MachineInfo.CheckSystemComponents();
-            ConsoleLogger.Log("[check] system components health");
-            #endregion
+            //#region [    Check System Components    ]
+            //MachineInfo.CheckSystemComponents();
+            //ConsoleLogger.Log("[check] system components health");
+            //#endregion
 
             #region [    Check Units Location    ]
             var anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
@@ -641,10 +644,10 @@ namespace Antd {
             ConsoleLogger.Log("[check] app-file acl");
             #endregion
 
-            #region [    Cloud Send Uptime    ]
-            var ncc = new ConfigurationCheck();
-            ncc.Start(1000 * 60 * 2);
-            #endregion
+            //#region [    Cloud Send Uptime    ]
+            //var ncc = new ConfigurationCheck();
+            //ncc.Start(1000 * 60 * 2);
+            //#endregion
 
             #region [    Test    ]
 #if DEBUG

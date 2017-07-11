@@ -71,6 +71,7 @@ namespace antdlib.common {
         public static string AntdCfgCommands => $"{AntdCfg}/commands";
         public static string AntdCfgSecret => $"{AntdCfg}/secret";
         public static string AntdCfgVfs => $"{AntdCfg}/vfs";
+        public static string AntdCfgRssdp => $"{AntdCfg}/rssdp";
 
         public static string Repo => "/mnt/cdrom";
         public static string RepoApps => $"{Repo}/Apps";

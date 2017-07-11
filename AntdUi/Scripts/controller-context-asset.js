@@ -178,46 +178,25 @@ function AssetGlusterController($scope, $http) {
 app.controller("AssetDiscoveryController", ["$scope", "$http", AssetDiscoveryController]);
 
 function AssetDiscoveryController($scope, $http) {
-    $scope.scanPort = function (machine) {
-        $http.get("/scan/" + machine.Ip).success(function (data) {
-            machine.Ports = data;
-        });
-    }
-
-    $scope.wol = function (machine) {
+    $scope.addToCluster = function (el) {
         var data = $.param({
-            MacAddress: machine.MacAddress
+            DestinationHost: el.ModelUrl,
+            Name: el.FriendlyName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/asset/wol", data).then(function () { console.log(1); }, function (r) { console.log(r); });
+        $http.post("/cluster/device/add", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
 
-    $scope.shareKey = function (machine) {
-        var data = $.param({
-            Host: machine.Ip,
-            Port: machine.Port
+    $scope.Get = function () {
+        $http.get("/discovery").success(function (data) {
+            $scope.Discovery = data.List;
         });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/asset/handshake/start", data).then(function () { console.log(1); }, function (r) { console.log(r); });
     }
-
-    $scope.sync = function (machine) {
-        var data = $.param({
-            MachineAddress: machine.Ip + ":" + machine.Port
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/syncmachine/machine", data).then(function () { console.log(1); }, function (r) { console.log(r); });
-    }
+    $scope.Get();
 
     $scope.reload = function () {
-        $http.get("/discovery").success(function (data) {
-            $scope.Discovery = data;
-        });
+        $scope.Get();
     }
-
-    $http.get("/discovery").success(function (data) {
-        $scope.Discovery = data;
-    });
 }
 
 app.controller("AssetScanController", ["$scope", "$http", AssetScanController]);

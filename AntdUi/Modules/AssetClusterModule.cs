@@ -45,26 +45,6 @@ namespace AntdUi.Modules {
                 return json;
             };
 
-            Post["/cluster/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/set");
-            };
-
-            Post["/cluster/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/restart");
-            };
-
-            Post["/cluster/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/stop");
-            };
-
-            Post["/cluster/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/enable");
-            };
-
-            Post["/cluster/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/disable");
-            };
-
             Post["/cluster/save"] = x => {
                 string config = Request.Form.Config;
                 string ip = Request.Form.Ip;
@@ -84,6 +64,49 @@ namespace AntdUi.Modules {
                 };
                 return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/accept", dict);
             };
+
+            #region [    Handshake + cluster init    ]
+            Post["/asset/handshake"] = x => {
+                string apple = Request.Form.ApplePie;
+                var dict = new Dictionary<string, string> {
+                    { "ApplePie", apple }
+                };
+                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake", dict);
+            };
+
+            Post["Add Device to Cluster", "/cluster/device/add"] = x => {
+                var host = Request.Form.DestinationHost;
+                var hostname = Request.Form.Name;
+                var dict = new Dictionary<string, string> {
+                    { "Host", host },
+                    { "Name", hostname },
+                };
+                var fs = _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake/start", dict);
+                return fs;
+            };
+            #endregion
+
+            #region [    old   ]
+            //Post["/cluster/set"] = x => {
+            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/set");
+            //};
+
+            //Post["/cluster/restart"] = x => {
+            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/restart");
+            //};
+
+            //Post["/cluster/stop"] = x => {
+            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/stop");
+            //};
+
+            //Post["/cluster/enable"] = x => {
+            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/enable");
+            //};
+
+            //Post["/cluster/disable"] = x => {
+            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/disable");
+            //};
+            #endregion
         }
     }
 }
