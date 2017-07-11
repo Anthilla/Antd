@@ -47,6 +47,10 @@ function AssetClusterController($scope, $http, $interval) {
         $scope.Info.PortMapping.push(portMap);
     }
 
+    $scope.removePortMapping = function (i) {
+        $scope.Info.PortMapping.splice(i, 1);
+    }
+
     $scope.addNode = function () {
         var node = {
             VirtualPort: "",
@@ -55,12 +59,17 @@ function AssetClusterController($scope, $http, $interval) {
         $scope.ClusterNodes.push(node);
     }
 
+    $scope.removeNode = function (i) {
+        $scope.Info.ClusterNodes.splice(i, 1);
+    }
+
     //$scope.PublicIp = "";
     $scope.ClusterNodes = [];
     $scope.Get = function () {
         $http.get("/cluster").success(function (data) {
             $scope.Info = data.Info;
             $scope.ClusterNodes = data.ClusterNodes;
+            $scope.NetworkAdapters = data.NetworkAdapters;
         });
     }
     $scope.Get();
@@ -179,9 +188,9 @@ app.controller("AssetDiscoveryController", ["$scope", "$http", AssetDiscoveryCon
 
 function AssetDiscoveryController($scope, $http) {
     $scope.addToCluster = function (el) {
+        var json = angular.toJson(el);
         var data = $.param({
-            DestinationHost: el.ModelUrl,
-            Name: el.FriendlyName
+            HostJson: json
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/cluster/device/add", data).then(function () { console.log(1); }, function (r) { console.log(r); });

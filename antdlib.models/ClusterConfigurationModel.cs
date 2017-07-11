@@ -15,9 +15,14 @@ namespace antdlib.models {
             public string ServicePort { get; set; }
         }
 
-        public class Node {
-            public string Hostname { get; set; }
-            public string IpAddress { get; set; }
+        //public class Node {
+        //    public string Hostname { get; set; }
+        //    public string IpAddress { get; set; }
+        //}
+
+        public class DeployConf {
+            public Configuration Configuration { get; set; }
+            public List<NodeModel> Nodes { get; set; }
         }
     }
 }

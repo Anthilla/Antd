@@ -72,11 +72,24 @@ namespace antdlib.models {
         public Device Device { get; set; }
     }
 
-    public class RssdpDeviceModel {
+    public class DeviceUidsModel {
+        public string Uuid { get; set; }
+        public string Upnp { get; set; }
+        public string Pnp { get; set; }
+        public string Urn { get; set; }
+        public string Device { get; set; }
+    }
+
+    public class NodeModel {
+        public string RawUid { get; set; }
+        public string Upnp { get; set; }
+        public string Pnp { get; set; }
+        public string Urn { get; set; }
+        public string Device { get; set; }
         public string MachineUid { get; set; }
         public string DescriptionLocation { get; set; }
         public string DeviceType { get; set; }
-        public string FriendlyName { get; set; }
+        public string Hostname { get; set; }
         public string PublicIp { get; set; }
         public string Manufacturer { get; set; }
         public string ModelName { get; set; }
@@ -86,6 +99,7 @@ namespace antdlib.models {
         public string SerialNumber { get; set; }
         public List<RssdpServiceModel> Services { get; set; }
     }
+
     public class RssdpServiceModel {
         public string ServiceType { get; set; }
         public string ControlURL { get; set; }

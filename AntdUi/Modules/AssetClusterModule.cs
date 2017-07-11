@@ -75,13 +75,20 @@ namespace AntdUi.Modules {
             };
 
             Post["Add Device to Cluster", "/cluster/device/add"] = x => {
-                var host = Request.Form.DestinationHost;
-                var hostname = Request.Form.Name;
+                var conf = Request.Form.HostJson;
                 var dict = new Dictionary<string, string> {
-                    { "Host", host },
-                    { "Name", hostname },
+                    { "HostJson", conf }
                 };
                 var fs = _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake/start", dict);
+                return fs;
+            };
+
+            Post["Add Device to Cluster", "/cluster/deploy"] = x => {
+                var clusterConfiguration = Request.Form.Cluster;
+                var dict = new Dictionary<string, string> {
+                    { "Cluster", clusterConfiguration }
+                };
+                var fs = _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/deploy", dict);
                 return fs;
             };
             #endregion

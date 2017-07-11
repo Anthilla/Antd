@@ -3,14 +3,133 @@
 <div ng-controller="AssetClusterController">
     <button ng-click="ResponseMessageHideSelf()" ng-hide="ResponseMessageHide" class="button fg-anthilla-blue bg-anthilla-gray-1 bd-anthilla-blue width100pc" style="border: 2px solid; margin-bottom: 10px;">{{ ResponseMessage }}</button>
     <br />
-    <ul class="fg-white">
+    <!--cluster configuration management-->
+    <div class="panel margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-cog fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Cluster
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid fg-white">
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Virtual IP</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="Info.VirtualIpAddress" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Network Adapter</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div class="input-control select width100pc">
+                            <select ng-model="Info.NetworkInterface" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                <option ng-repeat="adapter in NetworkAdapters" value="{{ adapter }}">{{ adapter }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Priority</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="Info.Priority" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell uppercase fg-anthilla-green">
+                        <p>Port Mapping</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <p>Local Service Port</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <p>Virtual Port</p>
+                    </div>
+                    <div class="cell uppercase fg-anthilla-green">
+                        <button ng-click="addPortMapping()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ port</button>
+                    </div>
+                </div>
+                <div class="row cells6" ng-repeat="port in Info.PortMapping">
+                    <div class="cell uppercase fg-anthilla-green">
+
+                    </div>
+                    <div class="cell colspan2">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="port.VirtualPort" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell colspan2">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="port.ServicePort" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell uppercase fg-anthilla-green">
+                        <button ng-click="removePortMapping($index)" class="button bg-anthilla-gray-2 fg-anthilla-orange bd-anthilla-gray-3 padding-left20 padding-right20">x</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <!--nodes management-->
+    <div ng-repeat="node in ClusterNodes" class="panel margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-cog fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                {{ $index }}&nbsp;-&nbsp;{{ node.Hostname }}&nbsp;-&nbsp;{{ node.PublicIp }}
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid fg-white">
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Hostname</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="node.Hostname" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan2 uppercase fg-anthilla-green">
+                        <p>Address</p>
+                    </div>
+                    <div class="cell colspan4">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="node.PublicIp" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<ul class="fg-white">
         <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
-        <li><input placeholder="public ip" ng-model="Info.VirtualIpAddress" type="text" /></li>
         <li><input placeholder="guid" ng-model="Info.Guid" type="text" /></li>
+        <li><input placeholder="public ip" ng-model="Info.VirtualIpAddress" type="text" /></li>
         <li><input placeholder="network interface" ng-model="Info.NetworkInterface" type="text" /></li>
         <li><input placeholder="priority" ng-model="Info.Priority" type="text" /></li>
         <li></li>
-        <li><button ng-click="addPortMapping()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ port</button></li>
+        <li>
+            <button ng-click="addPortMapping()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ port</button>
+        </li>
         <li ng-repeat="port in Info.PortMapping">
             <ul>
                 <li><input placeholder="virtual port" ng-model="port.VirtualPort" type="text" /></li>
@@ -29,5 +148,5 @@
 
         <li><button ng-click="addNode()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">+ node</button></li>
         <li><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">save</button></li>
-    </ul>
+    </ul>-->
 </div>

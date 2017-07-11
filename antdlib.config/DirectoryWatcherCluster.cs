@@ -69,7 +69,7 @@ namespace antdlib.config {
             if(syncMachineConfiguration == null) {
                 return;
             }
-            var machines = syncMachineConfiguration.Select(_ => _.IpAddress).ToList();
+            var machines = syncMachineConfiguration.Select(_ => _.PublicIp).ToList();
             if(!machines.Any()) {
                 return;
             }

@@ -116,20 +116,9 @@ namespace Antd.ServiceDiscovery {
             }
         }
 
-        public static async Task<List<RssdpDeviceModel>> Discover() {
-            var list = new List<RssdpDeviceModel>();
-            if(!System.IO.File.Exists(CacheFile)) {
-                list = new List<RssdpDeviceModel>();
-            }
-            else {
-                var cachedText = System.IO.File.ReadAllText(CacheFile);
-                if(string.IsNullOrEmpty(cachedText)) {
-                    list = new List<RssdpDeviceModel>();
-                }
-                else {
-                    list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<RssdpDeviceModel>>(cachedText);
-                }
-            }
+        public static async Task<List<NodeModel>> Discover() {
+            var list = new List<NodeModel>();
+
             using(var deviceLocator = new SsdpDeviceLocator()) {
                 var foundDevices = await deviceLocator.SearchAsync();
                 var uidRegex = new Regex("uuid\\:([a-zA-Z0-9\\-]+)\\:");
@@ -137,14 +126,12 @@ namespace Antd.ServiceDiscovery {
                 foreach(var foundDevice in foundDevices) {
                     try {
                         var uid = foundDevice.Usn;
-                        var tryget = list.FirstOrDefault(_ => _.MachineUid == uid);
-                        if(tryget != null) { continue; }
-                        var device = new RssdpDeviceModel();
-                        device.MachineUid = uid;
+                        var device = new NodeModel();
+                        device.RawUid = uid;
                         device.DescriptionLocation = foundDevice.DescriptionLocation.ToString();
                         device.PublicIp = ipRegex.Match(device.DescriptionLocation).Groups[1].Value;
                         var fullDevice = await foundDevice.GetDeviceInfo();
-                        device.FriendlyName = fullDevice.FriendlyName;
+                        device.Hostname = fullDevice.FriendlyName;
                         device.DeviceType = fullDevice.DeviceType;
                         device.Manufacturer = fullDevice.Manufacturer;
                         device.ModelName = fullDevice.ModelName;
@@ -167,8 +154,61 @@ namespace Antd.ServiceDiscovery {
                     }
                 }
             }
-            System.IO.File.WriteAllText(CacheFile, Newtonsoft.Json.JsonConvert.SerializeObject(list, Newtonsoft.Json.Formatting.Indented));
-            return list;
+            var mergedList = new List<NodeModel>();
+            if(!System.IO.File.Exists(CacheFile)) {
+                mergedList = new List<NodeModel>();
+            }
+            else {
+                var cachedText = System.IO.File.ReadAllText(CacheFile);
+                if(string.IsNullOrEmpty(cachedText)) {
+                    mergedList = new List<NodeModel>();
+                }
+                else {
+                    mergedList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<NodeModel>>(cachedText);
+                }
+            }
+            var groupedList = list.GroupBy(_ => _.PublicIp).ToList();
+            foreach(var group in groupedList) {
+                var mergedNode = MergeUidInformation(group.ToList());
+                var tryget = mergedList.FirstOrDefault(_ => _.MachineUid == mergedNode.MachineUid);
+                if(tryget == null) {
+                    mergedList.Add(mergedNode);
+                }
+            }
+            System.IO.File.WriteAllText(CacheFile, Newtonsoft.Json.JsonConvert.SerializeObject(mergedList, Newtonsoft.Json.Formatting.Indented));
+            return mergedList;
+        }
+
+        //uuid:df5fb5c5-98c6-4103-8860-249747b8f5eb::upnp:rootdevice
+        //uuid:df5fb5c5-98c6-4103-8860-249747b8f5eb::pnp:rootdevice
+        //uuid:df5fb5c5-98c6-4103-8860-249747b8f5eb
+        //uuid:df5fb5c5-98c6-4103-8860-249747b8f5eb::urn:antd:device:5a67b142-5139-4820-8fee-574d56fffc07:1
+
+        private static NodeModel MergeUidInformation(List<NodeModel> rawNodes) {
+            var node = rawNodes.FirstOrDefault();
+            var uuidRegex = new Regex("uuid\\:([0-9a-zA-Z\\-]+)");
+            var upnpRegex = new Regex("upnp\\:([0-9a-zA-Z\\-]+)");
+            var pnpRegex = new Regex("pnp\\:([0-9a-zA-Z\\-]+)");
+            var urnRegex = new Regex("urn\\:([0-9a-zA-Z\\-]+)");
+            var deviceRegex = new Regex("device\\:([0-9a-zA-Z\\-]+)");
+            foreach(var n in rawNodes) {
+                if(string.IsNullOrEmpty(node.MachineUid)) {
+                    node.MachineUid = uuidRegex.Match(n.RawUid).Groups[1].Value;
+                }
+                if(string.IsNullOrEmpty(node.Upnp)) {
+                    node.Upnp = upnpRegex.Match(n.RawUid).Groups[1].Value;
+                }
+                if(string.IsNullOrEmpty(node.Pnp)) {
+                    node.Pnp = pnpRegex.Match(n.RawUid).Groups[1].Value;
+                }
+                if(string.IsNullOrEmpty(node.Urn)) {
+                    node.Urn = urnRegex.Match(n.RawUid).Groups[1].Value;
+                }
+                if(string.IsNullOrEmpty(node.Device)) {
+                    node.Device = deviceRegex.Match(n.RawUid).Groups[1].Value;
+                }
+            }
+            return node;
         }
     }
 }

@@ -2,6 +2,6 @@
 
 namespace antdlib.models {
     public class PageAssetDiscoveryModel {
-        public List<RssdpDeviceModel> List { get; set; }
+        public List<NodeModel> List { get; set; }
     }
 }

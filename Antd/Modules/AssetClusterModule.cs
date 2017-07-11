@@ -36,7 +36,6 @@ using System.Collections.Generic;
 using System.Linq;
 using anthilla.core;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Antd.Modules {
     public class AssetClusterModule : NancyModule {
@@ -46,7 +45,8 @@ namespace Antd.Modules {
                 var syncedMachines = ClusterConfiguration.GetNodes();
                 var model = new PageAssetClusterModel {
                     Info = ClusterConfiguration.GetClusterInfo(),
-                    ClusterNodes = syncedMachines.OrderBy(_ => _.Hostname).ThenBy(_ => _.IpAddress).ToList()
+                    ClusterNodes = syncedMachines.OrderBy(_ => _.Hostname).ThenBy(_ => _.PublicIp).ToList(),
+                    NetworkAdapters = IPv4.GetAllLocalDescription().ToList()
                 };
                 return JsonConvert.SerializeObject(model);
             };
@@ -54,11 +54,12 @@ namespace Antd.Modules {
             Post["/cluster/save"] = x => {
                 string config = Request.Form.Config;
                 string ip = Request.Form.Ip;
-                var model = JsonConvert.DeserializeObject<List<Cluster.Node>>(config);
+                var model = JsonConvert.DeserializeObject<List<NodeModel>>(config);
                 var model2 = JsonConvert.DeserializeObject<Cluster.Configuration>(ip);
                 ClusterConfiguration.SaveNodes(model);
                 ClusterConfiguration.SaveConfiguration(model2);
                 new Do().ClusterChanges();
+                DeployClusterConfiguration();
                 return HttpStatusCode.OK;
             };
 
@@ -96,13 +97,17 @@ namespace Antd.Modules {
                 ConsoleLogger.Log("[cluster] apply changes after new config");
                 new Do().HostChanges();
                 new Do().NetworkChanges();
+                DeployClusterConfiguration();
                 return HttpStatusCode.OK;
             };
 
             #region [    Handshake + cluster init    ]
-            Post["/asset/handshake/start"] = x => {
-                string host = Request.Form.Host;
-                string hostname = Request.Form.Name;
+            Post["/asset/handshake/start", true] = async (x, ct) => {
+                string conf = Request.Form.HostJson;
+                var remoteNode = JsonConvert.DeserializeObject<NodeModel>(conf);
+                if(remoteNode == null) {
+                    return HttpStatusCode.InternalServerError;
+                }
                 const string pathToPrivateKey = "/root/.ssh/id_rsa";
                 const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
                 if(!File.Exists(pathToPublicKey)) {
@@ -114,7 +119,7 @@ namespace Antd.Modules {
                     return HttpStatusCode.InternalServerError;
                 }
                 var dict = new Dictionary<string, string> { { "ApplePie", key } };
-                var r = new ApiConsumer().Post($"{host}asset/handshake", dict);
+                var r = new ApiConsumer().Post($"{remoteNode.ModelUrl}asset/handshake", dict);
                 if(r != HttpStatusCode.OK) {
                     return HttpStatusCode.InternalServerError;
                 }
@@ -137,30 +142,23 @@ namespace Antd.Modules {
                 ClusterConfiguration.SaveConfiguration(clusterConfiguration);
                 //3. controllo i nodi presenti nella configurazione
                 var clusterNodes = ClusterConfiguration.GetNodes();
+                var iplocals = IPv4.GetAllLocalAddress().ToList();
+                var disc = await ServiceDiscovery.Rssdp.Discover();
                 //4. per prima cosa controllo l'host locale
-                var localNode = new Cluster.Node() {
-                    Hostname = Host2Configuration.Host.HostName,
-                    IpAddress = IPv4.GetAllLocalAddress().FirstOrDefault()
-                };
+                var localNode = disc.FirstOrDefault(_ => iplocals.Contains(_.PublicIp));
                 //5. se non c'è lo aggiungo 
-                if(clusterNodes.FirstOrDefault(_ => _.Hostname == localNode.Hostname && _.IpAddress == localNode.IpAddress) == null) {
+                if(clusterNodes.FirstOrDefault(_ => _.MachineUid == localNode.MachineUid && _.PublicIp == localNode.PublicIp) == null) {
                     clusterNodes.Add(localNode);
                 }
-                //6. controllo il nodo richiesto (remoto)
-                var ipRegex = new Regex("([0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3})");
-                var remoteIp = ipRegex.Match(host).Groups[1].Value;
-                var remoteNode = new Cluster.Node() {
-                    Hostname = hostname,
-                    IpAddress = remoteIp
-                };
                 //7. se non c'è lo aggiungo
-                if(clusterNodes.FirstOrDefault(_ => _.Hostname == remoteNode.Hostname && _.IpAddress == remoteNode.IpAddress) == null) {
+                if(clusterNodes.FirstOrDefault(_ => _.MachineUid == remoteNode.MachineUid && _.PublicIp == remoteNode.PublicIp) == null) {
                     clusterNodes.Add(remoteNode);
                 }
                 //8. salvo la configurazione dei nodi
                 ClusterConfiguration.SaveNodes(clusterNodes);
                 //9. riavvio/avvio il servizio di cluster
                 new Do().ClusterChanges();
+                DeployClusterConfiguration();
                 return HttpStatusCode.OK;
             };
 
@@ -202,6 +200,15 @@ namespace Antd.Modules {
                 }
             };
 
+            Post["/cluster/deploy"] = x => {
+                var clusterConfiguration = Request.Form.Cluster;
+                Cluster.DeployConf model = Newtonsoft.Json.JsonConvert.DeserializeObject<Cluster.DeployConf>(clusterConfiguration);
+                ClusterConfiguration.SaveConfiguration(model.Configuration);
+                ClusterConfiguration.SaveNodes(model.Nodes);
+                new Do().ClusterChanges();
+                return HttpStatusCode.OK;
+            };
+
             //Post["/asset/wol"] = x => {
             //    string mac = Request.Form.MacAddress;
             //    CommandLauncher.Launch("wol", new Dictionary<string, string> { { "$mac", mac } });
@@ -225,6 +232,19 @@ namespace Antd.Modules {
             //    return JsonConvert.SerializeObject(list);
             //};
             #endregion
+        }
+
+        private static ApiConsumer _api = new ApiConsumer();
+
+        private static void DeployClusterConfiguration() {
+            var conf = ClusterConfiguration.GetPackagedConfiguration();
+            var json = JsonConvert.SerializeObject(conf);
+            var dict = new Dictionary<string, string> {
+                { "Cluster", json }
+            };
+            foreach(var node in conf.Nodes) {
+                _api.Post($"{node.ModelUrl}cluster/deploy", dict);
+            }
         }
     }
 }

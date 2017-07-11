@@ -98,7 +98,7 @@ namespace Antd {
         #region [    keepalived    ]
         private const string KeepalivedFileOutput = "/etc/keepalived/keepalived.conf";
 
-        private void SaveKeepalived(string publicIp, List<Cluster.Node> nodes) {
+        private void SaveKeepalived(string publicIp, List<NodeModel> nodes) {
             ConsoleLogger.Log("[cluster] init keepalived");
             const string keepalivedService = "keepalived.service";
             if(Systemctl.IsActive(keepalivedService)) {
@@ -144,7 +144,7 @@ namespace Antd {
 
         private readonly string _haproxyFileOutput = $"{Parameter.AntdCfgCluster}/haproxy.conf";
 
-        private void SaveHaproxy(string publicIp, List<Cluster.Node> nodes) {
+        private void SaveHaproxy(string publicIp, List<NodeModel> nodes) {
             ConsoleLogger.Log("[cluster] init haproxy");
             CommandLauncher.Launch("haproxy-stop");
             if(File.Exists(_haproxyFileOutput)) {
@@ -196,7 +196,7 @@ namespace Antd {
                 lines.Add("    cookie JSESSIONID prefix");
                 lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
                 foreach(var node in nodes) {
-                    lines.Add($"    server {node.Hostname} {node.IpAddress}:{port.ServicePort} check");
+                    lines.Add($"    server {node.Hostname} {node.PublicIp}:{port.ServicePort} check");
                 }
                 lines.Add("");
             }

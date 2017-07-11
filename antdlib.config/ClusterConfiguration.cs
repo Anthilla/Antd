@@ -22,21 +22,21 @@ namespace antdlib.config {
             }
         }
 
-        private static List<Cluster.Node> Load() {
+        private static List<NodeModel> Load() {
             if(!File.Exists(CfgFile)) {
-                return new List<Cluster.Node>();
+                return new List<NodeModel>();
             }
             try {
                 var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<List<Cluster.Node>>(text);
+                var obj = JsonConvert.DeserializeObject<List<NodeModel>>(text);
                 return obj;
             }
             catch(Exception) {
-                return new List<Cluster.Node>();
+                return new List<NodeModel>();
             }
         }
 
-        public static void SaveNodes(List<Cluster.Node> model) {
+        public static void SaveNodes(List<NodeModel> model) {
             Prepare();
             var text = JsonConvert.SerializeObject(model, Formatting.Indented);
             FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
@@ -66,8 +66,18 @@ namespace antdlib.config {
             }
         }
 
-        public static List<Cluster.Node> GetNodes() {
+        public static List<NodeModel> GetNodes() {
             return Load();
+        }
+
+        public static Cluster.DeployConf GetPackagedConfiguration() {
+            var conf = GetClusterInfo();
+            var nodes = GetNodes();
+            var cc = new Cluster.DeployConf {
+                Configuration = conf,
+                Nodes = nodes
+            };
+            return cc;
         }
     }
 }
