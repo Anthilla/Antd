@@ -191,6 +191,7 @@ namespace AntdUi.Modules {
             ///VfsClient.CreateContainer(Client kvp, string containerPath)
             Post["/client/{userguid}/{server}/{port}/1/0"] = x => {
                 string containerPath = Request.Form.ContainerPath;
+                containerPath = containerPath.Replace("//", "/");
                 var dict = new Dictionary<string, string> {
                     { "ContainerPath", containerPath }
                 };

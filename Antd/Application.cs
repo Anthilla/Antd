@@ -566,18 +566,18 @@ namespace Antd {
             DirectoryWatcherRsync.Start();
             #endregion
 
-            //#region [    Storage Server    ]
-            //VfsConfiguration.SetDefaults();
-            //new Thread(() => {
-            //    try {
-            //        var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
-            //        srv.Start();
-            //    }
-            //    catch(Exception ex) {
-            //        ConsoleLogger.Error(ex.Message);
-            //    }
-            //}).Start();
-            //#endregion
+            #region [    Storage Server    ]
+            VfsConfiguration.SetDefaults();
+            new Thread(() => {
+                try {
+                    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
+                    srv.Start();
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex.Message);
+                }
+            }).Start();
+            #endregion
 
             //#region [    Cloud Send Uptime    ]
             //var csuTimer = new UpdateCloudInfo();

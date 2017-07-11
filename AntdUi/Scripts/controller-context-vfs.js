@@ -4,6 +4,20 @@ app.controller("VfsController", ["$scope", "$http", "Upload", "$interval", VfsCo
 
 function VfsController($scope, $http, Upload, $interval) {
 
+    $scope.NewDirectoryName = "";
+
+    $scope.createDirectory = function () {
+        var api = $scope.GetPartialUrl("1/0");
+        var data = $.param({
+            ContainerPath: $scope.RequestedDirectory + "/" + $scope.NewDirectoryName
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post(api, data).then(function () {
+            $scope.NewDirectoryName = "";
+            $scope.ShowResponseMessage("ok");
+        }, function (r) { console.log(r); });
+    };
+
     $scope.files = [];
 
     $scope.submit = function () {
