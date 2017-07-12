@@ -27,14 +27,9 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
-using antdlib.config;
 using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using anthilla.core;
 
 namespace Antd.Modules {
     public class AssetDiscoveryModule : NancyModule {
@@ -50,6 +45,11 @@ namespace Antd.Modules {
 
             Get["/device/description"] = x => {
                 var model = ServiceDiscovery.Rssdp.GetDeviceDescription();
+                return JsonConvert.SerializeObject(model);
+            };
+
+            Get["/device/services"] = x => {
+                var model = ServiceDiscovery.Rssdp.GetServices();
                 return JsonConvert.SerializeObject(model);
             };
         }

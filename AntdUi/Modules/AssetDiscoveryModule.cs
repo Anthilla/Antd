@@ -31,6 +31,7 @@ using antdlib.models;
 using Nancy;
 using Newtonsoft.Json;
 using anthilla.core;
+using System.Collections.Generic;
 
 namespace AntdUi.Modules {
     public class AssetDiscoveryModule : NancyModule {
@@ -47,6 +48,12 @@ namespace AntdUi.Modules {
             Get["/device/description"] = x => {
                 var model = _api.Get<ServiceDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/device/description");
                 return Response.AsXml(model);
+            };
+
+            Get["/device/services"] = x => {
+                var model = _api.Get<List<RssdpServiceModel>>($"http://127.0.0.1:{Application.ServerPort}/device/services");
+                var json = JsonConvert.SerializeObject(model);
+                return json;
             };
         }
     }

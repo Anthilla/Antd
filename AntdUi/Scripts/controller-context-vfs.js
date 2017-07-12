@@ -6,18 +6,6 @@ function VfsController($scope, $http, Upload, $interval) {
 
     $scope.NewDirectoryName = "";
 
-    $scope.createDirectory = function () {
-        var api = $scope.GetPartialUrl("1/0");
-        var data = $.param({
-            ContainerPath: $scope.RequestedDirectory + "/" + $scope.NewDirectoryName
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post(api, data).then(function () {
-            $scope.NewDirectoryName = "";
-            $scope.ShowResponseMessage("ok");
-        }, function (r) { console.log(r); });
-    };
-
     $scope.files = [];
 
     $scope.submit = function () {
@@ -81,7 +69,7 @@ function VfsController($scope, $http, Upload, $interval) {
 
     $scope.DownloadUrl = function (obj) {
         var api = $scope.GetPartialUrl("0/1");
-        return api + "?path=" + $scope.RequestedDirectory + "&file=" + obj.Key;
+        return api + "?path=" + $scope.RequestedDirectory.replace(/\//g, "%2F") + "&file=" + obj.Key;
     }
 
     Array.prototype.clean = function (deleteValue) {
@@ -143,22 +131,24 @@ function VfsController($scope, $http, Upload, $interval) {
     $scope.DeleteContainer = function (containerPath) {
         var api = $scope.GetPartialUrl("1/5");
         var data = $.param({
-            ContainerPath: containerPath
+            ContainerPath: $scope.RequestedDirectory + "/" + containerPath
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post(api, data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
-
+        $http.post(api, data).then(function () {
+            $scope.EnterFolder("..");
+            $scope.GetContainer($scope.RequestedDirectory);
+        }, function (r) { console.log(r); });
     }
 
     $scope.RenameContainer = function (containerPath, newContainer) {
+        console.log(newContainer)
         var api = $scope.GetPartialUrl("1/4");
         var data = $.param({
-            ContainerPath: containerPath,
+            ContainerPath: $scope.RequestedDirectory + "/" + containerPath,
             NewName: newContainer
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post(api, data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
-
     }
 
     $scope.MoveContainer = function (containerPath, newContainer) {
@@ -169,7 +159,6 @@ function VfsController($scope, $http, Upload, $interval) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post(api, data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
-
     }
 
     $scope.VerifyContainer = function (containerPath) {
@@ -192,28 +181,33 @@ function VfsController($scope, $http, Upload, $interval) {
         }, function (r) { console.log(r); });
     }
 
-    $scope.CreateContainer = function (containerPath) {
+    $scope.CreateContainer = function () {
         var api = $scope.GetPartialUrl("1/0");
         var data = $.param({
-            ContainerPath: containerPath
+            ContainerPath: $scope.RequestedDirectory + "/" + $scope.NewDirectoryName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post(api, data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+        $http.post(api, data).then(function () {
+            $scope.NewDirectoryName = "";
+            $scope.GetContainer($scope.RequestedDirectory);
+        }, function (r) { console.log(r); });
     }
 
     $scope.DeleteObject = function (objectPath) {
         var api = $scope.GetPartialUrl("0/5");
         var data = $.param({
-            ObjectPath: objectPath
+            ObjectPath: $scope.RequestedDirectory + "/" + objectPath
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post(api, data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
+        $http.post(api, data).then(function () {
+            $scope.GetContainer($scope.RequestedDirectory);
+        }, function (r) { console.log(r); });
     }
 
     $scope.RenameObject = function (objectPath, newName) {
         var api = $scope.GetPartialUrl("0/4");
         var data = $.param({
-            ObjectPath: objectPath,
+            ObjectPath: $scope.RequestedDirectory + "/" + objectPath,
             NewName: newName
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -239,10 +233,9 @@ function VfsController($scope, $http, Upload, $interval) {
         $http.post(api, data).then(function () { $scope.ShowResponseMessage("ok"); }, function (r) { console.log(r); });
     }
 
-    $scope.CreateObject = function () {
-        var api = $scope.GetPartialUrl("0/0");
-        //todo upload
-    }
+    //$scope.CreateObject = function () {
+    //    var api = $scope.GetPartialUrl("0/0");
+    //}
 
     $scope.Connected = false;
 

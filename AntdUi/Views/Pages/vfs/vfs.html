@@ -129,7 +129,7 @@
                     <div class="cell colspan2 uppercase fg-anthilla-green">
                     </div>
                     <div class="cell colspan4">
-                        <button type="submit" ng-click="createDirectory()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-upload fg-anthilla-blue padding-right20"></span>&nbsp;create</button>
+                        <button type="submit" ng-click="CreateContainer()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20 width100pc"><span class="mif-upload fg-anthilla-blue padding-right20"></span>&nbsp;create</button>
                     </div>
                 </div>
             </div>
@@ -149,15 +149,17 @@
                 <span class="list-title">..</span>
             </div>
 
-            <div ng-repeat="folder in CurrentDirectory.ChildContainers" ng-click="EnterFolder(folder)" class="list">
-                <span class="list-icon icon-font-icon mif-folder"></span>
-                <span class="list-title">{{ folder }}</span>
+            <div ng-repeat="folder in CurrentDirectory.ChildContainers" ng-init="newContainer=folder;" class="list">
+                <span ng-click="EnterFolder(folder)" class="list-icon icon-font-icon mif-folder"></span>
+                <input ng-blur="RenameContainer(folder, newContainer)" class="list-title" ng-model="newContainer" style="background-color: #FFFFFF; border: 0px solid #FFFFFF;" type="text">
+                <span ng-click="DeleteContainer(folder)" class="fg-red mif-bin place-right"></span>
             </div>
 
-            <a ng-repeat="obj in CurrentDirectory.ObjectMetadata" class="list fg-gray" href="{{ DownloadUrl(obj) }}">
-                <span class="list-icon icon-folder mif-file-empty"></span>
-                <span class="list-title">{{ obj.Key }}</span>
-            </a>
+            <div ng-repeat="obj in CurrentDirectory.ObjectMetadata" class="list fg-gray" ng-init="newName=obj.Key;">
+                <a href="{{ DownloadUrl(obj) }}" class="list-icon icon-folder mif-file-empty"></a>
+                <input ng-blur="RenameObject(obj.Key, newName)" class="list-title" ng-model="newName" style="background-color: #FFFFFF; border: 0px solid #FFFFFF;" type="text">
+                <span ng-click="DeleteObject(obj.Key)" class="fg-red mif-bin place-right"></span>
+            </div>
         </div>
     </div>
 </div>

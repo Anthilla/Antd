@@ -210,5 +210,14 @@ namespace Antd.ServiceDiscovery {
             }
             return node;
         }
+
+        public static List<RssdpServiceModel> GetServices() {
+            var list = new List<RssdpServiceModel>();
+            var appConfig = new AppConfiguration().Get();
+            list.Add(new RssdpServiceModel { Name = "antd", Port = appConfig.AntdPort.ToString() });
+            list.Add(new RssdpServiceModel { Name = "antdui", Port = appConfig.AntdUiPort.ToString() });
+            list.Add(new RssdpServiceModel { Name = "antdfs", Port = "" });
+            return list;
+        }
     }
 }

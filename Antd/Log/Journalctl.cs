@@ -97,7 +97,7 @@ namespace Antd.Log {
                     FileWithAcl.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines, "644", "root", "wheel");
                 }
                 catch(Exception ex) {
-                    ConsoleLogger.Error($"unable to create the log report: {ex.Message}", ConsoleLogger.Method());
+                    ConsoleLogger.Error($"unable to create the log report: {ex.Message}");
                 }
             }
 

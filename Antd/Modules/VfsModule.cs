@@ -126,6 +126,8 @@ namespace Antd.Modules {
                     return HttpStatusCode.InternalServerError;
                 }
                 string objectPath = Request.Form.ObjectPath;
+                objectPath = Request.Query.file;
+
                 var result = VFS.VfsClient.RetrieveObject(client, objectPath);
                 var fileName = objectPath.Split('/').LastOrDefault();
                 var fileType = Kvpbase.MimeTypes.GetFromExtension(Path.GetExtension(fileName));

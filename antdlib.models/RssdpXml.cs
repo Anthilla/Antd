@@ -103,5 +103,7 @@ namespace antdlib.models {
     public class RssdpServiceModel {
         public string ServiceType { get; set; }
         public string ControlURL { get; set; }
+        public string Name { get; set; }
+        public string Port { get; set; }
     }
 }

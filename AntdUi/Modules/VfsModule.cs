@@ -134,7 +134,9 @@ namespace AntdUi.Modules {
                     using(var memoryStream = new MemoryStream()) {
                         var client = new RestClient($"http://127.0.0.1:{Application.ServerPort}{Request.Path}");
                         var request = new RestRequest("/", Method.GET);
+                        objectPath = objectPath + "/" + file;
                         request.AddParameter("ObjectPath", objectPath);
+                        request.AddQueryParameter("file", objectPath.Replace("//", "/"));
                         request.ResponseWriter = (responseStream) => responseStream.CopyTo(stream);
                         client.DownloadData(request);
                         int data;
