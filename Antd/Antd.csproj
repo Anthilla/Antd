@@ -207,6 +207,7 @@
     <Compile Include="Timer\SyncTime.cs" />
     <Compile Include="Timer\SnapshotCleanup.cs" />
     <Compile Include="VFS\VfsClient.cs" />
+    <Compile Include="VFS\VfsWatcher.cs" />
     <Compile Include="Wifi\AccessPoint.cs" />
     <None Include="Templates\haproxy.conf.tmpl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

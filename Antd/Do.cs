@@ -7,6 +7,7 @@ using antdlib.models;
 using anthilla.commands;
 using anthilla.core;
 using Parameter = antdlib.common.Parameter;
+using antdlib.config.shared;
 
 namespace Antd {
     public class Do {
@@ -79,7 +80,8 @@ namespace Antd {
         public void ClusterChanges() {
             ConsoleLogger.Log("[cluster] applying changes");
             ClusterConfiguration.Prepare();
-            var publicIp = ClusterConfiguration.GetClusterInfo().VirtualIpAddress;
+            var clusterConfig = ClusterConfiguration.GetClusterInfo();
+            var publicIp = clusterConfig.VirtualIpAddress;
             if(string.IsNullOrEmpty(publicIp)) {
                 ConsoleLogger.Warn("[cluster] public ip not valid");
                 return;
@@ -92,6 +94,8 @@ namespace Antd {
 
             SaveKeepalived(publicIp, nodes);
             SaveHaproxy(publicIp, nodes);
+
+            SaveFileSystemSync(clusterConfig, nodes);
         }
         #endregion
 
@@ -178,13 +182,18 @@ namespace Antd {
                 "    timeout server  50000",
                 ""
             };
-
-            foreach(var port in ports) {
-                var frontEndLabel = $"fe_in{port.ServicePort}_out{port.VirtualPort}";
-                var backEndLabel = $"be_in{port.ServicePort}_out{port.VirtualPort}";
+            var localport = new AppConfiguration().Get().AntdUiPort;
+            var localServices = new ApiConsumer().Get<List<RssdpServiceModel>>($"http://localhost:{localport}/device/services");
+            foreach(var portMapping in ports) {
+                portMapping.ServicePort = localServices.FirstOrDefault(_ => _.Name == portMapping.ServiceName)?.Port;
+                if(string.IsNullOrEmpty(portMapping.ServicePort)) {
+                    continue;
+                }
+                var frontEndLabel = $"fe_in{portMapping.ServicePort}_out{portMapping.VirtualPort}";
+                var backEndLabel = $"be_in{portMapping.ServicePort}_out{portMapping.VirtualPort}";
                 lines.Add($"frontend {frontEndLabel}");
                 lines.Add("    mode http");
-                lines.Add($"    bind {clusterInfo.VirtualIpAddress}:{port.VirtualPort} transparent");
+                lines.Add($"    bind {clusterInfo.VirtualIpAddress}:{portMapping.VirtualPort} transparent");
                 lines.Add("    stats enable");
                 lines.Add("    stats auth admin:Anthilla");
                 lines.Add("    option httpclose");
@@ -196,7 +205,7 @@ namespace Antd {
                 lines.Add("    cookie JSESSIONID prefix");
                 lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
                 foreach(var node in nodes) {
-                    lines.Add($"    server {node.Hostname} {node.PublicIp}:{port.ServicePort} check");
+                    lines.Add($"    server {node.Hostname} {node.PublicIp}:{portMapping.ServicePort} check");
                 }
                 lines.Add("");
             }
@@ -204,6 +213,11 @@ namespace Antd {
             File.WriteAllLines(_haproxyFileOutput, lines);
             CommandLauncher.Launch("haproxy-start", new Dictionary<string, string> { { "$file", _haproxyFileOutput } });
             ConsoleLogger.Log("[cluster] haproxy started");
+        }
+
+        private void SaveFileSystemSync(Cluster.Configuration config, List<NodeModel> nodes) {
+            Application.VfsWatcher.Stop();
+            Application.VfsWatcher.Start(config, nodes);
         }
         #endregion
 

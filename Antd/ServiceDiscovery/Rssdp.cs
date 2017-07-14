@@ -219,5 +219,11 @@ namespace Antd.ServiceDiscovery {
             list.Add(new RssdpServiceModel { Name = "antdfs", Port = "" });
             return list;
         }
+
+        public static List<Cluster.FileSystemMapping> GetFileSystem() {
+            var list = new List<Cluster.FileSystemMapping>();
+            list.Add(new Cluster.FileSystemMapping { ContentName = "test", LocalPath = "/Data/Data01/test" });
+            return list;
+        }
     }
 }

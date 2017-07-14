@@ -3,6 +3,11 @@
 app.controller("AssetClusterController", ["$scope", "$http", "$interval", AssetClusterController]);
 
 function AssetClusterController($scope, $http, $interval) {
+
+    $scope.removeHostFromCluster = function (index) {
+        $scope.ClusterNodes.splice(index, 1);
+    }
+
     $scope.save = function () {
         var config = angular.toJson($scope.ClusterNodes, true);
         var config2 = angular.toJson($scope.Info, true);

@@ -43,8 +43,28 @@ namespace Antd.Modules {
         public AssetClusterModule() {
             Get["/cluster"] = x => {
                 var syncedMachines = ClusterConfiguration.GetNodes();
+                var config = ClusterConfiguration.GetClusterInfo();
+                foreach(var node in syncedMachines) {
+                    var services = _api.Get<List<RssdpServiceModel>>(node.ModelUrl + "device/services");
+                    node.Services = services;
+                }
+                var importPortMapping = syncedMachines
+                    .Select(_ => _.Services)
+                    .Merge()
+                    .Select(_ => _.Name)
+                    .ToHashSet()
+                    .Select(_ => new Cluster.PortMapping { ServiceName = _, ServicePort = "", VirtualPort = "" })
+                    .ToList()
+                    ;
+                var existingPortMapping = config.PortMapping.ToList();
+                foreach(var i in importPortMapping) {
+                    if(existingPortMapping.FirstOrDefault(_ => _.ServiceName == i.ServiceName) == null) {
+                        existingPortMapping.Add(i);
+                    }
+                }
+                config.PortMapping = existingPortMapping.ToList();
                 var model = new PageAssetClusterModel {
-                    Info = ClusterConfiguration.GetClusterInfo(),
+                    Info = config,
                     ClusterNodes = syncedMachines.OrderBy(_ => _.Hostname).ThenBy(_ => _.PublicIp).ToList(),
                     NetworkAdapters = IPv4.GetAllLocalDescription().ToList()
                 };

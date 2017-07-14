@@ -54,11 +54,13 @@ using Parameter = antdlib.common.Parameter;
 using Random = anthilla.core.Random;
 using System.Threading;
 using Kvpbase;
+using Antd.VFS;
 
 namespace Antd {
     internal class Application {
 
         public static string KeyName = "antd";
+        public static VfsWatcher VfsWatcher;
 
         private static void Main() {
             ConsoleLogger.Log("[boot step] starting antd");
@@ -438,8 +440,6 @@ namespace Antd {
             #region [    Service Discovery    ]
             try {
                 ServiceDiscovery.Rssdp.PublishThisDevice();
-                //var rssdp = new ServiceDiscovery.Rssdp();
-                //rssdp.BeginSearch();
                 ConsoleLogger.Log("[rssdp] published device");
             }
             catch(Exception ex) {
@@ -556,6 +556,7 @@ namespace Antd {
             #endregion
 
             #region [    Cluster    ]
+            VfsWatcher = new VfsWatcher();
             ClusterConfiguration.Prepare();
             new Do().ClusterChanges();
             ConsoleLogger.Log("[cluster] active");

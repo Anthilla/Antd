@@ -52,6 +52,11 @@ namespace Antd.Modules {
                 var model = ServiceDiscovery.Rssdp.GetServices();
                 return JsonConvert.SerializeObject(model);
             };
+
+            Get["/device/filesystem"] = x => {
+                var model = ServiceDiscovery.Rssdp.GetFileSystem();
+                return JsonConvert.SerializeObject(model);
+            };
         }
     }
 }
