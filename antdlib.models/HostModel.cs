@@ -34,6 +34,7 @@ namespace antdlib.models {
             new HostParameter { SetCmd = "sysctl-p" },
             new HostParameter { SetCmd = "systemd-machine-id-setup" },
             new HostParameter { SetCmd = "dhclient-killall" },
+            new HostParameter { SetCmd = "dhcpcd-killall" },
             new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-resolvd.service" } } },
             new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.service" } } },
             new HostParameter { SetCmd = "systemctl-stop", StoredValues = new Dictionary<string, string> { { "$service", "systemd-networkd.socket" } } },

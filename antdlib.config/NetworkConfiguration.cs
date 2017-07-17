@@ -69,9 +69,9 @@ namespace antdlib.config {
                 return;
             }
             var netIf = InterfacePhysical.FirstOrDefault();
-            var tryStart = CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
+            var tryStart = CommandLauncher.Launch("dhcpcd", new Dictionary<string, string> { { "$net_if", netIf } }).ToList();
             if(!tryStart.Any()) {
-                ConsoleLogger.Log("[network] dhclient started");
+                ConsoleLogger.Log("[network] dhcp client started");
                 ConsoleLogger.Log($"[network] {netIf} is configured");
                 return;
             }
@@ -400,7 +400,7 @@ namespace antdlib.config {
                     if(networkdIsActive) {
                         Systemctl.Stop("systemd-networkd");
                     }
-                    CommandLauncher.Launch("dhclient-killall");
+                    CommandLauncher.Launch("dhcpcd-killall");
                     CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
                         { "$net_if", netif }
                     });
@@ -414,7 +414,7 @@ namespace antdlib.config {
                     }
                     break;
                 case NetworkInterfaceMode.Dynamic:
-                    CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", netif } });
+                    CommandLauncher.Launch("dhcpcd", new Dictionary<string, string> { { "$net_if", netif } });
                     break;
                 default:
                     return;

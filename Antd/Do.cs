@@ -340,7 +340,7 @@ namespace Antd {
                     if(networkdIsActive) {
                         Systemctl.Stop("systemd-networkd");
                     }
-                    CommandLauncher.Launch("dhclient-killall");
+                    CommandLauncher.Launch("dhcpcd-killall");
                     CommandLauncher.Launch("ip4-flush-configuration", new Dictionary<string, string> {
                         { "$net_if", deviceName}
                     });
@@ -354,7 +354,7 @@ namespace Antd {
                     }
                     break;
                 case NetworkInterfaceMode.Dynamic:
-                    CommandLauncher.Launch("dhclient4", new Dictionary<string, string> { { "$net_if", deviceName } });
+                    CommandLauncher.Launch("dhcpcd", new Dictionary<string, string> { { "$net_if", deviceName } });
                     break;
                 default:
                     return;
