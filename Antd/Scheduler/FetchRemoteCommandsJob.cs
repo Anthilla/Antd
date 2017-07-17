@@ -1,42 +1,55 @@
-﻿using System;
-using antdlib.config.shared;
+﻿using antdlib.config.shared;
 using antdlib.models;
+using anthilla.core;
+using anthilla.scheduler;
+using System;
 using anthilla.commands;
 using System.Collections.Generic;
-using System.Linq;
-using System.Timers;
-using anthilla.core;
 using Parameter = antdlib.common.Parameter;
+using System.Linq;
 
-namespace Antd.Cloud {
-    public class FetchRemoteCommand {
+namespace Antd.Scheduler {
+    public class FetchRemoteCommandsJob : Job {
 
-        public System.Timers.Timer Timer { get; private set; }
+        #region [    Core Parameter    ]
+        private bool _isRepeatable = true;
 
-        /// <summary>
-        /// Start the timer
-        /// </summary>
-        /// <param name="milliseconds">Time in milliseconds</param>
-        public void Start(int milliseconds) {
-            Timer = new System.Timers.Timer(milliseconds);
-            Timer.Elapsed += _timer_Elapsed;
-            Timer.Enabled = true;
-            Timer.Start();
-            Do();
+        public override bool IsRepeatable {
+            get {
+                return _isRepeatable;
+            }
+            set {
+                value = _isRepeatable;
+            }
         }
 
-        public void Stop() {
-            Timer.Dispose();
+        private int _repetitionIntervalTime = 1000 * 60 * 2 + 330;
+
+        public override int RepetitionIntervalTime {
+            get {
+                return _repetitionIntervalTime;
+            }
+
+            set {
+                value = _repetitionIntervalTime;
+            }
         }
+
+        public override string Name {
+            get {
+                return GetType().Name;
+            }
+
+            set {
+                value = GetType().Name;
+            }
+        }
+        #endregion
 
         private static readonly ApiConsumer Api = new ApiConsumer();
         private static readonly MachineIdsModel MachineId = Machine.MachineIds.Get;
 
-        private static void _timer_Elapsed(object sender, ElapsedEventArgs e) {
-            Do();
-        }
-
-        private static void Do() {
+        public override void DoJob() {
             try {
                 //ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
                 var cloudaddress = new AppConfiguration().Get().CloudAddress;

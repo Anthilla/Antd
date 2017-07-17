@@ -43,6 +43,7 @@ namespace Antd.VFS {
         }
 
         public void Stop() {
+            if(_watchers == null) { return; }
             foreach(var watcher in _watchers) {
                 watcher.Dispose();
             }

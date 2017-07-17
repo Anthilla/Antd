@@ -120,8 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="Cloud\UpdateCloudInfo.cs" />
-    <Compile Include="Cloud\WhatIsMyIp.cs" />
+    <Compile Include="Helpers\WhatIsMyIp.cs" />
     <Compile Include="Do.cs" />
     <Compile Include="Helpers\Default.cs" />
     <Compile Include="Helpers\Dicts.cs" />
@@ -178,11 +177,13 @@
     <Compile Include="Modules\WizardModule.cs" />
     <Compile Include="Modules\_HomeModule.cs" />
     <Compile Include="Modules\MonitorModule.cs" />
-    <Compile Include="Cloud\FetchRemoteCommand.cs" />
     <Compile Include="Networkd\NetworkdConfiguration.cs" />
+    <Compile Include="Scheduler\UpdateCloudInfoJob.cs" />
+    <Compile Include="Scheduler\FetchRemoteCommandsJob.cs" />
+    <Compile Include="Scheduler\SimpleExecutionJob.cs" />
     <Compile Include="ServiceDiscovery\Rssdp.cs" />
     <Compile Include="Timer\UpdateBindHints.cs" />
-    <Compile Include="Timer\ConfigurationCheck.cs" />
+    <Compile Include="Scheduler\CheckInternetStatusJob.cs" />
     <Compile Include="Ui\UiService.cs" />
     <Compile Include="Apps\AppsManagement.cs" />
     <Compile Include="Apps\AppsUnits.cs" />
@@ -313,6 +314,10 @@
     <ProjectReference Include="..\..\_shared\anthilla.logger\anthilla.logger.csproj">
       <Project>{3165c749-fe75-4c8a-80b6-47b8ed286e37}</Project>
       <Name>anthilla.logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\_shared\anthilla.scheduler\anthilla.scheduler.csproj">
+      <Project>{906b8907-f2ea-4baa-bf11-9f80c6e8bbbd}</Project>
+      <Name>anthilla.scheduler</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
       <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>

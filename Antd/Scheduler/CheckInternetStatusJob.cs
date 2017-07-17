@@ -1,43 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Timers;
 using antdlib.config;
 using anthilla.commands;
 using anthilla.core;
+using anthilla.scheduler;
 
-namespace Antd.Timer {
-    public class ConfigurationCheck {
+namespace Antd.Scheduler {
+    public class CheckInternetStatusJob : Job {
 
-        public System.Timers.Timer Timer { get; private set; }
+        #region [    Core Parameter    ]
+        private bool _isRepeatable = true;
 
-        public void Start(int milliseconds) {
-            try {
-                Action();
+        public override bool IsRepeatable {
+            get {
+                return _isRepeatable;
             }
-            catch(Exception) {
-                ConsoleLogger.Log("[check] internet status: something went wrong");
-            }
-            Timer = new System.Timers.Timer(milliseconds);
-            Timer.Elapsed += Elapsed;
-            Timer.Enabled = true;
-        }
-
-        public void Stop() {
-            Timer?.Dispose();
-        }
-
-        private static void Elapsed(object sender, ElapsedEventArgs e) {
-            try {
-                Action();
-            }
-            catch(Exception) {
-                ConsoleLogger.Log("[check] internet status: something went wrong");
+            set {
+                value = _isRepeatable;
             }
         }
 
-        private static void Action() {
+        private int _repetitionIntervalTime = 1000 * 60 * 2;
+
+        public override int RepetitionIntervalTime {
+            get {
+                return _repetitionIntervalTime;
+            }
+
+            set {
+                value = _repetitionIntervalTime;
+            }
+        }
+
+        public override string Name {
+            get {
+                return GetType().Name;
+            }
+
+            set {
+                value = GetType().Name;
+            }
+        }
+        #endregion
+
+        public override void DoJob() {
             //ConsoleLogger.Log("[check] check modules status");
             //var doo = new Do();
             //doo.ModulesChanges();

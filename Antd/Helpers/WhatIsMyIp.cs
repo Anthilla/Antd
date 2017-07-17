@@ -1,7 +1,7 @@
 ﻿using System;
 using anthilla.core;
 
-namespace Antd.Cloud {
+namespace Antd.Helpers {
     public class WhatIsMyIp {
         public static string Get() {
             try {

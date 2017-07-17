@@ -8,6 +8,7 @@ namespace Antd.Apps {
         public static void Setup() {
             if(IsTargetActive())
                 return;
+            ConsoleLogger.Log("[apptarget] setup");
             if(!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
             DirectoryWithAcl.CreateDirectory("/etc/systemd/system/", "755", "root", "wheel");
             DirectoryWithAcl.CreateDirectory("/etc/systemd/system/applicative.target.wants", "755", "root", "wheel");
@@ -28,7 +29,7 @@ namespace Antd.Apps {
 
         #region TT Target
         private static  bool IsTargetActive() {
-            var result = Bash.Execute("systemctl is-active applicative.target", false);
+            var result = Bash.Execute("systemctl is-active applicative.target");
             return result.Trim() == "active";
         }
 

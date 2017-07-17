@@ -28,7 +28,6 @@
 //-------------------------------------------------------------------------------------
 
 using Antd.Apps;
-using Antd.Cloud;
 using Antd.License;
 using Antd.Overlay;
 using Antd.Storage;
@@ -47,7 +46,6 @@ using System.IO;
 using System.Linq;
 using anthilla.core;
 using anthilla.core.Helpers;
-using Antd.Info;
 using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
 using Parameter = antdlib.common.Parameter;
@@ -55,6 +53,8 @@ using Random = anthilla.core.Random;
 using System.Threading;
 using Kvpbase;
 using Antd.VFS;
+using anthilla.scheduler;
+using Antd.Info;
 
 namespace Antd {
     internal class Application {
@@ -127,9 +127,60 @@ namespace Antd {
             ConsoleLogger.Log("mounts ready");
             #endregion
 
+            #region [    Check Units Location    ]
+            var anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
+            if(!anthillaUnits.Any()) {
+                var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
+                foreach(var unit in antdUnits) {
+                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    if(!File.Exists(trueUnit)) {
+                        File.Copy(unit, trueUnit);
+                    }
+                    File.Delete(unit);
+                    Bash.Execute($"ln -s {trueUnit} {unit}");
+                }
+                var appsUnits = Directory.EnumerateFiles(Parameter.AppsUnits, "*.*", SearchOption.TopDirectoryOnly);
+                foreach(var unit in appsUnits) {
+                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    if(!File.Exists(trueUnit)) {
+                        File.Copy(unit, trueUnit);
+                    }
+                    File.Delete(unit);
+                    Bash.Execute($"ln -s {trueUnit} {unit}");
+                }
+                var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
+                foreach(var unit in applicativeUnits) {
+                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    if(!File.Exists(trueUnit)) {
+                        File.Copy(unit, trueUnit);
+                    }
+                    File.Delete(unit);
+                    Bash.Execute($"ln -s {trueUnit} {unit}");
+                }
+            }
+            anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            if(!anthillaUnits.Any()) {
+                foreach(var unit in anthillaUnits) {
+                    Bash.Execute($"chown root:wheel {unit}");
+                    Bash.Execute($"chmod 644 {unit}");
+                }
+            }
+            ConsoleLogger.Log("[check] units integrity");
+            #endregion
+
             #region [    Application Keys    ]
             var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
             var pub = ak.PublicKey;
+            #endregion
+
+            #region [    Secret    ]
+            if(!File.Exists(Parameter.AntdCfgSecret)) {
+                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
+            }
+
+            if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
+                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
+            }
             #endregion
 
             #region [    License Management    ]
@@ -152,29 +203,9 @@ namespace Antd {
             }
             #endregion
 
-            #region [    Secret    ]
-            if(!File.Exists(Parameter.AntdCfgSecret)) {
-                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
-            }
-
-            if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
-                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
-            }
-            #endregion
-
             #region [    JournalD    ]
             if(JournaldConfiguration.IsActive()) {
                 JournaldConfiguration.Set();
-            }
-            #endregion
-
-            #region [    Manage Networkd    ]
-            const string networkdService = "systemd-networkd.service";
-            if(Systemctl.IsActive(networkdService)) {
-                Systemctl.Stop(networkdService);
-            }
-            if(Systemctl.IsEnabled(networkdService)) {
-                Systemctl.Disable(networkdService);
             }
             #endregion
 
@@ -466,7 +497,7 @@ namespace Antd {
             }
             #endregion
 
-            #region [    Storage    ]
+            #region [    Storage - Zfs   ]
             foreach(var pool in Zpool.ImportList().ToList()) {
                 if(string.IsNullOrEmpty(pool))
                     continue;
@@ -489,6 +520,9 @@ namespace Antd {
             new SyncTime().Start(new TimeSpan(0, 42, 00));
             new RemoveUnusedModules().Start(new TimeSpan(2, 15, 00));
 
+            JobManager jobManager = new JobManager();
+            jobManager.ExecuteAllJobs();
+
             ConsoleLogger.Log("scheduled events ready");
             #endregion
 
@@ -499,20 +533,25 @@ namespace Antd {
             }
             #endregion
 
-            #region [    Sync    ]
-            if(GlusterConfiguration.IsActive()) {
-                GlusterConfiguration.Launch();
-            }
-            if(RsyncConfiguration.IsActive()) {
-                RsyncConfiguration.Set();
-            }
-            #endregion
-
             #region [    C A    ]
             if(CaConfiguration.IsActive()) {
                 CaConfiguration.Set();
             }
             #endregion
+
+            #region [    Host Init    ]
+            var app = new AppConfiguration().Get();
+            var port = app.AntdPort;
+            var uri = $"http://localhost:{app.AntdPort}/";
+            var host = new NancyHost(new Uri(uri));
+            host.Start();
+            ConsoleLogger.Log("host ready");
+            StaticConfiguration.DisableErrorTraces = false;
+            ConsoleLogger.Log($"http port: {port}");
+            ConsoleLogger.Log("[boot step] antd is running");
+            #endregion
+
+            ConsoleLogger.Log("[boot step] working procedures");
 
             #region [    Apps    ]
             AppTarget.Setup();
@@ -529,25 +568,27 @@ namespace Antd {
             ConsoleLogger.Log("apps ready");
             #endregion
 
-            #region [    Host Init    ]
-            var app = new AppConfiguration().Get();
-            var port = app.AntdPort;
-            var uri = $"http://localhost:{app.AntdPort}/";
-            var host = new NancyHost(new Uri(uri));
-            host.Start();
-            ConsoleLogger.Log("host ready");
-            StaticConfiguration.DisableErrorTraces = false;
-            ConsoleLogger.Log($"http port: {port}");
-            ConsoleLogger.Log("[boot step] antd is running");
-            var startupTime = DateTime.Now - startTime;
-            ConsoleLogger.Log($"loaded in: {startupTime}");
-            if(!File.Exists("/cfg/antd/stats.txt")) {
-                FileWithAcl.WriteAllText("/cfg/antd/stats.txt", "");
+            #region [    Sync / Gluster   ]
+            if(GlusterConfiguration.IsActive()) {
+                GlusterConfiguration.Launch();
             }
-            File.AppendAllLines("/cfg/antd/stats.txt", new[] { $"{startTime:yyyy MM dd HH:mm} - {startupTime}" });
+            if(RsyncConfiguration.IsActive()) {
+                RsyncConfiguration.Set();
+            }
             #endregion
 
-            ConsoleLogger.Log("[boot step] working procedures");
+            #region [    Storage Server    ]
+            VfsConfiguration.SetDefaults();
+            new Thread(() => {
+                try {
+                    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
+                    srv.Start();
+                }
+                catch(Exception ex) {
+                    ConsoleLogger.Error(ex.Message);
+                }
+            }).Start();
+            #endregion
 
             #region [    Tor    ]
             if(TorConfiguration.IsActive()) {
@@ -567,75 +608,6 @@ namespace Antd {
             DirectoryWatcherRsync.Start();
             #endregion
 
-            #region [    Storage Server    ]
-            VfsConfiguration.SetDefaults();
-            new Thread(() => {
-                try {
-                    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
-                    srv.Start();
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex.Message);
-                }
-            }).Start();
-            #endregion
-
-            //#region [    Cloud Send Uptime    ]
-            //var csuTimer = new UpdateCloudInfo();
-            //csuTimer.Start(1000 * 60 * 5);
-            //#endregion
-
-            //#region [    Cloud Fetch Commands    ]
-            //var cfcTimer = new FetchRemoteCommand();
-            //cfcTimer.Start(1000 * 60 * 2 + 330);
-            //#endregion
-
-            //#region [    Check System Components    ]
-            //MachineInfo.CheckSystemComponents();
-            //ConsoleLogger.Log("[check] system components health");
-            //#endregion
-
-            #region [    Check Units Location    ]
-            var anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
-            if(!anthillaUnits.Any()) {
-                var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in antdUnits) {
-                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
-                        File.Copy(unit, trueUnit);
-                    }
-                    File.Delete(unit);
-                    Bash.Execute($"ln -s {trueUnit} {unit}");
-                }
-                var appsUnits = Directory.EnumerateFiles(Parameter.AppsUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in appsUnits) {
-                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
-                        File.Copy(unit, trueUnit);
-                    }
-                    File.Delete(unit);
-                    Bash.Execute($"ln -s {trueUnit} {unit}");
-                }
-                var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in applicativeUnits) {
-                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
-                        File.Copy(unit, trueUnit);
-                    }
-                    File.Delete(unit);
-                    Bash.Execute($"ln -s {trueUnit} {unit}");
-                }
-            }
-            anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
-            if(!anthillaUnits.Any()) {
-                foreach(var unit in anthillaUnits) {
-                    Bash.Execute($"chown root:wheel {unit}");
-                    Bash.Execute($"chmod 644 {unit}");
-                }
-            }
-            ConsoleLogger.Log("[check] units integrity");
-            #endregion
-
             #region [    Check Application File Acls    ]
             var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories);
             foreach(var file in files) {
@@ -645,10 +617,10 @@ namespace Antd {
             ConsoleLogger.Log("[check] app-file acl");
             #endregion
 
-            //#region [    Cloud Send Uptime    ]
-            //var ncc = new ConfigurationCheck();
-            //ncc.Start(1000 * 60 * 2);
-            //#endregion
+            #region [    Check System Components    ]
+            MachineInfo.CheckSystemComponents();
+            ConsoleLogger.Log("[check] system components health");
+            #endregion
 
             #region [    Test    ]
 #if DEBUG
@@ -656,6 +628,7 @@ namespace Antd {
 #endif
             #endregion
 
+            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
             KeepAlive();
             ConsoleLogger.Log("antd is closing");
             host.Stop();

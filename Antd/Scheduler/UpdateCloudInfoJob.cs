@@ -1,31 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Timers;
-using antdlib.models;
-using anthilla.commands;
+﻿using antdlib.models;
 using anthilla.core;
+using anthilla.scheduler;
+using System;
+using anthilla.commands;
+using System.Collections.Generic;
+using Parameter = antdlib.common.Parameter;
+using System.Linq;
+using System.Text.RegularExpressions;
 using anthilla.crypto;
+using System.Text;
 using Antd.Info;
 using Antd.Storage;
-using Parameter = antdlib.common.Parameter;
+using Antd.Helpers;
 
-namespace Antd.Cloud {
-    public class UpdateCloudInfo {
+namespace Antd.Scheduler {
+    public class UpdateCloudInfoJob : Job {
 
-        public System.Timers.Timer Timer { get; private set; }
+        #region [    Core Parameter    ]
+        private bool _isRepeatable = true;
 
-        public void Start(int milliseconds) {
-            Timer = new System.Timers.Timer(milliseconds);
-            Timer.Elapsed += Action;
-            Timer.Enabled = true;
+        public override bool IsRepeatable {
+            get {
+                return _isRepeatable;
+            }
+            set {
+                value = _isRepeatable;
+            }
         }
 
-        public void Stop() {
-            Timer?.Dispose();
+        private int _repetitionIntervalTime = 1000 * 60 * 5;
+
+        public override int RepetitionIntervalTime {
+            get {
+                return _repetitionIntervalTime;
+            }
+
+            set {
+                value = _repetitionIntervalTime;
+            }
         }
+
+        public override string Name {
+            get {
+                return GetType().Name;
+            }
+
+            set {
+                value = GetType().Name;
+            }
+        }
+        #endregion
 
         private static string GetVersionDateFromFile(string path) {
             var r = new Regex("(-\\d{8})", RegexOptions.IgnoreCase);
@@ -38,7 +62,7 @@ namespace Antd.Cloud {
         private readonly AsymmetricKeys _asymmetricKeys = new AsymmetricKeys(Parameter.AntdCfgKeys, Application.KeyName);
         private readonly MachineIdsModel _machineId = Machine.MachineIds.Get;
 
-        private void Action(object sender, ElapsedEventArgs e) {
+        public override void DoJob() {
             try {
                 var pk = Encoding.ASCII.GetString(_asymmetricKeys.PublicKey);
                 var internalIp = "";
