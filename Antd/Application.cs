@@ -83,6 +83,15 @@ namespace Antd {
             Bash.Execute("ulimit -n 1024000", false);
             #endregion
 
+            #region [    Stop Networkd    ]
+            Systemctl.Stop("systemd-networkd.service");
+            Systemctl.Disable("systemd-networkd.service");
+            Systemctl.Mask("systemd-networkd.service");
+            Systemctl.Stop("systemd-resolved.service");
+            Systemctl.Disable("systemd-resolved.service");
+            Systemctl.Mask("systemd-resolved.service");
+            #endregion
+
             #region [    Overlay Watcher    ]
             if(Directory.Exists(Parameter.Overlay)) {
                 new OverlayWatcher().StartWatching();
