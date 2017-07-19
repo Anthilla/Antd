@@ -351,6 +351,13 @@
     </None>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="dlls\antdlib.common.dll" />
+    <Content Include="dlls\anthilla.commands.dll" />
+    <Content Include="dlls\anthilla.crypto.dll" />
+    <Content Include="dlls\anthilla.logger.dll" />
+    <Content Include="dlls\anthilla.scheduler.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>del *.pdb
