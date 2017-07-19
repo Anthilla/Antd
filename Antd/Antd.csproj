@@ -357,6 +357,7 @@
     <Content Include="dlls\anthilla.crypto.dll" />
     <Content Include="dlls\anthilla.logger.dll" />
     <Content Include="dlls\anthilla.scheduler.dll" />
+    <Content Include="dlls\StorageServer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
