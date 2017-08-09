@@ -39,25 +39,23 @@ using Parameter = antdlib.common.Parameter;
 namespace AntdUi.Modules {
     public class CaModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public CaModule() {
             Get["/ca"] = x => {
-                var model = _api.Get<PageCaModel>($"http://127.0.0.1:{Application.ServerPort}/ca");
+                var model = ApiConsumer.Get<PageCaModel>($"http://127.0.0.1:{Application.ServerPort}/ca");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/ca/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/set");
             };
 
             Post["/ca/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/enable");
             };
 
             Post["/ca/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/disable");
             };
 
             Post["/ca/options"] = x => {
@@ -79,7 +77,7 @@ namespace AntdUi.Modules {
                     { "RootCommonName", rootCommonName },
                     { "RootEmailAddress", rootEmailAddress },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
             };
 
             Get["/ca/crl"] = x => {
@@ -113,7 +111,7 @@ namespace AntdUi.Modules {
                         { "OrganizationName", o },
                         { "OrganizationalUnitName", ou }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/user", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/user", dict);
             };
 
             Post["/ca/certificate/server"] = x => {
@@ -135,7 +133,7 @@ namespace AntdUi.Modules {
                     { "OrganizationName", o },
                     { "OrganizationalUnitName", ou }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/server", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/server", dict);
             };
 
             Post["/ca/certificate/dc"] = x => {
@@ -161,7 +159,7 @@ namespace AntdUi.Modules {
                     { "OrganizationName", o },
                     { "OrganizationalUnitName", ou }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/dc", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/dc", dict);
             };
 
             Post["/ca/certificate/sc"] = x => {
@@ -185,7 +183,7 @@ namespace AntdUi.Modules {
                     { "OrganizationName", o },
                     { "OrganizationalUnitName", ou }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/sc", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/certificate/sc", dict);
             };
         }
     }

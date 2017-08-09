@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdDhcpLeasesModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdDhcpLeasesModule() {
             Get["/dhcpleases"] = x => {
-                var model = _api.Get<PageDhcpLeasesModel>($"http://127.0.0.1:{Application.ServerPort}/dhcpleases");
+                var model = ApiConsumer.Get<PageDhcpLeasesModel>($"http://127.0.0.1:{Application.ServerPort}/dhcpleases");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

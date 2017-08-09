@@ -75,7 +75,7 @@ namespace Antd.Modules {
                     {"User", user},
                     {"Key", key}
                 };
-                var r = new ApiConsumer().Post($"http://{remoteHost}/ak/create", dict);
+                var r = ApiConsumer.Post($"http://{remoteHost}/ak/create", dict);
                 return r;
             };
 
@@ -90,7 +90,7 @@ namespace Antd.Modules {
                     {"User", user},
                     {"Key", key}
                 };
-                var r = new ApiConsumer().Post($"http://{remoteHost}/ak/create", dict);
+                var r = ApiConsumer.Post($"http://{remoteHost}/ak/create", dict);
                 return r;
             };
         }

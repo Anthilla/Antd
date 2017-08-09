@@ -32,54 +32,53 @@ using Nancy;
 using Newtonsoft.Json;
 using anthilla.core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AntdUi.Modules {
     public class AntdServicesModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdServicesModule() {
             Get["/services"] = x => {
-                var model = _api.Get<PageServicesModel>($"http://127.0.0.1:{Application.ServerPort}/services");
+                var model = ApiConsumer.Get<PageServicesModel>($"http://127.0.0.1:{Application.ServerPort}/services");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Get["/services/log"] = x => {
                 string unit = Request.Query.unit;
-                var model = _api.Get<IEnumerable<string>>($"http://127.0.0.1:{Application.ServerPort}/services/log?unit={unit}");
-                var json = JsonConvert.SerializeObject(model.JoinToString("<br />"));
+                var model = ApiConsumer.Get<IEnumerable<string>>($"http://127.0.0.1:{Application.ServerPort}/services/log?unit={unit}");
+                var json = JsonConvert.SerializeObject(CommonString.Build(model.ToArray(), "<br />"));
                 return json;
             };
 
             Post["/services/start"] = x => {
                 string unit = Request.Form.Unit;
                 var dict = new Dictionary<string, string> { { "Unit", unit } };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/services/start", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/services/start", dict);
             };
 
             Post["/services/restart"] = x => {
                 string unit = Request.Form.Unit;
                 var dict = new Dictionary<string, string> { { "Unit", unit } };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/services/restart", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/services/restart", dict);
             };
 
             Post["/services/stop"] = x => {
                 string unit = Request.Form.Unit;
                 var dict = new Dictionary<string, string> { { "Unit", unit } };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/services/stop", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/services/stop", dict);
             };
 
             Post["/services/enable"] = x => {
                 string unit = Request.Form.Unit;
                 var dict = new Dictionary<string, string> { { "Unit", unit } };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/services/enable", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/services/enable", dict);
             };
 
             Post["/services/disable"] = x => {
                 string unit = Request.Form.Unit;
                 var dict = new Dictionary<string, string> { { "Unit", unit } };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/services/disable", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/services/disable", dict);
             };
         }
     }

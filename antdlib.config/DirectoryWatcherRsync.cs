@@ -53,28 +53,23 @@ namespace antdlib.config {
 
             var paths = _directories.Select(_ => _.Type == "file" ? Path.GetDirectoryName(_.Source) : _.Source).ToArray();
             ConsoleLogger.Log("[watcher rsync] start");
-            try {
-                if(!Watchers.Any()) {
-                    foreach(var w in Watchers) {
-                        w.Dispose();
-                    }
-                }
-                foreach(var path in paths) {
-                    if(!Directory.Exists(path) && !File.Exists(path)) {
-                        continue;
-                    }
-                    var fsw = new FileSystemWatcher(path) {
-                        NotifyFilter = NotifyFilters.LastWrite,
-                        IncludeSubdirectories = true,
-                        EnableRaisingEvents = true
-                    };
-
-                    fsw.Changed += FileChanged;
-                    Watchers.Add(fsw);
+            if(!Watchers.Any()) {
+                foreach(var w in Watchers) {
+                    w.Dispose();
                 }
             }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex.Message);
+            foreach(var path in paths) {
+                if(!Directory.Exists(path) && !File.Exists(path)) {
+                    continue;
+                }
+                var fsw = new FileSystemWatcher(path) {
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    IncludeSubdirectories = true,
+                    EnableRaisingEvents = true
+                };
+
+                fsw.Changed += FileChanged;
+                Watchers.Add(fsw);
             }
         }
 

@@ -36,12 +36,10 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdHostParametersModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdHostParametersModule() {
 
             Get["/hostparam"] = x => {
-                var model = _api.Get<HostParameters>($"http://127.0.0.1:{Application.ServerPort}/hostparam");
+                var model = ApiConsumer.Get<HostParameters>($"http://127.0.0.1:{Application.ServerPort}/hostparam");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -51,7 +49,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/rmmodlist"] = x => {
@@ -59,7 +57,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/modulesblacklistlist"] = x => {
@@ -67,7 +65,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/osparameters"] = x => {
@@ -75,7 +73,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/servicesstartlist"] = x => {
@@ -83,7 +81,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/servicesstoplist"] = x => {
@@ -91,7 +89,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/startcommandslist"] = x => {
@@ -99,7 +97,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/hostparam/set/endcommandslist"] = x => {
@@ -107,7 +105,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
         }
     }

@@ -36,33 +36,31 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdSshdModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdSshdModule() {
             Get["/sshd"] = x => {
-                var model = _api.Get<PageSshdModel>($"http://127.0.0.1:{Application.ServerPort}/sshd");
+                var model = ApiConsumer.Get<PageSshdModel>($"http://127.0.0.1:{Application.ServerPort}/sshd");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/sshd/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/set");
             };
 
             Post["/sshd/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/restart");
             };
 
             Post["/sshd/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/stop");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/stop");
             };
 
             Post["/sshd/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/enable");
             };
 
             Post["/sshd/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/disable");
             };
 
             Post["/sshd/options"] = x => {
@@ -84,7 +82,7 @@ namespace AntdUi.Modules {
                     { "PubkeyAuthentication", pubkeyAuthentication },
                     { "UsePam", usePam },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/sshd/options", dict);
             };
         }
     }

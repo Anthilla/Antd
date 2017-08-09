@@ -23,15 +23,9 @@ namespace antdlib.config {
                 return new JournaldConfigurationModel();
             }
             else {
-                try {
-                    var text = File.ReadAllText(CfgFile);
-                    var obj = JsonConvert.DeserializeObject<JournaldConfigurationModel>(text);
-                    return obj;
-                }
-                catch(Exception) {
-                    return new JournaldConfigurationModel();
-                }
-
+                var text = File.ReadAllText(CfgFile);
+                var obj = JsonConvert.DeserializeObject<JournaldConfigurationModel>(text);
+                return obj;
             }
         }
 

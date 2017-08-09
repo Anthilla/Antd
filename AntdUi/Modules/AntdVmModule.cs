@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdVmModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdVmModule() {
             Get["/vm"] = x => {
-                var model = _api.Get<PageVmModel>($"http://127.0.0.1:{Application.ServerPort}/vm");
+                var model = ApiConsumer.Get<PageVmModel>($"http://127.0.0.1:{Application.ServerPort}/vm");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

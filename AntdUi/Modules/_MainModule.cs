@@ -5,8 +5,6 @@ using Nancy.Security;
 namespace AntdUi.Modules {
     public class MainModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public MainModule() {
             this.RequiresAuthentication();
 
@@ -16,7 +14,7 @@ namespace AntdUi.Modules {
                 if(Request.Path == "/wizard") {
                     return null;
                 }
-                var isConfigured = _api.Get<bool>($"http://127.0.0.1:{Application.ServerPort}/configured");
+                var isConfigured = ApiConsumer.Get<bool>($"http://127.0.0.1:{Application.ServerPort}/configured");
                 return !isConfigured ? Response.AsRedirect("/wizard") : null;
             };
 

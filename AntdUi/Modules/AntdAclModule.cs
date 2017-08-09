@@ -36,31 +36,29 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdAclModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdAclModule() {
             Get["/acl"] = x => {
-                var model = _api.Get<PageAclModel>($"http://127.0.0.1:{Application.ServerPort}/acl");
+                var model = ApiConsumer.Get<PageAclModel>($"http://127.0.0.1:{Application.ServerPort}/acl");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/acl/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/set");
+            Post["/acl/set"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/set");
 
-            Post["/acl/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/restart");
+            Post["/acl/restart"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/restart");
 
-            Post["/acl/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/stop");
+            Post["/acl/stop"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/stop");
 
-            Post["/acl/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/enable");
+            Post["/acl/enable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/enable");
 
-            Post["/acl/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/disable");
+            Post["/acl/disable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/disable");
 
             Post["/acl/add"] = x => {
                 string dir = Request.Form.Path;
                 var dict = new Dictionary<string, string> {
                     { "Path", dir }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/add", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/add", dict);
             };
 
             Post["/acl/create"] = x => {
@@ -70,12 +68,12 @@ namespace AntdUi.Modules {
                     { "Guid", guid },
                     { "Acl", textall }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/apply", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/apply", dict);
             };
 
             Get["/acl/get/{guid}"] = x => {
                 string guid = x.guid;
-                var model = _api.Get<string[]>($"http://127.0.0.1:{Application.ServerPort}/acl/get/" + guid);
+                var model = ApiConsumer.Get<string[]>($"http://127.0.0.1:{Application.ServerPort}/acl/get/" + guid);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -85,7 +83,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/del", dict);
             };
 
             Post["/acl/apply"] = x => {
@@ -93,7 +91,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/apply", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/apply", dict);
             };
 
             #region [    Script    ]
@@ -102,7 +100,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "User", user }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/acl/apply/script", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/acl/apply/script", dict);
             };
             #endregion
         }

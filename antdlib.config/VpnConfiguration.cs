@@ -24,15 +24,9 @@ namespace antdlib.config {
                 _serviceModel = new VpnConfigurationModel();
             }
             else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<VpnConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new VpnConfigurationModel();
-                }
-
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<VpnConfigurationModel>(text);
+                _serviceModel = obj;
             }
         }
 
@@ -94,11 +88,11 @@ namespace antdlib.config {
 
             remoteHost = remoteHost.Split(':').FirstOrDefault();
 
-            var lsmod = Bash.Execute("lsmod").SplitBash().Grep("tun").FirstOrDefault();
+            var lsmod = Bash.Execute("lsmod").Split().Grep("tun").FirstOrDefault();
             if(lsmod == null) {
                 Bash.Execute("modprobe tun");
             }
-            var lsmodRemote = Bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"").SplitBash().Grep("tun").FirstOrDefault();
+            var lsmodRemote = Bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"").Split().Grep("tun").FirstOrDefault();
             if(lsmodRemote == null) {
                 Bash.Execute($"ssh root@{remoteHost} \"modprobe tun\"");
             }
@@ -111,7 +105,7 @@ namespace antdlib.config {
                 return;
             }
 
-            var localTap = Bash.Execute("ip link show").SplitBash().ToList();
+            var localTap = Bash.Execute("ip link show").Split().ToList();
             if(!localTap.Any(_ => _.Contains("tap1"))) {
                 ConsoleLogger.Warn("[vpn] something went wrong while setting the local tunnel interface");
                 return;
@@ -119,12 +113,12 @@ namespace antdlib.config {
             Bash.Execute("ip link set dev tap1 up");
             Bash.Execute("ip addr flush dev tap1");
             Bash.Execute($"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1");
-            localTap = Bash.Execute("ip link show tap1").SplitBash().ToList();
+            localTap = Bash.Execute("ip link show tap1").Split().ToList();
             if(localTap.Any(_ => _.ToLower().Contains("up"))) {
                 ConsoleLogger.Log("[vpn] local tunnel interface is up");
             }
 
-            var remoteTap = Bash.Execute($"ssh root@{remoteHost} \"ip link show\"").SplitBash().ToList();
+            var remoteTap = Bash.Execute($"ssh root@{remoteHost} \"ip link show\"").Split().ToList();
             if(!remoteTap.Any(_ => _.Contains("tap1"))) {
                 ConsoleLogger.Warn("[vpn] something went wrong while setting the remote tunnel interface");
                 return;
@@ -132,7 +126,7 @@ namespace antdlib.config {
             Bash.Execute($"ssh root@{remoteHost} \"ip link set dev tap1 up\"");
             Bash.Execute($"ssh root@{remoteHost} \"ip addr flush dev tap1\"");
             Bash.Execute($"ssh root@{remoteHost} \"ip addr add {_serviceModel.LocalPoint.Address}/{_serviceModel.LocalPoint.Range} dev tap1\"");
-            remoteTap = Bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").SplitBash().ToList();
+            remoteTap = Bash.Execute($"ssh root@{remoteHost} \"ip link show tap1\"").Split().ToList();
             if(remoteTap.Any(_ => _.ToLower().Contains("up"))) {
                 ConsoleLogger.Log("[vpn] remote tunnel interface is up");
             }
@@ -161,7 +155,7 @@ namespace antdlib.config {
                 return false;
             }
             var dict = new Dictionary<string, string> { { "ApplePie", key } };
-            var r = new ApiConsumer().Post($"http://{remoteHost}/asset/handshake", dict);
+            var r = ApiConsumer.Post($"http://{remoteHost}/asset/handshake", dict);
             var kh = new SshKnownHosts();
             kh.Add(remoteHost.Split(':').FirstOrDefault());
             if(r == HttpStatusCode.OK) {
@@ -173,7 +167,7 @@ namespace antdlib.config {
         }
 
         public bool TestConnection() {
-            var r = CommandLauncher.Launch("ping-c", new Dictionary<string, string> { { "$ip", _serviceModel.RemotePoint.Address } }).Grep("From");
+            var r = CommandLauncher.Launch("ping-c", new Dictionary<string, string> { { "$ip", _serviceModel.RemotePoint.Address } }).ToArray().Grep("From");
             return !r.All(_ => _.ToLower().Contains("host unreachable"));
         }
 

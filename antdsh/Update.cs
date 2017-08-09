@@ -104,10 +104,10 @@ namespace antdsh {
         }
 
         private static IEnumerable<string> GetServerList(string filter = "") {
-            var text = new ApiConsumer().GetString($"{_officialRepo}server.txt");
-            var list = text.SplitToList("\n");
+            var text = ApiConsumer.GetString($"{_officialRepo}server.txt");
+            var list = text.Split('\n');
             if(!string.IsNullOrEmpty(filter)) {
-                list = list.Where(_ => _.StartsWith(filter)).ToList();
+                list = list.Where(_ => _.StartsWith(filter)).ToArray();
             }
             return list;
         }
@@ -115,31 +115,27 @@ namespace antdsh {
         private static int _getServerRetry;
 
         private static string GetReferenceServer(string filter = "") {
-            try {
-                var server = _publicRepositoryUrlHttps;
-                while(_getServerRetry < 5) {
-                    var arr = GetServerList(filter).ToArray();
-                    var rnd = new Random().Next(0, arr.Length);
-                    server = arr[rnd];
+            var server = _publicRepositoryUrlHttps;
+            while(_getServerRetry < 5) {
+                var arr = GetServerList(filter).ToArray();
+                var rnd = new Random().Next(0, arr.Length);
+                server = arr[rnd];
+                if(string.IsNullOrEmpty(server)) {
                     _getServerRetry++;
+                    continue;
                 }
-                return server;
+                else {
+                    break;
+                }
             }
-            catch(Exception) {
-                return _publicRepositoryUrlHttps;
-            }
+            return server;
         }
 
         private static void CleanTmp() {
-            try {
-                if(Directory.Exists(TmpDirectory)) {
-                    Directory.Delete(TmpDirectory, true);
-                }
-                Directory.CreateDirectory(TmpDirectory);
+            if(Directory.Exists(TmpDirectory)) {
+                Directory.Delete(TmpDirectory, true);
             }
-            catch(Exception) {
-                //throw;
-            }
+            Directory.CreateDirectory(TmpDirectory);
         }
 
         public static string GetFileHash(string filePath) {
@@ -289,12 +285,7 @@ namespace antdsh {
                 if(!string.IsNullOrEmpty(linkDirForAntd) && File.Exists(destUnitPath)) {
                     var linkedFile = $"{linkDirForAntd}/{unitName}";
                     if(File.Exists(linkedFile)) {
-                        try {
-                            File.Delete(linkedFile);
-                        }
-                        catch(Exception e) {
-                            Console.WriteLine(e);
-                        }
+                        File.Delete(linkedFile);
                     }
                     Bash.Execute($"ln -s {downloadUnitPath} {linkedFile}");
                 }

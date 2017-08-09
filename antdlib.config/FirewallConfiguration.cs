@@ -18,14 +18,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new FirewallConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<FirewallConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new FirewallConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<FirewallConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(FirewallConfigurationModel model) {

@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdDiskUsageModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdDiskUsageModule() {
             Get["/diskusage"] = x => {
-                var model = _api.Get<PageDiskUsageModel>($"http://127.0.0.1:{Application.ServerPort}/diskusage");
+                var model = ApiConsumer.Get<PageDiskUsageModel>($"http://127.0.0.1:{Application.ServerPort}/diskusage");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

@@ -101,19 +101,13 @@ namespace Antd.ServiceDiscovery {
 
         // Process each found device in the event handler
         public async static void deviceLocator_DeviceAvailable(object sender, DeviceAvailableEventArgs e) {
-            try {
-                //Device data returned only contains basic device details and location of full device description.
-                Console.WriteLine("Found " + e.DiscoveredDevice.Usn + " at " + e.DiscoveredDevice.DescriptionLocation.ToString());
+            //Device data returned only contains basic device details and location of full device description.
+            Console.WriteLine("Found " + e.DiscoveredDevice.Usn + " at " + e.DiscoveredDevice.DescriptionLocation.ToString());
 
-                //Can retrieve the full device description easily though.
-                var fullDevice = await e.DiscoveredDevice.GetDeviceInfo();
-                Console.WriteLine(fullDevice.FriendlyName);
-                Console.WriteLine();
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error(ex.Message);
-                //continue;
-            }
+            //Can retrieve the full device description easily though.
+            var fullDevice = await e.DiscoveredDevice.GetDeviceInfo();
+            Console.WriteLine(fullDevice.FriendlyName);
+            Console.WriteLine();
         }
 
         public static async Task<List<NodeModel>> Discover() {
@@ -124,34 +118,28 @@ namespace Antd.ServiceDiscovery {
                 var uidRegex = new Regex("uuid\\:([a-zA-Z0-9\\-]+)\\:");
                 var ipRegex = new Regex("([0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3})");
                 foreach(var foundDevice in foundDevices) {
-                    try {
-                        var uid = foundDevice.Usn;
-                        var device = new NodeModel();
-                        device.RawUid = uid;
-                        device.DescriptionLocation = foundDevice.DescriptionLocation.ToString();
-                        device.PublicIp = ipRegex.Match(device.DescriptionLocation).Groups[1].Value;
-                        var fullDevice = await foundDevice.GetDeviceInfo();
-                        device.Hostname = fullDevice.FriendlyName;
-                        device.DeviceType = fullDevice.DeviceType;
-                        device.Manufacturer = fullDevice.Manufacturer;
-                        device.ModelName = fullDevice.ModelName;
-                        device.ModelDescription = fullDevice.ModelDescription;
-                        device.ModelNumber = fullDevice.ModelNumber;
-                        device.ModelUrl = device.DescriptionLocation.Replace("device/description", "");
-                        device.SerialNumber = fullDevice.SerialNumber;
-                        var services = new List<RssdpServiceModel>();
-                        foreach(var foundService in fullDevice.Services) {
-                            var svc = new RssdpServiceModel();
-                            svc.ServiceType = foundService.ServiceType;
-                            svc.ControlURL = foundService.ControlUrl?.ToString();
-                        }
-                        device.Services = services;
-                        list.Add(device);
+                    var uid = foundDevice.Usn;
+                    var device = new NodeModel();
+                    device.RawUid = uid;
+                    device.DescriptionLocation = foundDevice.DescriptionLocation.ToString();
+                    device.PublicIp = ipRegex.Match(device.DescriptionLocation).Groups[1].Value;
+                    var fullDevice = await foundDevice.GetDeviceInfo();
+                    device.Hostname = fullDevice.FriendlyName;
+                    device.DeviceType = fullDevice.DeviceType;
+                    device.Manufacturer = fullDevice.Manufacturer;
+                    device.ModelName = fullDevice.ModelName;
+                    device.ModelDescription = fullDevice.ModelDescription;
+                    device.ModelNumber = fullDevice.ModelNumber;
+                    device.ModelUrl = device.DescriptionLocation.Replace("device/description", "");
+                    device.SerialNumber = fullDevice.SerialNumber;
+                    var services = new List<RssdpServiceModel>();
+                    foreach(var foundService in fullDevice.Services) {
+                        var svc = new RssdpServiceModel();
+                        svc.ServiceType = foundService.ServiceType;
+                        svc.ControlURL = foundService.ControlUrl?.ToString();
                     }
-                    catch(Exception ex) {
-                        ConsoleLogger.Error(ex.Message);
-                        continue;
-                    }
+                    device.Services = services;
+                    list.Add(device);
                 }
             }
             var mergedList = new List<NodeModel>();

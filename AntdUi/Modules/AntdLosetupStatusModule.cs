@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdLosetupStatusModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdLosetupStatusModule() {
             Get["/losetupstatus"] = x => {
-                var model = _api.Get<PageLosetupStatusModel>($"http://127.0.0.1:{Application.ServerPort}/losetupstatus");
+                var model = ApiConsumer.Get<PageLosetupStatusModel>($"http://127.0.0.1:{Application.ServerPort}/losetupstatus");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

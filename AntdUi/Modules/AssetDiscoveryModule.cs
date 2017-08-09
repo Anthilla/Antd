@@ -36,22 +36,20 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AssetDiscoveryModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AssetDiscoveryModule() {
             Get["/discovery"] = x => {
-                var model = _api.Get<PageAssetDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/discovery");
+                var model = ApiConsumer.Get<PageAssetDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/discovery");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Get["/device/description"] = x => {
-                var model = _api.Get<ServiceDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/device/description");
+                var model = ApiConsumer.Get<ServiceDiscoveryModel>($"http://127.0.0.1:{Application.ServerPort}/device/description");
                 return Response.AsXml(model);
             };
 
             Get["/device/services"] = x => {
-                var model = _api.Get<List<RssdpServiceModel>>($"http://127.0.0.1:{Application.ServerPort}/device/services");
+                var model = ApiConsumer.Get<List<RssdpServiceModel>>($"http://127.0.0.1:{Application.ServerPort}/device/services");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

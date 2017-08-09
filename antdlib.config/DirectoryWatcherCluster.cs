@@ -46,17 +46,12 @@ namespace antdlib.config {
                 return;
             }
             ConsoleLogger.Log("[watcher config] start");
-            try {
-                _fileSystemWatcher = new FileSystemWatcher(Parameter.AntdCfgServices) {
-                    NotifyFilter = NotifyFilters.LastWrite,
-                    IncludeSubdirectories = true,
-                    EnableRaisingEvents = true
-                };
-                _fileSystemWatcher.Changed += FileChanged;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex.Message);
-            }
+            _fileSystemWatcher = new FileSystemWatcher(Parameter.AntdCfgServices) {
+                NotifyFilter = NotifyFilters.LastWrite,
+                IncludeSubdirectories = true,
+                EnableRaisingEvents = true
+            };
+            _fileSystemWatcher.Changed += FileChanged;
         }
 
         public static void Stop() {
@@ -91,26 +86,21 @@ namespace antdlib.config {
             }
             ConsoleLogger.Log($"[watcher config] change at {e.FullPath}");
             var file = e.FullPath;
-            try {
-                var text = File.ReadAllText(file);
-                if(string.IsNullOrEmpty(text)) {
-                    return;
-                }
-                var data = new Dictionary<string, string> {
+            var text = File.ReadAllText(file);
+            if(string.IsNullOrEmpty(text)) {
+                return;
+            }
+            var data = new Dictionary<string, string> {
                 { "File", file },
                 { "Content", text }
             };
-                var app = new AppConfiguration().Get();
-                foreach(var machine in machines) {
-                    ConsoleLogger.Log($"[watcher config] send config to {machine}");
-                    var status = new ApiConsumer().Post($"http://{machine}:{app.AntdUiPort}/cluster/accept", data);
-                    ConsoleLogger.Warn(status != HttpStatusCode.OK
-                        ? $"[watcher config] sync with {machine} failed"
-                        : $"[watcher config] sync with {machine} ok");
-                }
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
+            var app = new AppConfiguration().Get();
+            foreach(var machine in machines) {
+                ConsoleLogger.Log($"[watcher config] send config to {machine}");
+                var status = ApiConsumer.Post($"http://{machine}:{app.AntdUiPort}/cluster/accept", data);
+                ConsoleLogger.Warn(status != HttpStatusCode.OK
+                    ? $"[watcher config] sync with {machine} failed"
+                    : $"[watcher config] sync with {machine} ok");
             }
         }
     }

@@ -49,12 +49,7 @@ namespace antdsh {
                 return false;
             }
             finally {
-                try {
-                    _semaphore.Dispose();
-                }
-                catch(Exception ex) {
-                    Console.WriteLine(ex.Message);
-                }
+                _semaphore?.Dispose();
             }
         }
 

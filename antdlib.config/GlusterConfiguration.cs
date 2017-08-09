@@ -19,14 +19,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new GlusterConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<GlusterConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new GlusterConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<GlusterConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(GlusterConfigurationModel model) {

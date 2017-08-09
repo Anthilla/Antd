@@ -52,7 +52,7 @@ namespace Antd.Storage {
         }
 
         public  static IEnumerable<string> ImportList() {
-            var text = Bash.Execute("zpool import").SplitBash().Grep("'pool:'").Print(2, " ");
+            var text = Bash.Execute("zpool import").Split().Grep("'pool:'").Print(2, " ");
             return text;
         }
 

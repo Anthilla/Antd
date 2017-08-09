@@ -13,7 +13,7 @@ namespace Antd.Wifi {
             if(string.IsNullOrEmpty(devInfo)) {
                 return false;
             }
-            var i = devInfo.SplitBash().Grep("* AP");
+            var i = devInfo.Split().Grep("* AP");
             return i.Any();
         }
     }

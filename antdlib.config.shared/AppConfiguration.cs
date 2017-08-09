@@ -12,8 +12,6 @@ namespace antdlib.config.shared {
 
         private readonly string _file = $"{Parameter.AntdCfg}/app.conf";
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AppConfiguration() {
             if(!File.Exists(_file)) {
                 _model = new AppConfigurationModel();
@@ -21,15 +19,9 @@ namespace antdlib.config.shared {
                 FileWithAcl.WriteAllText(_file, text, "644", "root", "wheel");
             }
             else {
-                try {
-                    var text = File.ReadAllText(_file);
-                    var obj = JsonConvert.DeserializeObject<AppConfigurationModel>(text);
-                    _model = obj;
-                }
-                catch(Exception) {
-                    _model = new AppConfigurationModel();
-                }
-
+                var text = File.ReadAllText(_file);
+                var obj = JsonConvert.DeserializeObject<AppConfigurationModel>(text);
+                _model = obj;
             }
         }
 
@@ -43,14 +35,14 @@ namespace antdlib.config.shared {
         }
 
         public AppConfigurationModel UiGet() {
-            _model = _api.Get<AppConfigurationModel>($"http://localhost:{_model.AntdPort}/config");
+            _model = ApiConsumer.Get<AppConfigurationModel>($"http://localhost:{_model.AntdPort}/config");
             return _model;
         }
 
         public void UiSave(AppConfigurationModel model) {
             var savedModel = Get();
             _model = model;
-            _api.Post2($"http://localhost:{savedModel.AntdPort}/config", ObjectExtensions.ToDictionary(_model));
+            ApiConsumer.Post2($"http://localhost:{savedModel.AntdPort}/config", ObjectExtensions.ToDictionary(_model));
         }
     }
 }

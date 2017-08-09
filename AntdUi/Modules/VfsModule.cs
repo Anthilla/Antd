@@ -39,13 +39,11 @@ using System.Linq;
 namespace AntdUi.Modules {
     public class VfsModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public VfsModule() : base("/vfs") {
 
             #region [    Config    ]
             Get["/"] = x => {
-                var model = _api.Get<PageVfsModel>($"http://127.0.0.1:{Application.ServerPort}{Request.Path}");
+                var model = ApiConsumer.Get<PageVfsModel>($"http://127.0.0.1:{Application.ServerPort}{Request.Path}");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -55,7 +53,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/save/topology"] = x => {
@@ -63,7 +61,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/save/apikeys"] = x => {
@@ -71,7 +69,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/save/apikeypermissions"] = x => {
@@ -79,7 +77,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/save/users"] = x => {
@@ -87,7 +85,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
             #endregion
 
@@ -154,7 +152,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ObjectPath", objectPath }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.MoveObject(Client kvp, string objectPath, string newContainer)
@@ -165,7 +163,7 @@ namespace AntdUi.Modules {
                     { "ObjectPath", objectPath },
                     { "NewContainer", newContainer }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.RenameObject(Client kvp, string objectPath, string newName)
@@ -176,7 +174,7 @@ namespace AntdUi.Modules {
                     { "ObjectPath", objectPath },
                     { "NewName", newName }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.DeleteObject(Client kvp, string objectPath)
@@ -185,7 +183,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ObjectPath", objectPath }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
             #endregion
 
@@ -197,7 +195,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ContainerPath", containerPath }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.GetContainer(Client kvp, string containerPath)
@@ -206,7 +204,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ContainerPath", containerPath }
                 };
-                var result = _api.Post<VfsContainerInfo>($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                var result = ApiConsumer.Post<VfsContainerInfo>($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
                 var json = JsonConvert.SerializeObject(result);
                 return json;
             };
@@ -217,7 +215,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ContainerPath", containerPath }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.MoveContainer(Client kvp, string containerPath, string newContainer)
@@ -228,7 +226,7 @@ namespace AntdUi.Modules {
                     { "ContainerPath", containerPath },
                     { "NewContainer", newContainer }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.RenameContainer(Client kvp, string containerPath, string newName)
@@ -239,7 +237,7 @@ namespace AntdUi.Modules {
                     { "ContainerPath", containerPath },
                     { "NewName", newName }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             ///VfsClient.DeleteContainer(Client kvp, string containerPath)
@@ -248,7 +246,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ContainerPath", containerPath }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
             #endregion
         }

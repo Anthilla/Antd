@@ -36,7 +36,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using anthilla.commands;
-using Random = anthilla.core.Random;
 
 namespace Antd.Modules {
     public class AntdNetwork2Module : NancyModule {
@@ -79,7 +78,7 @@ namespace Antd.Modules {
             };
 
             Post["/network2/restart"] = x => {
-                new Do().NetworkChanges();
+                Do.NetworkChanges();
                 return HttpStatusCode.OK;
             };
 
@@ -111,16 +110,10 @@ namespace Antd.Modules {
                     subnet = vars.ExternalNetPrimaryBits;
                 }
 
-                var broadcast = "";
-                try {
-                    broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex.Message);
-                }
+                var broadcast = Cidr.CalcNetwork(ip, subnet).Broadcast.ToString();
 
                 var model = new NetworkInterfaceConfiguration {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     Type = typedType,
                     Hostname = hostname,
                     Index = index,
@@ -149,7 +142,7 @@ namespace Antd.Modules {
                 string gatewayAddress = Request.Form.GatewayAddress;
                 string def = Request.Form.Default;
                 var model = new NetworkGatewayConfiguration {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     Description = description,
                     GatewayAddress = gatewayAddress,
                     IsDefault = !string.IsNullOrEmpty(def) && Convert.ToBoolean(def)
@@ -169,9 +162,9 @@ namespace Antd.Modules {
                 string parent = Request.Form.Parent;
                 string children = Request.Form.Children;
                 var model = new NetworkAggregatedInterfaceConfiguration {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     Parent = parent,
-                    Children = string.IsNullOrEmpty(children) ? new List<string>() : children.SplitToList()
+                    Children = string.IsNullOrEmpty(children) ? new List<string>() : children.SplitToList().ToList()
                 };
                 Network2Configuration.AddAggregatedInterfaceConfiguration(model);
                 return HttpStatusCode.OK;
@@ -189,7 +182,7 @@ namespace Antd.Modules {
                 string destinationRange = Request.Form.DestinationRange;
                 string gateway = Request.Form.Gateway;
                 var model = new NetworkRouteConfiguration {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     DestinationIp = destinationIp,
                     DestinationRange = destinationRange,
                     Gateway = gateway
@@ -214,7 +207,7 @@ namespace Antd.Modules {
                 string domain = Request.Form.Domain;
                 string ip = Request.Form.Ip;
                 var model = new DnsConfiguration {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     Type = typedType,
                     Domain = domain,
                     Ip = ip
@@ -250,7 +243,7 @@ namespace Antd.Modules {
                 string delete = Request.Form.Delete;
                 string add = Request.Form.Add;
                 var model = new NsUpdateConfiguration {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     ServerName = serverName,
                     ServerPort = serverPort,
                     LocalAddress = localAddress,
@@ -280,7 +273,7 @@ namespace Antd.Modules {
                 string mtu = Request.Form.Mtu;
                 string macAddress = Request.Form.MacAddress;
                 var model = new NetworkHardwareConfiguration() {
-                    Id = string.IsNullOrEmpty(id) ? Random.ShortGuid() : id,
+                    Id = string.IsNullOrEmpty(id) ? CommonRandom.ShortGuid() : id,
                     Txqueuelen = txqueuelen,
                     Mtu = mtu,
                     MacAddress = macAddress
@@ -330,25 +323,15 @@ namespace Antd.Modules {
 
             Post["/network2/add/bond"] = x => {
                 string name = Request.Form.Name;
-                try {
-                    CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", name } });
-                    ConsoleLogger.Log($"created bond {name}");
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex.Message);
-                }
+                CommandLauncher.Launch("bond-set", new Dictionary<string, string> { { "$bond", name } });
+                ConsoleLogger.Log($"created bond {name}");
                 return HttpStatusCode.OK;
             };
 
             Post["/network2/add/bridge"] = x => {
                 string name = Request.Form.Name;
-                try {
-                    CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", name } });
-                    ConsoleLogger.Log($"created bridge {name}");
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex.Message);
-                }
+                CommandLauncher.Launch("brctl-add", new Dictionary<string, string> { { "$bridge", name } });
+                ConsoleLogger.Log($"created bridge {name}");
                 return HttpStatusCode.OK;
             };
         }

@@ -60,7 +60,7 @@ namespace antdlib.config {
         }
 
         private KeyValuePair<string, string> GetVmVncAddress(string domain) {
-            var res = Bash.Execute($"virsh dumpxml {domain}").SplitBash().Grep("graphics type='vnc'").First();
+            var res = Bash.Execute($"virsh dumpxml {domain}").Split().Grep("graphics type='vnc'").First();
             if(res.Length < 1 || !res.Contains("port=") || !res.Contains("listen=")) {
                 return new KeyValuePair<string, string>(null, null);
             }

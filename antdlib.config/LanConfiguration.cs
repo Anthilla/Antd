@@ -13,7 +13,7 @@ namespace antdlib.config {
 
         private static string[] GetPhysicalInterfaces() {
             var ifList = new List<string>();
-            var list = Bash.Execute("ls -la /sys/class/net").SplitBash().Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }

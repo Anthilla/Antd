@@ -36,31 +36,29 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AssetGlusterModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AssetGlusterModule() {
             Get["/gluster"] = x => {
-                var model = _api.Get<PageGlusterModel>($"http://127.0.0.1:{Application.ServerPort}/gluster");
+                var model = ApiConsumer.Get<PageGlusterModel>($"http://127.0.0.1:{Application.ServerPort}/gluster");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/gluster/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set");
+            Post["/gluster/set"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/set");
 
-            Post["/gluster/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart");
+            Post["/gluster/restart"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/restart");
 
-            Post["/gluster/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop");
+            Post["/gluster/stop"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/stop");
 
-            Post["/gluster/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable");
+            Post["/gluster/enable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/enable");
 
-            Post["/gluster/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable");
+            Post["/gluster/disable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/disable");
 
             Post["/gluster/save"] = x => {
                 string config = Request.Form.Config;
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/save", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/gluster/save", dict);
             };
         }
     }

@@ -36,24 +36,22 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class LogSyslogNgModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public LogSyslogNgModule() {
             Get["/syslogng"] = x => {
-                var model = _api.Get<PageSyslogNgModel>($"http://127.0.0.1:{Application.ServerPort}/syslogng");
+                var model = ApiConsumer.Get<PageSyslogNgModel>($"http://127.0.0.1:{Application.ServerPort}/syslogng");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/syslogng/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/set");
+            Post["/syslogng/set"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/set");
 
-            Post["/syslogng/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/restart");
+            Post["/syslogng/restart"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/restart");
 
-            Post["/syslogng/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/stop");
+            Post["/syslogng/stop"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/stop");
 
-            Post["/syslogng/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/enable");
+            Post["/syslogng/enable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/enable");
 
-            Post["/syslogng/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/disable");
+            Post["/syslogng/disable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/disable");
 
             Post["/syslogng/options"] = x => {
                 string threaded = Request.Form.Threaded;
@@ -90,7 +88,7 @@ namespace AntdUi.Modules {
                     { "PortLevelSecurity", portLevelSecurity },
                     { "PortLevelSystem", portLevelSystem }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/syslogng/options", dict);
             };
         }
     }

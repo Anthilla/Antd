@@ -36,11 +36,9 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdHost2Module : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdHost2Module() {
             Get["/host2"] = x => {
-                var model = _api.Get<PageHost2Model>($"http://127.0.0.1:{Application.ServerPort}/host2");
+                var model = ApiConsumer.Get<PageHost2Model>($"http://127.0.0.1:{Application.ServerPort}/host2");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -80,7 +78,7 @@ namespace AntdUi.Modules {
                     { "NtpdateServer", ntpdateServer },
                     { "Cloud", cloud }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host2/info", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host2/info", dict);
             };
         }
     }

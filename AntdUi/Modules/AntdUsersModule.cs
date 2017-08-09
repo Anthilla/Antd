@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdUsersModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdUsersModule() {
             Get["/users"] = x => {
-                var model = _api.Get<PageUsersModel>($"http://127.0.0.1:{Application.ServerPort}/users/list");
+                var model = ApiConsumer.Get<PageUsersModel>($"http://127.0.0.1:{Application.ServerPort}/users/list");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -52,7 +50,7 @@ namespace AntdUi.Modules {
                     {"User", user},
                     {"Password", password}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/users", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/users", dict);
             };
 
             Post["/users/master/password"] = x => {
@@ -60,7 +58,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Password", password}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/users/master/password", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/users/master/password", dict);
             };
         }
     }

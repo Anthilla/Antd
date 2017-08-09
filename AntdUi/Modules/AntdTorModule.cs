@@ -36,31 +36,29 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdTorModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdTorModule() {
             Get["/tor"] = x => {
-                var model = _api.Get<PageTorModel>($"http://127.0.0.1:{Application.ServerPort}/tor");
+                var model = ApiConsumer.Get<PageTorModel>($"http://127.0.0.1:{Application.ServerPort}/tor");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/tor/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/set");
+            Post["/tor/set"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/tor/set");
 
-            Post["/tor/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/restart");
+            Post["/tor/restart"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/tor/restart");
 
-            Post["/tor/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/stop");
+            Post["/tor/stop"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/tor/stop");
 
-            Post["/tor/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/enable");
+            Post["/tor/enable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/tor/enable");
 
-            Post["/tor/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/disable");
+            Post["/tor/disable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/tor/disable");
 
             Post["/tor/save"] = x => {
                 string config = Request.Form.Config;
                 var dict = new Dictionary<string, string> {
                     { "Config", config }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/tor/save", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/tor/save", dict);
             };
         }
     }

@@ -87,6 +87,9 @@ namespace Antd.Info {
 
         public static UptimeModel GetUptime() {
             var result = Bash.Execute("uptime");
+            if(string.IsNullOrEmpty(result)) {
+                return new UptimeModel();
+            }
             var values = result.Split(new[] { "," }, 3, StringSplitOptions.RemoveEmptyEntries);
             var model = new UptimeModel {
                 Uptime = values[0],

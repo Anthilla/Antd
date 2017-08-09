@@ -38,12 +38,12 @@ namespace Antd.Log {
     public class Journalctl {
 
         public IEnumerable<string> GetAllLog() {
-            var result = Bash.Execute("journalctl --no-pager --quiet").SplitBash();
+            var result = Bash.Execute("journalctl --no-pager --quiet").Split();
             return result;
         }
 
         public IEnumerable<string> GetAllLog(string filter) {
-            var result = Bash.Execute("journalctl --no-pager --quiet").SplitBash().Grep(filter);
+            var result = Bash.Execute("journalctl --no-pager --quiet").Split().Grep(filter);
             return result;
         }
 
@@ -78,27 +78,22 @@ namespace Antd.Log {
 
             public void GenerateReport() {
                 DirectoryWithAcl.CreateDirectory(ReportDir, "755", "root", "wheel");
-                try {
-                    var lines = new List<string> {
-                        "+================================+",
-                        $"|    Antd Report @ {DateTime.Now:yyyy-MM-dd}    |",
-                        "+================================+",
-                        "",
-                        Bash.Execute("uname -a"),
-                        $"uptime:           {Bash.Execute("uptime | awk -F ',' '{print $1 $2}'").Trim()}",
-                        $"processes:        {Bash.Execute("ps -aef | wc | awk -F ' ' '{ print $1 }'").Trim()}",
-                        $"users logged:     {Bash.Execute("who | awk -F ' ' '{print $1}' |sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
-                        $"sessions open:    {Bash.Execute("who | sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
-                        $"load:             {Bash.Execute("uptime | awk -F ',' '{print $4 $5 $6}' | awk -F ':' '{print $2}'").Trim()}",
-                        ""
-                    };
-                    lines.AddRange(GetSecurityReport());
+                var lines = new List<string> {
+                    "+================================+",
+                    $"|    Antd Report @ {DateTime.Now:yyyy-MM-dd}    |",
+                    "+================================+",
+                    "",
+                    Bash.Execute("uname -a"),
+                    $"uptime:           {Bash.Execute("uptime | awk -F ',' '{print $1 $2}'").Trim()}",
+                    $"processes:        {Bash.Execute("ps -aef | wc | awk -F ' ' '{ print $1 }'").Trim()}",
+                    $"users logged:     {Bash.Execute("who | awk -F ' ' '{print $1}' |sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
+                    $"sessions open:    {Bash.Execute("who | sort -u | wc |awk -F ' ' '{print $1}'").Trim()}",
+                    $"load:             {Bash.Execute("uptime | awk -F ',' '{print $4 $5 $6}' | awk -F ':' '{print $2}'").Trim()}",
+                    ""
+                };
+                lines.AddRange(GetSecurityReport());
 
-                    FileWithAcl.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines, "644", "root", "wheel");
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"unable to create the log report: {ex.Message}");
-                }
+                FileWithAcl.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines, "644", "root", "wheel");
             }
 
             private static IEnumerable<string> GetSecurityReport() {

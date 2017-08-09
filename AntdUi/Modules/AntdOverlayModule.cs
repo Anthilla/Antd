@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdOverlayModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdOverlayModule() {
             Get["/overlay"] = x => {
-                var model = _api.Get<PageOverlayModel>($"http://127.0.0.1:{Application.ServerPort}/overlay");
+                var model = ApiConsumer.Get<PageOverlayModel>($"http://127.0.0.1:{Application.ServerPort}/overlay");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -48,7 +46,7 @@ namespace AntdUi.Modules {
             Post["/overlay/setdirectory"] = x => {
                 string dir = Request.Form.Directory;
                 var dict = new Dictionary<string, string> { { "Directory", dir } };
-                var model = _api.Post($"http://127.0.0.1:{Application.ServerPort}/overlay/setdirectory", dict);
+                var model = ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/overlay/setdirectory", dict);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

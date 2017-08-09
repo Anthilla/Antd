@@ -46,42 +46,36 @@ namespace Antd.Scheduler {
         }
         #endregion
 
-        private static readonly ApiConsumer Api = new ApiConsumer();
         private static readonly MachineIdsModel MachineId = Machine.MachineIds.Get;
 
         public override void DoJob() {
-            try {
-                //ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
-                var cloudaddress = new AppConfiguration().Get().CloudAddress;
-                if(string.IsNullOrEmpty(cloudaddress)) {
-                    return;
-                }
-                if(!cloudaddress.EndsWith("/")) {
-                    cloudaddress = cloudaddress + "/";
-                }
-                if(Parameter.Cloud.Contains("localhost")) {
-                    return;
-                }
-                //fetchcommand/{partnum}/{serialnum}/{machineuid}/{appname}
-                var cmds = Api.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetinfo/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
-                if(cmds == null)
-                    return;
-                if(!cmds.Any())
-                    return;
-                foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
-                    CommandLauncher.Launch(cmd.Command, cmd.Parameters);
-                    var dict = new Dictionary<string, string> {
+            //ConsoleLogger.Log("Scheduled action: Watch Cloud Stored Commands");
+            var cloudaddress = new AppConfiguration().Get().CloudAddress;
+            if(string.IsNullOrEmpty(cloudaddress)) {
+                return;
+            }
+            if(!cloudaddress.EndsWith("/")) {
+                cloudaddress = cloudaddress + "/";
+            }
+            if(Parameter.Cloud.Contains("localhost")) {
+                return;
+            }
+            //fetchcommand/{partnum}/{serialnum}/{machineuid}/{appname}
+            var cmds = ApiConsumer.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetinfo/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
+            if(cmds == null)
+                return;
+            if(!cmds.Any())
+                return;
+            foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
+                CommandLauncher.Launch(cmd.Command, cmd.Parameters);
+                var dict = new Dictionary<string, string> {
                         { "AppName", "Antd" },
                         { "PartNumber", MachineId.PartNumber },
                         { "SerialNumber", MachineId.SerialNumber },
                         { "MachineUid", MachineId.MachineUid },
                         { "Command", cmd.CommandCode }
                     };
-                    Api.Post($"{cloudaddress}repo/assetinfo/confirmcommand", dict);
-                }
-            }
-            catch(Exception) {
-                //ConsoleLogger.Error(ex.Message);
+                ApiConsumer.Post($"{cloudaddress}repo/assetinfo/confirmcommand", dict);
             }
         }
     }

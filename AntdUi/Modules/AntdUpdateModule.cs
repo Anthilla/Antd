@@ -36,11 +36,9 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdUpdateModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdUpdateModule() {
             Get["/update"] = x => {
-                var model = _api.Get<PageUpdateModel>($"http://127.0.0.1:{Application.ServerPort}/update");
+                var model = ApiConsumer.Get<PageUpdateModel>($"http://127.0.0.1:{Application.ServerPort}/update");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -48,7 +46,7 @@ namespace AntdUi.Modules {
             Post["/update"] = x => {
                 string context = Request.Form.Context;
                 var dict = new Dictionary<string, string> { { "Context", context } };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/update", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/update", dict);
             };
         }
     }

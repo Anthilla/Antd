@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdTimeModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdTimeModule() {
             Get["/time"] = x => {
-                var model = _api.Get<PageTimeModel>($"http://127.0.0.1:{Application.ServerPort}/time/info");
+                var model = ApiConsumer.Get<PageTimeModel>($"http://127.0.0.1:{Application.ServerPort}/time/info");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -50,17 +48,17 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Timezone", timezone}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/timezone", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/timezone", dict);
             };
 
-            Post["/time/synctime"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/synctime");
+            Post["/time/synctime"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/synctime");
 
             Post["/time/ntpdate"] = x => {
                 string ntpdate = Request.Form.Ntpdate;
                 var dict = new Dictionary<string, string> {
                     {"Ntpdate", ntpdate}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpdate", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpdate", dict);
             };
 
             Post["/time/ntpd"] = x => {
@@ -68,7 +66,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Ntpd", ntpd}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpd", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/ntpd", dict);
             };
         }
     }

@@ -46,7 +46,7 @@ namespace Antd.Modules {
                 var resolv = CommandLauncher.Launch("cat-etc-resolv").ToArray();
                 var nsswitch = CommandLauncher.Launch("cat-etc-nsswitch").ToArray();
                 var model = new PageNameServiceModel {
-                    Hostname = CommandLauncher.Launch("cat-etc-hostname").JoinToString("<br />"),
+                    Hostname = CommandLauncher.Launch("cat-etc-hostname").ToArray().JoinToString("<br />"),
                     DomainInt = HostConfiguration.Host.InternalDomain,
                     DomainExt = HostConfiguration.Host.ExternalDomain,
                     Hosts = hosts.JoinToString("<br />"),

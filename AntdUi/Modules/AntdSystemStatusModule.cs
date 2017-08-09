@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdSystemStatusModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdSystemStatusModule() {
             Get["/systemstatus"] = x => {
-                var model = _api.Get<PageSystemStatusModel>($"http://127.0.0.1:{Application.ServerPort}/systemstatus");
+                var model = ApiConsumer.Get<PageSystemStatusModel>($"http://127.0.0.1:{Application.ServerPort}/systemstatus");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

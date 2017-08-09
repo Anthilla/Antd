@@ -36,33 +36,31 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdSambaModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdSambaModule() {
             Get["/samba"] = x => {
-                var model = _api.Get<PageSambaModel>($"http://127.0.0.1:{Application.ServerPort}/samba");
+                var model = ApiConsumer.Get<PageSambaModel>($"http://127.0.0.1:{Application.ServerPort}/samba");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/samba/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/set");
             };
 
             Post["/samba/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/restart");
             };
 
             Post["/samba/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/stop");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/stop");
             };
 
             Post["/samba/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/enable");
             };
 
             Post["/samba/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/disable");
             };
 
             Post["/samba/options"] = x => {
@@ -174,7 +172,7 @@ namespace AntdUi.Modules {
                     { "DosFiletimeResolution", dosFiletimeResolution },
                     { "VfsObjects", vfsObjects },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
             };
 
             Post["/samba/resource"] = x => {
@@ -186,7 +184,7 @@ namespace AntdUi.Modules {
                     { "Path", path },
                     { "Comment", comment }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/resource", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/resource", dict);
             };
 
             Post["/samba/resource/del"] = x => {
@@ -194,7 +192,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/samba/resource/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/samba/resource/del", dict);
             };
         }
     }

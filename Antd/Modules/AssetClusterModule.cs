@@ -45,7 +45,7 @@ namespace Antd.Modules {
                 var syncedMachines = ClusterConfiguration.GetNodes();
                 var config = ClusterConfiguration.GetClusterInfo();
                 foreach(var node in syncedMachines) {
-                    var services = _api.Get<List<RssdpServiceModel>>(node.ModelUrl + "device/services");
+                    var services = ApiConsumer.Get<List<RssdpServiceModel>>(node.ModelUrl + "device/services");
                     node.Services = services;
                 }
                 var importPortMapping = syncedMachines
@@ -78,7 +78,7 @@ namespace Antd.Modules {
                 var model2 = JsonConvert.DeserializeObject<Cluster.Configuration>(ip);
                 ClusterConfiguration.SaveNodes(model);
                 ClusterConfiguration.SaveConfiguration(model2);
-                new Do().ClusterChanges();
+                Do.ClusterChanges();
                 DeployClusterConfiguration();
                 return HttpStatusCode.OK;
             };
@@ -95,14 +95,7 @@ namespace Antd.Modules {
                 ConsoleLogger.Log($"[cluster] received config for file: {file}");
 
                 DirectoryWatcherCluster.Stop();
-                try {
-                    FileWithAcl.WriteAllText(file, content, "644", "root", "wheel");
-                }
-                catch(Exception) {
-                    ConsoleLogger.Warn("");
-                    DirectoryWatcherCluster.Start();
-                    return HttpStatusCode.InternalServerError;
-                }
+                FileWithAcl.WriteAllText(file, content, "644", "root", "wheel");
                 DirectoryWatcherCluster.Start();
 
                 var dict = Dicts.DirsAndServices;
@@ -115,8 +108,8 @@ namespace Antd.Modules {
                     }
                 }
                 ConsoleLogger.Log("[cluster] apply changes after new config");
-                new Do().HostChanges();
-                new Do().NetworkChanges();
+                Do.HostChanges();
+                Do.NetworkChanges();
                 DeployClusterConfiguration();
                 return HttpStatusCode.OK;
             };
@@ -139,7 +132,7 @@ namespace Antd.Modules {
                     return HttpStatusCode.InternalServerError;
                 }
                 var dict = new Dictionary<string, string> { { "ApplePie", key } };
-                var r = new ApiConsumer().Post($"{remoteNode.ModelUrl}asset/handshake", dict);
+                var r = ApiConsumer.Post($"{remoteNode.ModelUrl}asset/handshake", dict);
                 if(r != HttpStatusCode.OK) {
                     return HttpStatusCode.InternalServerError;
                 }
@@ -177,7 +170,7 @@ namespace Antd.Modules {
                 //8. salvo la configurazione dei nodi
                 ClusterConfiguration.SaveNodes(clusterNodes);
                 //9. riavvio/avvio il servizio di cluster
-                new Do().ClusterChanges();
+                Do.ClusterChanges();
                 DeployClusterConfiguration();
                 return HttpStatusCode.OK;
             };
@@ -198,26 +191,20 @@ namespace Antd.Modules {
                 };
                 var authorizedKeysConfiguration = new AuthorizedKeysConfiguration();
                 authorizedKeysConfiguration.AddKey(model);
-                try {
-                    DirectoryWithAcl.CreateDirectory("/root/.ssh");
-                    const string authorizedKeysPath = "/root/.ssh/authorized_keys";
-                    if(File.Exists(authorizedKeysPath)) {
-                        var f = File.ReadAllText(authorizedKeysPath);
-                        if(!f.Contains(apple)) {
-                            FileWithAcl.AppendAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
-                        }
+                DirectoryWithAcl.CreateDirectory("/root/.ssh");
+                const string authorizedKeysPath = "/root/.ssh/authorized_keys";
+                if(File.Exists(authorizedKeysPath)) {
+                    var f = File.ReadAllText(authorizedKeysPath);
+                    if(!f.Contains(apple)) {
+                        FileWithAcl.AppendAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
                     }
-                    else {
-                        FileWithAcl.WriteAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
-                    }
-                    Bash.Execute($"chmod 600 {authorizedKeysPath}", false);
-                    Bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
-                    return HttpStatusCode.OK;
                 }
-                catch(Exception ex) {
-                    ConsoleLogger.Log(ex);
-                    return HttpStatusCode.InternalServerError;
+                else {
+                    FileWithAcl.WriteAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
                 }
+                Bash.Execute($"chmod 600 {authorizedKeysPath}", false);
+                Bash.Execute($"chown {user}:{user} {authorizedKeysPath}", false);
+                return HttpStatusCode.OK;
             };
 
             Post["/cluster/deploy"] = x => {
@@ -225,7 +212,7 @@ namespace Antd.Modules {
                 Cluster.DeployConf model = Newtonsoft.Json.JsonConvert.DeserializeObject<Cluster.DeployConf>(clusterConfiguration);
                 ClusterConfiguration.SaveConfiguration(model.Configuration);
                 ClusterConfiguration.SaveNodes(model.Nodes);
-                new Do().ClusterChanges();
+                Do.ClusterChanges();
                 return HttpStatusCode.OK;
             };
 
@@ -254,8 +241,6 @@ namespace Antd.Modules {
             #endregion
         }
 
-        private static ApiConsumer _api = new ApiConsumer();
-
         private static void DeployClusterConfiguration() {
             var conf = ClusterConfiguration.GetPackagedConfiguration();
             var json = JsonConvert.SerializeObject(conf);
@@ -263,7 +248,7 @@ namespace Antd.Modules {
                 { "Cluster", json }
             };
             foreach(var node in conf.Nodes) {
-                _api.Post($"{node.ModelUrl}cluster/deploy", dict);
+                ApiConsumer.Post($"{node.ModelUrl}cluster/deploy", dict);
             }
         }
     }

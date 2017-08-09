@@ -291,7 +291,7 @@ namespace antdsh {
         //}
 
         private static void StatusFunc(string[] args) {
-            var res = Bash.Execute("ps -aef").Grep("Antd.exe");
+            var res = Bash.Execute("ps -aef").Split().Grep("Antd.exe");
             Console.WriteLine(res.Any() ? "Antd is running." : "Antd is NOT running");
             Console.WriteLine("");
             Console.WriteLine(Bash.Execute("systemctl status "));

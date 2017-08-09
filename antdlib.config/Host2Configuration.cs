@@ -15,12 +15,7 @@ namespace antdlib.config {
             if(!File.Exists(FilePath)) {
                 return new Host2Model();
             }
-            try {
-                return JsonConvert.DeserializeObject<Host2Model>(File.ReadAllText(FilePath));
-            }
-            catch(Exception) {
-                return new Host2Model();
-            }
+            return JsonConvert.DeserializeObject<Host2Model>(File.ReadAllText(FilePath));
         }
 
         public static void Export(Host2Model model) {

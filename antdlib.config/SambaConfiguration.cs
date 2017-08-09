@@ -24,14 +24,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new SambaConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<SambaConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new SambaConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<SambaConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(SambaConfigurationModel model) {

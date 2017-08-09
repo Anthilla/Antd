@@ -48,7 +48,7 @@ namespace Antd.Modules {
 
             Post["/storage/print"] = x => {
                 string disk = Request.Form.Disk;
-                var result = Bash.Execute($"parted /dev/{disk} print 2> /dev/null").SplitBash().Grep("'Partition Table: '").First();
+                var result = Bash.Execute($"parted /dev/{disk} print 2> /dev/null").Split().Grep("'Partition Table: '").First();
                 return Response.AsText(result.Replace("Partition Table: ", ""));
             };
 

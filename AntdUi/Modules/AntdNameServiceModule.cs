@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdNameServiceModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdNameServiceModule() {
             Get["/nameservice"] = x => {
-                var model = _api.Get<PageNameServiceModel>($"http://127.0.0.1:{Application.ServerPort}/nameservice");
+                var model = ApiConsumer.Get<PageNameServiceModel>($"http://127.0.0.1:{Application.ServerPort}/nameservice");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -50,7 +48,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Hosts", hosts }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/hosts", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/hosts", dict);
             };
 
             Post["/nameservice/networks"] = x => {
@@ -58,7 +56,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Networks", networks }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/hosts", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/hosts", dict);
             };
 
             Post["/nameservice/resolv"] = x => {
@@ -66,7 +64,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Resolv", resolv }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/resolv", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/resolv", dict);
             };
 
             Post["/nameservice/switch"] = x => {
@@ -74,7 +72,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Switch", @switch }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/switch", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/nameservice/switch", dict);
             };
 
             Post["/host/int/domain"] = x => {
@@ -82,7 +80,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Domain", domain }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/int/domain", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/int/domain", dict);
             };
 
             Post["/host/ext/domain"] = x => {
@@ -90,7 +88,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Domain", domain }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/ext/domain", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/ext/domain", dict);
             };
         }
     }

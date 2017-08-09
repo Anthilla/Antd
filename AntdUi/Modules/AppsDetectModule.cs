@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AppsDetectModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AppsDetectModule() {
             Get["/apps/detect"] = x => {
-                var model = _api.Get<PageAppsDetectModel>($"http://127.0.0.1:{Application.ServerPort}/apps/detect");
+                var model = ApiConsumer.Get<PageAppsDetectModel>($"http://127.0.0.1:{Application.ServerPort}/apps/detect");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

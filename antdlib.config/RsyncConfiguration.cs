@@ -17,14 +17,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new RsyncConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<RsyncConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new RsyncConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<RsyncConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(RsyncConfigurationModel model) {

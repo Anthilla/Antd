@@ -36,33 +36,31 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdFirewallModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdFirewallModule() {
             Get["/firewall"] = x => {
-                var model = _api.Get<PageFirewallModel>($"http://127.0.0.1:{Application.ServerPort}/firewall");
+                var model = ApiConsumer.Get<PageFirewallModel>($"http://127.0.0.1:{Application.ServerPort}/firewall");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/firewall/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/set");
             };
 
             Post["/firewall/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/restart");
             };
 
             Post["/firewall/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/stop");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/stop");
             };
 
             Post["/firewall/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/enable");
             };
 
             Post["/firewall/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/disable");
             };
 
             #region [    IPV4    ]
@@ -75,7 +73,7 @@ namespace AntdUi.Modules {
                     { "Type", type },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/filter/set", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/filter/set", dict);
             };
 
             Post["/firewall/ipv4/filter/chain"] = x => {
@@ -85,7 +83,7 @@ namespace AntdUi.Modules {
                     { "Chain", chain },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/filter/chain", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/filter/chain", dict);
             };
 
             Post["/firewall/ipv4/nat/set"] = x => {
@@ -97,7 +95,7 @@ namespace AntdUi.Modules {
                     { "Type", type },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/nat/set", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/nat/set", dict);
             };
 
             Post["/firewall/ipv4/nat/chain"] = x => {
@@ -107,7 +105,7 @@ namespace AntdUi.Modules {
                     { "Chain", chain },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/nat/chain", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv4/nat/chain", dict);
             };
             #endregion
 
@@ -121,7 +119,7 @@ namespace AntdUi.Modules {
                     { "Type", type },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/filter/set", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/filter/set", dict);
             };
 
             Post["/firewall/ipv6/filter/chain"] = x => {
@@ -131,7 +129,7 @@ namespace AntdUi.Modules {
                     { "Chain", chain },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/filter/chain", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/filter/chain", dict);
             };
 
             Post["/firewall/ipv6/nat/set"] = x => {
@@ -143,7 +141,7 @@ namespace AntdUi.Modules {
                     { "Type", type },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/nat/set", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/nat/set", dict);
             };
 
             Post["/firewall/ipv6/nat/chain"] = x => {
@@ -153,7 +151,7 @@ namespace AntdUi.Modules {
                     { "Chain", chain },
                     { "Elements", elements },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/nat/chain", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/firewall/ipv6/nat/chain", dict);
             };
             #endregion
         }

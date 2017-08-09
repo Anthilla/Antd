@@ -36,24 +36,22 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdDhcpdModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdDhcpdModule() {
             Get["/dhcpd"] = x => {
-                var model = _api.Get<PageDhcpdModel>($"http://127.0.0.1:{Application.ServerPort}/dhcpd");
+                var model = ApiConsumer.Get<PageDhcpdModel>($"http://127.0.0.1:{Application.ServerPort}/dhcpd");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/dhcpd/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set");
+            Post["/dhcpd/set"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/set");
 
-            Post["/dhcpd/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart");
+            Post["/dhcpd/restart"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/restart");
 
-            Post["/dhcpd/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop");
+            Post["/dhcpd/stop"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/stop");
 
-            Post["/dhcpd/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable");
+            Post["/dhcpd/enable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/enable");
 
-            Post["/dhcpd/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable");
+            Post["/dhcpd/disable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/disable");
 
             Post["/dhcpd/options"] = x => {
                 string allow = Request.Form.Allow;
@@ -110,7 +108,7 @@ namespace AntdUi.Modules {
                     { "BroadcastAddress", broadcastAddress },
                     { "SubnetMask", subnetMask }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/options", dict);
             };
 
             Post["/dhcpd/class"] = x => {
@@ -120,7 +118,7 @@ namespace AntdUi.Modules {
                     { "Name", name },
                     { "MacVendor", macVendor }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/class", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/class", dict);
             };
 
             Post["/dhcpd/class/del"] = x => {
@@ -128,7 +126,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/class/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/class/del", dict);
             };
 
             Post["/dhcpd/pool"] = x => {
@@ -136,7 +134,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Option", option }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/pool", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/pool", dict);
             };
 
             Post["/dhcpd/pool/del"] = x => {
@@ -144,7 +142,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/pool/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/pool/del", dict);
             };
 
             Post["/dhcpd/reservation"] = x => {
@@ -156,7 +154,7 @@ namespace AntdUi.Modules {
                     { "MacAddress", macAddress },
                     { "IpAddress", ipAddress }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/reservation", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/reservation", dict);
             };
 
             Post["/dhcpd/reservation/del"] = x => {
@@ -164,7 +162,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/reservation/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/dhcpd/reservation/del", dict);
             };
         }
     }

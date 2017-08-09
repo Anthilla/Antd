@@ -41,7 +41,7 @@ namespace Antd.Modules {
 
         public WizardModule() {
             Get["/wizard/data"] = x => {
-                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").SplitBash();
+                var timezones = Bash.Execute("timedatectl list-timezones --no-pager").Split();
                 var hosts = CommandLauncher.Launch("cat-etc-hosts").ToArray();
                 var networks = CommandLauncher.Launch("cat-etc-networks").ToArray();
                 var resolv = CommandLauncher.Launch("cat-etc-resolv").ToArray();

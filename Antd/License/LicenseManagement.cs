@@ -10,7 +10,6 @@ namespace Antd.License {
     public class LicenseManagement {
 
         private readonly string _licensePath = $"{Parameter.AntdCfg}/license.lic";
-        private readonly ApiConsumer _api = new ApiConsumer();
 
         public void Download(string appName, MachineIdsModel machineUid, byte[] publicKey) {
             if(File.Exists(_licensePath))
@@ -33,7 +32,7 @@ namespace Antd.License {
                 { "Uid", machineUid.MachineUid },
                 { "PublicKey", pk}
             };
-            var lic = _api.Post<string>($"{cloudaddress}license/create", dict);
+            var lic = ApiConsumer.Post<string>($"{cloudaddress}license/create", dict);
             if(lic != null) {
                 FileWithAcl.WriteAllText(_licensePath, lic, "644", "root", "wheel");
             }
@@ -58,7 +57,7 @@ namespace Antd.License {
                 { "Uid", machineUid.MachineUid },
                 { "PublicKey", pk }
             };
-            var status = _api.Post<ResponseLicenseStatusModel>($"{cloudaddress}license/check", dict);
+            var status = ApiConsumer.Post<ResponseLicenseStatusModel>($"{cloudaddress}license/check", dict);
             return status;
         }
     }

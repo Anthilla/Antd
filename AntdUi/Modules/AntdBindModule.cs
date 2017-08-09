@@ -36,24 +36,22 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdBindModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdBindModule() {
             Get["/bind"] = x => {
-                var model = _api.Get<PageBindModel>($"http://127.0.0.1:{Application.ServerPort}/bind");
+                var model = ApiConsumer.Get<PageBindModel>($"http://127.0.0.1:{Application.ServerPort}/bind");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
-            Post["/bind/set"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/set");
+            Post["/bind/set"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/set");
 
-            Post["/bind/restart"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/restart");
+            Post["/bind/restart"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/restart");
 
-            Post["/bind/stop"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/stop");
+            Post["/bind/stop"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/stop");
 
-            Post["/bind/enable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/enable");
+            Post["/bind/enable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/enable");
 
-            Post["/bind/disable"] = x => _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/disable");
+            Post["/bind/disable"] = x => ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/disable");
 
             Post["/bind/options"] = x => {
                 string notify = Request.Form.Notify;
@@ -138,7 +136,7 @@ namespace AntdUi.Modules {
                     { "AclInternalNetworks", aclInternalNetworks },
                     { "AclExternalNetworks", aclExternalNetworks }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/ca/options", dict);
             };
 
             Post["/bind/zone"] = x => {
@@ -158,7 +156,7 @@ namespace AntdUi.Modules {
                     { "AllowQuery", allowQuery },
                     { "AllowTransfer", allowTransfer },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/zone", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/zone", dict);
             };
 
             Post["/bind/zone/del"] = x => {
@@ -166,7 +164,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/bind/zone/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/bind/zone/del", dict);
             };
         }
     }

@@ -36,11 +36,9 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdHostModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdHostModule() {
             Get["/host"] = x => {
-                var model = _api.Get<PageHostModel>($"http://127.0.0.1:{Application.ServerPort}/host/info");
+                var model = ApiConsumer.Get<PageHostModel>($"http://127.0.0.1:{Application.ServerPort}/host/info");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -50,7 +48,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Name", name}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/name", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/name", dict);
             };
 
             Post["/host/chassis"] = x => {
@@ -58,7 +56,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Chassis", chassis}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/chassis", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/chassis", dict);
             };
 
             Post["/host/deployment"] = x => {
@@ -66,7 +64,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Deployment", deployment}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/deployment", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/deployment", dict);
             };
 
             Post["/host/location"] = x => {
@@ -74,7 +72,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Location", location}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/location", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/host/info/location", dict);
             };
         }
     }

@@ -96,25 +96,14 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return conf;
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                conf = JsonConvert.DeserializeObject<Network2ConfigurationModel>(text);
-            }
-            catch(Exception) {
-                conf = new Network2ConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            conf = JsonConvert.DeserializeObject<Network2ConfigurationModel>(text);
             return conf;
         }
 
         public static bool Save(Network2ConfigurationModel conf) {
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[network] configuration save error: {ex.Message}");
-                return false;
-            }
+            FileWithAcl.WriteAllText(CfgFile, text, "644", "root", "wheel");
             return true;
         }
 
@@ -133,18 +122,13 @@ namespace antdlib.config {
             var files = Directory.EnumerateFiles(InterfaceDir, $"*{InterfaceConfigurationExt}");
             var ints = Conf.Interfaces;
             foreach(var file in files) {
-                try {
-                    var text = File.ReadAllText(file);
-                    var conf = JsonConvert.DeserializeObject<NetworkInterfaceConfiguration>(text);
-                    var mcContainsConf = ints.Select(_ => _.Configuration).Contains(conf.Id);
-                    var scContainsConf =
-                        ints.Select(_ => _.AdditionalConfigurations.Where(__ => _.Configuration == conf.Id)).Any();
-                    conf.IsUsed = mcContainsConf || scContainsConf;
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var text = File.ReadAllText(file);
+                var conf = JsonConvert.DeserializeObject<NetworkInterfaceConfiguration>(text);
+                var mcContainsConf = ints.Select(_ => _.Configuration).Contains(conf.Id);
+                var scContainsConf =
+                    ints.Select(_ => _.AdditionalConfigurations.Where(__ => _.Configuration == conf.Id)).Any();
+                conf.IsUsed = mcContainsConf || scContainsConf;
+                list.Add(conf);
             }
             return list;
         }
@@ -155,12 +139,7 @@ namespace antdlib.config {
             }
             var file = $"{InterfaceDir}/{conf.Id}{InterfaceConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
-            }
-            catch(Exception) {
-                return false;
-            }
+            FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             return File.Exists(file);
         }
 
@@ -169,12 +148,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
         #endregion
@@ -184,14 +158,9 @@ namespace antdlib.config {
             var list = new List<NetworkGatewayConfiguration>();
             var files = Directory.EnumerateFiles(GatewayDir, $"*{GatewayConfigurationExt}");
             foreach(var file in files) {
-                try {
-                    var text = File.ReadAllText(file);
-                    var conf = JsonConvert.DeserializeObject<NetworkGatewayConfiguration>(text);
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var text = File.ReadAllText(file);
+                var conf = JsonConvert.DeserializeObject<NetworkGatewayConfiguration>(text);
+                list.Add(conf);
             }
             return list;
         }
@@ -202,12 +171,7 @@ namespace antdlib.config {
             }
             var file = $"{GatewayDir}/{conf.Id}{GatewayConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
-            }
-            catch(Exception) {
-                return false;
-            }
+            FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             return File.Exists(file);
         }
 
@@ -216,12 +180,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
         #endregion
@@ -231,14 +190,9 @@ namespace antdlib.config {
             var list = new List<NetworkRouteConfiguration>();
             var files = Directory.EnumerateFiles(RouteDir, $"*{RouteConfigurationExt}");
             foreach(var file in files) {
-                try {
-                    var text = File.ReadAllText(file);
-                    var conf = JsonConvert.DeserializeObject<NetworkRouteConfiguration>(text);
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var text = File.ReadAllText(file);
+                var conf = JsonConvert.DeserializeObject<NetworkRouteConfiguration>(text);
+                list.Add(conf);
             }
             return list;
         }
@@ -249,12 +203,7 @@ namespace antdlib.config {
             }
             var file = $"{RouteDir}/{conf.Id}{RouteConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
-            }
-            catch(Exception) {
-                return false;
-            }
+            FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             return File.Exists(file);
         }
 
@@ -263,12 +212,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
         #endregion
@@ -278,14 +222,9 @@ namespace antdlib.config {
             var list = new List<NsUpdateConfiguration>();
             var files = Directory.EnumerateFiles(NsUpdateDir, $"*{NsUpdateConfigurationExt}");
             foreach(var file in files) {
-                try {
-                    var text = File.ReadAllText(file);
-                    var conf = JsonConvert.DeserializeObject<NsUpdateConfiguration>(text);
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var text = File.ReadAllText(file);
+                var conf = JsonConvert.DeserializeObject<NsUpdateConfiguration>(text);
+                list.Add(conf);
             }
             return list;
         }
@@ -331,12 +270,7 @@ namespace antdlib.config {
             }
             lines.Add("show");
             lines.Add("send");
-            try {
-                FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
-            }
-            catch(Exception) {
-                return false;
-            }
+            FileWithAcl.WriteAllLines(file, lines, "644", "root", "wheel");
             return File.Exists(file);
         }
 
@@ -345,12 +279,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
 
@@ -358,25 +287,19 @@ namespace antdlib.config {
 
         #region [    Network Devices Mapping    ]
         private static IEnumerable<string> GetAll() {
-            try {
-                var list = BashExtension.SplitBash(Bash.Execute("ls -la /sys/class/net")).Where(_ => _.Contains("->"));
-                return list.Select(f => AwkExtension.Print(f, 9, " ")).ToList();
-            }
-            catch(Exception) {
-                return new List<string>();
-            }
-
+            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
+            return list.Select(f => f.Print(9, " ")).ToList();
         }
 
         private static IEnumerable<string> GetPhysicalInterfaces() {
             var ifList = new List<string>();
-            var list = BashExtension.SplitBash(Bash.Execute("ls -la /sys/class/net")).Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }
                 else if(f.Contains("virtual/net") || f.Contains("platform")) { }
                 else if(!f.Contains("virtual/net")) {
-                    var name = AwkExtension.Print(f, 9, " ");
+                    var name = f.Print(9, " ");
                     ifList.Add(name.Trim());
                 }
             }
@@ -385,12 +308,12 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetVirtualInterfaces() {
             var ifList = new List<string>();
-            var list = BashExtension.SplitBash(Bash.Execute("ls -la /sys/class/net")).Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) { }
                 else if(f.Contains("virtual/net") || f.Contains("platform")) {
-                    var name = AwkExtension.Print(f, 9, " ");
+                    var name = f.Print(9, " ");
                     ifList.Add(name.Trim());
                 }
                 else if(!f.Contains("virtual/net")) { }
@@ -400,10 +323,10 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetBondInterfaces() {
             var ifList = new List<string>();
-            var list = BashExtension.SplitBash(Bash.Execute("ls -la /sys/class/net")).Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) {
-                    var name = AwkExtension.Print(f, 9, " ");
+                    var name = f.Print(9, " ");
                     ifList.Add(name.Trim());
                 }
                 else if(f.Contains("br")) { }
@@ -415,11 +338,11 @@ namespace antdlib.config {
 
         private static IEnumerable<string> GetBridgeInterfaces() {
             var ifList = new List<string>();
-            var list = BashExtension.SplitBash(Bash.Execute("ls -la /sys/class/net")).Where(_ => _.Contains("->"));
+            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
             foreach(var f in list) {
                 if(f.Contains("bond")) { }
                 else if(f.Contains("br")) {
-                    var name = AwkExtension.Print(f, 9, " ");
+                    var name = f.Print(9, " ");
                     ifList.Add(name.Trim());
                 }
                 else if(f.Contains("virtual/net") || f.Contains("platform")) { }
@@ -435,14 +358,9 @@ namespace antdlib.config {
             var list = new List<DnsConfiguration>();
             var files = Directory.EnumerateFiles(DnsDir, $"*{DnsConfigurationExt}");
             foreach(var file in files) {
-                try {
-                    var text = File.ReadAllText(file);
-                    var conf = JsonConvert.DeserializeObject<DnsConfiguration>(text);
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var text = File.ReadAllText(file);
+                var conf = JsonConvert.DeserializeObject<DnsConfiguration>(text);
+                list.Add(conf);
             }
             return list;
         }
@@ -453,12 +371,7 @@ namespace antdlib.config {
             }
             var file = $"{DnsDir}/{conf.Id}{DnsConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
-            }
-            catch(Exception) {
-                return false;
-            }
+            FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             return File.Exists(file);
         }
 
@@ -467,12 +380,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
 
@@ -492,14 +400,9 @@ namespace antdlib.config {
             var list = new List<NetworkHardwareConfiguration>();
             var files = Directory.EnumerateFiles(NetworkHardwareDir, $"*{NetworkHardwareConfigurationExt}");
             foreach(var file in files) {
-                try {
-                    var text = File.ReadAllText(file);
-                    var conf = JsonConvert.DeserializeObject<NetworkHardwareConfiguration>(text);
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var text = File.ReadAllText(file);
+                var conf = JsonConvert.DeserializeObject<NetworkHardwareConfiguration>(text);
+                list.Add(conf);
             }
             return list;
         }
@@ -510,12 +413,7 @@ namespace antdlib.config {
             }
             var file = $"{NetworkHardwareDir}/{conf.Id}{NetworkHardwareConfigurationExt}";
             var text = JsonConvert.SerializeObject(conf, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
-            }
-            catch(Exception) {
-                return false;
-            }
+            FileWithAcl.WriteAllText(file, text, "644", "root", "wheel");
             return File.Exists(file);
         }
 
@@ -524,12 +422,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
 
@@ -540,13 +433,8 @@ namespace antdlib.config {
             var list = new List<NetworkAggregatedInterfaceConfiguration>();
             var files = Directory.EnumerateFiles(NetworkAggregatedInterfaceDir, $"*{NetworkAggregatedInterfaceConfigurationExt}");
             foreach(var file in files) {
-                try {
-                    var conf = Json.Read<NetworkAggregatedInterfaceConfiguration>(file);
-                    list.Add(conf);
-                }
-                catch(Exception) {
-                    //throw;
-                }
+                var conf = Json.Read<NetworkAggregatedInterfaceConfiguration>(file);
+                list.Add(conf);
             }
             return list;
         }
@@ -565,12 +453,7 @@ namespace antdlib.config {
             if(!File.Exists(file)) {
                 return false;
             }
-            try {
-                File.Delete(file);
-            }
-            catch(Exception) {
-                return false;
-            }
+            File.Delete(file);
             return !File.Exists(file);
         }
         #endregion

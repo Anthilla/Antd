@@ -33,26 +33,15 @@ namespace antdlib.config {
 
         public static void SetModprobesList(List<string> objects) {
             var lines = objects;
-            try {
-                FileWithAcl.WriteAllLines(ModprobesFile, lines, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] modprobes configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllLines(ModprobesFile, lines, "644", "root", "wheel");
         }
 
         private static List<string> GetModprobesList() {
             if(!File.Exists(ModprobesFile)) {
                 return new List<string>();
             }
-            try {
-                var lines = File.ReadAllLines(ModprobesFile).ToList();
-                return lines;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] modprobes configuration get error: {ex.Message}");
-                return new List<string>();
-            }
+            var lines = File.ReadAllLines(ModprobesFile).ToList();
+            return lines;
         }
         #endregion
 
@@ -61,26 +50,15 @@ namespace antdlib.config {
 
         public static void SetRmmodList(List<string> objects) {
             var lines = objects;
-            try {
-                FileWithAcl.WriteAllLines(RmmodFile, lines, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] rmmod configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllLines(RmmodFile, lines, "644", "root", "wheel");
         }
 
         private static List<string> GetRmmodList() {
             if(!File.Exists(RmmodFile)) {
                 return new List<string>();
             }
-            try {
-                var lines = File.ReadAllLines(RmmodFile).ToList();
-                return lines;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] rmmod configuration get error: {ex.Message}");
-                return new List<string>();
-            }
+            var lines = File.ReadAllLines(RmmodFile).ToList();
+            return lines;
         }
         #endregion
 
@@ -89,26 +67,15 @@ namespace antdlib.config {
 
         public static void SetModulesBlacklistList(List<string> objects) {
             var lines = objects;
-            try {
-                FileWithAcl.WriteAllLines(ModulesblacklistFile, lines, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] modulesblacklist configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllLines(ModulesblacklistFile, lines, "644", "root", "wheel");
         }
 
         private static List<string> GetModulesBlacklistList() {
             if(!File.Exists(ModulesblacklistFile)) {
                 return new List<string>();
             }
-            try {
-                var lines = File.ReadAllLines(ModulesblacklistFile).ToList();
-                return lines;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] modulesblacklist configuration get error: {ex.Message}");
-                return new List<string>();
-            }
+            var lines = File.ReadAllLines(ModulesblacklistFile).ToList();
+            return lines;
         }
         #endregion}
 
@@ -117,26 +84,15 @@ namespace antdlib.config {
 
         public static void SetOsParametersList(List<string> objects) {
             var lines = objects;
-            try {
-                FileWithAcl.WriteAllLines(OsparametersFile, lines, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] osparameters configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllLines(OsparametersFile, lines, "644", "root", "wheel");
         }
 
         private static List<string> GetOsParametersList() {
             if(!File.Exists(OsparametersFile)) {
                 return new List<string>();
             }
-            try {
-                var lines = File.ReadAllLines(OsparametersFile).ToList();
-                return lines;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] osparameters configuration get error: {ex.Message}");
-                return new List<string>();
-            }
+            var lines = File.ReadAllLines(OsparametersFile).ToList();
+            return lines;
         }
         #endregion}
 
@@ -145,26 +101,15 @@ namespace antdlib.config {
 
         public static void SetServicesStartList(List<string> objects) {
             var lines = objects;
-            try {
-                FileWithAcl.WriteAllLines(ServicesstartFile, lines, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] servicesstart configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllLines(ServicesstartFile, lines, "644", "root", "wheel");
         }
 
         private static List<string> GetServicesStartList() {
             if(!File.Exists(ServicesstartFile)) {
                 return new List<string>();
             }
-            try {
-                var lines = File.ReadAllLines(ServicesstartFile).ToList();
-                return lines;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] servicesstart configuration get error: {ex.Message}");
-                return new List<string>();
-            }
+            var lines = File.ReadAllLines(ServicesstartFile).ToList();
+            return lines;
         }
         #endregion
 
@@ -173,26 +118,15 @@ namespace antdlib.config {
 
         public static void SetServicesStopList(List<string> objects) {
             var lines = objects;
-            try {
-                FileWithAcl.WriteAllLines(ServicesstopFile, lines, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] servicesstop configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllLines(ServicesstopFile, lines, "644", "root", "wheel");
         }
 
         private static List<string> GetServicesStopList() {
             if(!File.Exists(ServicesstopFile)) {
                 return new List<string>();
             }
-            try {
-                var lines = File.ReadAllLines(ServicesstopFile).ToList();
-                return lines;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] servicesstop configuration get error: {ex.Message}");
-                return new List<string>();
-            }
+            var lines = File.ReadAllLines(ServicesstopFile).ToList();
+            return lines;
         }
         #endregion
 
@@ -201,27 +135,16 @@ namespace antdlib.config {
 
         public static void SetStartCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
-            try {
-                FileWithAcl.WriteAllText(StartcommandsFile, text, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] startcommands configuration set error: {ex.Message}");
-            }
+            FileWithAcl.WriteAllText(StartcommandsFile, text, "644", "root", "wheel");
         }
 
         private static List<Control> GetStartCommandsList() {
             if(!File.Exists(StartcommandsFile)) {
                 return new List<Control>();
             }
-            try {
                 var text = File.ReadAllText(StartcommandsFile);
                 var objects = JsonConvert.DeserializeObject<List<Control>>(text);
                 return objects;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] startcommands configuration get error: {ex.Message}");
-                return new List<Control>();
-            }
         }
         #endregion
 
@@ -230,27 +153,16 @@ namespace antdlib.config {
 
         public static void SetEndCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
-            try {
                 FileWithAcl.WriteAllText(EndcommandsFile, text, "644", "root", "wheel");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] endcommands configuration set error: {ex.Message}");
-            }
         }
 
         private static List<Control> GetEndCommandsList() {
             if(!File.Exists(EndcommandsFile)) {
                 return new List<Control>();
             }
-            try {
                 var text = File.ReadAllText(EndcommandsFile);
                 var objects = JsonConvert.DeserializeObject<List<Control>>(text);
                 return objects;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error($"[host parameters] endcommands configuration get error: {ex.Message}");
-                return new List<Control>();
-            }
         }
         #endregion
     }

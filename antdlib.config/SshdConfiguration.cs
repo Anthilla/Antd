@@ -20,14 +20,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new SshdConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<SshdConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new SshdConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<SshdConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(SshdConfigurationModel model) {

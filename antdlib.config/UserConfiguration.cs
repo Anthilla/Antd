@@ -19,14 +19,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new UserConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<UserConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new UserConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<UserConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(UserConfigurationModel model) {

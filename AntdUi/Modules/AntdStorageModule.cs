@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdStorageModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdStorageModule() {
             Get["/storage"] = x => {
-                var model = _api.Get<PageStorageModel>($"http://127.0.0.1:{Application.ServerPort}/storage");
+                var model = ApiConsumer.Get<PageStorageModel>($"http://127.0.0.1:{Application.ServerPort}/storage");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -51,7 +49,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Disk", disk }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/storage/print", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/storage/print", dict);
             };
 
             Post["/storage/mklabel"] = x => {
@@ -63,7 +61,7 @@ namespace AntdUi.Modules {
                     { "Type", type },
                     { "Confirm", yn },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/storage/mklabel", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/storage/mklabel", dict);
             };
         }
     }

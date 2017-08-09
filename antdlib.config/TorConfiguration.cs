@@ -24,14 +24,9 @@ namespace antdlib.config {
                 return new TorConfigurationModel();
 
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<TorConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new TorConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<TorConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(List<TorService> model) {
@@ -54,10 +49,9 @@ namespace antdlib.config {
             }
             var lines = new List<string>();
             foreach(var svc in ServiceModel.Services) {
-                if (string.IsNullOrEmpty(svc.Name)
+                if(string.IsNullOrEmpty(svc.Name)
                     || string.IsNullOrEmpty(svc.IpAddress)
-                    || string.IsNullOrEmpty(svc.TorPort))
-                {
+                    || string.IsNullOrEmpty(svc.TorPort)) {
                     continue;
                 }
                 //HiddenServiceDir /var/lib/tor/hidden_service/

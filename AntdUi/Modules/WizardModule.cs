@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class WizardModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public WizardModule() {
             Get["/wizard/data"] = x => {
-                var model = _api.Get<PageWizardModel>($"http://127.0.0.1:{Application.ServerPort}/wizard/data");
+                var model = ApiConsumer.Get<PageWizardModel>($"http://127.0.0.1:{Application.ServerPort}/wizard/data");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -86,7 +84,7 @@ namespace AntdUi.Modules {
                     { "StaticAddress", staticAddress },
                     { "StaticRange", staticRange }
                 };
-                _api.Post($"http://127.0.0.1:{Application.ServerPort}/wizard", dict);
+                ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/wizard", dict);
                 return Response.AsRedirect("/logout");
             };
         }

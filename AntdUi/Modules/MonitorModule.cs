@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class MonitorModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public MonitorModule() {
             Get["/monitor/resources"] = x => {
-                var model = _api.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
+                var model = ApiConsumer.Get<PageMonitorModel>($"http://127.0.0.1:{Application.ServerPort}/monitor/resources");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

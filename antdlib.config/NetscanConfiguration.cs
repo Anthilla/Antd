@@ -23,12 +23,7 @@ namespace antdlib.config {
             if(!File.Exists(_filePath)) {
                 _settings = new NetscanSettingModel { Values = Values() };
             }
-            try {
-                _settings = JsonConvert.DeserializeObject<NetscanSettingModel>(File.ReadAllText(_filePath));
-            }
-            catch(Exception) {
-                _settings = new NetscanSettingModel { Values = Values() };
-            }
+            _settings = JsonConvert.DeserializeObject<NetscanSettingModel>(File.ReadAllText(_filePath));
         }
 
         public NetscanSettingModel Get() {

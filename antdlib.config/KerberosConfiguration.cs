@@ -23,15 +23,9 @@ namespace antdlib.config {
                 _serviceModel = new KerberosConfigurationModel();
             }
             else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<KerberosConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new KerberosConfigurationModel();
-                }
-
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<KerberosConfigurationModel>(text);
+                _serviceModel = obj;
             }
         }
 

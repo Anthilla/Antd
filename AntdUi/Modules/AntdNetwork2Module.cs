@@ -36,18 +36,16 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdNetwork2Module : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdNetwork2Module() {
 
             Get["/network2"] = x => {
-                var model = _api.Get<PageNetwork2Model>($"http://127.0.0.1:{Application.ServerPort}/network2");
+                var model = ApiConsumer.Get<PageNetwork2Model>($"http://127.0.0.1:{Application.ServerPort}/network2");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/network2/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/restart");
             };
 
             Post["/network2/interfaceconfiguration"] = x => {
@@ -67,7 +65,7 @@ namespace AntdUi.Modules {
                     { "Ip", ip },
                     { "Range", range }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interfaceconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interfaceconfiguration", dict);
             };
 
             Post["/network2/interfaceconfiguration/del"] = x => {
@@ -75,7 +73,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interfaceconfiguration/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interfaceconfiguration/del", dict);
             };
 
             Post["/network2/gatewayconfiguration"] = x => {
@@ -89,7 +87,7 @@ namespace AntdUi.Modules {
                     { "GatewayAddress", gatewayAddress },
                     { "Default", def }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/gatewayconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/gatewayconfiguration", dict);
             };
 
             Post["/network2/gatewayconfiguration/del"] = x => {
@@ -97,7 +95,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/gatewayconfiguration/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/gatewayconfiguration/del", dict);
             };
 
             Post["/network2/lagconfiguration"] = x => {
@@ -109,7 +107,7 @@ namespace AntdUi.Modules {
                     { "Parent", parent },
                     { "Children", children }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/lagconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/lagconfiguration", dict);
             };
 
             Post["/network2/lagconfiguration/del"] = x => {
@@ -117,7 +115,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/lagconfiguration/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/lagconfiguration/del", dict);
             };
 
             Post["/network2/routeconfiguration"] = x => {
@@ -131,7 +129,7 @@ namespace AntdUi.Modules {
                     { "DestinationRange", destinationRange },
                     { "Gateway", gateway }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/routeconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/routeconfiguration", dict);
             };
 
             Post["/network2/routeconfiguration/del"] = x => {
@@ -139,7 +137,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/routeconfiguration/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/routeconfiguration/del", dict);
             };
 
             Post["/network2/dnsconfiguration"] = x => {
@@ -153,7 +151,7 @@ namespace AntdUi.Modules {
                     { "Domain", domain },
                     { "Ip", ip }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration", dict);
             };
 
             Post["/network2/dnsconfiguration/del"] = x => {
@@ -161,7 +159,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/del", dict);
             };
 
             Post["/network2/dnsconfiguration/active"] = x => {
@@ -169,7 +167,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/active", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/dnsconfiguration/active", dict);
             };
 
             Post["/network2/nsupdateconfiguration"] = x => {
@@ -201,7 +199,7 @@ namespace AntdUi.Modules {
                     { "Delete", delete },
                     { "Add", add }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration", dict);
             };
 
             Post["/network2/nsupdateconfiguration/del"] = x => {
@@ -209,7 +207,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration/active/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/nsupdateconfiguration/active/del", dict);
             };
 
             Post["/network2/hardwareconfiguration"] = x => {
@@ -223,7 +221,7 @@ namespace AntdUi.Modules {
                     { "Mtu", mtu },
                     { "Txqueuelen", txqueuelen }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/hardwareconfiguration", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/hardwareconfiguration", dict);
             };
 
             Post["/network2/hardwareconfiguration/del"] = x => {
@@ -231,7 +229,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/hardwareconfiguration/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/hardwareconfiguration/del", dict);
             };
 
             Post["/network2/interface"] = x => {
@@ -249,7 +247,7 @@ namespace AntdUi.Modules {
                     { "Status", status },
                     { "HardwareConfiguration", hwc }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface", dict);
             };
 
             Post["/network2/interface/del"] = x => {
@@ -257,7 +255,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Device", dev }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface/del", dict);
             };
 
             Post["/network2/interface2"] = x => {
@@ -265,7 +263,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Config", conf }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface2", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network2/interface2", dict);
             };
 
             Post["/network2/add/bond"] = x => {
@@ -273,7 +271,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Name", name }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
 
             Post["/network2/add/bridge"] = x => {
@@ -281,7 +279,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Name", name }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}{Request.Path}", dict);
             };
         }
     }

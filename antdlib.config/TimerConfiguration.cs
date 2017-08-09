@@ -20,15 +20,9 @@ namespace antdlib.config {
                 _serviceModel = new TimerConfigurationModel();
             }
             else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<TimerConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new TimerConfigurationModel();
-                }
-
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<TimerConfigurationModel>(text);
+                _serviceModel = obj;
             }
         }
 

@@ -13,31 +13,26 @@ using System.Threading.Tasks;
 namespace Antd.VFS {
     public class VfsWatcher {
 
-        private List<FileSystemWatcher> _watchers;
+        private List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
         private List<NodeModel> _nodes;
 
         public void Start(Cluster.Configuration config, List<NodeModel> nodes) {
             var dirs = config.FileSystemMapping.Select(_ => _.LocalPath);
             foreach(var dir in dirs) {
-                try {
-                    var watcher = new FileSystemWatcher(dir) {
-                        NotifyFilter =
-                             NotifyFilters.LastAccess |
-                             NotifyFilters.LastWrite |
-                             NotifyFilters.FileName |
-                             NotifyFilters.DirectoryName,
-                        IncludeSubdirectories = true
-                    };
-                    watcher.Changed += OnChanged;
-                    watcher.Created += OnChanged;
-                    watcher.Deleted += OnChanged;
-                    watcher.Renamed += OnRenamed;
-                    watcher.EnableRaisingEvents = true;
-                    _watchers.Add(watcher);
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Log(ex.Message);
-                }
+                var watcher = new FileSystemWatcher(dir) {
+                    NotifyFilter =
+                         NotifyFilters.LastAccess |
+                         NotifyFilters.LastWrite |
+                         NotifyFilters.FileName |
+                         NotifyFilters.DirectoryName,
+                    IncludeSubdirectories = true
+                };
+                watcher.Changed += OnChanged;
+                watcher.Created += OnChanged;
+                watcher.Deleted += OnChanged;
+                watcher.Renamed += OnRenamed;
+                watcher.EnableRaisingEvents = true;
+                _watchers.Add(watcher);
             }
             _nodes = nodes;
         }

@@ -39,25 +39,20 @@ using Parameter = antdlib.common.Parameter;
 namespace Antd.Overlay {
     public class OverlayWatcher {
         public void StartWatching() {
-            try {
-                var path = Parameter.Overlay;
-                var watcher = new FileSystemWatcher(path) {
-                    NotifyFilter =
-                        NotifyFilters.LastAccess |
-                        NotifyFilters.LastWrite |
-                        NotifyFilters.FileName |
-                        NotifyFilters.DirectoryName,
-                    IncludeSubdirectories = true
-                };
-                watcher.Changed += OnChanged;
-                watcher.Created += OnChanged;
-                watcher.Deleted += OnChanged;
-                watcher.Renamed += OnRenamed;
-                watcher.EnableRaisingEvents = true;
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log(ex.Message);
-            }
+            var path = Parameter.Overlay;
+            var watcher = new FileSystemWatcher(path) {
+                NotifyFilter =
+                    NotifyFilters.LastAccess |
+                    NotifyFilters.LastWrite |
+                    NotifyFilters.FileName |
+                    NotifyFilters.DirectoryName,
+                IncludeSubdirectories = true
+            };
+            watcher.Changed += OnChanged;
+            watcher.Created += OnChanged;
+            watcher.Deleted += OnChanged;
+            watcher.Renamed += OnRenamed;
+            watcher.EnableRaisingEvents = true;
         }
 
         public static Dictionary<string, string> ChangedDirectories { get; } = new Dictionary<string, string>();

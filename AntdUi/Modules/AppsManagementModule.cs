@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AppsManagementModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AppsManagementModule() {
             Get["/apps/management"] = x => {
-                var model = _api.Get<PageAppsManagementModel>($"http://127.0.0.1:{Application.ServerPort}/apps/management");
+                var model = ApiConsumer.Get<PageAppsManagementModel>($"http://127.0.0.1:{Application.ServerPort}/apps/management");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -50,19 +48,19 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"AppName", appName}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/apps/setup", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/apps/setup", dict);
             };
 
             Get["/apps/status/{unit}"] = x => {
                 string unit = x.unit;
-                var model = _api.Get<string>($"http://127.0.0.1:{Application.ServerPort}/apps/status/" + unit);
+                var model = ApiConsumer.Get<string>($"http://127.0.0.1:{Application.ServerPort}/apps/status/" + unit);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Get["/apps/active/{unit}"] = x => {
                 string unit = x.unit;
-                var model = _api.Get<bool>($"http://127.0.0.1:{Application.ServerPort}/apps/active/" + unit);
+                var model = ApiConsumer.Get<bool>($"http://127.0.0.1:{Application.ServerPort}/apps/active/" + unit);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -72,7 +70,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Name", name}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/apps/restart", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/apps/restart", dict);
             };
 
             Post["/apps/stop"] = x => {
@@ -80,7 +78,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     {"Name", name}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/apps/stop", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/apps/stop", dict);
             };
         }
     }

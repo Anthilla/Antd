@@ -36,18 +36,16 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdNetworkModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdNetworkModule() {
 
             Get["/network"] = x => {
-                var model = _api.Get<PageNetworkModel>($"http://127.0.0.1:{Application.ServerPort}/network");
+                var model = ApiConsumer.Get<PageNetworkModel>($"http://127.0.0.1:{Application.ServerPort}/network");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/network/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network/restart");
             };
 
             Post["/network/interface"] = x => {
@@ -71,7 +69,7 @@ namespace AntdUi.Modules {
                     { "Route", route },
                     { "Gateway", gateway }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface", dict);
             };
 
             Post["/network/interface/del"] = x => {
@@ -79,7 +77,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/del", dict);
             };
 
             Post["/network/interface/bridge"] = x => {
@@ -108,7 +106,7 @@ namespace AntdUi.Modules {
                     { "Route", route },
                     { "Gateway", gateway }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bridge", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bridge", dict);
             };
 
             Post["/network/interface/bond"] = x => {
@@ -134,7 +132,7 @@ namespace AntdUi.Modules {
                     { "Route", route },
                     { "Gateway", gateway }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bond", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/network/interface/bond", dict);
             };
         }
     }

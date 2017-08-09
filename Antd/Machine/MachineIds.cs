@@ -19,13 +19,7 @@ namespace Antd.Machine {
                     File.Delete(IdPath);
                 }
                 else {
-                    try {
-                        var x = JsonConvert.DeserializeObject<MachineIdsModel>(checkFile);
-                        return x;
-                    }
-                    catch(Exception) {
-                        File.Delete(IdPath);
-                    }
+                    return JsonConvert.DeserializeObject<MachineIdsModel>(checkFile);
                 }
             }
             else {

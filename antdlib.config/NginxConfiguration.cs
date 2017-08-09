@@ -21,14 +21,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new NginxConfigurationModel();
             }
-            try {
                 var text = File.ReadAllText(CfgFile);
                 var obj = JsonConvert.DeserializeObject<NginxConfigurationModel>(text);
                 return obj;
-            }
-            catch(Exception) {
-                return new NginxConfigurationModel();
-            }
         }
 
         public static void Save(NginxConfigurationModel model) {

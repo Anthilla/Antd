@@ -18,12 +18,7 @@ namespace antdlib.config {
             if(!File.Exists(FilePath)) {
                 return new HostModel();
             }
-            try {
-                return JsonConvert.DeserializeObject<HostModel>(File.ReadAllText(FilePath));
-            }
-            catch(Exception) {
-                return new HostModel();
-            }
+            return JsonConvert.DeserializeObject<HostModel>(File.ReadAllText(FilePath));
         }
 
         public static void Export(HostModel model) {
@@ -194,17 +189,12 @@ namespace antdlib.config {
             if(!File.Exists("/etc/resolv.conf")) {
                 File.WriteAllText("/etc/resolv.conf", "");
             }
-            try {
-                var existing = File.ReadAllLines("/etc/resolv.conf");
-                var configured = Host.NsResolvContent;
-                var merge = existing.Union(configured).ToArray();
-                Host.NsResolvContent = merge;
-                File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
-                Export(Host);
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Error(ex.Message);
-            }
+            var existing = File.ReadAllLines("/etc/resolv.conf");
+            var configured = Host.NsResolvContent;
+            var merge = existing.Union(configured).ToArray();
+            Host.NsResolvContent = merge;
+            File.WriteAllLines("/etc/resolv.conf", Host.NsResolvContent);
+            Export(Host);
         }
         #endregion
 

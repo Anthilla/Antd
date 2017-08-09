@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdMemoryStatusModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdMemoryStatusModule() {
             Get["/memorystatus"] = x => {
-                var model = _api.Get<PageMemoryStatusModel>($"http://127.0.0.1:{Application.ServerPort}/memorystatus");
+                var model = ApiConsumer.Get<PageMemoryStatusModel>($"http://127.0.0.1:{Application.ServerPort}/memorystatus");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

@@ -36,37 +36,35 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdRsyncModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdRsyncModule() {
             Get["/rsync"] = x => {
-                var model = _api.Get<PageRsyncModel>($"http://127.0.0.1:{Application.ServerPort}/rsync");
+                var model = ApiConsumer.Get<PageRsyncModel>($"http://127.0.0.1:{Application.ServerPort}/rsync");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/rsync/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/set");
             };
 
             Post["/rsync/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/restart");
             };
 
             Post["/rsync/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/stop");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/stop");
             };
 
             Post["/rsync/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/enable");
             };
 
             Post["/rsync/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/disable");
             };
 
             Post["/rsync/options"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/options");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/options");
             };
 
             Post["/rsync/directory"] = x => {
@@ -78,7 +76,7 @@ namespace AntdUi.Modules {
                     { "Destination", destination },
                     { "Type", type },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/directory", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/directory", dict);
             };
 
             Post["/rsync/directory/del"] = x => {
@@ -86,7 +84,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/directory/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/rsync/directory/del", dict);
             };
         }
     }

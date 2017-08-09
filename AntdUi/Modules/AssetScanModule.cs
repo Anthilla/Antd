@@ -36,18 +36,16 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AssetScanModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AssetScanModule() {
             Get["/scan"] = x => {
-                var model = _api.Get<PageAssetScanModel>($"http://127.0.0.1:{Application.ServerPort}/scan");
+                var model = ApiConsumer.Get<PageAssetScanModel>($"http://127.0.0.1:{Application.ServerPort}/scan");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Get["/scan/{subnet}"] = x => {
                 string subnet = x.subnet;
-                var model = _api.Get<IEnumerable<string>>($"http://127.0.0.1:{Application.ServerPort}/scan/" + subnet);
+                var model = ApiConsumer.Get<IEnumerable<string>>($"http://127.0.0.1:{Application.ServerPort}/scan/" + subnet);
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

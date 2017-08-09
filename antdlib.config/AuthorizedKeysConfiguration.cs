@@ -20,15 +20,9 @@ namespace antdlib.config {
                 _serviceModel = new AuthorizedKeysConfigurationModel();
             }
             else {
-                try {
-                    var text = File.ReadAllText(_cfgFile);
-                    var obj = JsonConvert.DeserializeObject<AuthorizedKeysConfigurationModel>(text);
-                    _serviceModel = obj;
-                }
-                catch(Exception) {
-                    _serviceModel = new AuthorizedKeysConfigurationModel();
-                }
-
+                var text = File.ReadAllText(_cfgFile);
+                var obj = JsonConvert.DeserializeObject<AuthorizedKeysConfigurationModel>(text);
+                _serviceModel = obj;
             }
         }
 

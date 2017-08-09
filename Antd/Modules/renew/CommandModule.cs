@@ -41,29 +41,19 @@ namespace Antd.Modules {
         public CommandModule() {
             Get["/cmd/launch/{name}"] = x => {
                 string name = x.name;
-                try {
-                    var result = CommandLauncher.Launch(name);
-                    return JsonConvert.SerializeObject(result, Formatting.Indented);
-                }
-                catch(Exception ex) {
-                    return JsonConvert.SerializeObject(ex, Formatting.Indented);
-                }
+                var result = CommandLauncher.Launch(name);
+                return JsonConvert.SerializeObject(result, Formatting.Indented);
             };
 
             Get["/cmd/launch/{name}/{values*}"] = x => {
                 string name = x.name;
                 string strValues = x.values;
                 if(!string.IsNullOrEmpty(strValues)) {
-                    try {
-                        var dict = strValues.SplitToList(";")
-                            .Select(kv => kv.SplitToList(":").ToArray())
-                            .ToDictionary(s => s.First(), s => s.Last());
-                        var result = CommandLauncher.Launch(name, dict);
-                        return JsonConvert.SerializeObject(result, Formatting.Indented);
-                    }
-                    catch(Exception ex) {
-                        return JsonConvert.SerializeObject(ex, Formatting.Indented);
-                    }
+                    var dict = strValues.SplitToList(";")
+                        .Select(kv => kv.SplitToList(":").ToArray())
+                        .ToDictionary(s => s.First(), s => s.Last());
+                    var result = CommandLauncher.Launch(name, dict);
+                    return JsonConvert.SerializeObject(result, Formatting.Indented);
                 }
                 return HttpStatusCode.InternalServerError;
             };
@@ -72,24 +62,12 @@ namespace Antd.Modules {
                 string name = Request.Form.Command;
                 string strValues = Request.Form.Matches;
                 if(!string.IsNullOrEmpty(strValues)) {
-                    try {
-                        var dict = strValues.SplitToList(";")
-                            .Select(kv => kv.SplitToList(":").ToArray())
-                            .ToDictionary(s => s.First(), s => s.Last());
-                        var result = CommandLauncher.Launch(name, dict);
-                        return JsonConvert.SerializeObject(result, Formatting.Indented);
-                    }
-                    catch(Exception ex) {
-                        return JsonConvert.SerializeObject(ex, Formatting.Indented);
-                    }
+                    var dict = strValues.SplitToList(";")
+                        .Select(kv => kv.SplitToList(":").ToArray())
+                        .ToDictionary(s => s.First(), s => s.Last());
+                    return JsonConvert.SerializeObject(CommandLauncher.Launch(name, dict), Formatting.Indented);
                 }
-                try {
-                    var result = CommandLauncher.Launch(name);
-                    return JsonConvert.SerializeObject(result, Formatting.Indented);
-                }
-                catch(Exception ex) {
-                    return JsonConvert.SerializeObject(ex, Formatting.Indented);
-                }
+                return JsonConvert.SerializeObject(CommandLauncher.Launch(name), Formatting.Indented);
             };
         }
     }

@@ -115,9 +115,6 @@ namespace antdlib.config {
             catch(NullReferenceException nrex) {
                 ConsoleLogger.Warn(nrex.Message + " " + nrex.Source + " c: " + control.FirstCommand);
             }
-            catch(Exception ex) {
-                ConsoleLogger.Warn(ex.Message + " c: " + control.FirstCommand);
-            }
         }
 
         public static List<Control> Get() {

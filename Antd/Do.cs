@@ -11,23 +11,14 @@ using antdlib.config.shared;
 
 namespace Antd {
     public class Do {
-        private const string LocalTemplateDirectory = "/framework/antd/Templates";
-        private readonly Dictionary<string, string> _replacements;
+        private static string LocalTemplateDirectory = "/framework/antd/Templates";
+        private static readonly Dictionary<string, string> _replacements = new Dictionary<string, string>();
 
-        private readonly Host2Model _host;
-        private readonly bool _isDnsPublic;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Do() {
-            _host = Host2Configuration.Host;
-            _isDnsPublic = true;
-            _replacements = new Dictionary<string, string>();
-        }
+        private static readonly Host2Model _host = Host2Configuration.Host;
+        private static readonly bool _isDnsPublic = true;
 
         #region [    Main Functions    ]
-        public void AllChanges() {
+        public static void AllChanges() {
             ParametersChangesPre();
             NetworkChanges();
             HostChanges();
@@ -35,7 +26,7 @@ namespace Antd {
             ClusterChanges();
         }
 
-        public void HostChanges() {
+        public static void HostChanges() {
             SaveHostname();
             ApplyNtpdate();
             SaveNtpFile();
@@ -49,17 +40,17 @@ namespace Antd {
             //SaveNftablesFile();
         }
 
-        public void NetworkChanges() {
+        public static void NetworkChanges() {
             AppluDefaultNetworkConfiguration();
             ApplyNetworkConfiguration();
         }
 
-        public void ParametersChanges() {
+        public static void ParametersChanges() {
             ParametersChangesPre();
             ParametersChangesPost();
         }
 
-        public void ParametersChangesPre() {
+        public static void ParametersChangesPre() {
             LaunchStart();
             SaveOsParameters();
             ModulesChanges();
@@ -67,17 +58,17 @@ namespace Antd {
             StopService();
         }
 
-        public void ModulesChanges() {
+        public static void ModulesChanges() {
             SaveModprobes();
             RemoveModules();
             BlacklistMudules();
         }
 
-        public void ParametersChangesPost() {
+        public static void ParametersChangesPost() {
             LaunchEnd();
         }
 
-        public void ClusterChanges() {
+        public static void ClusterChanges() {
             ConsoleLogger.Log("[cluster] applying changes");
             ClusterConfiguration.Prepare();
             var clusterConfig = ClusterConfiguration.GetClusterInfo();
@@ -102,7 +93,7 @@ namespace Antd {
         #region [    keepalived    ]
         private const string KeepalivedFileOutput = "/etc/keepalived/keepalived.conf";
 
-        private void SaveKeepalived(string publicIp, List<NodeModel> nodes) {
+        private static void SaveKeepalived(string publicIp, List<NodeModel> nodes) {
             ConsoleLogger.Log("[cluster] init keepalived");
             const string keepalivedService = "keepalived.service";
             if(Systemctl.IsActive(keepalivedService)) {
@@ -146,9 +137,9 @@ namespace Antd {
             ConsoleLogger.Log("[cluster] keepalived restarted");
         }
 
-        private readonly string _haproxyFileOutput = $"{Parameter.AntdCfgCluster}/haproxy.conf";
+        private static readonly string _haproxyFileOutput = $"{Parameter.AntdCfgCluster}/haproxy.conf";
 
-        private void SaveHaproxy(string publicIp, List<NodeModel> nodes) {
+        private static void SaveHaproxy(string publicIp, List<NodeModel> nodes) {
             ConsoleLogger.Log("[cluster] init haproxy");
             CommandLauncher.Launch("haproxy-stop");
             if(File.Exists(_haproxyFileOutput)) {
@@ -183,7 +174,7 @@ namespace Antd {
                 ""
             };
             var localport = new AppConfiguration().Get().AntdUiPort;
-            var localServices = new ApiConsumer().Get<List<RssdpServiceModel>>($"http://localhost:{localport}/device/services");
+            var localServices = ApiConsumer.Get<List<RssdpServiceModel>>($"http://localhost:{localport}/device/services");
             foreach(var portMapping in ports) {
                 portMapping.ServicePort = localServices.FirstOrDefault(_ => _.Name == portMapping.ServiceName)?.Port;
                 if(string.IsNullOrEmpty(portMapping.ServicePort)) {
@@ -215,14 +206,14 @@ namespace Antd {
             ConsoleLogger.Log("[cluster] haproxy started");
         }
 
-        private void SaveFileSystemSync(Cluster.Configuration config, List<NodeModel> nodes) {
+        private static void SaveFileSystemSync(Cluster.Configuration config, List<NodeModel> nodes) {
             Application.VfsWatcher.Stop();
             Application.VfsWatcher.Start(config, nodes);
         }
         #endregion
 
         #region [    private functions    ]
-        private string EditLine(string input) {
+        private static string EditLine(string input) {
             var output = input;
             foreach(var r in _replacements) {
                 output = output.Replace(r.Key, r.Value);
@@ -230,13 +221,13 @@ namespace Antd {
             return output;
         }
 
-        private void ImportTemplate(string src, string dest) {
+        private static void ImportTemplate(string src, string dest) {
             if(!File.Exists(dest)) {
                 File.Copy(src, dest);
             }
         }
 
-        //private void ActivateService(string svc) {
+        //private  static void ActivateService(string svc) {
         //    if(Systemctl.IsEnabled(svc) == false) {
         //        Systemctl.Enable(svc);
         //    }
@@ -257,7 +248,7 @@ namespace Antd {
             }
         }
 
-        private void ApplyNetworkConfiguration() {
+        private static void ApplyNetworkConfiguration() {
             var configurations = Network2Configuration.Conf.Interfaces;
             if(!configurations.Any()) {
                 ConsoleLogger.Log("[network] configurations not found: create defaults");
@@ -282,7 +273,7 @@ namespace Antd {
             }
         }
 
-        private void SetInterface(NetworkInterface configuration, NetworkInterfaceConfiguration interfaceConfiguration, NetworkGatewayConfiguration gatewayConfiguration) {
+        private static void SetInterface(NetworkInterface configuration, NetworkInterfaceConfiguration interfaceConfiguration, NetworkGatewayConfiguration gatewayConfiguration) {
             if(interfaceConfiguration == null) {
                 return;
             }
@@ -379,7 +370,7 @@ namespace Antd {
             CommandLauncher.Launch("ip4-add-route", new Dictionary<string, string> { { "$net_if", deviceName }, { "$ip_address", "default" }, { "$gateway", gatewayConfiguration.GatewayAddress } });
         }
 
-        private void CreateDefaultNetworkConfiguration() {
+        private static void CreateDefaultNetworkConfiguration() {
             Network2Configuration.AddInterfaceConfiguration(Default.InternalPhysicalInterfaceConfiguration());
             Network2Configuration.AddInterfaceConfiguration(Default.ExternalPhysicalInterfaceConfiguration());
             Network2Configuration.AddInterfaceConfiguration(Default.InternalBridgeInterfaceConfiguration());
@@ -389,7 +380,7 @@ namespace Antd {
             Network2Configuration.AddDnsConfiguration(Default.PrivateInternalDnsConfiguration());
             Network2Configuration.AddDnsConfiguration(Default.PrivateExternalDnsConfiguration());
             var devs = Network2Configuration.InterfacePhysical.ToList();
-            var partIp = Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3).JoinToString(".");
+            var partIp = Default.InternalPhysicalInterfaceConfiguration().Ip.Split('.').Take(3).ToArray().JoinToString(".");
             var counter = 200;
             var list = new List<NetworkInterface>();
             foreach(var dev in devs) {
@@ -408,7 +399,7 @@ namespace Antd {
             Network2Configuration.SetDnsConfigurationActive(Default.PublicDnsConfiguration().Id);
         }
 
-        //public void SetupResolvD() {
+        //public static void SetupResolvD() {
         //    if(!File.Exists("/etc/systemd/resolved.conf") || string.IsNullOrEmpty(File.ReadAllText("/etc/systemd/resolved.conf"))) {
         //        var lines = new List<string> {
         //            "[Resolve]",
@@ -425,7 +416,7 @@ namespace Antd {
         #endregion
 
         #region [    hostnamectl    ]
-        private void SaveHostname() {
+        private static void SaveHostname() {
             CommandLauncher.Launch("set-hostname", new Dictionary<string, string> {
                 { "$host_name", _host.HostName }
             });
@@ -446,28 +437,23 @@ namespace Antd {
         #endregion
 
         #region [    ntpdate    ]
-        private void ApplyNtpdate() {
+        private static void ApplyNtpdate() {
             CommandLauncher.Launch("ntpdate", new Dictionary<string, string> { { "$server", _host.NtpdateServer } });
         }
         #endregion
 
         #region [    ntp.conf    ]
-        private readonly string _ntpFileInput = $"{LocalTemplateDirectory}/ntp.conf.tmlp";
+        private static readonly string _ntpFileInput = $"{LocalTemplateDirectory}/ntp.conf.tmlp";
         private const string NtpFileOutput = "/etc/ntp.conf";
 
-        private void SaveNtpFile() {
-            try {
-                using(var reader = new StreamReader(_ntpFileInput)) {
-                    using(TextWriter writer = File.CreateText(NtpFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+        private static void SaveNtpFile() {
+            using(var reader = new StreamReader(_ntpFileInput)) {
+                using(TextWriter writer = File.CreateText(NtpFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
@@ -475,7 +461,7 @@ namespace Antd {
         #region [    resolv.conf    ]
         private const string ResolvFileOutput = "/etc/resolv.conf";
 
-        private void SaveResolvFile() {
+        private static void SaveResolvFile() {
             string[] lines;
             if(_isDnsPublic) {
                 lines = new[] {
@@ -490,84 +476,64 @@ namespace Antd {
                     $"domain {_host.ResolvDomain}"
                 };
             }
-            try {
-                using(TextWriter writer = File.CreateText(ResolvFileOutput)) {
-                    foreach(var line in lines) {
-                        writer.WriteLine(line);
-                    }
+            using(TextWriter writer = File.CreateText(ResolvFileOutput)) {
+                foreach(var line in lines) {
+                    writer.WriteLine(line);
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
 
         #region [    nsswitch.conf    ]
-        private readonly string _nsswitchFileInput = $"{LocalTemplateDirectory}/nsswitch.conf.tmlp";
+        private static readonly string _nsswitchFileInput = $"{LocalTemplateDirectory}/nsswitch.conf.tmlp";
         private const string NsswitchFileOutput = "/etc/nsswitch.conf";
 
-        private void SaveNsswitchFile() {
-            try {
-                using(var reader = new StreamReader(_nsswitchFileInput)) {
-                    using(TextWriter writer = File.CreateText(NsswitchFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+        private static void SaveNsswitchFile() {
+            using(var reader = new StreamReader(_nsswitchFileInput)) {
+                using(TextWriter writer = File.CreateText(NsswitchFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
 
         #region [    networks    ]
-        private readonly string _networksFileInput = $"{LocalTemplateDirectory}/networks.tmlp";
+        private static readonly string _networksFileInput = $"{LocalTemplateDirectory}/networks.tmlp";
         private const string NetworksFileOutput = "/etc/networks";
 
-        private void SaveNetworksFile() {
-            try {
-                using(var reader = new StreamReader(_networksFileInput)) {
-                    using(TextWriter writer = File.CreateText(NetworksFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+        private static void SaveNetworksFile() {
+            using(var reader = new StreamReader(_networksFileInput)) {
+                using(TextWriter writer = File.CreateText(NetworksFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
 
         #region [    hosts    ]
-        private readonly string _hostsFileInput = $"{LocalTemplateDirectory}/hosts.tmlp";
+        private static readonly string _hostsFileInput = $"{LocalTemplateDirectory}/hosts.tmlp";
         private const string HostsFileOutput = "/etc/hosts";
 
-        private void SaveHostsFile() {
-            try {
-                using(var reader = new StreamReader(_hostsFileInput)) {
-                    using(TextWriter writer = File.CreateText(HostsFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+        private static void SaveHostsFile() {
+            using(var reader = new StreamReader(_hostsFileInput)) {
+                using(TextWriter writer = File.CreateText(HostsFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
 
         #region [    dhcpd.conf    ]
-        private void SaveDhcpdFile() {
+        private static void SaveDhcpdFile() {
             Directory.CreateDirectory("/etc/dhcp");
             Directory.CreateDirectory(BindDirectory);
             Directory.CreateDirectory(BindZonesDirectory);
@@ -592,7 +558,7 @@ namespace Antd {
         private const string BindDirectory = "/etc/bind";
         private const string BindZonesDirectory = "/etc/bind/zones";
 
-        private void SaveNamedFile() {
+        private static void SaveNamedFile() {
             Directory.CreateDirectory(BindDirectory);
             Directory.CreateDirectory(BindZonesDirectory);
             var newModel = BindConfiguration.Get();
@@ -689,7 +655,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, _host.InternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.InternalDomainPrimary, _host.InternalArpaPrimary, _host.InternalHostIpPrimary.Split('.').Skip(2).ToArray().JoinToString(".")));
             }
             if(newModel.ZoneFiles.FirstOrDefault(_ => _.Name == $"{BindZonesDirectory}/host.{externalZoneName}.db") == null) {
                 var filePath = $"{BindZonesDirectory}/host.{externalZoneName}.db";
@@ -709,7 +675,7 @@ namespace Antd {
                     Configuration = "unixtime"
                 };
                 zonesFile.Add(z);
-                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, _host.ExternalHostIpPrimary.Split('.').Skip(2).JoinToString(".")));
+                File.WriteAllLines(filePath, BindConfiguration.GetReverseZoneText(_host.HostName, _host.ExternalDomainPrimary, _host.ExternalArpaPrimary, _host.ExternalHostIpPrimary.Split('.').Skip(2).ToArray().JoinToString(".")));
             }
             newModel.ZoneFiles = zonesFile;
             BindConfiguration.Save(newModel);
@@ -718,28 +684,23 @@ namespace Antd {
         #endregion
 
         #region [    rndc.conf    ]
-        private readonly string _rndcFileInput = $"{LocalTemplateDirectory}/rndc.conf.tmpl";
+        private static readonly string _rndcFileInput = $"{LocalTemplateDirectory}/rndc.conf.tmpl";
         private const string RndcFileOutput = "/etc/bind/rndc.conf";
 
-        private void SaveRndcFile() {
-            try {
-                using(var reader = new StreamReader(_rndcFileInput)) {
-                    using(TextWriter writer = File.CreateText(RndcFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+        private static void SaveRndcFile() {
+            using(var reader = new StreamReader(_rndcFileInput)) {
+                using(TextWriter writer = File.CreateText(RndcFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
 
         #region [    bind files    ]
-        private void SaveBindFiles() {
+        private static void SaveBindFiles() {
             Directory.CreateDirectory("/etc/bind");
             Directory.CreateDirectory("/etc/bind/zones");
             ImportTemplate($"{LocalTemplateDirectory}/blackhole.zones.tmpl", "/etc/bind/blackhole.zones");
@@ -749,65 +710,50 @@ namespace Antd {
             ImportTemplate($"{LocalTemplateDirectory}/zones_localhost-reverse.db.tmpl", "/etc/bind/zones/localhost-reverse.db");
         }
 
-        private void SaveBindZones() {
+        private static void SaveBindZones() {
             var hostZoneFileInput = $"{LocalTemplateDirectory}/zones_host.domint.local.db.tmpl";
             var hostZoneFileOutput = $"/etc/bind/zones/host.{_host.InternalDomainPrimary}.db";
-            try {
-                using(var reader = new StreamReader(hostZoneFileInput)) {
-                    using(TextWriter writer = File.CreateText(hostZoneFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+            using(var reader = new StreamReader(hostZoneFileInput)) {
+                using(TextWriter writer = File.CreateText(hostZoneFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
 
             var revZoneFileInput = $"{LocalTemplateDirectory}/zones_rev.10.11.0.0.db.tmpl";
             var revZoneFileOutput = $"/etc/bind/zones/rev.{_host.InternalNetPrimary}.db";
-            try {
-                using(var reader = new StreamReader(revZoneFileInput)) {
-                    using(TextWriter writer = File.CreateText(revZoneFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+            using(var reader = new StreamReader(revZoneFileInput)) {
+                using(TextWriter writer = File.CreateText(revZoneFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-            }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
             }
         }
         #endregion
 
         #region [    Nftable    ]
-        private readonly string _nftablesFileInput = $"{LocalTemplateDirectory}/nftables.conf.tmpl";
+        private static readonly string _nftablesFileInput = $"{LocalTemplateDirectory}/nftables.conf.tmpl";
         private const string NftablesFileOutput = "/etc/nftables.conf";
 
-        private void SaveNftablesFile() {
-            try {
-                using(var reader = new StreamReader(_nftablesFileInput)) {
-                    using(TextWriter writer = File.CreateText(NftablesFileOutput)) {
-                        string line;
-                        while((line = reader.ReadLine()) != null) {
-                            writer.WriteLine(EditLine(line));
-                        }
+        private static void SaveNftablesFile() {
+            using(var reader = new StreamReader(_nftablesFileInput)) {
+                using(TextWriter writer = File.CreateText(NftablesFileOutput)) {
+                    string line;
+                    while((line = reader.ReadLine()) != null) {
+                        writer.WriteLine(EditLine(line));
                     }
                 }
-                CommandLauncher.Launch("nft-f", new Dictionary<string, string> { { "$file", NftablesFileOutput } });
             }
-            catch(Exception e) {
-                Console.WriteLine(e.Message);
-            }
+            CommandLauncher.Launch("nft-f", new Dictionary<string, string> { { "$file", NftablesFileOutput } });
         }
         #endregion
 
         #region [    modules    ]
-        public void SaveModprobes() {
+        public static void SaveModprobes() {
             var modules = HostParametersConfiguration.Conf.Modprobes;
             foreach(var mod in modules) {
                 ConsoleLogger.Log($"load module: {mod}");
@@ -816,19 +762,19 @@ namespace Antd {
             }
         }
 
-        public void RemoveModules() {
+        public static void RemoveModules() {
             var modules = string.Join(" ", HostParametersConfiguration.Conf.Rmmod);
             CommandLauncher.Launch("rmmod", new Dictionary<string, string> { { "$modules", modules } });
         }
 
-        public void BlacklistMudules() {
+        public static void BlacklistMudules() {
             if(!File.Exists("/etc/modprobe.d/blacklist.conf")) { return; }
             File.WriteAllLines("/etc/modprobe.d/blacklist.conf", HostParametersConfiguration.Conf.ModulesBlacklist.Select(_ => $"blacklist {_}"));
         }
         #endregion
 
         #region [    services    ]
-        public void StartService() {
+        public static void StartService() {
             var svcs = HostParametersConfiguration.Conf.ServicesStart;
             foreach(var svc in svcs) {
                 if(Systemctl.IsEnabled(svc) == false) {
@@ -840,7 +786,7 @@ namespace Antd {
             }
         }
 
-        public void StopService() {
+        public static void StopService() {
             var svcs = HostParametersConfiguration.Conf.ServicesStop;
             foreach(var svc in svcs) {
                 if(Systemctl.IsEnabled(svc)) {
@@ -854,71 +800,58 @@ namespace Antd {
         #endregion
 
         #region [    os parameters    ]
-        public void SaveOsParameters() {
+        public static void SaveOsParameters() {
             var parameters = HostParametersConfiguration.Conf.OsParameters;
             foreach(var par in parameters) {
                 if(!par.Contains(" ")) { continue; }
-                try {
-                    var arr = par.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                    if(arr.Length != 2) { continue; }
-                    var file = arr[0];
-                    if(!File.Exists(file)) { continue; }
-                    var value = arr[1];
-                    File.WriteAllText(file, value);
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex);
-                }
+                var arr = par.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                if(arr.Length != 2) { continue; }
+                var file = arr[0];
+                if(!File.Exists(file)) { continue; }
+                var value = arr[1];
+                File.WriteAllText(file, value);
             }
         }
         #endregion
 
         #region [    commands    ]
-        public void LaunchStart() {
+        public static void LaunchStart() {
             var controls = HostParametersConfiguration.Conf.StartCommands;
             foreach(var control in controls) {
                 Launch(control);
             }
         }
 
-        public void LaunchEnd() {
+        public static void LaunchEnd() {
             var controls = HostParametersConfiguration.Conf.EndCommands;
             foreach(var control in controls) {
                 Launch(control);
             }
         }
 
-        private void Launch(Control control) {
+        private static void Launch(Control control) {
             if(control?.FirstCommand == null) {
                 return;
             }
-            try {
-                var firstCommand = control.FirstCommand;
-                if(string.IsNullOrEmpty(control.ControlCommand)) {
-                    ConsoleLogger.Log($"[setup.conf] {control.FirstCommand}");
-                    Bash.Execute(firstCommand, false);
-                    return;
-                }
-                var controlCommand = control.ControlCommand;
-                var controlResult = Bash.Execute(controlCommand);
-                var firstCheck = controlResult.Contains(control.Check);
-                if(firstCheck) {
-                    return;
-                }
+            var firstCommand = control.FirstCommand;
+            if(string.IsNullOrEmpty(control.ControlCommand)) {
+                ConsoleLogger.Log($"[setup.conf] {control.FirstCommand}");
                 Bash.Execute(firstCommand, false);
-                controlResult = Bash.Execute(controlCommand);
-                var secondCheck = controlResult.Contains(control.Check);
-                if(secondCheck) {
-                    return;
-                }
-                Launch(control);
+                return;
             }
-            catch(NullReferenceException nrex) {
-                ConsoleLogger.Warn(nrex.Message + " " + nrex.Source + " c: " + control.FirstCommand);
+            var controlCommand = control.ControlCommand;
+            var controlResult = Bash.Execute(controlCommand);
+            var firstCheck = controlResult.Contains(control.Check);
+            if(firstCheck) {
+                return;
             }
-            catch(Exception ex) {
-                ConsoleLogger.Warn(ex.Message + " c: " + control.FirstCommand);
+            Bash.Execute(firstCommand, false);
+            controlResult = Bash.Execute(controlCommand);
+            var secondCheck = controlResult.Contains(control.Check);
+            if(secondCheck) {
+                return;
             }
+            Launch(control);
         }
         #endregion
     }

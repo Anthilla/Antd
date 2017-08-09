@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AssetClusterModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AssetClusterModule() {
             Get["/cluster"] = x => {
-                var model = _api.Get<PageAssetClusterModel>($"http://127.0.0.1:{Application.ServerPort}/cluster");
+                var model = ApiConsumer.Get<PageAssetClusterModel>($"http://127.0.0.1:{Application.ServerPort}/cluster");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -52,7 +50,7 @@ namespace AntdUi.Modules {
                     {"Config", config},
                     {"Ip", ip}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/save", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/save", dict);
             };
 
             Post["Accept Configuration", "/cluster/accept"] = x => {
@@ -62,7 +60,7 @@ namespace AntdUi.Modules {
                     {"File", file},
                     {"Content", content}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/accept", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/accept", dict);
             };
 
             #region [    Handshake + cluster init    ]
@@ -71,7 +69,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "ApplePie", apple }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake", dict);
             };
 
             Post["Add Device to Cluster", "/cluster/device/add"] = x => {
@@ -79,7 +77,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "HostJson", conf }
                 };
-                var fs = _api.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake/start", dict);
+                var fs = ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/asset/handshake/start", dict);
                 return fs;
             };
 
@@ -88,30 +86,30 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Cluster", clusterConfiguration }
                 };
-                var fs = _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/deploy", dict);
+                var fs = ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/deploy", dict);
                 return fs;
             };
             #endregion
 
             #region [    old   ]
             //Post["/cluster/set"] = x => {
-            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/set");
+            //    return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/set");
             //};
 
             //Post["/cluster/restart"] = x => {
-            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/restart");
+            //    return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/restart");
             //};
 
             //Post["/cluster/stop"] = x => {
-            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/stop");
+            //    return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/stop");
             //};
 
             //Post["/cluster/enable"] = x => {
-            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/enable");
+            //    return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/enable");
             //};
 
             //Post["/cluster/disable"] = x => {
-            //    return _api.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/disable");
+            //    return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/cluster/disable");
             //};
             #endregion
         }

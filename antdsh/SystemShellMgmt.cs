@@ -42,7 +42,7 @@ namespace antdsh {
         /// </summary>
         public bool ChechDiskSpace() {
             Console.WriteLine("Checking Disk Space");
-            var blkid = Bash.Execute("blkid").SplitBash().Grep("/dev/sda").Grep("BootExt");
+            var blkid = Bash.Execute("blkid").Split().Grep("/dev/sda").Grep("BootExt");
             var volume = blkid.First().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[0].Replace(":", "");
             var available = Bash.Execute($"df -k {volume} | sed -e 1d|head -3").
                 Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToArray()[3];
@@ -64,15 +64,15 @@ namespace antdsh {
         /// </summary>
         public void DownloadNewFiles() {
             var firmwareTmp = $"{Parameter.AntdTmpDir}/firmare";
-            new ApiConsumer().GetFile("/url/download/firmware", $"{firmwareTmp}");
+            ApiConsumer.GetFile("/url/download/firmware", $"{firmwareTmp}");
             var initrdTmp = $"{Parameter.AntdTmpDir}/initrd";
-            new ApiConsumer().GetFile("/url/download/initrd", $"{initrdTmp}");
+            ApiConsumer.GetFile("/url/download/initrd", $"{initrdTmp}");
             var kernelTmp = $"{Parameter.AntdTmpDir}/kernel";
-            new ApiConsumer().GetFile("/url/download/kernel", $"{kernelTmp}");
+            ApiConsumer.GetFile("/url/download/kernel", $"{kernelTmp}");
             var modulesTmp = $"{Parameter.AntdTmpDir}/modules";
-            new ApiConsumer().GetFile("/url/download/modules", $"{modulesTmp}");
+            ApiConsumer.GetFile("/url/download/modules", $"{modulesTmp}");
             var systemTmp = $"{Parameter.AntdTmpDir}/system";
-            new ApiConsumer().GetFile("/url/download/system", $"{systemTmp}");
+            ApiConsumer.GetFile("/url/download/system", $"{systemTmp}");
 
             Bash.Execute($"cp {firmwareTmp} {Parameter.RepoKernel}");
             Bash.Execute($"cp {initrdTmp} {Parameter.RepoKernel}");

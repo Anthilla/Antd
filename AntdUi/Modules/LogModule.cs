@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class LogModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public LogModule() {
             Get["/log"] = x => {
-                var model = _api.Get<PageLogModel>($"http://127.0.0.1:{Application.ServerPort}/log");
+                var model = ApiConsumer.Get<PageLogModel>($"http://127.0.0.1:{Application.ServerPort}/log");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

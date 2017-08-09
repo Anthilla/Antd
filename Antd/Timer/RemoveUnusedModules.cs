@@ -16,7 +16,7 @@ namespace Antd.Timer {
         }
 
         private static void Action() {
-            new Do().ParametersChangesPost();
+            Do.ParametersChangesPost();
         }
     }
 }

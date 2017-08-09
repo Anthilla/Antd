@@ -94,7 +94,7 @@ namespace Antd.Modules {
                     Cloud = cloud ?? old.Cloud
                 };
                 Host2Configuration.Export(vars);
-                new Do().HostChanges();
+                Do.HostChanges();
                 return HttpStatusCode.OK;
             };
         }

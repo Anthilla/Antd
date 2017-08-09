@@ -36,33 +36,31 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class LogJournaldModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public LogJournaldModule() {
             Get["/journald"] = x => {
-                var model = _api.Get<PageJournaldModel>($"http://127.0.0.1:{Application.ServerPort}/journald");
+                var model = ApiConsumer.Get<PageJournaldModel>($"http://127.0.0.1:{Application.ServerPort}/journald");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/journald/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/journald/set");
             };
 
             Post["/journald/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/journald/restart");
             };
 
             Post["/journald/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/stop");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/journald/stop");
             };
 
             Post["/journald/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/journald/enable");
             };
 
             Post["/journald/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/journald/disable");
             };
 
             Post["/journald/options"] = x => {
@@ -118,7 +116,7 @@ namespace AntdUi.Modules {
                     { "MaxLevelConsole", maxLevelConsole },
                     { "MaxLevelWall", maxLevelWall }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/journald/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/journald/options", dict);
             };
         }
     }

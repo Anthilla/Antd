@@ -18,16 +18,10 @@ namespace antdlib.config {
         private static AppsConfigurationModel Load() {
             if(!File.Exists(CfgFile)) {
                 return new AppsConfigurationModel();
-
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<AppsConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new AppsConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<AppsConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(AppsConfigurationModel model) {

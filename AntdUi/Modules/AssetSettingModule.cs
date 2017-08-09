@@ -36,11 +36,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AssetSettingModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AssetSettingModule() {
             Get["/assetsetting"] = x => {
-                var model = _api.Get<PageAssetSettingModel>($"http://127.0.0.1:{Application.ServerPort}/assetsetting");
+                var model = ApiConsumer.Get<PageAssetSettingModel>($"http://127.0.0.1:{Application.ServerPort}/assetsetting");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -52,7 +50,7 @@ namespace AntdUi.Modules {
                     {"Subnet", subnet},
                     {"Label", label}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/netscan/setsubnet", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/netscan/setsubnet", dict);
             };
 
             Post["/netscan/setlabel"] = x => {
@@ -64,7 +62,7 @@ namespace AntdUi.Modules {
                     {"Number", number},
                     {"Label", label}
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/netscan/setlabel", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/netscan/setlabel", dict);
             };
         }
     }

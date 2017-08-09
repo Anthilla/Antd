@@ -18,14 +18,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new CaConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<CaConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new CaConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<CaConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(CaConfigurationModel model) {
@@ -172,7 +167,7 @@ namespace antdlib.config {
         }
 
         private static string GetThisIp() {
-            var ifconfig = Bash.Execute("ifconfig").SplitBash();
+            var ifconfig = Bash.Execute("ifconfig").Split();
             var first = ifconfig.FirstOrDefault(_ => _.ToLower().Contains("inet"));
             if(first == null) {
                 return "127.0.0.1";
@@ -346,7 +341,7 @@ namespace antdlib.config {
 
         public static string[] CheckCrl() {
             var crl = $"{CaIntermediateDirectory}/crl/intermediate.crl.pem";
-            return Bash.Execute($"openssl crl -in {crl} -noout -text").SplitBash().ToArray();
+            return Bash.Execute($"openssl crl -in {crl} -noout -text").Split().ToArray();
         }
         #endregion
     }

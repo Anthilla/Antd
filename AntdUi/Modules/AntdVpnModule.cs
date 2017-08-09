@@ -36,33 +36,31 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdVpnModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdVpnModule() {
             Get["/vpn"] = x => {
-                var model = _api.Get<PageVpnModel>($"http://127.0.0.1:{Application.ServerPort}/vpn");
+                var model = ApiConsumer.Get<PageVpnModel>($"http://127.0.0.1:{Application.ServerPort}/vpn");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/vpn/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/set");
             };
 
             Post["/vpn/restart"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/restart");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/restart");
             };
 
             Post["/vpn/stop"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/stop");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/stop");
             };
 
             Post["/vpn/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/enable");
             };
 
             Post["/vpn/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/disable");
             };
 
             Post["/vpn/options"] = x => {
@@ -78,7 +76,7 @@ namespace AntdUi.Modules {
                     { "LocalAddress", localAddress },
                     { "LocalRange", localRange }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/options", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/vpn/options", dict);
             };
         }
     }

@@ -26,14 +26,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new List<NodeModel>();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<List<NodeModel>>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new List<NodeModel>();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<List<NodeModel>>(text);
+            return obj;
         }
 
         public static void SaveNodes(List<NodeModel> model) {
@@ -56,14 +51,9 @@ namespace antdlib.config {
             if(!File.Exists(IpFile)) {
                 return new Cluster.Configuration();
             }
-            try {
-                var text = File.ReadAllText(IpFile);
-                var obj = JsonConvert.DeserializeObject<Cluster.Configuration>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new Cluster.Configuration();
-            }
+            var text = File.ReadAllText(IpFile);
+            var obj = JsonConvert.DeserializeObject<Cluster.Configuration>(text);
+            return obj;
         }
 
         public static List<NodeModel> GetNodes() {

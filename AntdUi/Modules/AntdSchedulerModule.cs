@@ -36,25 +36,23 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class AntdSchedulerModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdSchedulerModule() {
             Get["/scheduler"] = x => {
-                var model = _api.Get<PageSchedulerModel>($"http://127.0.0.1:{Application.ServerPort}/scheduler");
+                var model = ApiConsumer.Get<PageSchedulerModel>($"http://127.0.0.1:{Application.ServerPort}/scheduler");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
 
             Post["/scheduler/set"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/set");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/set");
             };
 
             Post["/scheduler/enable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/enable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/enable");
             };
 
             Post["/scheduler/disable"] = x => {
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/disable");
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/disable");
             };
 
             Post["/scheduler/timer"] = x => {
@@ -66,7 +64,7 @@ namespace AntdUi.Modules {
                     { "Time", time },
                     { "Command", command },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/timer", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/timer", dict);
             };
 
             Post["/scheduler/timer/del"] = x => {
@@ -74,7 +72,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/timer/del", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/scheduler/timer/del", dict);
             };
         }
     }

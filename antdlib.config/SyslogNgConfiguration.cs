@@ -20,14 +20,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new SyslogNgConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<SyslogNgConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new SyslogNgConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<SyslogNgConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(SyslogNgConfigurationModel model) {

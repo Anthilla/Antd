@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdInfoModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdInfoModule() {
             Get["/info"] = x => {
-                var model = _api.Get<PageInfoModel>($"http://127.0.0.1:{Application.ServerPort}/info");
+                var model = ApiConsumer.Get<PageInfoModel>($"http://127.0.0.1:{Application.ServerPort}/info");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

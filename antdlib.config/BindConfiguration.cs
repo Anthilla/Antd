@@ -66,8 +66,7 @@ namespace antdlib.config {
         }
 
         public static void DownloadRootServerHits() {
-            var apiConsumer = new ApiConsumer();
-            var text = apiConsumer.GetString("https://www.internic.net/domain/named.named");
+            var text = ApiConsumer.GetString("https://www.internic.net/domain/named.named");
             const string namedHintsFile = "/etc/bind/named.named";
             FileWithAcl.WriteAllText(namedHintsFile, text, "644", "named", "named");
             RndcReload();
@@ -77,14 +76,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new BindConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<BindConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new BindConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<BindConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(BindConfigurationModel model) {
@@ -124,18 +118,18 @@ namespace antdlib.config {
                 }
                 lines.Add("}");
             }
-            lines.Add($"forwarders {{ {options.Forwarders.JoinToString("; ")} }}");
-            lines.Add($"allow-notify {{ {options.AllowNotify.JoinToString("; ")} }}");
-            lines.Add($"allow-transfer {{ {options.AllowTransfer.JoinToString("; ")} }}");
+            lines.Add($"forwarders {{ {CommonString.Build(options.Forwarders.ToArray(), "; ")} }}");
+            lines.Add($"allow-notify {{ {CommonString.Build(options.AllowNotify.ToArray(), "; ")} }}");
+            lines.Add($"allow-transfer {{ {CommonString.Build(options.AllowTransfer.ToArray(), "; ")} }}");
             lines.Add($"recursion {options.Recursion};");
             lines.Add($"transfer-format {options.TransferFormat};");
             lines.Add($"query-source address {options.QuerySourceAddress} port {options.QuerySourcePort};");
             lines.Add($"version {options.Version};");
-            lines.Add($"allow-query {{ {options.AllowQuery.JoinToString("; ")} }}");
-            lines.Add($"allow-recursion {{ {options.AllowRecursion.JoinToString("; ")} }}");
+            lines.Add($"allow-query {{ {CommonString.Build(options.AllowQuery.ToArray(), "; ")} }}");
+            lines.Add($"allow-recursion {{ {CommonString.Build(options.AllowRecursion.ToArray(),"; ")} }}");
             lines.Add($"ixfr-from-differences {options.IxfrFromDifferences};");
-            lines.Add($"listen-on-v6 {{ {options.ListenOnV6.JoinToString("; ")} }}");
-            lines.Add($"listen-on port 53 {{ {options.ListenOnPort53.JoinToString("; ")} }}");
+            lines.Add($"listen-on-v6 {{ {CommonString.Build(options.ListenOnV6.ToArray(),"; ")} }}");
+            lines.Add($"listen-on port 53 {{ {CommonString.Build(options.ListenOnPort53.ToArray(),"; ")} }}");
             lines.Add($"dnssec-enable {options.DnssecEnabled};");
             lines.Add($"dnssec-validation {options.DnssecValidation};");
             lines.Add($"dnssec-lookaside {options.DnssecLookaside};");
@@ -151,13 +145,13 @@ namespace antdlib.config {
 
             lines.Add(
                 options.ControlKeys.Any()
-                    ? $"controls {{ inet {options.ControlIp} port {options.ControlPort} allow {{ {options.ControlAllow.JoinToString("; ")} }} keys {{ {options.ControlKeys.Select(_ => "\"" + _ + "\"").JoinToString(";")} }}"
-                    : $"controls {{ inet {options.ControlIp} port {options.ControlPort} allow {{ {options.ControlAllow.JoinToString("; ")} }}");
+                    ? $"controls {{ inet {options.ControlIp} port {options.ControlPort} allow {{ {CommonString.Build(options.ControlAllow.ToArray(), "; ")} }} keys {{ {CommonString.Build(options.ControlKeys.Select(_ => "\"" + _ + "\"").ToArray(), ";")} }}"
+                    : $"controls {{ inet {options.ControlIp} port {options.ControlPort} allow {{ {CommonString.Build(options.ControlAllow.ToArray(), "; ")} }}");
 
             lines.Add("");
 
             foreach(var acl in options.AclList) {
-                lines.Add($"acl {acl.Name} {{ {acl.InterfaceList.JoinToString("; ")} }}");
+                lines.Add($"acl {acl.Name} {{ {CommonString.Build(acl.InterfaceList.ToArray(), "; ")} }}");
             }
             lines.Add("");
 
@@ -207,13 +201,13 @@ namespace antdlib.config {
                     lines.Add($"serial-update-method {zone.SerialUpdateMethod};");
                 }
                 if(zone.AllowUpdate.Any()) {
-                    lines.Add($"allow-update {{ {zone.AllowUpdate.JoinToString("; ")} }}");
+                    lines.Add($"allow-update {{ {CommonString.Build(zone.AllowUpdate.ToArray(), "; ")} }}");
                 }
                 if(zone.AllowQuery.Any()) {
-                    lines.Add($"allow-query {{ {zone.AllowQuery.JoinToString("; ")} }}");
+                    lines.Add($"allow-query {{ {CommonString.Build(zone.AllowQuery.ToArray(), "; ")} }}");
                 }
                 if(zone.AllowTransfer.Any()) {
-                    lines.Add($"allow-transfer {{ {zone.AllowTransfer.JoinToString("; ")} }}");
+                    lines.Add($"allow-transfer {{ {CommonString.Build(zone.AllowTransfer.ToArray(), "; ")} }}");
                     lines.Add($"allow-transfer {zone.AllowTransfer};");
                 }
                 lines.Add("};");

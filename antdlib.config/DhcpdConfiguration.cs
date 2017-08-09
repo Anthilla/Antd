@@ -50,14 +50,9 @@ namespace antdlib.config {
             if(!File.Exists(CfgFile)) {
                 return new DhcpdConfigurationModel();
             }
-            try {
-                var text = File.ReadAllText(CfgFile);
-                var obj = JsonConvert.DeserializeObject<DhcpdConfigurationModel>(text);
-                return obj;
-            }
-            catch(Exception) {
-                return new DhcpdConfigurationModel();
-            }
+            var text = File.ReadAllText(CfgFile);
+            var obj = JsonConvert.DeserializeObject<DhcpdConfigurationModel>(text);
+            return obj;
         }
 
         public static void Save(DhcpdConfigurationModel model) {

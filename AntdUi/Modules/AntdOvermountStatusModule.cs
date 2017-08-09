@@ -35,11 +35,9 @@ using Newtonsoft.Json;
 namespace AntdUi.Modules {
     public class AntdOvermountStatusModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdOvermountStatusModule() {
             Get["/overmountstatus"] = x => {
-                var model = _api.Get<PageOvermountStatusModel>($"http://127.0.0.1:{Application.ServerPort}/overmountstatus");
+                var model = ApiConsumer.Get<PageOvermountStatusModel>($"http://127.0.0.1:{Application.ServerPort}/overmountstatus");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };

@@ -37,7 +37,7 @@ using anthilla.core.Helpers;
 using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
-    public  static class MountManagement {
+    public static class MountManagement {
 
         private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh };
 
@@ -47,7 +47,7 @@ namespace antdlib.config {
             {"/sys/kernel/dlm", "-o default -t ocfs2_dlmfs dlm"}
         };
 
-        public  static void WorkingDirectories() {
+        public static void WorkingDirectories() {
             foreach(var dir in DefaultWorkingDirectories) {
                 var mntDir = MountHelper.SetDirsPath(dir);
                 Directory.CreateDirectory(dir);
@@ -64,7 +64,7 @@ namespace antdlib.config {
             }
         }
 
-        public  static List<MountModel> GetAll() {
+        public static List<MountModel> GetAll() {
             var list = new List<MountModel>();
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var directory in directories) {
@@ -90,7 +90,7 @@ namespace antdlib.config {
             return list;
         }
 
-        public  static void AllDirectories() {
+        public static void AllDirectories() {
             var list = new List<MountModel>();
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             foreach(var directory in directories) {
@@ -117,18 +117,13 @@ namespace antdlib.config {
 
             var directoryMounts = list.Where(m => m.Entity == MountEntity.Directory).ToList();
             foreach(var directoryMount in directoryMounts) {
-                try {
-                    var dir = directoryMount.SystemPath.Replace("\\", "");
-                    var mntDir = directoryMount.RepoDirsPath;
-                    if(MountHelper.IsAlreadyMounted(dir) == false) {
-                        Directory.CreateDirectory(dir);
-                        Directory.CreateDirectory(mntDir);
-                        SetBind(mntDir, dir);
-                        ConsoleLogger.Log($"mount {mntDir} -> {dir}");
-                    }
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Warn(ex.Message);
+                var dir = directoryMount.SystemPath.Replace("\\", "");
+                var mntDir = directoryMount.RepoDirsPath;
+                if(MountHelper.IsAlreadyMounted(dir) == false) {
+                    Directory.CreateDirectory(dir);
+                    Directory.CreateDirectory(mntDir);
+                    SetBind(mntDir, dir);
+                    ConsoleLogger.Log($"mount {mntDir} -> {dir}");
                 }
             }
             ConsoleLogger.Log("directories mounted");
@@ -154,14 +149,14 @@ namespace antdlib.config {
             ConsoleLogger.Log("files mounted");
         }
 
-        public  static void Dir(string directory) {
+        public static void Dir(string directory) {
             var mntDir = MountHelper.SetDirsPath(directory);
             Directory.CreateDirectory(directory);
             Directory.CreateDirectory(mntDir);
             SetBind(mntDir, directory);
         }
 
-        public  static void File(string file) {
+        public static void File(string file) {
             var mntFile = MountHelper.SetFilesPath(file);
             SetBind(mntFile, file);
         }

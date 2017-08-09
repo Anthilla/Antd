@@ -22,23 +22,18 @@ namespace antdlib.config {
             if(!File.Exists(FilePath)) {
                 return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
             }
-            try {
-                var text = File.ReadAllText(FilePath);
-                var arr = text.Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
-                if(arr.Length == 0) {
-                    return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
-                }
-                if(arr.Length == 1) {
-                    return new Tuple<string, string>("master", arr[0]);
-                }
-                if(arr.Length == 2) {
-                    return new Tuple<string, string>(arr[0], arr[1]);
-                }
+            var text = File.ReadAllText(FilePath);
+            var arr = text.Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
+            if(arr.Length == 0) {
                 return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
             }
-            catch(Exception) {
-                return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
+            if(arr.Length == 1) {
+                return new Tuple<string, string>("master", arr[0]);
             }
+            if(arr.Length == 2) {
+                return new Tuple<string, string>(arr[0], arr[1]);
+            }
+            return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
         }
 
         public void Setup() {

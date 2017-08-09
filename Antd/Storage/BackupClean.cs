@@ -29,16 +29,11 @@ namespace Antd.Storage {
             foreach(var line in lines) {
                 var snap = new Model();
                 var attr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                try {
-                    snap.Name = attr[0];
-                    snap.PoolName = attr[0].Split('@').FirstOrDefault();
-                    snap.Dimension = Convert.ToInt64(attr[1]);
-                    snap.Created = GetSnapshotDate(snap.Name);
-                    snapshots.Add(snap);
-                }
-                catch(Exception ex) {
-                    Console.WriteLine(ex);
-                }
+                snap.Name = attr[0];
+                snap.PoolName = attr[0].Split('@').FirstOrDefault();
+                snap.Dimension = Convert.ToInt64(attr[1]);
+                snap.Created = GetSnapshotDate(snap.Name);
+                snapshots.Add(snap);
             }
 
             var list = new HashSet<string>();

@@ -28,33 +28,33 @@
 //-------------------------------------------------------------------------------------
 
 using Antd.Apps;
+using Antd.Info;
 using Antd.License;
 using Antd.Overlay;
 using Antd.Storage;
 using Antd.SystemdTimer;
 using Antd.Timer;
 using Antd.Ui;
+using Antd.VFS;
 using antdlib.config;
 using antdlib.config.shared;
 using antdlib.models;
+using anthilla.core;
+using anthilla.core.Helpers;
 using anthilla.crypto;
+using anthilla.scheduler;
+using Kvpbase;
 using Nancy;
 using Nancy.Hosting.Self;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using anthilla.core;
-using anthilla.core.Helpers;
+using System.Threading;
 using EnumerableExtensions = anthilla.core.EnumerableExtensions;
 using HostConfiguration = antdlib.config.HostConfiguration;
 using Parameter = antdlib.common.Parameter;
-using Random = anthilla.core.Random;
-using System.Threading;
-using Kvpbase;
-using Antd.VFS;
-using anthilla.scheduler;
-using Antd.Info;
 
 namespace Antd {
     internal class Application {
@@ -63,17 +63,65 @@ namespace Antd {
         public static VfsWatcher VfsWatcher;
 
         private static void Main() {
-            ConsoleLogger.Log("[boot step] starting antd");
-            var startTime = DateTime.Now;
+            ConsoleLogger.Log("[antd] start");
+            var STOPWATCH = new Stopwatch();
+            STOPWATCH.Start();
 
-            ConsoleLogger.Log("[boot step] core procedures");
+            OsReadAndWrite();
+            RemoveLimits();
+            StopNetworkd();
+            OverlayWatcher();
+            WorkingDirectories();
+            Mounts();
+            CheckUnitsLocation();
+            GenerateSecret();
+            LicenseManagement();
+            JournalD();
+            ImportConfiguration();
+            Adjustments();
+            Users();
+            HostConfiguration_NameService();
+            Network();
+            Firewall();
+            Dhcpd();
+            Bind();
+            ApplySetupConfiguration();
+            Nginx();
+            Ssh();
+            StartRssdp();
+            AntdUI();
+            Samba();
+            Syslog();
+            StorageZfs();
+            Scheduler();
+            Acl();
+            Ca();
+            HostInit();
+            Apps();
+            Sync_Gluster();
+            StorageServer();
+            Tor();
+            Cluster();
+            DirectoryWatchers();
+            CheckApplicationFileAcls();
+            CheckSystemComponents();
+            Test();
 
-            #region [    os Rw    ]
+            ConsoleLogger.Log($"loaded in: {STOPWATCH.ElapsedMilliseconds} ms");
+            KeepAlive();
+            HOST.Stop();
+            STOPWATCH.Stop();
+            Console.WriteLine("[antd] stop");
+        }
+
+        private static NancyHost HOST;
+
+        private static void OsReadAndWrite() {
             Bash.Execute("mount -o remount,rw /", false);
             Bash.Execute("mount -o remount,rw /mnt/cdrom", false);
-            #endregion
+        }
 
-            #region [    Remove Limits    ]
+        private static void RemoveLimits() {
             const string limitsFile = "/etc/security/limits.conf";
             if(File.Exists(limitsFile)) {
                 if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
@@ -81,25 +129,25 @@ namespace Antd {
                 }
             }
             Bash.Execute("ulimit -n 1024000", false);
-            #endregion
+        }
 
-            #region [    Stop Networkd    ]
+        private static void StopNetworkd() {
             Systemctl.Stop("systemd-networkd.service");
             Systemctl.Disable("systemd-networkd.service");
             Systemctl.Mask("systemd-networkd.service");
             Systemctl.Stop("systemd-resolved.service");
             Systemctl.Disable("systemd-resolved.service");
             Systemctl.Mask("systemd-resolved.service");
-            #endregion
+        }
 
-            #region [    Overlay Watcher    ]
+        private static void OverlayWatcher() {
             if(Directory.Exists(Parameter.Overlay)) {
                 new OverlayWatcher().StartWatching();
                 ConsoleLogger.Log("overlay watcher ready");
             }
-            #endregion
+        }
 
-            #region [    Working Directories    ]
+        private static void WorkingDirectories() {
             Directory.CreateDirectory(Parameter.AntdCfg);
             Directory.CreateDirectory(Parameter.AntdCfgServices);
             Directory.CreateDirectory(Parameter.AntdCfgNetwork);
@@ -117,9 +165,9 @@ namespace Antd {
             ConsoleLogger.Log("working directories created");
             MountManagement.WorkingDirectories();
             ConsoleLogger.Log("working directories mounted");
-            #endregion
+        }
 
-            #region [    Mounts    ]
+        private static void Mounts() {
             if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-firmware", "/lib64/firmware") == false) {
                 Bash.Execute("mount /mnt/cdrom/Kernel/active-firmware /lib64/firmware", false);
             }
@@ -134,9 +182,9 @@ namespace Antd {
             Bash.Execute("systemctl restart systemd-modules-load.service", false);
             MountManagement.AllDirectories();
             ConsoleLogger.Log("mounts ready");
-            #endregion
+        }
 
-            #region [    Check Units Location    ]
+        private static void CheckUnitsLocation() {
             var anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
             if(!anthillaUnits.Any()) {
                 var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
@@ -175,51 +223,42 @@ namespace Antd {
                 }
             }
             ConsoleLogger.Log("[check] units integrity");
-            #endregion
+        }
 
-            #region [    Application Keys    ]
-            var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
-            var pub = ak.PublicKey;
-            #endregion
-
-            #region [    Secret    ]
+        private static void GenerateSecret() {
             if(!File.Exists(Parameter.AntdCfgSecret)) {
                 FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }
-
             if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
                 FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
             }
-            #endregion
+        }
 
-            #region [    License Management    ]
+        private static void LicenseManagement() {
+            var ak = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
+            var pub = ak.PublicKey;
             var appconfig = new AppConfiguration().Get();
             ConsoleLogger.Log($"[cloud] {appconfig.CloudAddress}");
-            try {
-                var machineIds = Machine.MachineIds.Get;
-                ConsoleLogger.Log($"[machineid] {machineIds.PartNumber}");
-                ConsoleLogger.Log($"[machineid] {machineIds.SerialNumber}");
-                ConsoleLogger.Log($"[machineid] {machineIds.MachineUid}");
-                var licenseManagement = new LicenseManagement();
-                licenseManagement.Download("Antd", machineIds, pub);
-                var licenseStatus = licenseManagement.Check("Antd", machineIds, pub);
-                ConsoleLogger.Log(licenseStatus == null
-                    ? "[license] license results null"
-                    : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Warn(ex.Message);
-            }
-            #endregion
+            var machineIds = Machine.MachineIds.Get;
+            ConsoleLogger.Log($"[machineid] {machineIds.PartNumber}");
+            ConsoleLogger.Log($"[machineid] {machineIds.SerialNumber}");
+            ConsoleLogger.Log($"[machineid] {machineIds.MachineUid}");
+            var licenseManagement = new LicenseManagement();
+            licenseManagement.Download("Antd", machineIds, pub);
+            var licenseStatus = licenseManagement.Check("Antd", machineIds, pub);
+            ConsoleLogger.Log(licenseStatus == null
+                ? "[license] license results null"
+                : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
 
-            #region [    JournalD    ]
+        }
+
+        private static void JournalD() {
             if(JournaldConfiguration.IsActive()) {
                 JournaldConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Import Existing Configuration    ]
-
+        private static void ImportConfiguration() {
             Network2Configuration.SetWorkingDirectories();
 
             #region import host2model
@@ -261,13 +300,7 @@ namespace Antd {
             var niflist = new List<NetworkInterface>();
             foreach(var cif in tmpNet.Interfaces) {
                 ConsoleLogger.Log($"[data import] network configuration for '{cif.Interface}'");
-                var broadcast = "";
-                try {
-                    broadcast = Cidr.CalcNetwork(cif.StaticAddress, cif.StaticRange).Broadcast.ToString();
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error($"[data import] {ex.Message}");
-                }
+                var broadcast = Cidr.CalcNetwork(cif.StaticAddress, cif.StaticRange).Broadcast.ToString();
                 var hostname = $"{vars.HostName}{NetworkInterfaceType.Internal}.{vars.InternalDomainPrimary}";
                 var subnet = tmpHost2.InternalNetPrimaryBits;
                 var index = Network2Configuration.InterfaceConfigurationList.Count(_ => _.Type == NetworkInterfaceType.Internal);
@@ -309,7 +342,7 @@ namespace Antd {
             }
             if(!Network2Configuration.GatewayConfigurationList.Any()) {
                 var defaultGatewayConfiguration = new NetworkGatewayConfiguration {
-                    Id = Random.ShortGuid(),
+                    Id = CommonRandom.ShortGuid(),
                     IsDefault = true,
                     GatewayAddress = vars.InternalHostIpPrimary,
                     Description = "DFGW"
@@ -337,74 +370,71 @@ namespace Antd {
             }
             if(!File.Exists($"{Parameter.AntdCfgParameters}/osparameters.conf")) {
                 var list = new List<string> {
-                    "/proc/sys/fs/file-max 1024000",
-                    "/proc/sys/net/bridge/bridge-nf-call-arptables 0",
-                    "/proc/sys/net/bridge/bridge-nf-call-ip6tables 0",
-                    "/proc/sys/net/bridge/bridge-nf-call-iptables 0",
-                    "/proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged 0",
-                    "/proc/sys/net/bridge/bridge-nf-filter-vlan-tagged 0",
-                    "/proc/sys/net/core/netdev_max_backlog 300000",
-                    "/proc/sys/net/core/optmem_max 40960",
-                    "/proc/sys/net/core/rmem_max 268435456",
-                    "/proc/sys/net/core/somaxconn 65536",
-                    "/proc/sys/net/core/wmem_max 268435456",
-                    "/proc/sys/net/ipv4/conf/all/accept_local 1",
-                    "/proc/sys/net/ipv4/conf/all/accept_redirects 1",
-                    "/proc/sys/net/ipv4/conf/all/accept_source_route 1",
-                    "/proc/sys/net/ipv4/conf/all/rp_filter 0",
-                    "/proc/sys/net/ipv4/conf/all/forwarding 1",
-                    "/proc/sys/net/ipv4/conf/default/rp_filter 0",
-                    "/proc/sys/net/ipv4/ip_forward 1",
-                    "/proc/sys/net/ipv4/ip_local_port_range 1024 65000",
-                    "/proc/sys/net/ipv4/ip_no_pmtu_disc 1",
-                    "/proc/sys/net/ipv4/tcp_congestion_control htcp",
-                    "/proc/sys/net/ipv4/tcp_fin_timeout 40",
-                    "/proc/sys/net/ipv4/tcp_max_syn_backlog 3240000",
-                    "/proc/sys/net/ipv4/tcp_max_tw_buckets 1440000",
-                    "/proc/sys/net/ipv4/tcp_moderate_rcvbuf 1",
-                    "/proc/sys/net/ipv4/tcp_mtu_probing 1",
-                    "/proc/sys/net/ipv4/tcp_rmem 4096 87380 134217728",
-                    "/proc/sys/net/ipv4/tcp_slow_start_after_idle 1",
-                    "/proc/sys/net/ipv4/tcp_tw_recycle 0",
-                    "/proc/sys/net/ipv4/tcp_tw_reuse 1",
-                    "/proc/sys/net/ipv4/tcp_window_scaling 1",
-                    "/proc/sys/net/ipv4/tcp_wmem 4096 65536 134217728",
-                    "/proc/sys/net/ipv6/conf/br0/disable_ipv6 1",
-                    "/proc/sys/net/ipv6/conf/eth0/disable_ipv6 1",
-                    "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6 1",
-                    "/proc/sys/vm/swappiness 0"
-                };
+                                "/proc/sys/fs/file-max 1024000",
+                                "/proc/sys/net/bridge/bridge-nf-call-arptables 0",
+                                "/proc/sys/net/bridge/bridge-nf-call-ip6tables 0",
+                                "/proc/sys/net/bridge/bridge-nf-call-iptables 0",
+                                "/proc/sys/net/bridge/bridge-nf-filter-pppoe-tagged 0",
+                                "/proc/sys/net/bridge/bridge-nf-filter-vlan-tagged 0",
+                                "/proc/sys/net/core/netdev_max_backlog 300000",
+                                "/proc/sys/net/core/optmem_max 40960",
+                                "/proc/sys/net/core/rmem_max 268435456",
+                                "/proc/sys/net/core/somaxconn 65536",
+                                "/proc/sys/net/core/wmem_max 268435456",
+                                "/proc/sys/net/ipv4/conf/all/accept_local 1",
+                                "/proc/sys/net/ipv4/conf/all/accept_redirects 1",
+                                "/proc/sys/net/ipv4/conf/all/accept_source_route 1",
+                                "/proc/sys/net/ipv4/conf/all/rp_filter 0",
+                                "/proc/sys/net/ipv4/conf/all/forwarding 1",
+                                "/proc/sys/net/ipv4/conf/default/rp_filter 0",
+                                "/proc/sys/net/ipv4/ip_forward 1",
+                                "/proc/sys/net/ipv4/ip_local_port_range 1024 65000",
+                                "/proc/sys/net/ipv4/ip_no_pmtu_disc 1",
+                                "/proc/sys/net/ipv4/tcp_congestion_control htcp",
+                                "/proc/sys/net/ipv4/tcp_fin_timeout 40",
+                                "/proc/sys/net/ipv4/tcp_max_syn_backlog 3240000",
+                                "/proc/sys/net/ipv4/tcp_max_tw_buckets 1440000",
+                                "/proc/sys/net/ipv4/tcp_moderate_rcvbuf 1",
+                                "/proc/sys/net/ipv4/tcp_mtu_probing 1",
+                                "/proc/sys/net/ipv4/tcp_rmem 4096 87380 134217728",
+                                "/proc/sys/net/ipv4/tcp_slow_start_after_idle 1",
+                                "/proc/sys/net/ipv4/tcp_tw_recycle 0",
+                                "/proc/sys/net/ipv4/tcp_tw_reuse 1",
+                                "/proc/sys/net/ipv4/tcp_window_scaling 1",
+                                "/proc/sys/net/ipv4/tcp_wmem 4096 65536 134217728",
+                                "/proc/sys/net/ipv6/conf/br0/disable_ipv6 1",
+                                "/proc/sys/net/ipv6/conf/eth0/disable_ipv6 1",
+                                "/proc/sys/net/ipv6/conf/wlan0/disable_ipv6 1",
+                                "/proc/sys/vm/swappiness 0"
+                            };
                 HostParametersConfiguration.SetOsParametersList(list);
 
                 ConsoleLogger.Log("[data import] parameters");
             }
             #endregion
+        }
 
-            #endregion
-
-            #region [    Adjustments    ]
-            new Do().ParametersChangesPre();
+        private static void Adjustments() {
+            Do.ParametersChangesPre();
             ConsoleLogger.Log("modules, services and os parameters ready");
-            #endregion
+        }
 
-            ConsoleLogger.Log("[boot step] procedures");
-
-            #region [    Users    ]
+        private static void Users() {
             var manageMaster = new ManageMaster();
             manageMaster.Setup();
             UserConfiguration.Import();
             UserConfiguration.Set();
             ConsoleLogger.Log("users config ready");
-            #endregion
+        }
 
-            #region [    Host Configuration & Name Service    ]
-            new Do().HostChanges();
+        private static void HostConfiguration_NameService() {
+            Do.HostChanges();
             ConsoleLogger.Log("host configured");
             ConsoleLogger.Log("name service ready");
-            #endregion
+        }
 
-            #region [    Network    ]
-            new Do().NetworkChanges();
+        private static void Network() {
+            Do.NetworkChanges();
             if(File.Exists("/cfg/antd/services/network.conf")) {
                 File.Delete("/cfg/antd/services/network.conf");
             }
@@ -412,44 +442,42 @@ namespace Antd {
                 File.Delete("/cfg/antd/services/network.conf.bck");
             }
             ConsoleLogger.Log("network ready");
-            #endregion
+        }
 
-            #region [    Firewall    ]
+        private static void Firewall() {
             if(FirewallConfiguration.IsActive()) {
                 FirewallConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Dhcpd    ]
+        private static void Dhcpd() {
             DhcpdConfiguration.TryImport();
             if(DhcpdConfiguration.IsActive()) {
                 DhcpdConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Bind    ]
+        private static void Bind() {
             BindConfiguration.TryImport();
             BindConfiguration.DownloadRootServerHits();
             if(BindConfiguration.IsActive()) {
                 BindConfiguration.Set();
             }
-            #endregion
+        }
 
-            ConsoleLogger.Log("[boot step] post procedures");
-
-            #region [    Apply Setup Configuration    ]
-            new Do().ParametersChangesPost();
+        private static void ApplySetupConfiguration() {
+            Do.ParametersChangesPost();
             ConsoleLogger.Log("machine configured (apply setup.conf)");
-            #endregion
+        }
 
-            #region [    Nginx    ]
+        private static void Nginx() {
             NginxConfiguration.TryImport();
             if(NginxConfiguration.IsActive()) {
                 NginxConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Ssh    ]
+        private static void Ssh() {
             if(SshdConfiguration.IsActive()) {
                 SshdConfiguration.Set();
             }
@@ -475,38 +503,31 @@ namespace Antd {
                 Bash.Execute($"chown {storedKey.User}:{storedKey.User} {authorizedKeysPath}");
             }
             ConsoleLogger.Log("ssh ready");
-            #endregion
+        }
 
-            #region [    Service Discovery    ]
-            try {
-                ServiceDiscovery.Rssdp.PublishThisDevice();
-                ConsoleLogger.Log("[rssdp] published device");
-            }
-            catch(Exception ex) {
-                ConsoleLogger.Log($"[rssdp] {ex.Message}");
-            }
-            #endregion
+        private static void StartRssdp() {
+            ServiceDiscovery.Rssdp.PublishThisDevice();
+            ConsoleLogger.Log("[rssdp] published device");
+        }
 
-            #region [    AntdUI    ]
+        private static void AntdUI() {
             UiService.Setup();
             ConsoleLogger.Log("antduisetup");
-            #endregion
+        }
 
-            ConsoleLogger.Log("[boot step] managed procedures");
-
-            #region [    Samba    ]
+        private static void Samba() {
             if(SambaConfiguration.IsActive()) {
                 SambaConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Syslog    ]
+        private static void Syslog() {
             if(SyslogNgConfiguration.IsActive()) {
                 SyslogNgConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Storage - Zfs   ]
+        private static void StorageZfs() {
             foreach(var pool in Zpool.ImportList().ToList()) {
                 if(string.IsNullOrEmpty(pool))
                     continue;
@@ -514,9 +535,9 @@ namespace Antd {
                 Zpool.Import(pool);
             }
             ConsoleLogger.Log("storage ready");
-            #endregion
+        }
 
-            #region [    Scheduler    ]
+        private static void Scheduler() {
             Timers.MoveExistingTimers();
             Timers.Setup();
             Timers.Import();
@@ -528,41 +549,37 @@ namespace Antd {
             new SnapshotCleanup().Start(new TimeSpan(2, 00, 00));
             new SyncTime().Start(new TimeSpan(0, 42, 00));
             new RemoveUnusedModules().Start(new TimeSpan(2, 15, 00));
-
             JobManager jobManager = new JobManager();
             jobManager.ExecuteAllJobs();
-
             ConsoleLogger.Log("scheduled events ready");
-            #endregion
+        }
 
-            #region [    Acl    ]
+        private static void Acl() {
             if(AclConfiguration.IsActive()) {
                 AclConfiguration.Set();
                 AclConfiguration.ScriptSetup();
             }
-            #endregion
+        }
 
-            #region [    C A    ]
+        private static void Ca() {
             if(CaConfiguration.IsActive()) {
                 CaConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Host Init    ]
+        private static void HostInit() {
             var app = new AppConfiguration().Get();
             var port = app.AntdPort;
             var uri = $"http://localhost:{app.AntdPort}/";
-            var host = new NancyHost(new Uri(uri));
-            host.Start();
+            HOST = new NancyHost(new Uri(uri));
+            HOST.Start();
             ConsoleLogger.Log("host ready");
             StaticConfiguration.DisableErrorTraces = false;
             ConsoleLogger.Log($"http port: {port}");
             ConsoleLogger.Log("[boot step] antd is running");
-            #endregion
+        }
 
-            ConsoleLogger.Log("[boot step] working procedures");
-
-            #region [    Apps    ]
+        private static void Apps() {
             AppTarget.Setup();
             var apps = AppsConfiguration.Get().Apps;
             foreach(var mapp in apps) {
@@ -575,73 +592,56 @@ namespace Antd {
             }
             //AppTarget.StartAll();
             ConsoleLogger.Log("apps ready");
-            #endregion
+        }
 
-            #region [    Sync / Gluster   ]
+        private static void Sync_Gluster() {
             if(GlusterConfiguration.IsActive()) {
                 GlusterConfiguration.Launch();
             }
             if(RsyncConfiguration.IsActive()) {
                 RsyncConfiguration.Set();
             }
-            #endregion
+        }
 
-            #region [    Storage Server    ]
+        private static void StorageServer() {
             VfsConfiguration.SetDefaults();
             new Thread(() => {
-                try {
-                    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
-                    srv.Start();
-                }
-                catch(Exception ex) {
-                    ConsoleLogger.Error(ex.Message);
-                }
+                var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
+                srv.Start();
             }).Start();
-            #endregion
+        }
 
-            #region [    Tor    ]
+        private static void Tor() {
             if(TorConfiguration.IsActive()) {
                 TorConfiguration.Start();
             }
-            #endregion
+        }
 
-            #region [    Cluster    ]
+        private static void Cluster() {
             VfsWatcher = new VfsWatcher();
             ClusterConfiguration.Prepare();
-            new Do().ClusterChanges();
+            Do.ClusterChanges();
             ConsoleLogger.Log("[cluster] active");
-            #endregion
+        }
 
-            #region [    Directory Watchers    ]
+        private static void DirectoryWatchers() {
             DirectoryWatcherCluster.Start();
             DirectoryWatcherRsync.Start();
-            #endregion
+        }
 
-            #region [    Check Application File Acls    ]
-            var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories);
-            foreach(var file in files) {
+        private static void CheckApplicationFileAcls() {
+            var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories).ToArray();
+            for(var i =0; i < files.Length; i++) {
+                var file = files[i];
                 Bash.Execute($"chmod 644 {file}");
                 Bash.Execute($"chown root:wheel {file}");
             }
             ConsoleLogger.Log("[check] app-file acl");
-            #endregion
+        }
 
-            #region [    Check System Components    ]
+        private static void CheckSystemComponents() {
             MachineInfo.CheckSystemComponents();
             ConsoleLogger.Log("[check] system components health");
-            #endregion
-
-            #region [    Test    ]
-#if DEBUG
-            Test();
-#endif
-            #endregion
-
-            ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-            KeepAlive();
-            ConsoleLogger.Log("antd is closing");
-            host.Stop();
-            Console.WriteLine("host shutdown");
         }
 
         private static void Test() {

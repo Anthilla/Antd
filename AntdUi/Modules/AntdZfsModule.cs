@@ -37,11 +37,9 @@ using anthilla.core;
 namespace AntdUi.Modules {
     public class AntdZfsModule : NancyModule {
 
-        private readonly ApiConsumer _api = new ApiConsumer();
-
         public AntdZfsModule() {
             Get["/zfs"] = x => {
-                var model = _api.Get<PageZfsModel>($"http://127.0.0.1:{Application.ServerPort}/zfs");
+                var model = ApiConsumer.Get<PageZfsModel>($"http://127.0.0.1:{Application.ServerPort}/zfs");
                 var json = JsonConvert.SerializeObject(model);
                 return json;
             };
@@ -57,7 +55,7 @@ namespace AntdUi.Modules {
                     { "Pool", pool },
                     { "Interval", interval },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/snap", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/snap", dict);
             };
 
             Post["/zfs/snap/disable"] = x => {
@@ -65,7 +63,7 @@ namespace AntdUi.Modules {
                 var dict = new Dictionary<string, string> {
                     { "Guid", guid },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/snap/disable", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/snap/disable", dict);
             };
 
             Post["/zpool/create"] = x => {
@@ -79,7 +77,7 @@ namespace AntdUi.Modules {
                     { "Type", pooltype },
                     { "Disk", disk }
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zpool/create", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/zpool/create", dict);
             };
 
             Post["/zfs/create"] = x => {
@@ -91,7 +89,7 @@ namespace AntdUi.Modules {
                     { "Name", poolname },
                     { "Dataset", datasetname },
                 };
-                return _api.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/create", dict);
+                return ApiConsumer.Post($"http://127.0.0.1:{Application.ServerPort}/zfs/create", dict);
             };
         }
     }
