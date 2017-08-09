@@ -61,7 +61,7 @@ namespace Antd.Scheduler {
                 return;
             }
             //fetchcommand/{partnum}/{serialnum}/{machineuid}/{appname}
-            var cmds = ApiConsumer.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetinfo/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
+            var cmds = ApiConsumer.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetmanagement/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
             if(cmds == null)
                 return;
             if(!cmds.Any())
@@ -75,7 +75,7 @@ namespace Antd.Scheduler {
                         { "MachineUid", MachineId.MachineUid },
                         { "Command", cmd.CommandCode }
                     };
-                ApiConsumer.Post($"{cloudaddress}repo/assetinfo/confirmcommand", dict);
+                ApiConsumer.Post($"{cloudaddress}repo/assetmanagement/confirmcommand", dict);
             }
         }
     }

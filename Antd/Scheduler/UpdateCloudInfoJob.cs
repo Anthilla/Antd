@@ -94,7 +94,7 @@ namespace Antd.Scheduler {
             if(Parameter.Cloud.Contains("localhost")) {
                 return;
             }
-            ApiConsumer.Post($"{Parameter.Cloud}repo/assetinfo/save", dict);
+            ApiConsumer.Post($"{Parameter.Cloud}repo/assetmanagement/save/uptime", dict);
             //ConsoleLogger.Log($"[cloud-uptime] info sent to cloud - data gathered in {DateTime.Now - dtnow}");
         }
     }
