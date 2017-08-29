@@ -20,12 +20,12 @@ namespace antdlib.config {
 
         private Tuple<string, string> LoadHostModel() {
             if(!File.Exists(FilePath)) {
-                return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
+                return new Tuple<string, string>("master", "252975977253103541671893814013814116237132841698924515721578242135731312536863201");
             }
             var text = File.ReadAllText(FilePath);
             var arr = text.Split(new[] { " " }, 2, StringSplitOptions.RemoveEmptyEntries);
             if(arr.Length == 0) {
-                return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
+                return new Tuple<string, string>("master", "252975977253103541671893814013814116237132841698924515721578242135731312536863201");
             }
             if(arr.Length == 1) {
                 return new Tuple<string, string>("master", arr[0]);
@@ -33,7 +33,7 @@ namespace antdlib.config {
             if(arr.Length == 2) {
                 return new Tuple<string, string>(arr[0], arr[1]);
             }
-            return new Tuple<string, string>("master", "250841977126621-227309917-30068297103565105222953-2509920183-30734-3192717661-14017");
+            return new Tuple<string, string>("master", "252975977253103541671893814013814116237132841698924515721578242135731312536863201");
         }
 
         public void Setup() {

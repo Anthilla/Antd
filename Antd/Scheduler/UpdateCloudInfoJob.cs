@@ -66,12 +66,10 @@ namespace Antd.Scheduler {
             var internalIp = "";
             var externalIp = WhatIsMyIp.Get();
             var ut = MachineInfo.GetUptime();
-            var uptime = ut.Uptime;
-            var loadAverage = ut.LoadAverage;
-            var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
-            var diskUsage = du?.UsePercentage;
-            var hostnamectl = CommandLauncher.Launch("hostnamectl").ToList();
-            var hostname = hostnamectl.Count == 0 ? "" : hostnamectl.First(_ => _.Contains("Static hostname:"))?.Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
+            var du = MachineInfo.GetDiskUsage().Where(_ => _ != null);
+            var diskUsage = !du.Any() ? "" : du?.FirstOrDefault(_ => _.MountedOn.Contains("/mnt/cdrom")).UsePercentage;
+            var hostnamectl = CommandLauncher.Launch("hostnamectl");
+            var hostname = hostnamectl.Length == 0 ? "" : hostnamectl.FirstOrDefault(_ => _.Contains("Static hostname:"))?.Split(new[] { ":" }, 2, StringSplitOptions.RemoveEmptyEntries)[1];
             var antdVersion = GetVersionDateFromFile(Bash.Execute("file /mnt/cdrom/Apps/Anthilla_Antd/active-version"));
             var systemVersion = GetVersionDateFromFile(Bash.Execute("file /mnt/cdrom/System/active-system"));
             var kernelVersion = GetVersionDateFromFile(Bash.Execute("file /mnt/cdrom/Kernel/active-kernel"));
@@ -83,9 +81,9 @@ namespace Antd.Scheduler {
                 { "KeyValue", pk },
                 { "InternalIp", internalIp },
                 { "ExternalIp", externalIp },
-                { "Uptime", uptime },
+                { "Uptime",  ut.Uptime },
                 { "DiskUsage", diskUsage },
-                { "LoadAverage", loadAverage },
+                { "LoadAverage", ut.LoadAverage },
                 { "Hostname", hostname },
                 { "AntdVersion", antdVersion },
                 { "SystemVersion", systemVersion },

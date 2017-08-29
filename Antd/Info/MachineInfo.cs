@@ -45,35 +45,28 @@ namespace Antd.Info {
             }
         }
 
-        private static readonly MapToModel Mapper = new MapToModel();
-
         public static IEnumerable<CpuinfoModel> GetCpuinfo() {
-            var result = Mapper.FromFile<CpuinfoModel>("/proc/cpuinfo", ":");
-            return result;
+            return MapToModel.FromFile<CpuinfoModel>("/proc/cpuinfo", new string[] { ":" });
         }
 
         public static IEnumerable<MeminfoModel> GetMeminfo() {
-            var result = Mapper.FromFile<MeminfoModel>("/proc/meminfo", ":");
-            return result;
+            return MapToModel.FromFile<MeminfoModel>("/proc/meminfo", new string[] { ":" });
         }
 
         public static IEnumerable<AosReleaseModel> GetAosrelease() {
-            var result = Mapper.FromFile<AosReleaseModel>("/etc/aos-release", ":");
-            return result;
+            return MapToModel.FromFile<AosReleaseModel>("/etc/aos-release", new string[] { ":" });
         }
 
         public static IEnumerable<LosetupModel> GetLosetup() {
-            var result = Mapper.FromCommand<LosetupModel>("losetup --list -n").ToList();
-            return result;
+            return MapToModel.FromCommand<LosetupModel>("losetup --list -n", new string[] { "\t", " " });
         }
 
         public static IEnumerable<UnitModel> GetServices() {
-            var result = Mapper.FromCommand<UnitModel>("systemctl --no-pager list-unit-files").ToList().Skip(1);
-            return result;
+            return MapToModel.FromCommand<UnitModel>("systemctl --no-pager list-unit-files", new string[] { " " }, 1);
         }
 
         public static List<UnitModel> GetUnits(string type) {
-            var result = Mapper.FromCommand<UnitModel>($"systemctl list-units --all --no-legend --no-pager -t {type}", 5).ToList().Skip(1).ToList();
+            var result = MapToModel.FromCommand<UnitModel>($"systemctl list-units --all --no-legend --no-pager -t {type}", new string[] { " " }).Skip(1).ToList();
             foreach(var r in result) {
                 r.Type = type;
             }
@@ -81,8 +74,7 @@ namespace Antd.Info {
         }
 
         public static IEnumerable<ModuleModel> GetModules() {
-            var result = Mapper.FromCommand<ModuleModel>("lsmod").ToList().Skip(1);
-            return result;
+            return MapToModel.FromCommand<ModuleModel>("lsmod", new string[] { " " }, 1);
         }
 
         public static UptimeModel GetUptime() {
@@ -100,15 +92,12 @@ namespace Antd.Info {
         }
 
         public static IEnumerable<FreeModel> GetFree() {
-            var result = Mapper.FromCommand<FreeModel>("free -lth").ToList().Skip(1);
-            return result;
+            return MapToModel.FromCommand<FreeModel>("free -lth", new string[] { " " }).ToList().Skip(1);
         }
 
         public static IEnumerable<SystemComponentModel> GetSystemComponentModels() {
-            var repoSystem = Parameter.RepoSystem;
-            var actives = Directory.EnumerateFileSystemEntries(repoSystem).Where(_ => _.Contains("active-")).ToList();
-            var repoKernel = Parameter.RepoKernel;
-            actives.AddRange(Directory.EnumerateFileSystemEntries(repoKernel).Where(_ => _.Contains("active-")).ToList());
+            var actives = Directory.EnumerateFileSystemEntries(Parameter.RepoSystem).Where(_ => _.Contains("active-")).ToList();
+            actives.AddRange(Directory.EnumerateFileSystemEntries(Parameter.RepoKernel).Where(_ => _.Contains("active-")).ToList());
             var components = new List<SystemComponentModel>();
             var losetup = GetLosetup().ToList();
             foreach(var file in actives) {
@@ -155,6 +144,10 @@ namespace Antd.Info {
                     }
                 }
             }
+        }
+
+        public static IEnumerable<DiskUsageModel> GetDiskUsage() {
+            return MapToModel.FromCommand<DiskUsageModel>("df -HTP", new string[] { "\t", " " }, 1).Where(_ => _ != null);
         }
     }
 }

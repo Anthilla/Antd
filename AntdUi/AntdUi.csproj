@@ -179,9 +179,6 @@
     <Compile Include="Modules\AssetClusterModule.cs" />
     <Compile Include="Modules\CaModule.cs" />
     <Compile Include="Modules\ContentModule.cs" />
-    <Compile Include="Database\Actions.cs" />
-    <Compile Include="Database\Backup.cs" />
-    <Compile Include="Database\BaseModel.cs" />
     <Compile Include="Modules\LanguageModule.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Modules\LoginModule.cs" />

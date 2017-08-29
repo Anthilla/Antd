@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using anthilla.core;
 using Parameter = antdlib.common.Parameter;
+using System.Net.NetworkInformation;
 
 namespace antdlib.config {
     public class Network2Configuration {
@@ -18,11 +19,11 @@ namespace antdlib.config {
         public static List<NsUpdateConfiguration> NsUpdateConfigurationList => GetNsUpdateConfiguration();
         public static List<NetworkHardwareConfiguration> NetworkHardwareConfigurationList => GetNetworkHardwareConfiguration();
         public static List<NetworkAggregatedInterfaceConfiguration> NetworkAggregatedInterfaceConfigurationList => GetAggregatedInterfaceConfiguration();
-        public static IEnumerable<string> NetworkInterfaces => GetAll();
-        public static IEnumerable<string> InterfacePhysical => GetPhysicalInterfaces();
-        public static IEnumerable<string> InterfaceVirtual => GetVirtualInterfaces();
-        public static IEnumerable<string> InterfaceBond => GetBondInterfaces();
-        public static IEnumerable<string> InterfaceBridge => GetBridgeInterfaces();
+        public static string[] NetworkInterfaces => GetAll();
+        public static List<string> InterfacePhysical => SortNetworkInterfaces()[0];
+        public static List<string> InterfaceBridge => SortNetworkInterfaces()[1];
+        public static List<string> InterfaceBond => SortNetworkInterfaces()[2];
+        public static List<string> InterfaceVirtual => SortNetworkInterfaces()[3];
 
         private static readonly string Dir = Parameter.AntdCfgNetwork;
         private static readonly string CfgFile = $"{Parameter.AntdCfgNetwork}/network.conf";
@@ -107,7 +108,7 @@ namespace antdlib.config {
             return true;
         }
 
-        public static void SaveInterfaceSetting(List<NetworkInterface> model) {
+        public static void SaveInterfaceSetting(List<models.NetworkInterface> model) {
             var n = new Network2ConfigurationModel {
                 Interfaces = model
             };
@@ -286,70 +287,118 @@ namespace antdlib.config {
         #endregion
 
         #region [    Network Devices Mapping    ]
-        private static IEnumerable<string> GetAll() {
-            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
-            return list.Select(f => f.Print(9, " ")).ToList();
+
+        private static string[] GetAll() {
+            var ifs = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
+            var names = new string[ifs.Length];
+            for(var i = 0; i < ifs.Length; i++) {
+                names[i] = ifs[i].Id;
+            }
+            return names;
         }
 
-        private static IEnumerable<string> GetPhysicalInterfaces() {
-            var ifList = new List<string>();
-            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
-            foreach(var f in list) {
-                if(f.Contains("bond")) { }
-                else if(f.Contains("br")) { }
-                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
-                else if(!f.Contains("virtual/net")) {
-                    var name = f.Print(9, " ");
-                    ifList.Add(name.Trim());
+        private static List<string>[] SortNetworkInterfaces() {
+            var sorted = new List<string>[4];
+            sorted[0] = new List<string>(); //0 phy
+            sorted[1] = new List<string>(); //1 br
+            sorted[2] = new List<string>(); //2 bnd
+            sorted[3] = new List<string>(); //3 virt
+            var adapters = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
+            for(var i = 0; i < adapters.Length; i++) {
+                var adapter = adapters[i];
+                if(adapter.NetworkInterfaceType != System.Net.NetworkInformation.NetworkInterfaceType.Ethernet) {
+                    //3
+                    sorted[3].Add(adapter.Id);
+                }
+                else {
+                    if(adapter.Id.StartsWith("dummy")) {
+                        sorted[3].Add(adapter.Id);
+                    }
+                    else if(adapter.Id.StartsWith("ifb")) {
+                        sorted[3].Add(adapter.Id);
+                    }
+                    else if(adapter.Id.StartsWith("gretap")) {
+                        sorted[3].Add(adapter.Id);
+                    }
+                    else if(adapter.Id.StartsWith("gretun")) {
+                        sorted[3].Add(adapter.Id);
+                    }
+                    else if(adapter.Id.StartsWith("bond")) {
+                        //2
+                        sorted[2].Add(adapter.Id);
+                    }
+                    else if(adapter.Id.StartsWith("br")) {
+                        //1
+                        sorted[1].Add(adapter.Id);
+                    }
+                    else {
+                        //0
+                        sorted[0].Add(adapter.Id);
+                    }
                 }
             }
-            return ifList;
+            return sorted;
         }
 
-        private static IEnumerable<string> GetVirtualInterfaces() {
-            var ifList = new List<string>();
-            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
-            foreach(var f in list) {
-                if(f.Contains("bond")) { }
-                else if(f.Contains("br")) { }
-                else if(f.Contains("virtual/net") || f.Contains("platform")) {
-                    var name = f.Print(9, " ");
-                    ifList.Add(name.Trim());
-                }
-                else if(!f.Contains("virtual/net")) { }
-            }
-            return ifList;
-        }
+        //private static IEnumerable<string> GetPhysicalInterfaces() {
+        //    var ifList = new List<string>();
+        //    var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
+        //    foreach(var f in list) {
+        //        if(f.Contains("bond")) { }
+        //        else if(f.Contains("br")) { }
+        //        else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+        //        else if(!f.Contains("virtual/net")) {
+        //            var name = f.Print(9, " ");
+        //            ifList.Add(name.Trim());
+        //        }
+        //    }
+        //    return ifList;
+        //}
 
-        private static IEnumerable<string> GetBondInterfaces() {
-            var ifList = new List<string>();
-            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
-            foreach(var f in list) {
-                if(f.Contains("bond")) {
-                    var name = f.Print(9, " ");
-                    ifList.Add(name.Trim());
-                }
-                else if(f.Contains("br")) { }
-                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
-                else if(!f.Contains("virtual/net")) { }
-            }
-            return ifList;
-        }
+        //private static IEnumerable<string> GetVirtualInterfaces() {
+        //    var ifList = new List<string>();
+        //    var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
+        //    foreach(var f in list) {
+        //        if(f.Contains("bond")) { }
+        //        else if(f.Contains("br")) { }
+        //        else if(f.Contains("virtual/net") || f.Contains("platform")) {
+        //            var name = f.Print(9, " ");
+        //            ifList.Add(name.Trim());
+        //        }
+        //        else if(!f.Contains("virtual/net")) { }
+        //    }
+        //    return ifList;
+        //}
 
-        private static IEnumerable<string> GetBridgeInterfaces() {
-            var ifList = new List<string>();
-            var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
-            foreach(var f in list) {
-                if(f.Contains("bond")) { }
-                else if(f.Contains("br")) {
-                    var name = f.Print(9, " ");
-                    ifList.Add(name.Trim());
-                }
-                else if(f.Contains("virtual/net") || f.Contains("platform")) { }
-                else if(!f.Contains("virtual/net")) { }
-            }
-            return ifList;
-        }
+        //private static IEnumerable<string> GetBondInterfaces() {
+        //    var ifList = new List<string>();
+        //    var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
+        //    foreach(var f in list) {
+        //        if(f.Contains("bond")) {
+        //            var name = f.Print(9, " ");
+        //            ifList.Add(name.Trim());
+        //        }
+        //        else if(f.Contains("br")) { }
+        //        else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+        //        else if(!f.Contains("virtual/net")) { }
+        //    }
+        //    return ifList;
+        //}
+
+        //private static IEnumerable<string> GetBridgeInterfaces() {
+        //    var ifList = new List<string>();
+        //    var list = Bash.Execute("ls -la /sys/class/net").Split().Where(_ => _.Contains("->"));
+        //    foreach(var f in list) {
+        //        if(f.Contains("bond")) { }
+        //        else if(f.Contains("br")) {
+        //            var name = f.Print(9, " ");
+        //            ifList.Add(name.Trim());
+        //        }
+        //        else if(f.Contains("virtual/net") || f.Contains("platform")) { }
+        //        else if(!f.Contains("virtual/net")) { }
+        //    }
+        //    return ifList;
+        //}
 
         #endregion
 

@@ -201,7 +201,6 @@
     <Compile Include="Overlay\OverlayWatcher.cs" />
     <Compile Include="Storage\BackupClean.cs" />
     <Compile Include="Storage\Disks.cs" />
-    <Compile Include="Storage\DiskUsage.cs" />
     <Compile Include="Storage\ZfsSnap.cs" />
     <Compile Include="Storage\Zfs.cs" />
     <Compile Include="Storage\Zpool.cs" />

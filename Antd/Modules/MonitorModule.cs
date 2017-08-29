@@ -63,7 +63,7 @@ namespace Antd.Modules {
                     int.TryParse(new string(used?.SkipWhile(_ => !char.IsDigit(_)).TakeWhile(char.IsDigit).ToArray()), out resultPart);
                     memoryUsage = GetPercentage(resultTot, resultPart);
                 }
-                var du = new DiskUsage().GetInfo().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
+                var du = MachineInfo.GetDiskUsage().FirstOrDefault(_ => _.MountedOn == "/mnt/cdrom");
                 var model = new PageMonitorModel {
                     Hostname = hostname,
                     Uptime = uptime.Uptime.SplitToList("up").Last().Trim(),

@@ -61,10 +61,14 @@ namespace Antd {
 
         public static string KeyName = "antd";
         public static VfsWatcher VfsWatcher;
+        public static Stopwatch STOPWATCH;
 
         private static void Main() {
+            var resetEvent = new AutoResetEvent(initialState: false);
+            Console.CancelKeyPress += (s, e) => { e.Cancel = true; resetEvent.Set(); };
+
+            STOPWATCH = new Stopwatch();
             ConsoleLogger.Log("[antd] start");
-            var STOPWATCH = new Stopwatch();
             STOPWATCH.Start();
 
             OsReadAndWrite();
@@ -89,7 +93,6 @@ namespace Antd {
             Nginx();
             Ssh();
             StartRssdp();
-            AntdUI();
             Samba();
             Syslog();
             StorageZfs();
@@ -99,7 +102,7 @@ namespace Antd {
             HostInit();
             Apps();
             Sync_Gluster();
-            StorageServer();
+            //StorageServer();
             Tor();
             Cluster();
             DirectoryWatchers();
@@ -108,7 +111,8 @@ namespace Antd {
             Test();
 
             ConsoleLogger.Log($"loaded in: {STOPWATCH.ElapsedMilliseconds} ms");
-            KeepAlive();
+            resetEvent.WaitOne();
+            //anthilla.core.Common.KeepAlive();
             HOST.Stop();
             STOPWATCH.Stop();
             Console.WriteLine("[antd] stop");
@@ -117,8 +121,8 @@ namespace Antd {
         private static NancyHost HOST;
 
         private static void OsReadAndWrite() {
-            Bash.Execute("mount -o remount,rw /", false);
-            Bash.Execute("mount -o remount,rw /mnt/cdrom", false);
+            Bash.Execute("mount -o remount,rw,discard,noatime /", false);
+            Bash.Execute("mount -o remount,rw,discard,noatime /mnt/cdrom", false);
         }
 
         private static void RemoveLimits() {
@@ -196,15 +200,15 @@ namespace Antd {
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
-                var appsUnits = Directory.EnumerateFiles(Parameter.AppsUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in appsUnits) {
-                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
-                        File.Copy(unit, trueUnit);
-                    }
-                    File.Delete(unit);
-                    Bash.Execute($"ln -s {trueUnit} {unit}");
-                }
+                //var appsUnits = Directory.EnumerateFiles(Parameter.AppsUnits, "*.*", SearchOption.TopDirectoryOnly);
+                //foreach(var unit in appsUnits) {
+                //    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                //    if(!File.Exists(trueUnit)) {
+                //        File.Copy(unit, trueUnit);
+                //    }
+                //    File.Delete(unit);
+                //    Bash.Execute($"ln -s {trueUnit} {unit}");
+                //}
                 var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in applicativeUnits) {
                     var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
@@ -215,7 +219,7 @@ namespace Antd {
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
             }
-            anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            //anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
             if(!anthillaUnits.Any()) {
                 foreach(var unit in anthillaUnits) {
                     Bash.Execute($"chown root:wheel {unit}");
@@ -604,11 +608,11 @@ namespace Antd {
         }
 
         private static void StorageServer() {
-            VfsConfiguration.SetDefaults();
-            new Thread(() => {
-                var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
-                srv.Start();
-            }).Start();
+            //VfsConfiguration.SetDefaults();
+            //ThreadPool.QueueUserWorkItem(new WaitCallback((state) => {
+            //    var srv = new StorageServer(VfsConfiguration.GetSystemConfiguration());
+            //    srv.Start();
+            //}));
         }
 
         private static void Tor() {
@@ -630,9 +634,8 @@ namespace Antd {
         }
 
         private static void CheckApplicationFileAcls() {
-            var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories).ToArray();
-            for(var i =0; i < files.Length; i++) {
-                var file = files[i];
+            var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories);
+            foreach(var file in files) {
                 Bash.Execute($"chmod 644 {file}");
                 Bash.Execute($"chown root:wheel {file}");
             }
@@ -646,14 +649,5 @@ namespace Antd {
 
         private static void Test() {
         }
-
-        #region [    Shutdown Management    ]
-        private static void KeepAlive() {
-            var r = Console.ReadLine();
-            while(r != "quit") {
-                r = Console.ReadLine();
-            }
-        }
-        #endregion
     }
 }

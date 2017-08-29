@@ -61,21 +61,27 @@ namespace Antd.Scheduler {
                 return;
             }
             //fetchcommand/{partnum}/{serialnum}/{machineuid}/{appname}
-            var cmds = ApiConsumer.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetmanagement/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
-            if(cmds == null)
-                return;
-            if(!cmds.Any())
-                return;
-            foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
-                CommandLauncher.Launch(cmd.Command, cmd.Parameters);
-                var dict = new Dictionary<string, string> {
+
+            try {
+                var cmds = ApiConsumer.Get<List<RemoteCommand>>($"{cloudaddress}repo/assetmanagement/fetchcommand/{MachineId.PartNumber}/{MachineId.SerialNumber}/{MachineId.MachineUid}/Antd");
+                if(cmds == null)
+                    return;
+                if(!cmds.Any())
+                    return;
+                foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
+                    CommandLauncher.Launch(cmd.Command, cmd.Parameters);
+                    var dict = new Dictionary<string, string> {
                         { "AppName", "Antd" },
                         { "PartNumber", MachineId.PartNumber },
                         { "SerialNumber", MachineId.SerialNumber },
                         { "MachineUid", MachineId.MachineUid },
                         { "Command", cmd.CommandCode }
                     };
-                ApiConsumer.Post($"{cloudaddress}repo/assetmanagement/confirmcommand", dict);
+                    ApiConsumer.Post($"{cloudaddress}repo/assetmanagement/confirmcommand", dict);
+                }
+            }
+            catch(Exception) {
+
             }
         }
     }

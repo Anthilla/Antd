@@ -41,7 +41,7 @@ namespace Antd {
         }
 
         public static void NetworkChanges() {
-            AppluDefaultNetworkConfiguration();
+            ApplyDefaultNetworkConfiguration();
             ApplyNetworkConfiguration();
         }
 
@@ -175,30 +175,32 @@ namespace Antd {
             };
             var localport = new AppConfiguration().Get().AntdUiPort;
             var localServices = ApiConsumer.Get<List<RssdpServiceModel>>($"http://localhost:{localport}/device/services");
-            foreach(var portMapping in ports) {
-                portMapping.ServicePort = localServices.FirstOrDefault(_ => _.Name == portMapping.ServiceName)?.Port;
-                if(string.IsNullOrEmpty(portMapping.ServicePort)) {
-                    continue;
+            if(localServices != null) {
+                foreach(var portMapping in ports) {
+                    portMapping.ServicePort = localServices.FirstOrDefault(_ => _.Name == portMapping.ServiceName)?.Port;
+                    if(string.IsNullOrEmpty(portMapping.ServicePort)) {
+                        continue;
+                    }
+                    var frontEndLabel = $"fe_in{portMapping.ServicePort}_out{portMapping.VirtualPort}";
+                    var backEndLabel = $"be_in{portMapping.ServicePort}_out{portMapping.VirtualPort}";
+                    lines.Add($"frontend {frontEndLabel}");
+                    lines.Add("    mode http");
+                    lines.Add($"    bind {clusterInfo.VirtualIpAddress}:{portMapping.VirtualPort} transparent");
+                    lines.Add("    stats enable");
+                    lines.Add("    stats auth admin:Anthilla");
+                    lines.Add("    option httpclose");
+                    lines.Add("    option forwardfor");
+                    lines.Add($"    default_backend {backEndLabel}");
+                    lines.Add("");
+                    lines.Add($"backend {backEndLabel}");
+                    lines.Add("    balance roundrobin");
+                    lines.Add("    cookie JSESSIONID prefix");
+                    lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
+                    foreach(var node in nodes) {
+                        lines.Add($"    server {node.Hostname} {node.PublicIp}:{portMapping.ServicePort} check");
+                    }
+                    lines.Add("");
                 }
-                var frontEndLabel = $"fe_in{portMapping.ServicePort}_out{portMapping.VirtualPort}";
-                var backEndLabel = $"be_in{portMapping.ServicePort}_out{portMapping.VirtualPort}";
-                lines.Add($"frontend {frontEndLabel}");
-                lines.Add("    mode http");
-                lines.Add($"    bind {clusterInfo.VirtualIpAddress}:{portMapping.VirtualPort} transparent");
-                lines.Add("    stats enable");
-                lines.Add("    stats auth admin:Anthilla");
-                lines.Add("    option httpclose");
-                lines.Add("    option forwardfor");
-                lines.Add($"    default_backend {backEndLabel}");
-                lines.Add("");
-                lines.Add($"backend {backEndLabel}");
-                lines.Add("    balance roundrobin");
-                lines.Add("    cookie JSESSIONID prefix");
-                lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
-                foreach(var node in nodes) {
-                    lines.Add($"    server {node.Hostname} {node.PublicIp}:{portMapping.ServicePort} check");
-                }
-                lines.Add("");
             }
 
             File.WriteAllLines(_haproxyFileOutput, lines);
@@ -238,8 +240,9 @@ namespace Antd {
         #endregion
 
         #region [    network    ]
-        private static void AppluDefaultNetworkConfiguration() {
-            var ifs = Network2Configuration.InterfacePhysical;
+        private static void ApplyDefaultNetworkConfiguration() {
+            var ifs = Network2Configuration.InterfacePhysical.ToArray();
+            Console.WriteLine(ifs.Length);
             foreach(var nif in ifs) {
                 CommandLauncher.Launch("ip4-set-mtu", new Dictionary<string, string> { { "$net_if", nif }, { "$mtu", "6000" } });
                 CommandLauncher.Launch("ip4-set-txqueuelen", new Dictionary<string, string> { { "$net_if", nif }, { "$txqueuelen", "10000" } });

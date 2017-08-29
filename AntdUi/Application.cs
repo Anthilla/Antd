@@ -2,6 +2,8 @@
 using Nancy.Hosting.Self;
 using System;
 using anthilla.core;
+using System.Linq;
+using System.Threading;
 
 namespace AntdUi {
     internal class Application {
@@ -11,6 +13,8 @@ namespace AntdUi {
         public static int ServerPort;
 
         public static void Main() {
+            var resetEvent = new AutoResetEvent(initialState: false);
+            Console.CancelKeyPress += (s, e) => { e.Cancel = true; resetEvent.Set(); };
             ConsoleLogger.Log("starting antdui");
             var startTime = DateTime.Now;
             var app = new AppConfiguration().Get();
@@ -23,16 +27,15 @@ namespace AntdUi {
             ConsoleLogger.Log($"http port: {Port}");
             ConsoleLogger.Log("antdui is running");
             ConsoleLogger.Log($"loaded in: {DateTime.Now - startTime}");
-            KeepAlive();
+            Test();
+            resetEvent.WaitOne();
+            //Common.KeepAlive();
             Console.WriteLine("Stopping...");
             host.Stop();
         }
 
-        private static void KeepAlive() {
-            var r = Console.ReadLine();
-            while(r != "quit") {
-                r = Console.ReadLine();
-            }
+        private static void Test() {
+       
         }
     }
 }

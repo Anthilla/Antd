@@ -27,6 +27,7 @@
 //     20141110
 //-------------------------------------------------------------------------------------
 
+using Antd.Info;
 using Antd.Storage;
 using antdlib.models;
 using Nancy;
@@ -37,9 +38,8 @@ namespace Antd.Modules {
 
         public AntdDiskUsageModule() {
             Get["/diskusage"] = x => {
-                var diskUsage = new DiskUsage();
                 var model = new PageDiskUsageModel {
-                    DisksUsage = diskUsage.GetInfo()
+                    DisksUsage = MachineInfo.GetDiskUsage()
                 };
                 return JsonConvert.SerializeObject(model);
             };
