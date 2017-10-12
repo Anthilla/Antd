@@ -130,62 +130,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modules\AntdAclModule.cs" />
-    <Compile Include="Modules\AntdBindModule.cs" />
-    <Compile Include="Modules\AntdCpuStatusModule.cs" />
-    <Compile Include="Modules\AntdDhcpdModule.cs" />
-    <Compile Include="Modules\AntdDhcpLeasesModule.cs" />
-    <Compile Include="Modules\AntdDiskUsageModule.cs" />
-    <Compile Include="Modules\AntdFirewallModule.cs" />
-    <Compile Include="Modules\AntdMountModule.cs" />
-    <Compile Include="Modules\AssetGlusterModule.cs" />
-    <Compile Include="Modules\AntdHostParametersModule.cs" />
-    <Compile Include="Modules\AntdHost2Module.cs" />
-    <Compile Include="Modules\AntdNameServiceModule.cs" />
-    <Compile Include="Modules\AntdNetwork2Module.cs" />
-    <Compile Include="Modules\AntdNetworkModule.cs" />
-    <Compile Include="Modules\AntdRsyncModule.cs" />
-    <Compile Include="Modules\AntdSambaModule.cs" />
-    <Compile Include="Modules\AntdSchedulerModule.cs" />
-    <Compile Include="Modules\AntdSshdModule.cs" />
-    <Compile Include="Modules\AntdStorageModule.cs" />
-    <Compile Include="Modules\AntdTimeModule.cs" />
-    <Compile Include="Modules\AntdHostModule.cs" />
-    <Compile Include="Modules\AntdUpdateModule.cs" />
-    <Compile Include="Modules\AntdOverlayModule.cs" />
-    <Compile Include="Modules\AntdUsersModule.cs" />
-    <Compile Include="Modules\AntdOvermountStatusModule.cs" />
-    <Compile Include="Modules\AntdLosetupStatusModule.cs" />
-    <Compile Include="Modules\AntdSystemStatusModule.cs" />
-    <Compile Include="Modules\AntdServicesModule.cs" />
-    <Compile Include="Modules\AntdModulesStatusModule.cs" />
-    <Compile Include="Modules\AntdMemoryStatusModule.cs" />
-    <Compile Include="Modules\AntdInfoModule.cs" />
-    <Compile Include="Modules\AntdAppConfigurationModule.cs" />
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Modules\AntdVmModule.cs" />
-    <Compile Include="Modules\AntdTorModule.cs" />
-    <Compile Include="Modules\AntdVpnModule.cs" />
-    <Compile Include="Modules\AntdZfsModule.cs" />
-    <Compile Include="Modules\VfsModule.cs" />
-    <Compile Include="Modules\WizardModule.cs" />
-    <Compile Include="Modules\AppsDetectModule.cs" />
-    <Compile Include="Modules\AppsManagementModule.cs" />
-    <Compile Include="Modules\AssetDiscoveryModule.cs" />
-    <Compile Include="Modules\AssetScanModule.cs" />
-    <Compile Include="Modules\AssetSettingModule.cs" />
-    <Compile Include="Modules\AssetClusterModule.cs" />
-    <Compile Include="Modules\CaModule.cs" />
-    <Compile Include="Modules\ContentModule.cs" />
-    <Compile Include="Modules\LanguageModule.cs" />
-    <Compile Include="Application.cs" />
-    <Compile Include="Modules\LoginModule.cs" />
-    <Compile Include="Modules\LogJournaldModule.cs" />
-    <Compile Include="Modules\LogJournalModule.cs" />
-    <Compile Include="Modules\LogModule.cs" />
-    <Compile Include="Modules\LogReportModule.cs" />
-    <Compile Include="Modules\LogSyslogNgModule.cs" />
-    <Compile Include="Modules\MonitorModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -219,115 +163,25 @@
     <Content Include="Scripts\controller-context-antd.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\home-wizard.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Pages\antd\acl.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\bind.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\cpu.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\cron.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\dhcpd.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\disk.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\fw.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Pages\antd\host2.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\host.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\hostparam.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\info.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Pages\antd\leases.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\losetup.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\memory.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\mod.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\network2-lag.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\network2-dnsclient.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\network2-routes.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\network2.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\network.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\ns.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\mount.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\om.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\overlay.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Pages\antd\rsync.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\samba.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\sshd.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\storage.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\svcs.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Pages\asset\gluster.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\system.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\time.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\update.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\users.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\vm.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\antd\tor.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\antd\vpn.html">
@@ -369,17 +223,10 @@
     <Content Include="Views\Pages\ca\dcusers.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Views\todo\part-ssh-authkey.html" />
-    <None Include="Views\todo\page-vnc.html" />
     <None Include="Views\todo\page-ca-dcusers.html" />
     <None Include="Views\todo\page-ca-dc.html" />
     <None Include="Views\todo\page-apps-anthillasp.html" />
     <None Include="Views\todo\page-antd-ssh.html" />
-    <None Include="Views\todo\antd.users.js" />
-    <None Include="Views\todo\antd.storage.js" />
-    <None Include="Views\todo\antd.service.ssh.js" />
-    <None Include="Views\todo\antd.service.firewall.js" />
-    <None Include="Views\todo\antd.cmd.js" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -408,12 +255,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\vnc\content.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Pages\wizard\wizard.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Partials\navbar-wizard.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
