@@ -14,18 +14,36 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdsh", "antdsh\antdsh.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignorethis_misc", "{1BB31C59-D4CC-4640-BE45-B7857FBA22A1}"
 	ProjectSection(SolutionItems) = preProject
+		Antd\templates\.000_define_user_acl.sh = Antd\templates\.000_define_user_acl.sh
+		Antd\templates\.010_Home_SKEL.acl = Antd\templates\.010_Home_SKEL.acl
+		Antd\templates\.011_Shared_SKEL.acl = Antd\templates\.011_Shared_SKEL.acl
 		ignorethis_misc\_frequentregex.txt = ignorethis_misc\_frequentregex.txt
+		Antd\templates\blackhole.zones.tmpl = Antd\templates\blackhole.zones.tmpl
 		ignorethis_misc\boot_procedure-2.dgml = ignorethis_misc\boot_procedure-2.dgml
 		ignorethis_misc\boot_procedure.dgml = ignorethis_misc\boot_procedure.dgml
 		ignorethis_misc\converter.sh = ignorethis_misc\converter.sh
 		ignorethis_misc\createUserSmartCardCertificate.sh = ignorethis_misc\createUserSmartCardCertificate.sh
-		ignorethis_misc\gluster.cnf = ignorethis_misc\gluster.cnf
+		Antd\templates\dhcpd.conf.tmlp = Antd\templates\dhcpd.conf.tmlp
+		Antd\templates\FILE_etc_collectd.conf = Antd\templates\FILE_etc_collectd.conf
+		Antd\templates\FILE_etc_systemd_journald.conf = Antd\templates\FILE_etc_systemd_journald.conf
+		Antd\templates\FILE_etc_wpa_supplicant_wpa__suplicant.conf = Antd\templates\FILE_etc_wpa_supplicant_wpa__suplicant.conf
+		Antd\master_checklist.txt = Antd\master_checklist.txt
+		Antd\templates\named.conf = Antd\templates\named.conf
+		Antd\templates\nftables.conf.tmpl = Antd\templates\nftables.conf.tmpl
+		Antd\templates\nsswitch.conf.tmlp = Antd\templates\nsswitch.conf.tmlp
+		Antd\templates\ntp.conf.tmlp = Antd\templates\ntp.conf.tmlp
+		Antd\templates\rndc.conf.tmpl = Antd\templates\rndc.conf.tmpl
 		ignorethis_misc\samba-dc.cnf = ignorethis_misc\samba-dc.cnf
 		ignorethis_misc\samba-user.cnf = ignorethis_misc\samba-user.cnf
 		ignorethis_misc\script_domainController_ca.sh = ignorethis_misc\script_domainController_ca.sh
 		ignorethis_misc\setCaStructure.sh = ignorethis_misc\setCaStructure.sh
-		ignorethis_misc\todo-ui.txt = ignorethis_misc\todo-ui.txt
 		ignorethis_misc\TODO.txt = ignorethis_misc\TODO.txt
+		Antd\templates\zones_blockeddomain.hosts.tmpl = Antd\templates\zones_blockeddomain.hosts.tmpl
+		Antd\templates\zones_empty.db.tmpl = Antd\templates\zones_empty.db.tmpl
+		Antd\templates\zones_host.domint.local.db.tmpl = Antd\templates\zones_host.domint.local.db.tmpl
+		Antd\templates\zones_localhost-forward.db.tmpl = Antd\templates\zones_localhost-forward.db.tmpl
+		Antd\templates\zones_localhost-reverse.db.tmpl = Antd\templates\zones_localhost-reverse.db.tmpl
+		Antd\templates\zones_rev.10.11.0.0.db.tmpl = Antd\templates\zones_rev.10.11.0.0.db.tmpl
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03_antdlib.common", "antdlib.common\03_antdlib.common.csproj", "{8D27B042-C49C-40F3-85C1-5959B25E39FE}"
@@ -35,8 +53,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.models", "antdlib.models\antdlib.models.csproj", "{AD9E49CE-4817-4F27-B0B2-94A395FF4229}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "antdlib.config", "antdlib.config\antdlib.config.csproj", "{06B1B8FB-783F-40E1-9B85-2FADBA91EA50}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "working", "working", "{83B009BD-5589-4158-AFB5-1F0F63348DFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anthilla.commands", "..\_shared\anthilla.commands\anthilla.commands.csproj", "{3E77920A-6201-48D8-A9CE-8D01A477E0F9}"
 EndProject
