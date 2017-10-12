@@ -817,10 +817,6 @@
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
       <Name>03_antdlib.common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
-      <Project>{ad9e49ce-4817-4f27-b0b2-94a395ff4229}</Project>
-      <Name>antdlib.models</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

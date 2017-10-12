@@ -36,7 +36,7 @@ namespace Antd.cmds {
                 if(!cmds.Any())
                     return;
                 foreach(var cmd in cmds.OrderBy(_ => _.Date)) {
-                    anthilla.commands.CommandLauncher.Launch(cmd.Command, cmd.Parameters);
+                    //anthilla.commands.CommandLauncher.Launch(cmd.Command, cmd.Parameters);
                     var dict = new Dictionary<string, string> {
                         { "AppName", "Antd" },
                         { "PartNumber", machineIds.PartNumber.ToString() },

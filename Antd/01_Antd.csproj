@@ -245,10 +245,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\_shared\anthilla.commands\anthilla.commands.csproj">
-      <Project>{3e77920a-6201-48d8-a9ce-8d01a477e0f9}</Project>
-      <Name>anthilla.commands</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj">
       <Project>{faf895f3-2ea3-44cc-abe8-d54dc2ae0927}</Project>
       <Name>anthilla.core</Name>
@@ -256,10 +252,6 @@
     <ProjectReference Include="..\..\_shared\anthilla.crypto\anthilla.crypto.csproj">
       <Project>{87063138-EEB6-46EC-AA88-21E2A4BAC550}</Project>
       <Name>anthilla.crypto</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\_shared\anthilla.logger\anthilla.logger.csproj">
-      <Project>{3165c749-fe75-4c8a-80b6-47b8ed286e37}</Project>
-      <Name>anthilla.logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\_shared\anthilla.scheduler\anthilla.scheduler.csproj">
       <Project>{906b8907-f2ea-4baa-bf11-9f80c6e8bbbd}</Project>
