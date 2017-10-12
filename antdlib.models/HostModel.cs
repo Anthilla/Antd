@@ -1,4 +1,5 @@
 ﻿using anthilla.commands;
+using anthilla.core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace antdlib.models {
         public DateTime DateTime => DateTime.Now;
 
         [JsonIgnore]
-        public string Path => $"{common.Parameter.AntdCfg}/host.conf";
+        public string Path => $"{Parameter.AntdCfg}/host.conf";
 
         /// <summary>
         /// Is this configuration created by a user?

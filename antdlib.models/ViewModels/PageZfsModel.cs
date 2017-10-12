@@ -7,5 +7,6 @@ namespace antdlib.models {
         public IEnumerable<ZfsSnapModel> ZfsSnap { get; set; }
         public IEnumerable<string> ZpoolHistory { get; set; }
         public IEnumerable<DiskModel> DisksList { get; set; }
+        public IEnumerable<string> DisksListById { get; set; }
     }
 }

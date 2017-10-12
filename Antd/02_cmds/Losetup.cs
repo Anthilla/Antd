@@ -1,0 +1,31 @@
+﻿using Antd.models;
+using anthilla.core;
+using System;
+using System.Linq;
+
+namespace Antd.cmds {
+    public class Losetup {
+
+        private const string losetupFileLocation = "/sbin/losetup";
+        private const string losetupOptions = "--list -n";
+
+        public static LosetupModel[] Get() {
+            var result = CommonProcess.Execute(losetupFileLocation, losetupOptions).Where(_ => !string.IsNullOrEmpty(_)).ToArray();
+            var loetup = new LosetupModel[result.Length];
+            for(var i = 0; i < result.Length; i++) {
+                var currentData = result[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                loetup[i] = new LosetupModel() {
+                    Name = currentData[0],
+                    Sizelimit = currentData[1],
+                    Offset = currentData[2],
+                    Autoclear = currentData[3],
+                    Readonly = currentData[4],
+                    Backfile = currentData[5],
+                    Dio = currentData[6]
+                    //Hash = currentData[7]
+                };
+            }
+            return loetup;
+        }
+    }
+}

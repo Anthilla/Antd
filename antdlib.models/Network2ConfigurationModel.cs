@@ -2,7 +2,6 @@
 using System.IO;
 using anthilla.core;
 using Newtonsoft.Json;
-using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.models {
     public class Network2ConfigurationModel {

@@ -1,5 +1,0 @@
-﻿nameserver $resolvNameserver
-nameserver $internalDomain
-nameserver $externalDomain
-search $resolvDomain
-domain $resolvDomain

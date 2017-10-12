@@ -1,32 +1,21 @@
-﻿<a data-element="ToolbarButton" data-toolbar-button="antd" ui-sref="antd" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-wrench"></span>
-    <span class="title uppercase font-weight-bold">Config</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="cluster" ui-sref="cluster" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-books"></span>
-    <span class="title uppercase font-weight-bold">Asset</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="apps" ui-sref="apps" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-apps"></span>
-    <span class="title uppercase font-weight-bold">Apps</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="vfs" ui-sref="vfs" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-files-empty"></span>
-    <span class="title uppercase font-weight-bold">Vfs</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="log" ui-sref="log" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-chart-bars"></span>
-    <span class="title uppercase font-weight-bold">Log</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="ca" ui-sref="ca" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-key"></span>
-    <span class="title uppercase font-weight-bold">CA</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="vnc" ui-sref="vnc" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-display"></span>
-    <span class="title uppercase font-weight-bold">VNC</span>
-</a>
-<a data-element="ToolbarButton" data-toolbar-button="boot" ui-sref="boot" class="shortcut-button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-gray-2 bd-hover-anthilla-green no-margin place-right" style="border-width: 0 0 5px 0 !important;">
-    <span class="icon mif-cog"></span>
-    <span class="title uppercase font-weight-bold">Boot</span>
-</a>
+﻿<div ng-controller="ToolbarController" style="margin-top: 4px;">
+    <ul class="f-menu block-shadow-impact bg-anthilla-gray-2" style="margin-bottom: 5px;">
+        <li ng-repeat="button in Menu" ui-sref="{{button.Href}}" ng-click="activateThis(button)" ng-hide="AclHide(button.AclId)" class="{{button.IsActive}}">
+            <a href="#" class="fg-anthilla-green">
+                <span class="mif-{{button.Icon}}" style="margin-right: 10px;"></span>
+                {{ button.Label | translate }}
+            </a>
+        </li>
+    </ul>
+    <div ng-show="SubMenuShow">
+        <ul class="f-menu block-shadow-impact bg-anthilla-gray-2">
+            <li ng-repeat="button in SubMenu" ui-sref="{{button.Href}}" ng-click="activateThisSub(button)" ng-hide="AclHide(button.AclId)" class="{{button.IsActive}}">
+                <a href="#" class="fg-anthilla-green">
+                    <span class="mif-{{button.Icon}}" style="margin-right: 10px;"></span>
+                    {{ button.Label | translate }}
+                </a>
+            </li>
+        </ul>
+    </div>
+    <h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid; font-size: 1.6em !important; padding-left: 15px;">{{ ContextTitle | translate }}{{separator}}{{ SubContextTitle | translate }}</h1>
+</div>

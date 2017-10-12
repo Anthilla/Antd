@@ -116,10 +116,6 @@
       <Project>{faf895f3-2ea3-44cc-abe8-d54dc2ae0927}</Project>
       <Name>anthilla.core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
-      <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
-      <Name>antdlib.common</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

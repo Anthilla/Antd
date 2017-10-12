@@ -1,11 +1,9 @@
 ﻿using antdlib.models;
 using anthilla.commands;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using anthilla.core;
-using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public static class FirewallConfiguration {

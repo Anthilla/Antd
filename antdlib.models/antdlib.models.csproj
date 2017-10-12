@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlusterConfigurationModel.cs" />
     <Compile Include="RssdpXml.cs" />
     <Compile Include="VfsContainerInfo.cs" />
     <Compile Include="MachineIdsModel.cs" />
@@ -126,7 +127,6 @@
     <Compile Include="DiskUsageModel.cs" />
     <Compile Include="FirewallConfigurationModel.cs" />
     <Compile Include="FreeModel.cs" />
-    <Compile Include="GlusterConfigurationModel.cs" />
     <Compile Include="HostModel.cs" />
     <Compile Include="JournaldConfigurationModel.cs" />
     <Compile Include="KerberosConfigurationModel.cs" />
@@ -195,10 +195,6 @@
     <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
       <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
       <Name>StorageServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
-      <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
-      <Name>antdlib.common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

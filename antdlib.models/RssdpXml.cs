@@ -97,7 +97,7 @@ namespace antdlib.models {
         public string ModelNumber { get; set; }
         public string ModelUrl { get; set; }
         public string SerialNumber { get; set; }
-        public List<RssdpServiceModel> Services { get; set; }
+        public List<RssdpServiceModel> Services { get; set; } = new List<RssdpServiceModel>();
     }
 
     public class RssdpServiceModel {

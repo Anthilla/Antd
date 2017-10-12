@@ -1,0 +1,94 @@
+﻿using antdlib.config.shared;
+using antdlib.models;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using anthilla.core;
+using System.Net.NetworkInformation;
+using System;
+
+namespace Antd.License {
+    public class LicenseManagement {
+
+        private readonly string _licensePath = $"{Parameter.AntdCfg}/license.lic";
+
+        public void Download(string appName, MachineIdsModel machineUid, byte[] publicKey) {
+            if(File.Exists(_licensePath))
+                return;
+            var cloudaddress = new AppConfiguration().Get().CloudAddress;
+
+            try {
+                var p = new Ping();
+                var pingReply = p.Send(cloudaddress);
+                if(pingReply?.Status != IPStatus.Success) {
+                    ConsoleLogger.Log("[cloud] unreachable");
+                    return;
+                }
+            }
+            catch(Exception) {
+                ConsoleLogger.Log("[cloud] unreachable");
+                return;
+            }
+
+            if(string.IsNullOrEmpty(cloudaddress)) {
+                return;
+            }
+            if(cloudaddress.Contains("localhost"))  {
+                return;
+            }
+            if(!cloudaddress.EndsWith("/")) {
+                cloudaddress = cloudaddress + "/";
+            }
+            var pk = Encoding.ASCII.GetString(publicKey);
+            var dict = new Dictionary<string, string> {
+                { "AppName", appName },
+                { "PartNumber", machineUid.PartNumber },
+                { "SerialNumber", machineUid.SerialNumber },
+                { "Uid", machineUid.MachineUid },
+                { "PublicKey", pk}
+            };
+            var lic = ApiConsumer.Post<string>($"{cloudaddress}license/create", dict);
+            if(lic != null) {
+                FileWithAcl.WriteAllText(_licensePath, lic, "644", "root", "wheel");
+            }
+        }
+
+        public ResponseLicenseStatusModel Check(string appName, MachineIdsModel machineUid, byte[] publicKey) {
+            var cloudaddress = new AppConfiguration().Get().CloudAddress;
+
+            try {
+                var p = new Ping();
+                var pingReply = p.Send(cloudaddress);
+                if(pingReply?.Status != IPStatus.Success) {
+                    ConsoleLogger.Log("[cloud] unreachable");
+                    return null;
+                }
+            }
+            catch(Exception) {
+                ConsoleLogger.Log("[cloud] unreachable");
+                return null;
+            }
+         
+
+            if(string.IsNullOrEmpty(cloudaddress)) {
+                return null;
+            }
+            if(cloudaddress.Contains("localhost")) {
+                return null;
+            }
+            if(!cloudaddress.EndsWith("/")) {
+                cloudaddress = cloudaddress + "/";
+            }
+            var pk = Encoding.ASCII.GetString(publicKey);
+            var dict = new Dictionary<string, string> {
+                { "AppName", appName },
+                { "PartNumber", machineUid.PartNumber },
+                { "SerialNumber", machineUid.SerialNumber },
+                { "Uid", machineUid.MachineUid },
+                { "PublicKey", pk }
+            };
+            var status = ApiConsumer.Post<ResponseLicenseStatusModel>($"{cloudaddress}license/check", dict);
+            return status;
+        }
+    }
+}

@@ -92,12 +92,10 @@
     <Compile Include="AppsConfiguration.cs" />
     <Compile Include="TorConfiguration.cs" />
     <Compile Include="DirectoryWatcherRsync.cs" />
-    <Compile Include="DirectoryWatcherCluster.cs" />
     <Compile Include="HostParametersConfiguration.cs" />
     <Compile Include="Network2Configuration.cs" />
     <Compile Include="TimerConfiguration.cs" />
     <Compile Include="BindConfiguration.cs" />
-    <Compile Include="CaConfiguration.cs" />
     <Compile Include="CaConfigurationFiles.cs" />
     <Compile Include="ConfigurationFlow.cs" />
     <Compile Include="DhcpdConfiguration.cs" />
@@ -147,14 +145,6 @@
     <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
       <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
       <Name>StorageServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\antdlib.common\antdlib.common.csproj">
-      <Project>{8D27B042-C49C-40F3-85C1-5959B25E39FE}</Project>
-      <Name>antdlib.common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\antdlib.config.shared\antdlib.config.shared.csproj">
-      <Project>{C7806CEC-63AF-44E5-AE61-E7110A2A1343}</Project>
-      <Name>antdlib.config.shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.models\antdlib.models.csproj">
       <Project>{AD9E49CE-4817-4F27-B0B2-94A395FF4229}</Project>

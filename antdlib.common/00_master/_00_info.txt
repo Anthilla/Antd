@@ -1,0 +1,7 @@
+﻿00_master
+Contiene la struttura base della configurazione			
+
+Master.cs               Modello della configurazione della macchina, contiene tutte le informazioni necessarie per configurarla all'avvio
+                        La configurazione in running verrà mappata su questa classe e la si prende come riferimento nel momento in cui si devono applicare le modifiche
+
+Conf.cs                 Azioni per gestire sia la configurazione da applicare (import/export) che quella in running (solo import)

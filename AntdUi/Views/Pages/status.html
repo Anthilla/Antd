@@ -1,0 +1,21 @@
+<div ng-controller="MachineStatusController">
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div ng-click="loadMemory()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Info - Memory Status
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <table class="table border bordered fg-white" style="font-size: 0.85em;">
+                <tbody>
+                    <tr ng-repeat="mem in memory">
+                        <td class="fg-anthilla-green">{{ mem.Key }}</td>
+                        <td>{{ mem.Value }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+</div>

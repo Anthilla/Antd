@@ -31,7 +31,6 @@ using System;
 using System.IO;
 using System.Linq;
 using anthilla.core;
-using Parameter = antdlib.common.Parameter;
 
 namespace antdsh {
     public class SystemShellMgmt {
@@ -63,15 +62,15 @@ namespace antdsh {
         ///     - active-system
         /// </summary>
         public void DownloadNewFiles() {
-            var firmwareTmp = $"{Parameter.AntdTmpDir}/firmare";
+            var firmwareTmp = $"/tmp/firmare";
             ApiConsumer.GetFile("/url/download/firmware", $"{firmwareTmp}");
-            var initrdTmp = $"{Parameter.AntdTmpDir}/initrd";
+            var initrdTmp = $"/tmp/initrd";
             ApiConsumer.GetFile("/url/download/initrd", $"{initrdTmp}");
-            var kernelTmp = $"{Parameter.AntdTmpDir}/kernel";
+            var kernelTmp = $"/tmp/kernel";
             ApiConsumer.GetFile("/url/download/kernel", $"{kernelTmp}");
-            var modulesTmp = $"{Parameter.AntdTmpDir}/modules";
+            var modulesTmp = $"/tmp/modules";
             ApiConsumer.GetFile("/url/download/modules", $"{modulesTmp}");
-            var systemTmp = $"{Parameter.AntdTmpDir}/system";
+            var systemTmp = $"/tmp/system";
             ApiConsumer.GetFile("/url/download/system", $"{systemTmp}");
 
             Bash.Execute($"cp {firmwareTmp} {Parameter.RepoKernel}");

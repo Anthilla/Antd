@@ -1,65 +1,71 @@
-﻿<div class="app-bar bg-anthilla-gray-3 fg-white padding-right20 padding-left20">
-    <a class="app-bar-element bg-hover-anthilla-gray-3 fg-anthilla-green" href="#" style="cursor: default !important;">
-        <span id="LoadingSpinner" class="icon mif-spinner5 mif-ani-spin mif-2x" style="display: none;"></span>
-    </a>
-    <a class="app-bar-element bg-hover-anthilla-gray-3 fg-anthilla-green" style="cursor: default;">
-        <span class="padding-right10 padding-left10">Antd</span>
-    </a>
-    <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
+﻿<div ng-controller="NavbarController">
+    <div class="app-bar bg-anthilla-gray-3 fg-white" style="height: 2.3em;">
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-anthilla-green" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="padding-right10 padding-left10" ng-cloak>ANTD</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="icon mif-display" style="font-size: 1.25em;"></span>
+            <span class="padding-right10 padding-left10">&nbsp;{{monitor.Hostname}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="padding-right10 padding-left10 capitalize">{{monitor.Uptime}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="padding-right10 padding-left10">&nbsp;Load:&nbsp;{{monitor.LoadAverage}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="padding-right10 padding-left10 capitalize">memory used:&nbsp;{{monitor.MemoryUsage}}%</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="padding-right10 padding-left10 capitalize">disk used:&nbsp;{{monitor.DiskUsage}}</span>
+        </a>
+        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
 
-    <div ng-controller="MonitorController">
-        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
-            <span class="icon mif-display mif-2x"></span>
-            <span class="padding-right10 padding-left10">&nbsp;{{Resources.Hostname}}</span>
+        <a class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3" style="cursor: default; height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <span class="padding-right10 padding-left10" ng-cloak>{{date | date:'yyyy-MM-dd HH:mm'}}</span>
         </a>
-        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
-        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
-            <span class="padding-right10 padding-left10 capitalize">{{Resources.Uptime}}</span>
+        <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <li class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3" style="height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <a href="" class="dropdown-toggle fg-white">
+                <span class="mif-language padding-right10 padding-left10"></span>
+            </a>
+            <ul class="d-menu bg-anthilla-gray-3 bd-anthilla-green" data-role="dropdown" ng-controller="LanguageSwitchController">
+                <li>
+                    <a href="" ng-click="changeLanguage('en')" ng-cloak>{{ 'ENGLISH' | translate }}</a>
+                </li>
+                <li>
+                    <a href="" ng-click="changeLanguage('it')" ng-cloak>{{ 'ITALIAN' | translate }}</a>
+                </li>
+            </ul>
+        </li>
+        <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px; height: 100%"></span>
+        <li class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3" style="height: 100%; line-height: 2.5em; font-size: 0.95em;">
+            <a href="" class="dropdown-toggle fg-white">
+                <span class="mif-info padding-right10 padding-left10"></span>
+            </a>
+            <ul class="d-menu bg-anthilla-gray-3 bd-anthilla-green" data-role="dropdown">
+                <li>
+                    <a ui-sref="config">{{ 'CREDITS' | translate }}</a>
+                </li>
+                <li>
+                    <a ui-sref="config">{{ 'LEGAL_NOTES' | translate }}</a>
+                </li>
+            </ul>
+        </li>
+        <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px; height: 2.3em;"></span>
+        <a class="app-bar-element bg-hover-anthilla-green fg-hover-anthilla-gray-3 place-right" style="height: 100%; line-height: 2.5em; font-size: 0.95em;" href="/logout">
+            <span class="mif-exit padding-left10"></span>
+            <span class="padding-right10">{{ 'LOGOUT' | translate }}</span>
         </a>
-        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
-        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
-            <span class="padding-right10 padding-left10">&nbsp;{{Resources.LoadAverage}}</span>
-        </a>
-        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
-        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
-            <span class="padding-right10 padding-left10 capitalize">memory used&nbsp;{{Resources.MemoryUsage}}%</span>
-        </a>
-        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
-        <a class="app-bar-element bg-hover-anthilla-gray-3 fg-white" ui-sref="home" style="cursor: default;">
-            <span class="padding-right10 padding-left10 capitalize">disk used&nbsp;{{Resources.DiskUsage}}</span>
-        </a>
-        <span class="app-bar-divider bg-anthilla-gray-1" style="width: 2px;"></span>
+        <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px; height: 2.3em;"></span>
+        <!--<a ng-controller="AuthenticationController" class="app-bar-element bg-hover-anthilla-green fg-hover-anthilla-gray-3 place-right" style="cursor: pointer;" ui-sref="user({guid:'{{AuthenticatedUser.Guid}}'})">
+            <span class="mif-user padding-left10"></span>
+            <span class="padding-right10" ng-model="UserName" ng-user="{{user}}" ng-cloak>{{UserName}}</span>
+        </a>-->
     </div>
-
-    <a class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3" style="cursor: default;">
-        <span class="padding-right10 padding-left10" ng-controller="CurrentDateTimeController">{{date | date:'yyyy-MM-dd HH:mm'}}</span>
-    </a>
-    <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px;"></span>
-    <li class="app-bar-element place-right cursor-pointer bg-hover-anthilla-gray-3">
-        <a href="" class="dropdown-toggle fg-white">
-            <span class="mif-language padding-right10 padding-left10"></span>
-        </a>
-        <ul class="d-menu bg-anthilla-gray-3 bd-anthilla-green" data-role="dropdown" ng-controller="LanguageSwitchController">
-            <li>
-                <a href="" ng-click="changeLanguage('en')">{{ 'ENGLISH' | translate }}</a>
-            </li>
-            <li>
-                <a href="" ng-click="changeLanguage('it')">{{ 'ITALIAN' | translate }}</a>
-            </li>
-        </ul>
-    </li>
-    <!--<span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px;"></span>
-    <a class="app-bar-element bg-hover-anthilla-green fg-hover-anthilla-gray-3 place-right" ui-sref="config">
-        <span class="mif-wrench padding-right10 padding-left10"></span>
-    </a>-->
-    <span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px;"></span>
-    <a class="app-bar-element bg-hover-anthilla-green fg-hover-anthilla-gray-3 place-right" href="/logout">
-        <span class="mif-exit padding-left10"></span>
-        <span class="padding-right10">Logout</span>
-    </a>
-    <!--<span class="app-bar-divider place-right bg-anthilla-gray-1" style="width: 2px;"></span>
-    <a ng-controller="AuthenticationController" class="app-bar-element bg-hover-anthilla-green fg-hover-anthilla-gray-3 place-right" ui-sref="user">
-        <span class="mif-user padding-left10"></span>
-        <span class="padding-right10" ng-model="UserName" ng-user="{{user}}">{{UserName}}</span>
-    </a>-->
 </div>

@@ -1,0 +1,64 @@
+<h1 class="fg-white padding-bottom10 bd-anthilla-gray-2 capitalize" style="border-bottom: 1px solid;">sync</h1>
+
+<div ng-controller="AssetGlusterController">
+    <button ng-click="ResponseMessageHideSelf()" ng-hide="ResponseMessageHide" class="button fg-anthilla-blue bg-anthilla-gray-1 bd-anthilla-blue width100pc" style="border: 2px solid; margin-bottom: 10px;">{{ ResponseMessage }}</button>
+    <br />
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-meter fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Peer Status
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed" id="DirectoriesPanel">
+                <div class="row cells4">
+                    <div class="cell colspan4 fg-white" ng-bind-html="GlusterPeerStatus">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-meter fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Volumes Status
+            </span>
+        </div>
+        <div class="content padding20 bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="grid condensed" id="DirectoriesPanel">
+                <div class="row cells4">
+                    <div class="cell colspan4 fg-white" ng-bind-html="GlusterVolumeStatus">
+                        {{GlusterVolumeStatus}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <ul class="fg-white" style="list-style: none;">
+        <li style="margin-bottom: 5px;"><button ng-click="save()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Save Gluster Configuration</button></li>
+        <li ng-repeat="node in Gluster.Nodes">
+            <ul style="border: 2px solid #3a3a3a; list-style: none; padding: 5px; padding-top: 8px; padding-bottom: 8px;">
+                <li>NODE #{{ $index }} - <button ng-click="removeNode($index)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Remove Node</button></li>
+                <li>Hostname:&nbsp;&nbsp;&nbsp;&nbsp;<input placeholder="name" ng-model="node.Hostname" type="text" /></li>
+                <li ng-repeat="volume in node.Volumes">
+                    <ul style="margin-bottom: 15px; list-style: none; padding: 5px; padding-top: 8px; padding-bottom: 8px;">
+                        <li>Volume Label:&nbsp;&nbsp;&nbsp;&nbsp;<input placeholder="label" ng-model="volume.Label" type="text" /></li>
+                        <li>Brick Path:&nbsp;&nbsp;&nbsp;&nbsp;<input placeholder="brick" ng-model="volume.Brick" type="text" /></li>
+                        <li>Mountpoint:&nbsp;&nbsp;&nbsp;&nbsp;<input placeholder="mount point" ng-model="volume.MountPoint" type="text" /></li>
+                        <li><button ng-click="removeVolume($index, node)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Remove Volume</button></li>
+                    </ul>
+                </li>
+                <li>
+                    <button ng-click="addVolume(node)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Add Volume to Node</button>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <button ng-click="addNode()" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right20">Add Node</button>
+        </li>
+    </ul>
+</div>

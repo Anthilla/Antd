@@ -3,30 +3,6 @@
 <head>
     <meta charset="utf-8" />
     <title>Antd</title>
-
-    <link href="/Style/metro.css" rel="stylesheet">
-    <link href="/Style/metro-icons.css" rel="stylesheet">
-    <link href="/Style/template.css" rel="stylesheet">
-    <link href="/Style/template-colors.css" rel="stylesheet">
-    <link href="/Style/template.metro.css" rel="stylesheet">
-    <link href="/Style/trumbowyg.min.css" rel="stylesheet">
-    <link href="/Style/selectize.anthilla.css" rel="stylesheet">
-</head>
-<body class="bg-anthilla-gray-1">
-    <div class="bg-anthilla-gray-1" style="z-index: -2; position: fixed; width: 100%; height: 100%; top: 0; left:0;"></div>
-    <!--Static Content-->
-    <div class="width100pc" style="position: fixed; top: 0; z-index: 99;">
-        @Partial['Partials/navbar.html'];
-    </div>
-    <div class="padding-left10 padding-right10 width100pc bg-anthilla-gray-1" style="position: fixed; top: 50px; z-index: 99;">
-        @Partial['Partials/toolbar.html'];
-        <hr class="no-margin bg-anthilla-green" style="height: 5px;">
-    </div>
-    <!--Page Content-->
-    <div class="padding-left10 padding-right10" style="margin-top: 147px;">
-        <div ui-view="menu" class="bg-anthilla-gray-2 place-left width20pc bd-anthilla-gray-2" style="border: 2px solid;"></div>
-        <div ui-view="content" class="padding20 place-left width80pc bd-anthilla-gray-2" style="border-top: 6px solid;"></div>
-    </div>
     <!--Scripts-->
     <script src="/Scripts/jquery-3.1.1.min.js"></script>
     <script src="/Scripts/jquery-ui-1.12.1.min.js"></script>
@@ -46,16 +22,38 @@
     <script src="/Scripts/ng-file-upload-shim.min.js"></script>
     <script src="/Scripts/angular-translate-loader-url.min.js"></script>
     <script src="/Scripts/template.js"></script>
+
+    <script src="/Scripts/clipboard.min.js"></script>
+    <script src="/Scripts/ngclipboard.min.js"></script>
+
     <script src="/Scripts/trumbowyg.min.js"></script>
     <script src="/Scripts/trumbowyg-ng.min.js"></script>
     <script src="/Scripts/controller-home.js"></script>
-    <script src="/Scripts/controller-monitor.js"></script>
-    <script src="/Scripts/controller-context-antd.js"></script>
-    <script src="/Scripts/controller-context-apps.js"></script>
-    <script src="/Scripts/controller-context-asset.js"></script>
-    <script src="/Scripts/controller-context-boot.js"></script>
-    <script src="/Scripts/controller-context-ca.js"></script>
-    <script src="/Scripts/controller-context-log.js"></script>
-    <script src="/Scripts/controller-context-vfs.js"></script>
+    <script src="/Scripts/controller-antd.js"></script>
+
+    <!--Style-->
+    <link href="/Style/metro.css" rel="stylesheet">
+    <link href="/Style/metro-icons.css" rel="stylesheet">
+    <link href="/Style/template.css" rel="stylesheet">
+    <link href="/Style/template-colors.css" rel="stylesheet">
+    <link href="/Style/template.metro.css" rel="stylesheet">
+    <link href="/Style/trumbowyg.min.css" rel="stylesheet">
+    <link href="/Style/selectize.anthilla.css" rel="stylesheet">
+</head>
+<body class="bg-anthilla-gray-1">
+    <div class="bg-anthilla-gray-1" style="z-index: -2; position: fixed; width: 100%; height: 100%; top: 0; left:0;"></div>
+    <!--Static Content-->
+    <div class="width100pc">
+        @Partial['Partials/navbar.html'];
+    </div>
+    <div ng-controller="AuthenticationController">
+        @Partial['Partials/toolbar.html'];
+        <!--Page Content-->
+        <div class="grid condensed" style="margin: 0; margin-top: 10px; padding-bottom: 125px;">
+            <div class="row cells8">
+                <div ui-view="content" style="padding-left: 15px; padding-right: 15px;"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

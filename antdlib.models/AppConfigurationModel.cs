@@ -1,4 +1,4 @@
-﻿using antdlib.common;
+﻿using anthilla.core;
 
 namespace antdlib.models {
     public class AppConfigurationModel {

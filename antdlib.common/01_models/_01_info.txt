@@ -1,0 +1,2 @@
+﻿01_models
+Contiene la struttura secondaria della configurazione			

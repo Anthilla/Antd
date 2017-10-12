@@ -1,11 +1,13 @@
 ﻿#passwd:	 compat
 #group:		 compat
-passwd:		files winbind
-group:		files winbind
-shadow:		compat
 #passwd:     db files nis
 #shadow:     db files nis
 #group:      db files nis
+
+
+passwd:		files winbind
+group:		files winbind
+shadow:		compat
 hosts:		files mdns_minimal [NOTFOUND=return] resolve dns
 networks:	files dns
 services:	db files

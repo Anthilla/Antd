@@ -115,20 +115,25 @@ namespace antdsh {
         private static int _getServerRetry;
 
         private static string GetReferenceServer(string filter = "") {
-            var server = _publicRepositoryUrlHttps;
-            while(_getServerRetry < 5) {
-                var arr = GetServerList(filter).ToArray();
-                var rnd = new Random().Next(0, arr.Length);
-                server = arr[rnd];
-                if(string.IsNullOrEmpty(server)) {
-                    _getServerRetry++;
-                    continue;
+            try {
+                var server = _publicRepositoryUrlHttps;
+                while(_getServerRetry < 5) {
+                    var arr = GetServerList(filter).ToArray();
+                    var rnd = new Random().Next(0, arr.Length);
+                    server = arr[rnd];
+                    if(string.IsNullOrEmpty(server)) {
+                        _getServerRetry++;
+                        continue;
+                    }
+                    else {
+                        break;
+                    }
                 }
-                else {
-                    break;
-                }
+                return server;
             }
-            return server;
+            catch(Exception) {
+                return _officialRepo;
+            }
         }
 
         private static void CleanTmp() {
@@ -277,17 +282,18 @@ namespace antdsh {
             Bash.Execute($"mount {latestTmpFilePath} {tmpMountDirectory}");
             var downloadedUnits = Directory.EnumerateFiles(tmpMountDirectory).ToList();
             foreach(var downloadedUnit in downloadedUnits) {
-                var downloadUnitPath = Path.GetFullPath(downloadedUnit);
-                var unitName = Path.GetFileName(downloadUnitPath);
-                var destUnitPath = $"{unitsTargetDir}/{unitName}";
+                var downloadUnitPath = Path.GetFullPath(downloadedUnit); //è il percorso del file in /tmp/update
+                var unitName = Path.GetFileName(downloadUnitPath); //è il nome del file
+                var destUnitPath = $"{unitsTargetDir}/{unitName}"; //è il percorso del file in /mnt/cdrom/Units 
                 Console.WriteLine($"copy {downloadUnitPath} to {destUnitPath}");
                 File.Copy(downloadUnitPath, destUnitPath, true);
                 if(!string.IsNullOrEmpty(linkDirForAntd) && File.Exists(destUnitPath)) {
-                    var linkedFile = $"{linkDirForAntd}/{unitName}";
+                    var linkedFile = $"{linkDirForAntd}/{unitName}"; //è il percorso del file/link
                     if(File.Exists(linkedFile)) {
                         File.Delete(linkedFile);
                     }
-                    Bash.Execute($"ln -s {downloadUnitPath} {linkedFile}");
+                    Console.WriteLine($"ln -s {destUnitPath} {linkedFile}");
+                    Bash.Execute($"ln -s {destUnitPath} {linkedFile}");
                 }
             }
             Bash.Execute("systemctl daemon-reload");

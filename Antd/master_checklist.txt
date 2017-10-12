@@ -1,0 +1,37 @@
+[ ] cluster visualizza differenze configurazione
+[ ] boot.parameters.addNew/remove
+[ ] boot.parameters.import
+[ ] boot.modules.rulesOnChange (c'è un ordine di priorità tra i parametri, es: blacklist != load)
+[ ] boot.services.rulesOnChange (c'è un ordine di priorità tra i parametri, es: masking > start, forcedStart > start)
+[ ] network.routing.manageDefault (sono uno può essere default!)
+
+
+
+                                GET SET APPLY    (SET = salva parametro Master; APPLY = applica parametro da Master)
+
+host.version.system             [v] [x] [ ]
+host.version.firmware           [v] [x] [ ]
+host.version.modules            [v] [x] [ ]
+host.version.systemmap          [v] [x] [ ]
+host.version.initrd             [v] [x] [ ]
+host.version.kernel             [v] [x] [ ]
+host.version.antd               [v] [x] [ ]
+host.version.antdgui            [v] [x] [ ]
+host.version.antdsh             [v] [x] [ ]
+users.applicative               [ ] [v] [x] vengono solo creati e si deve implementare il metodo di autenticazione
+net.domain                      [x] [v] [ ] da applicare in dns, hosts, network (?)
+net.network_internal            [ ] [ ] [ ] da applicare in dns, hosts, network (?)
+net.network_external            [ ] [ ] [ ] da applicare in dns, hosts, network (?)
+net.network_interfaces          [v] [v] [v] da applicare in dns, hosts, network (?)
+services                        [ ] [ ] [ ]
+services.sshd                   [x] [v] [v] parse /etc/ssh/sshd_config 
+services.firewall               [ ] [v] [v] parse
+services.samba                  [ ] [v] [v] parse
+services.syslogng               [ ] [v] [v] parse
+services.tor                    [ ] [v] [v] parse
+storage                         [ ] [ ] [ ]
+storage.zpool                   [v] [ ] [ ]
+storage.zfs.ds                  [v] [ ] [ ]
+storage.zfs.snap                [v] [ ] [ ]
+cluster                         [ ] [ ] [ ]
+apps                            [ ] [ ] [ ]    

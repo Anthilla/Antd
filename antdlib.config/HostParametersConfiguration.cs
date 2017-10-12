@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using antdlib.models;
 using anthilla.core;
 using Newtonsoft.Json;
-using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public class HostParametersConfiguration {
@@ -142,9 +140,9 @@ namespace antdlib.config {
             if(!File.Exists(StartcommandsFile)) {
                 return new List<Control>();
             }
-                var text = File.ReadAllText(StartcommandsFile);
-                var objects = JsonConvert.DeserializeObject<List<Control>>(text);
-                return objects;
+            var text = File.ReadAllText(StartcommandsFile);
+            var objects = JsonConvert.DeserializeObject<List<Control>>(text);
+            return objects;
         }
         #endregion
 
@@ -153,16 +151,16 @@ namespace antdlib.config {
 
         public static void SetEndCommandsList(List<Control> commands) {
             var text = JsonConvert.SerializeObject(commands, Formatting.Indented);
-                FileWithAcl.WriteAllText(EndcommandsFile, text, "644", "root", "wheel");
+            FileWithAcl.WriteAllText(EndcommandsFile, text, "644", "root", "wheel");
         }
 
         private static List<Control> GetEndCommandsList() {
             if(!File.Exists(EndcommandsFile)) {
                 return new List<Control>();
             }
-                var text = File.ReadAllText(EndcommandsFile);
-                var objects = JsonConvert.DeserializeObject<List<Control>>(text);
-                return objects;
+            var text = File.ReadAllText(EndcommandsFile);
+            var objects = JsonConvert.DeserializeObject<List<Control>>(text);
+            return objects;
         }
         #endregion
     }

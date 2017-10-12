@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using anthilla.core;
-using Parameter = antdlib.common.Parameter;
 
 namespace antdlib.config {
     public static class SetupConfiguration {
