@@ -81,55 +81,24 @@
   <ItemGroup>
     <Compile Include="AclConfiguration.cs" />
     <Compile Include="GlusterConfiguration.cs" />
-    <Compile Include="NginxConfiguration.cs" />
-    <Compile Include="Parsers\NginxParser.cs" />
-    <Compile Include="Parsers\BindParser.cs" />
-    <Compile Include="Antd_SVCS\ServiceDataType.cs" />
-    <Compile Include="Parsers\DhcpParser.cs" />
-    <Compile Include="Antd_SVCS\Samba\SambaCommandModel.cs" />
-    <Compile Include="Antd_SVCS\Samba\SambaConfig.cs" />
-    <Compile Include="AuthorizedKeysConfiguration.cs" />
     <Compile Include="AppsConfiguration.cs" />
-    <Compile Include="TorConfiguration.cs" />
-    <Compile Include="DirectoryWatcherRsync.cs" />
-    <Compile Include="HostParametersConfiguration.cs" />
-    <Compile Include="Network2Configuration.cs" />
-    <Compile Include="TimerConfiguration.cs" />
-    <Compile Include="BindConfiguration.cs" />
     <Compile Include="CaConfigurationFiles.cs" />
     <Compile Include="ConfigurationFlow.cs" />
-    <Compile Include="DhcpdConfiguration.cs" />
-    <Compile Include="DhcpdLeases.cs" />
-    <Compile Include="FirewallConfiguration.cs" />
-    <Compile Include="HostConfiguration.cs" />
-    <Compile Include="JournaldConfiguration.cs" />
     <Compile Include="KerberosConfiguration.cs" />
     <Compile Include="LanConfiguration.cs" />
     <Compile Include="ManageMaster.cs" />
-    <Compile Include="MountManagement.cs" />
     <Compile Include="NetscanConfiguration.cs" />
-    <Compile Include="NetworkConfiguration.cs" />
     <Compile Include="PortManagement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootKeys.cs" />
-    <Compile Include="RsyncConfiguration.cs" />
-    <Compile Include="SambaConfiguration.cs" />
     <Compile Include="SetupConfiguration.cs" />
-    <Compile Include="SshdConfiguration.cs" />
     <Compile Include="SshKnownHosts.cs" />
-    <Compile Include="ClusterConfiguration.cs" />
-    <Compile Include="SyslogNgConfiguration.cs" />
     <Compile Include="SystemUser.cs" />
-    <Compile Include="UserConfiguration.cs" />
-    <Compile Include="Host2Configuration.cs" />
     <Compile Include="Virsh.cs" />
     <Compile Include="VfsConfiguration.cs" />
     <Compile Include="VpnConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Antd_SVCS\Samba\json-schema1.json" />
-    <None Include="Antd_SVCS\Samba\samba.command.list" />
-    <None Include="Antd_SVCS\Samba\samba.json" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
