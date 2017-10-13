@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="02_cmds\Applicative.cs" />
+    <Compile Include="02_cmds\Ntp.cs" />
     <Compile Include="02_cmds\WiFi.cs" />
     <Compile Include="02_cmds\Uname.cs" />
     <Compile Include="02_cmds\Ca.cs" />

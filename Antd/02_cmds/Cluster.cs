@@ -8,7 +8,6 @@ namespace Antd.cmds {
     /// <summary>
     /// TODO
     /// - sincronizza file da sincronizzare (in ClusterFs)  ->  DirectoryWatcher
-    /// - controlla stato dei nodi                          ->  su richiesta
     /// </summary>
     public class Cluster {
 

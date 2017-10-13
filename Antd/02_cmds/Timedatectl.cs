@@ -13,8 +13,8 @@ namespace Antd.cmds {
         private const string timedatectlFileLocation = "/usr/bin/timedatectl";
         private const string ntpdateFileLocation = "/usr/sbin/ntpdate";
         private const string hwclockFileLocation = "/sbin/hwclock";
-        private const string setTimezoneArg = "--no-pager --no-ask-password --adjust-system-clock set-timezone";
-        private const string setNtpdateArg = "--no-pager --no-ask-password --adjust-system-clock set-ntp yes";
+        private const string setTimezoneArg = "set-timezone";
+        private const string setNtpdateArg = "set-ntp yes";
         private const string getTimezoneArg = "list-timezones --no-pager";
         private const string systohcArg = "-s";
         private const string hctosysArg = "-w";
@@ -32,10 +32,7 @@ namespace Antd.cmds {
 
         public static bool Apply() {
             var current = Application.CurrentConfiguration.TimeDate;
-            var running = Application.RunningConfiguration.TimeDate;
-            if(CommonString.AreEquals(current.Timezone, running.Timezone) == false) {
-                SetTimezone(current.Timezone);
-            }
+            SetTimezone(current.Timezone);
             return true;
         }
 

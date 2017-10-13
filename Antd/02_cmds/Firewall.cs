@@ -5,7 +5,7 @@ namespace Antd.cmds {
 
     public class Firewall {
 
-        private const string nftablesFile = "/etc/nftables.conf";
+        private const string nftablesFile = "/cfg/antd/conf/nftables.conf";
         private const string nftFileLocation = "/sbin/nft";
         private const string nftArgs = "-f ";
 

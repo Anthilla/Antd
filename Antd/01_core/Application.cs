@@ -112,6 +112,7 @@ namespace Antd {
             Dns();
             Network();
 
+            Ntpd();
             Firewall();
             Dhcpd();
             Bind();
@@ -190,6 +191,7 @@ namespace Antd {
         private static void Time() {
             Scheduler.ExecuteJob<SyncLocalClockJob>();
             Timedatectl.Apply();
+            Ntp.Prepare();
             ConsoleLogger.Log("[time] ready");
         }
 
@@ -317,6 +319,11 @@ namespace Antd {
             Route.SetRoutingTable();
             Route.Set();
             ConsoleLogger.Log("[network] ready");
+        }
+
+        private static void Ntpd() {
+            Ntp.Set();
+            ConsoleLogger.Log("[ntp] ready");
         }
 
         private static void Firewall() {
