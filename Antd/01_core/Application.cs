@@ -175,7 +175,6 @@ namespace Antd {
             Directory.CreateDirectory(Parameter.TimerUnits);
             Directory.CreateDirectory(CommonString.Append(Parameter.AntdCfg, "/antd_conf_repo"));
             Directory.CreateDirectory(Parameter.AntdCfg);
-            Directory.CreateDirectory(Parameter.AntdCfgCluster);
             Directory.CreateDirectory(Parameter.AntdCfgConf);
             Directory.CreateDirectory(Parameter.AnthillaUnits);
             Directory.CreateDirectory(Parameter.AntdCfgVfs);

@@ -15,8 +15,8 @@ namespace Antd.cmds {
         private const string ipNonlocalBindSysctlKey = "net.ipv4.ip_nonlocal_bind";
         private const string ipNonlocalBindSysctlValue = "1";
         private const string ipNonlocalBindSysctlFile = "/proc/sys/net/ipv4/ip_nonlocal_bind";
-        private const string keepalivedFileOutput = "/cfg/antd/cluster/keepalived.conf";
-        private const string haproxyFileOutput = "/cfg/antd/cluster/haproxy.conf";
+        private const string keepalivedFileOutput = "/cfg/antd/conf/keepalived.conf";
+        private const string haproxyFileOutput = "/cfg/antd/conf/haproxy.conf";
 
         private static void Prepare() {
             Directory.CreateDirectory(haproxyVarLib);

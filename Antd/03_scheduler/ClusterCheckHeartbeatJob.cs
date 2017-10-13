@@ -78,7 +78,7 @@ namespace Antd {
         }
 
         private ClusterNodeChecklistModel NodeStatus(ClusterNode node) {
-            ConsoleLogger.Log($"[hb] check node {node.Hostname} {node.MachineUid}");
+            //ConsoleLogger.Log($"[hb] check node {node.Hostname} {node.MachineUid}");
             var status = new ClusterNodeChecklistModel();
 
             //controllo l'IP pubblico
