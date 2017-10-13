@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+<meta charset="utf-8" />
+<title>Anthilla Test</title>
+<script src="/f/angular.js"></script>
+</head>
+<body style="background-color: #535353;">
+<div ng-controller="main">
+<div style="color:#FFF; font-family: Arial; text-align: center; font-size: 3em; padding: 1em;">
+<img src="/f/logo.png" width="450" />
+<p style="color:#A7BD39;">{{ H }}</p>
+<p>{{ T.app }}</p>
+<p>{{ T.hw }}</p>
+</div>
+</div>
+<script type="text/javascript">
+var app = angular.module("app", [])
+.controller("main", ["$scope", "$http", "$interval", function ($scope, $http, $interval) {
+$interval(function () {
+$http.get("/host").success(function (e) { $scope.H = e; });
+$http.get("/date").success(function (e) { $scope.T = e; });
+}, 475);
+}]);
+</script>
+</body>
+</html>

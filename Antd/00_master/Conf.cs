@@ -37,6 +37,7 @@ namespace Antd {
         /// Crea una copia di backup dell'ultima configurazione salvata
         /// </summary>
         public static void Backup() {
+            Directory.CreateDirectory(Parameter.AntdCfgRestore);
             var filePath = CommonString.Append(Parameter.AntdCfg, "/", fileName, fileExtension);
             if(!File.Exists(filePath)) {
                 return;

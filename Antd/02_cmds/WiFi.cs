@@ -27,6 +27,7 @@ namespace Antd.cmds {
             }
             var arg = CommonString.Append("-i ", current.Interface, " -c ", wpasupplicantConfFile, " -B");
             CommonProcess.Do(wpasupplicantFileLocation);
+            ConsoleLogger.Warn(CommonString.Append(wpasupplicantFileLocation, " -i ", current.Interface, " -c ", wpasupplicantConfFile, " -B"));
         }
 
         public static void WriteFile(WpaSupplicant conf) {

@@ -80,18 +80,19 @@ namespace Antd {
         private ClusterNodeChecklistModel NodeStatus(ClusterNode node) {
             //ConsoleLogger.Log($"[hb] check node {node.Hostname} {node.MachineUid}");
             var status = new ClusterNodeChecklistModel();
+            status.TargetNodeMachineUid = node.MachineUid;
 
             //controllo l'IP pubblico
             status.KnownPublicIpReach = PingStatus(node.PublicIp);
             if(status.KnownPublicIpReach == 1) {
-                ConsoleLogger.Warn($"[hb] {node.Hostname} is unreachable at its known public ip");
+                //ConsoleLogger.Warn($"[hb] {node.Hostname} is unreachable at its known public ip");
                 return status;
             }
 
             //controllo antd
             var serviceStatus = ApiConsumer.Post(CommonString.Append(node.EntryPoint, serviceStatusPath));
             if(serviceStatus != Nancy.HttpStatusCode.OK) {
-                ConsoleLogger.Warn($"[hb] {node.Hostname}'s antd is unreachable at its known public ip");
+                //ConsoleLogger.Warn($"[hb] {node.Hostname}'s antd is unreachable at its known public ip");
                 return status;
             }
             else {
