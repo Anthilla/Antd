@@ -37,7 +37,7 @@ namespace Antd.cmds {
                 }
                 setupLines[i] = setupCommand.BashCommand;
             }
-            File.WriteAllLines($"{Parameter.AntdCfgSetup}/{setupFilename}", setupLines);
+            //File.WriteAllLines($"{Parameter.AntdCfgSetup}/{setupFilename}", setupLines);
             return true;
         }
 

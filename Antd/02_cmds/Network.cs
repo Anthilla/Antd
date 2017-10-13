@@ -255,7 +255,6 @@ namespace Antd.cmds {
         }
 
         public static bool SetInterfaceHardwareConfiguration(NetInterface netInterface) {
-            Console.WriteLine(netInterface.Active);
             if(netInterface.Active != true) {
                 Ip.EnableNetworkAdapter(netInterface.Id);
                 ConsoleLogger.Log($"[network] enabling '{netInterface.Id}'");

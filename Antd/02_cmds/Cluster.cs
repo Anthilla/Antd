@@ -101,46 +101,55 @@ namespace Antd.cmds {
                 "    timeout server  50000",
                 ""
             };
-            var localServices = Application.CurrentConfiguration.Cluster.Nodes.FirstOrDefault(_ => _.MachineUid == Application.CurrentConfiguration.Host.MachineUid.ToString()).Services;
-            if(localServices != null) {
-                for(var i = 0; i < ports.Length; i++) {
-                    var port = ports[i];
-                    port.ServicePort = localServices.FirstOrDefault(_ => _.Name == port.ServiceName)?.Port.ToString();
-                    if(string.IsNullOrEmpty(port.ServicePort)) {
-                        ConsoleLogger.Warn($"[cluster] haproxy source port is not defined for '{port.ServiceName}'");
-                        continue;
-                    }
-                    if(string.IsNullOrEmpty(port.VirtualPort)) {
-                        ConsoleLogger.Warn($"[cluster] haproxy virtual port is not defined for '{port.ServiceName}'");
-                        continue;
-                    }
-                    var frontEndLabel = $"fe_in{port.ServicePort}_out{port.VirtualPort}";
-                    var backEndLabel = $"be_in{port.ServicePort}_out{port.VirtualPort}";
-                    ConsoleLogger.Log($"[cluster] {port.ServiceName} virtual port: {port.VirtualPort} as {port.ServicePort}");
-                    lines.Add($"frontend {frontEndLabel}");
-                    lines.Add("    mode http");
-                    lines.Add($"    bind {networkConfig.VirtualIpAddress}:{port.VirtualPort} transparent");
-                    lines.Add("    stats enable");
-                    lines.Add("    stats auth admin:Anthilla");
-                    lines.Add("    option httpclose");
-                    lines.Add("    option forwardfor");
-                    lines.Add($"    default_backend {backEndLabel}");
-                    lines.Add("");
-                    lines.Add($"backend {backEndLabel}");
-                    lines.Add("    balance roundrobin");
-                    lines.Add("    cookie JSESSIONID prefix");
-                    lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
-                    for(var n = 0; n < nodesConfig.Length; n++) {
-                        var node = nodesConfig[n];
-                        lines.Add($"    server {node.Hostname} {node.PublicIp}:{port.ServicePort} check");
-                    }
-                    lines.Add("");
+            //var localServices = Application.CurrentConfiguration.Cluster.Nodes.FirstOrDefault(_ => _.MachineUid == Application.CurrentConfiguration.Host.MachineUid.ToString()).Services;
+            //if(localServices != null) {
+            int errorStateCounter = 0;
+            for(var i = 0; i < ports.Length; i++) {
+                var port = ports[i];
+                //port.ServicePort = localServices.FirstOrDefault(_ => _.Name == port.ServiceName)?.Port.ToString();
+                if(string.IsNullOrEmpty(port.ServicePort)) {
+                    errorStateCounter++;
+                    ConsoleLogger.Warn($"[cluster] haproxy source port is not defined for '{port.ServiceName}'");
+                    continue;
                 }
+                if(string.IsNullOrEmpty(port.VirtualPort)) {
+                    ConsoleLogger.Warn($"[cluster] haproxy virtual port is not defined for '{port.ServiceName}'");
+                    errorStateCounter++;
+                    continue;
+                }
+                var frontEndLabel = $"fe_in{port.ServicePort}_out{port.VirtualPort}";
+                var backEndLabel = $"be_in{port.ServicePort}_out{port.VirtualPort}";
+                ConsoleLogger.Log($"[cluster] {port.ServiceName} virtual port: {port.VirtualPort} as {port.ServicePort}");
+                lines.Add($"frontend {frontEndLabel}");
+                lines.Add("    mode http");
+                lines.Add($"    bind {networkConfig.VirtualIpAddress}:{port.VirtualPort} transparent");
+                lines.Add("    stats enable");
+                lines.Add("    stats auth admin:Anthilla");
+                lines.Add("    option httpclose");
+                lines.Add("    option forwardfor");
+                lines.Add($"    default_backend {backEndLabel}");
+                lines.Add("");
+                lines.Add($"backend {backEndLabel}");
+                lines.Add("    balance roundrobin");
+                lines.Add("    cookie JSESSIONID prefix");
+                lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
+                for(var n = 0; n < nodesConfig.Length; n++) {
+                    var node = nodesConfig[n];
+                    lines.Add($"    server {node.Hostname} {node.PublicIp}:{port.ServicePort} check");
+                }
+                lines.Add("");
             }
-            else {
-                ConsoleLogger.Warn("[cluster] local service does not exist");
+            //}
+            //else {
+            //    ConsoleLogger.Warn("[cluster] local service does not exist");
+            //    return;
+            //}
+
+            if(errorStateCounter == ports.Length) {
+                ConsoleLogger.Log("[cluster] failed to configure haproxy: port mapping list is empty");
                 return;
             }
+
             if(File.Exists(haproxyFileOutput)) {
                 File.Copy(haproxyFileOutput, $"{haproxyFileOutput}.bck", true);
             }
