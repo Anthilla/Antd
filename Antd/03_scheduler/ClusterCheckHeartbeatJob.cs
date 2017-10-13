@@ -61,7 +61,6 @@ namespace Antd {
         ///                         - aggiungo tutti gli ip alla lista ip pubblici noti
         /// </summary>
         public override void DoJob() {
-            return;
             if(Application.CurrentConfiguration.Cluster.Active == false) {
                 return;
             }

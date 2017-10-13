@@ -15,10 +15,6 @@ namespace AntdUi.Modules {
 
             Post["/save"] = x => {
                 string data = Request.Form.Data;
-                ConsoleLogger.Log("");
-                ConsoleLogger.Log("save (sto salvando le info del cluster dalla macchina stessa)");
-                ConsoleLogger.Log(data);
-                ConsoleLogger.Log("");
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
@@ -27,10 +23,6 @@ namespace AntdUi.Modules {
 
             Post["/import"] = x => {
                 string data = Request.Form.Data;
-                ConsoleLogger.Log("");
-                ConsoleLogger.Log("import (sto salvando le info ricevute da un altro nodo)");
-                ConsoleLogger.Log(data);
-                ConsoleLogger.Log("");
                 var dict = new Dictionary<string, string> {
                     { "Data", data }
                 };
@@ -43,16 +35,10 @@ namespace AntdUi.Modules {
             /// Questa API viene richiesta dall'utente (tramite GUI)
             /// </summary>
             Post["/apply"] = x => {
-                ConsoleLogger.Log("");
-                ConsoleLogger.Log("apply (sto applicando le modifiche del cluster)");
-                ConsoleLogger.Log("");
                 return ApiConsumer.Post(CommonString.Append(Application.ServerUrl, Request.Path));
             };
 
             Post["/deploy"] = x => {
-                ConsoleLogger.Log("");
-                ConsoleLogger.Log("deploy (sto inviando altrove le modifiche del cluster)");
-                ConsoleLogger.Log("");
                 return ApiConsumer.Post(CommonString.Append(Application.ServerUrl, Request.Path));
             };
 

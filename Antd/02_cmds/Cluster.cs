@@ -132,7 +132,7 @@ namespace Antd.cmds {
                 lines.Add($"backend {backEndLabel}");
                 lines.Add("    balance roundrobin");
                 lines.Add("    cookie JSESSIONID prefix");
-                lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
+                //lines.Add("    option httpchk HEAD /check.txt HTTP/1.0");
                 for(var n = 0; n < nodesConfig.Length; n++) {
                     var node = nodesConfig[n];
                     lines.Add($"    server {node.Hostname} {node.PublicIp}:{port.ServicePort} check");
@@ -148,10 +148,6 @@ namespace Antd.cmds {
             if(errorStateCounter == ports.Length) {
                 ConsoleLogger.Log("[cluster] failed to configure haproxy: port mapping list is empty");
                 return;
-            }
-
-            if(File.Exists(haproxyFileOutput)) {
-                File.Copy(haproxyFileOutput, $"{haproxyFileOutput}.bck", true);
             }
             File.WriteAllLines(haproxyFileOutput, lines);
             Haproxy.Stop();
@@ -201,9 +197,6 @@ namespace Antd.cmds {
                 "    }",
                 "}",
             };
-            if(File.Exists(keepalivedFileOutput)) {
-                File.Copy(keepalivedFileOutput, $"{keepalivedFileOutput}.bck", true);
-            }
             FileWithAcl.WriteAllLines(keepalivedFileOutput, lines);
             Keepalived.Stop();
             Keepalived.Start(keepalivedFileOutput);
