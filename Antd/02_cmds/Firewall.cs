@@ -40,10 +40,9 @@ namespace Antd.cmds {
 
             for(var t = 0; t < current.Tables.Length; t++) {
                 var firewalTable = current.Tables[t];
-                lines.Add(CommonString.Append("table ", firewalTable.Family
-                    , " ", firewalTable.Name, " {"));
-                for(var s = 0; s < current.Sets.Length; s++) {
-                    var set = current.Sets[s];
+                lines.Add(CommonString.Append("table ", firewalTable.Family, " ", firewalTable.Name, " {"));
+                for(var s = 0; s < firewalTable.Sets.Length; s++) {
+                    var set = firewalTable.Sets[s];
                     lines.Add(CommonString.Append("    set ", set.Name, " {"));
                     lines.Add(CommonString.Append("        type ", set.Type));
                     lines.Add(CommonString.Append("        elements = { ", CommonString.Build(set.Elements, ", "), " }"));

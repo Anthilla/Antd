@@ -3513,7 +3513,6 @@
             </table>
         </div>
     </div>
-
     <!--Firewall-->
     <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
         <div ng-click="loadFirewall()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
@@ -3550,7 +3549,7 @@
                     </div>
                 </div>
             </div>
-            <!--gestione set, indipendentemente dalla table-->
+            <!--gestione set, indipendente dalla table-->
             <div class="grid condensed fg-white" ng-show="Firewall!=null&&Firewall.Active==true">
                 <div class="row cells6">
                     <div class="cell colspan6">
@@ -3643,7 +3642,7 @@
                     </div>
                 </div>
             </div>
-            <!--crea nuona tabella -> grid-->
+            <!--crea nuona tabella-->
             <div class="grid condensed fg-white" ng-show="Firewall!=null&&Firewall.Active==true">
                 <div class="row cells8">
                     <div class="cell colspan2">
@@ -3659,13 +3658,6 @@
                         </div>
                     </div>
                     <div class="cell colspan2">
-                        <p class="uppercase fg-anthilla-green">New Table Name</p>
-                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
-                            <input type="text" ng-model="NewFirewallTable.Name" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
-                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
-                        </div>
-                    </div>
-                    <div class="cell colspan2">
                         <p class="uppercase fg-anthilla-green">New Table Type</p>
                         <div class="input-control select width100pc">
                             <select name="singleSelect" ng-model="NewFirewallTable.Type" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
@@ -3674,6 +3666,13 @@
                                 <option value="nat">nat</option>
                             </select>
                             <button type="button" class="button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-green" style="border-left: 0px !important;"><span class="mif-chevron-thin-down"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell colspan2">
+                        <p class="uppercase fg-anthilla-green">New Table Name</p>
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="NewFirewallTable.Name" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
                         </div>
                     </div>
                     <div class="cell colspan2 padding-left20">
@@ -3694,18 +3693,27 @@
                     <!--dettagli table-->
                     <div class="grid condensed fg-white" style="margin-top: 1.75em;">
                         <div class="row cells6">
-                            <div class="cell colspan2">
+                            <div class="cell colspan5">
                             </div>
-                            <div class="cell colspan2 padding-right10">
-                            </div>
-                            <div class="cell colspan2 padding-left10">
+                            <div class="cell">
                                 <button ng-click="removeFromList($index, Firewall.Tables)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc">{{ 'REMOVE' | translate }}</button>
                             </div>
                         </div>
-
+                        <div class="row cells6">
+                            <div class="cell">
+                                <p>Select sets for this Table</p>
+                            </div>
+                            <div class="cell colspan2 padding-right10"
+                                 ng-init="table.SetsConfig=selectizeFirewallTableSetsConfig(Firewall.Sets, table);table.TmpSets=createTmpSets(table.Sets);">
+                                <selectize config="table.SetsConfig" options="Firewall.Sets" ng-model="table.TmpSets"></selectize>
+                            </div>
+                            <div class="cell colspan2 padding-left10">
+                            </div>
+                            <div class="cell"></div>
+                        </div>
                         <!--crea nuova chain-->
                         <div class="row cells6">
-                            <div class="cell colspan2">
+                            <div class="cell">
                                 Add chain
                             </div>
                             <div class="cell colspan2 padding-right10" ng-init="table.NewChain.Type=table.Type">
@@ -3724,6 +3732,7 @@
                             <div class="cell colspan2 padding-left10">
                                 <button ng-click="addToList(table.NewChain, table.Chains)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc"><span class="mif-plus fg-anthilla-blue padding-right20"></span>&nbsp;{{ 'ADD' | translate }}</button>
                             </div>
+                            <div class="cell"> </div>
                         </div>
                     </div>
                     <!--gestione chain-->

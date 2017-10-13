@@ -1,8 +1,8 @@
 "use strict";
 
-app.controller("MachineConfigController", ["$scope", "$http", "$interval", "$timeout", MachineConfigController]);
+app.controller("MachineConfigController", ["$scope", "$http", "$interval", "$timeout", "$filter", MachineConfigController]);
 
-function MachineConfigController($scope, $http, $interval, $timeout) {
+function MachineConfigController($scope, $http, $interval, $timeout, $filter) {
 
     $scope.Host = null;
 
@@ -1086,6 +1086,45 @@ function MachineConfigController($scope, $http, $interval, $timeout) {
         }
     }
 
+    $scope.selectizeFirewallTableSetsConfig = function (options, table) {
+        return {
+            valueField: "Name",
+            labelField: "Name",
+            searchField: ["Name", "name"],
+            persist: true,
+            onChange: function (values) {
+                var list = [];
+                angular.forEach(values, function (value) {
+                    var foundSet = $filter('filter')(options, { Name: value })[0];
+                    list.push(foundSet);
+                });
+                table.Sets = list;
+            },
+            delimiter: ","
+        };
+    }
+
+    $scope.createTmpSets = function (list) {
+        var result = [];
+        angular.forEach(list, function (el) {
+            result.push(el.Name);
+        });
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1176,9 +1215,9 @@ function MachineConfigController($scope, $http, $interval, $timeout) {
     }
 }
 
-app.controller("MachineStatusController", ["$scope", "$http", "$interval", "$timeout", MachineStatusController]);
+app.controller("MachineStatusController", ["$scope", "$http", "$interval", "$timeout", "$filter", MachineStatusController]);
 
-function MachineStatusController($scope, $http, $interval, $timeout) {
+function MachineStatusController($scope, $http, $interval, $timeout, $filter) {
     $scope.loadMemory = function () {
         console.log("loadMemory");
         $http.get("/info/memory").success(function (data) {
@@ -1287,9 +1326,9 @@ function MachineStatusController($scope, $http, $interval, $timeout) {
     }
 }
 
-app.controller("AssetController", ["$scope", "$http", "$interval", "$timeout", AssetController]);
+app.controller("AssetController", ["$scope", "$http", "$interval", "$timeout", "$filter", AssetController]);
 
-function AssetController($scope, $http, $interval, $timeout) {
+function AssetController($scope, $http, $interval, $timeout, $filter) {
 
     $scope.Neighborhood = null;
 
