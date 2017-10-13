@@ -173,10 +173,11 @@ namespace Antd {
         private static void CreateWorkingDirectories() {
             Directory.CreateDirectory(Parameter.RepoDirs);
             Directory.CreateDirectory(Parameter.TimerUnits);
-            Directory.CreateDirectory(CommonString.Append(Parameter.AntdCfg, "/antd_conf_repo"));
-            Directory.CreateDirectory(Parameter.AntdCfg);
-            Directory.CreateDirectory(Parameter.AntdCfgConf);
             Directory.CreateDirectory(Parameter.AnthillaUnits);
+            Directory.CreateDirectory(Parameter.AntdCfg);
+            Directory.CreateDirectory(Parameter.AntdCfgRestore);
+            Directory.CreateDirectory(Parameter.AntdCfgConf);
+            Directory.CreateDirectory(Parameter.AntdCfgKeys);
             Directory.CreateDirectory(Parameter.AntdCfgVfs);
             Directory.CreateDirectory(Parameter.AntdCfgSetup);
             if(!File.Exists($"{Parameter.AntdCfgSetup}/setup.conf")) {

@@ -9,7 +9,6 @@ using System.IO;
 namespace Antd {
     public class ConfigRepo {
 
-        private const string oldConfFolder = "antd_conf_repo";
         private const string fileName = "antd";
         private const string fileExtension = ".json";
 
@@ -43,7 +42,7 @@ namespace Antd {
                 return;
             }
             var version = DateTime.Now.ToString("yyyyMMddHHmmss");
-            var backupFilePath = CommonString.Append(Parameter.AntdCfg, "/", oldConfFolder, "/", fileName, version, fileExtension);
+            var backupFilePath = CommonString.Append(Parameter.AntdCfgRestore, "/", fileName, version, fileExtension);
             File.Copy(filePath, backupFilePath, true);
         }
 
@@ -66,7 +65,7 @@ namespace Antd {
         /// <param name="version">Versione della configurazione: data con formato 'yyyyMMddHHmmss'</param>
         /// <returns></returns>
         public static MachineConfig Read(string version) {
-            var filePath = CommonString.Append(Parameter.AntdCfg, "/", oldConfFolder, "/", fileName, version, fileExtension);
+            var filePath = CommonString.Append(Parameter.AntdCfgRestore, "/", fileName, version, fileExtension);
             if(!File.Exists(filePath)) {
                 return null;
             }
