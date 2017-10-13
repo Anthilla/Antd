@@ -37,6 +37,7 @@ namespace Antd {
         /// Questo parametro va aggiornato periodicamente con un Job e sarà esposto da un api
         /// </summary>
         public static MachineStatusChecklistModel Checklist;
+        public static ClusterNodeChecklistModel[] ClusterChecklist;
         public static AsymmetricKeys Keys;
         public static JobManager Scheduler;
         public static Stopwatch STOPWATCH;

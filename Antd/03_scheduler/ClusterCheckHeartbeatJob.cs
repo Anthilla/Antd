@@ -1,5 +1,7 @@
-﻿using anthilla.core;
+﻿using Antd.models;
+using anthilla.core;
 using anthilla.scheduler;
+using System;
 using System.Net.NetworkInformation;
 
 namespace Antd {
@@ -41,7 +43,10 @@ namespace Antd {
         }
         #endregion
 
+        private const byte Ok = 0;
+        private const byte Ko = 1;
         private const string serviceStatusPath = "/device/ok";
+        private const string machineChecklistPath = "/device/checklist";
         private const string networkAddressPath = "/network/devices/addr";
         private const string localIp = "127.0.0.1";
 
@@ -65,52 +70,65 @@ namespace Antd {
                 return;
             }
             var nodes = Application.CurrentConfiguration.Cluster.Nodes;
+            var statusList = new ClusterNodeChecklistModel[nodes.Length];
             for(var i = 0; i < nodes.Length; i++) {
-                var node = nodes[i];
-                if(CommonString.AreEquals(node.MachineUid, Application.CurrentConfiguration.Host.MachineUid.ToString()) == true) {
-                    continue;
-                }
-                var entryPoint = node.EntryPoint;
-                ConsoleLogger.Log($"[hb] entry point found at {entryPoint}");
-
-                var nodesIps = ApiConsumer.Get<string[]>(CommonString.Append(entryPoint, networkAddressPath));
-                if(nodesIps == null) {
-                    continue;
-                }
-                for(var n = 0; n < nodesIps.Length; n++) {
-                    if(CommonString.AreEquals(nodesIps[n], localIp) == true) {
-                        continue;
-                    }
-                    var status = NodeStatus(nodesIps[n]);
-                    if(!status) {
-                        ConsoleLogger.Log($"[hb] 2/X ping node ip '{nodesIps[n]}': fail");
-                    }
-                    else {
-                        ConsoleLogger.Log($"[hb] 2/X ping node ip '{nodesIps[n]}': success");
-                    }
-                }
-
-                var ping01 = ApiConsumer.Post(CommonString.Append(entryPoint, serviceStatusPath));
-                if(ping01 != Nancy.HttpStatusCode.OK) {
-                    ConsoleLogger.Log($"[hb] 1/X ping node service: fail");
-                }
-                else {
-                    ConsoleLogger.Log($"[hb] 1/X ping node service: success");
-                }
-
+                statusList[i] = NodeStatus(nodes[i]);
             }
+            Application.ClusterChecklist = statusList;
         }
 
-        private bool NodeStatus(ClusterNode clusterNode) {
-            Ping pingSender = new Ping();
-            PingReply reply = pingSender.Send(clusterNode.PublicIp, 200);
-            return reply.Status == IPStatus.Success;
+        private ClusterNodeChecklistModel NodeStatus(ClusterNode node) {
+            ConsoleLogger.Log($"[hb] check node {node.Hostname} {node.MachineUid}");
+            var status = new ClusterNodeChecklistModel();
+
+            //controllo l'IP pubblico
+            status.KnownPublicIpReach = PingStatus(node.PublicIp);
+            if(status.KnownPublicIpReach == 1) {
+                ConsoleLogger.Warn($"[hb] {node.Hostname} is unreachable at its known public ip");
+                return status;
+            }
+
+            //controllo antd
+            var serviceStatus = ApiConsumer.Post(CommonString.Append(node.EntryPoint, serviceStatusPath));
+            if(serviceStatus != Nancy.HttpStatusCode.OK) {
+                ConsoleLogger.Warn($"[hb] {node.Hostname}'s antd is unreachable at its known public ip");
+                return status;
+            }
+            else {
+                status.ServiceReach = 0;
+            }
+
+            //controllo gli IP scoperti
+            var nodeIps = ApiConsumer.Get<string[]>(CommonString.Append(node.EntryPoint, networkAddressPath)) ?? new string[0];
+            var ipStatusList = new ClusterNodeIpStatusModel[nodeIps.Length];
+            for(var n = 0; n < nodeIps.Length; n++) {
+                if(CommonString.AreEquals(nodeIps[n], localIp) == true) {
+                    continue;
+                }
+                var ipStatus = new ClusterNodeIpStatusModel();
+                ipStatus.IpAddress = nodeIps[n];
+                ipStatus.Status = PingStatus(nodeIps[n]);
+                ipStatusList[n] = ipStatus;
+            }
+            status.DiscoveredIpsReach = ipStatusList;
+
+            //controllo stato nodo
+            var nodeChecklist = ApiConsumer.Get<MachineStatusChecklistModel>(CommonString.Append(node.EntryPoint, machineChecklistPath)) ?? new MachineStatusChecklistModel();
+            status.InternetReach = nodeChecklist.InternetReach;
+            status.InternetDnsReach = nodeChecklist.InternetDnsReach;
+
+            return status;
         }
 
-        private bool NodeStatus(string ip) {
-            Ping pingSender = new Ping();
-            PingReply reply = pingSender.Send(ip, 200);
-            return reply.Status == IPStatus.Success;
+        private byte PingStatus(string ip) {
+            try {
+                Ping pingSender = new Ping();
+                PingReply reply = pingSender.Send(ip, 200);
+                return reply.Status == IPStatus.Success ? Ok : Ko;
+            }
+            catch(Exception) {
+                return Ko;
+            }
         }
     }
 }

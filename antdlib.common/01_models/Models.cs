@@ -899,7 +899,7 @@ namespace Antd.models {
     }
 
     /// <summary>
-    /// Check list di elementi da controllare
+    /// Check list di elementi da controllare localmente
     /// Ogni parametro sarà un byte valorizzato a 0 o 1
     /// dove 0 => OK
     ///      1 => ci sono problemi
@@ -918,6 +918,65 @@ namespace Antd.models {
 
         public override string ToString() {
             return CommonString.Append(this.InternetReach.ToString(), this.InternetDnsReach.ToString());
+        }
+    }
+
+    /// <summary>
+    /// Check list di elementi da controllare
+    /// Relativamente a un nodo
+    /// Es: da nodo01 a nodo02 cosa riesco o non riesco a raggiungere/vedere
+    /// Ogni parametro sarà un byte valorizzato a 0 o 1
+    /// dove 0 => OK
+    ///      1 => ci sono problemi
+    /// </summary>
+    public class ClusterNodeChecklistModel {
+        /// <summary>
+        /// UID del nodo analizzato
+        /// </summary>
+        public string TargetNodeMachineUid { get; set; } = string.Empty;
+        /// <summary>
+        /// Prova a raggiungere "internet" tramite un IP
+        /// es  8.8.8.8
+        /// </summary>
+        public byte InternetReach { get; set; } = 1;
+        /// <summary>
+        /// Prova a raggiungere "internet" tramite un indirizzo dns
+        /// es  www.google.com
+        /// </summary>
+        public byte InternetDnsReach { get; set; } = 1;
+        /// <summary>
+        /// Prova a raggiungere l'ip conosciuto, configurato nelle impostazioni del cluster ed esposto da rssdp
+        /// </summary>
+        public byte KnownPublicIpReach { get; set; } = 1;
+        /// <summary>
+        /// Prova a raggiungere tutti gli ip impostati sul nodo
+        /// </summary>
+        public ClusterNodeIpStatusModel[] DiscoveredIpsReach { get; set; } = new ClusterNodeIpStatusModel[0];
+        /// <summary>
+        /// Raggiungibilità di antd
+        /// </summary>
+        public byte ServiceReach { get; set; } = 1;
+
+        public override string ToString() {
+            var dlines = new string[this.DiscoveredIpsReach.Length];
+            for(var i = 0; i < this.DiscoveredIpsReach.Length; i++) {
+                dlines[i] = this.DiscoveredIpsReach[i].ToString();
+            }
+            var dict = CommonString.Build(dlines, "");
+            return CommonString.Append(this.TargetNodeMachineUid,
+                this.InternetReach.ToString(),
+                this.InternetDnsReach.ToString(),
+                this.KnownPublicIpReach.ToString(),
+                dict);
+        }
+    }
+
+    public class ClusterNodeIpStatusModel {
+        public string IpAddress { get; set; } = string.Empty;
+        public byte Status { get; set; } = 1;
+
+        public override string ToString() {
+            return CommonString.Append(this.IpAddress, this.Status.ToString());
         }
     }
 }
