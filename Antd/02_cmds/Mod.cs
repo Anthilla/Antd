@@ -89,7 +89,7 @@ namespace Antd.cmds {
             var files = Directory.EnumerateFiles(modulesLocation, "*", SearchOption.AllDirectories).Where(_ => _.Contains(moduleExtension)).ToArray();
             var list = new string[files.Length];
             for(var i = 0; i < files.Length; i++) {
-                list[i] = files[i].Replace(moduleExtension, "");
+                list[i] = Path.GetFileName(files[i]).Replace(moduleExtension, "");
             }
             return list;
         }
