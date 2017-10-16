@@ -81,8 +81,8 @@ namespace Antd {
         /// </summary>
         /// <returns></returns>
         public static MachineStatus GetRunning() {
-            var STOPWATCH = new System.Diagnostics.Stopwatch();
-            STOPWATCH.Start();
+            //var STOPWATCH = new System.Diagnostics.Stopwatch();
+            //STOPWATCH.Start();
             var master = new MachineStatus();
 
             master.Info.Uptime = Uptime.Get();

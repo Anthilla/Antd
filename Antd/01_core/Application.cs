@@ -286,12 +286,6 @@ namespace Antd {
         }
 
         private static void SetModules() {
-            var modules = Mod.Get();
-            var bootModules = new SystemModule[modules.Length];
-            for(var i = 0; i < modules.Length; i++) {
-                bootModules[i] = new SystemModule() { Module = modules[i].Module, Active = true };
-            }
-            RunningConfiguration.Boot.Modules = bootModules;
             Mod.Set();
         }
 

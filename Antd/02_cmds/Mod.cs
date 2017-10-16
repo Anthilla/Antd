@@ -32,20 +32,19 @@ namespace Antd.cmds {
 
         public static bool Set() {
             var current = Application.CurrentConfiguration.Boot.Modules;
-            //var running = Application.CurrentConfiguration.Boot.Modules;
             for(var i = 0; i < current.Length; i++) {
                 var currentModule = current[i];
                 if(currentModule.Blacklist) {
                     Blacklist(currentModule.Module);
+                    continue;
                 }
                 if(currentModule.Remove) {
                     Remove(currentModule.Module);
+                    continue;
                 }
                 if(currentModule.Active) {
-                    //if(running.FirstOrDefault(_ => _.Module == currentModule.Module) == null) {
                     var moduleToLoad = CommonString.Append(currentModule.Module, " ", currentModule.Arguments);
                     Add(moduleToLoad.Trim());
-                    //}
                 }
             }
             return true;
@@ -90,7 +89,7 @@ namespace Antd.cmds {
             var files = Directory.EnumerateFiles(modulesLocation, "*", SearchOption.AllDirectories).Where(_ => _.Contains(moduleExtension)).ToArray();
             var list = new string[files.Length];
             for(var i = 0; i < files.Length; i++) {
-                list[i] = Path.GetFileNameWithoutExtension(files[i]);
+                list[i] = files[i].Replace(moduleExtension, "");
             }
             return list;
         }
