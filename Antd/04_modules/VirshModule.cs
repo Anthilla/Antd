@@ -1,4 +1,5 @@
 ﻿using Antd.cmds;
+using Antd.models;
 using Nancy;
 using Newtonsoft.Json;
 
@@ -11,23 +12,13 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(Application.RunningConfiguration.Services.Virsh);
             };
 
-            //Get["/running"] = x => {
-            //    return JsonConvert.SerializeObject(Application.RunningConfiguration.Host);
-            //};
-
-            //Post["/save"] = x => {
-            //    string data = Request.Form.Data;
-            //    var objects = JsonConvert.DeserializeObject<Host>(data);
-            //    Application.CurrentConfiguration.Host = objects;
-            //    ConfigRepo.Save();
-            //    return HttpStatusCode.OK;
-            //};
-
-            //Post["/apply"] = x => {
-            //    Hostnamectl.Apply();
-            //    Application.RunningConfiguration.Host = Hostnamectl.Get();
-            //    return HttpStatusCode.OK;
-            //};
+            Post["/save"] = x => {
+                string data = Request.Form.Data;
+                var objects = JsonConvert.DeserializeObject<VirshModel>(data);
+                Application.CurrentConfiguration.Services.Virsh = objects;
+                ConfigRepo.Save();
+                return HttpStatusCode.OK;
+            };
 
             Post["/destroy"] = x => {
                 string data = Request.Form.Data;

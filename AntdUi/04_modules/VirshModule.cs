@@ -6,15 +6,21 @@ using System.Collections.Generic;
 namespace AntdUi.Modules {
     public class VirshModule : NancyModule {
 
-        private static string Agent;
-
         public VirshModule() : base("/virsh") {
             this.RequiresAuthentication();
 
             Get["/"] = x => {
                 return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
             };
-     
+
+            Get["/save"] = x => {
+                string data = Request.Form.Data;
+                var dict = new Dictionary<string, string> {
+                    { "Data", data }
+                };
+                return ApiConsumer.Post(CommonString.Append(Application.ServerUrl, Request.Path), dict);
+            };
+
             Post["/destroy"] = x => {
                 string data = Request.Form.Data;
                 var dict = new Dictionary<string, string> {

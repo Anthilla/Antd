@@ -41,7 +41,13 @@ namespace Antd.cmds {
             var result = Directory.EnumerateDirectories(netFolder, "*", SearchOption.TopDirectoryOnly)
                 .Select(_ => Path.GetFileName(_))
                 .ToArray();
-            var bondNames = File.ReadAllText(CommonString.Append(netFolder, "/", bondingMastersFile)).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if(result.Length <= 0) {
+                return new NetInterface[0];
+            }
+            string[] bondNames = new string[0];
+            if(File.Exists(bondingMastersFile)) {
+                bondNames = File.ReadAllText(CommonString.Append(netFolder, "/", bondingMastersFile)).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            }
             var interfaces = new NetInterface[result.Length];
             for(var i = 0; i < result.Length; i++) {
                 var interfaceName = result[i];

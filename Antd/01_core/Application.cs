@@ -440,6 +440,12 @@ namespace Antd {
             }
         }
 
+        private static void ManageVirsh() {
+            if(CurrentConfiguration.Services.Virsh.Active) {
+                Virsh.StartAll();
+            }
+        }
+
         private static void DirectoryWatchers() {
             SetupWatcher.Start();
         }

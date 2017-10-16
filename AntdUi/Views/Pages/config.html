@@ -711,7 +711,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 15px;" ng-init="NewBootModule.ModuleConfig=selectizeConfig(NewBootModule.Module);NewBootModule.ModuleOptions=selectizeOptions(NewBootModule.Module);">
+                        <td style="padding: 0 15px;" ng-init="NewBootModule.ModuleConfig=selectizeSingleConfig(NewBootModule.Module);NewBootModule.ModuleOptions=selectizeOptions(NewBootModule.Module);">
                             <selectize config="NewBootModule.ModuleConfig" options="NewBootModule.ModuleOptions" ng-model="NewBootModule.Module"></selectize>
                         </td>
                         <!--<td>
@@ -853,7 +853,7 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td style="padding: 0 15px;" ng-init="NewBootService.ServiceConfig=selectizeConfig(NewBootService.Service);NewBootService.ServiceOptions=selectizeOptions(NewBootService.Service);">
+                        <td style="padding: 0 15px;" ng-init="NewBootService.ServiceConfig=selectizeSingleConfig(NewBootService.Service);NewBootService.ServiceOptions=selectizeOptions(NewBootService.Service);">
                             <selectize config="NewBootService.ServiceConfig" options="NewBootService.ServiceOptions" ng-model="NewBootService.Service"></selectize>
                         </td>
                         <!--<td>
@@ -3483,7 +3483,31 @@
             <div class="width100pc padding20" ng-hide="Virsh!=null">
                 <span class="mif-spinner2 mif-ani-spin mif-4x fg-yellow"></span>
             </div>
-            <table ng-show="Virsh!=null" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+            <div class="grid condensed fg-white" ng-show="Virsh!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>Enable</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <label class="switch" style="margin-top: 13px;">
+                            <input type="checkbox" ng-model="Virsh.Active">
+                            <span class="check"></span>
+                            <span class="caption padding-left10">
+                                <span ng-switch="Virsh.Active">
+                                    <span ng-switch-when="true">enabled</span>
+                                    <span ng-switch-when="false">disabled</span>
+                                    <span ng-switch-default>&nbsp;</span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+            <table ng-show="Virsh!=null&&Virsh.Active==true" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
                 <tbody>
                     <tr>
                         <td class="fg-anthilla-green">
@@ -3517,6 +3541,19 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="grid condensed fg-white" style="margin-top: 1.75em;" ng-show="Virsh!=null&&Virsh.Active==true">
+                <div class="row cells6">
+                    <div class="cell colspan1 ">
+                    </div>
+                    <div class="cell colspan2 padding-right10">
+                        <button ng-click="click(saveVirsh)" ng-style="buttonStyle"><span class="{{iconSave}}" ng-style="iconStyle"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    </div>
+                    <div class="cell colspan2 padding-left10">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!--Firewall-->

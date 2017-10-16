@@ -44,6 +44,16 @@ namespace Antd.cmds {
             return info;
         }
 
+        public static void StartAll() {
+            var current = Application.RunningConfiguration.Services.Virsh.Domains;
+            if(current.Length <= 0) {
+                return;
+            }
+            for(var i = 0; i < current.Length; i++) {
+                Start(current[i].Name);
+            }
+        }
+
         public static bool Destroy(string domain) {
             var args = CommonString.Append(destroyArg, " ", domain);
             CommonProcess.Do(virshFileLocation, args);
