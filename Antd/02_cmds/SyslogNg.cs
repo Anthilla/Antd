@@ -6,7 +6,7 @@ namespace Antd.cmds {
 
     public class SyslogNg {
 
-        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/syslogng.conf";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgConf}/syslogng.conf";
         private const string ServiceName = "syslog-ng.service";
         private const string MainFilePath = "/etc/syslog-ng/syslog-ng.conf";
         private const string MainFilePathBackup = "/etc/syslog-ng/.syslog-ng.conf";

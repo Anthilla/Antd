@@ -6,7 +6,7 @@ namespace Antd.cmds {
 
     public class Tor {
 
-        private static readonly string CfgFile = $"{Parameter.AntdCfgServices}/tor.conf";
+        private static readonly string CfgFile = $"{Parameter.AntdCfgConf}/tor.conf";
         private const string ServiceName = "tor.service";
         private const string MainFilePath = "/etc/tor/torrc";
         private const string MainFilePathBackup = "/etc/tor/.torrc";

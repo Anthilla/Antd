@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Nancy;
 using Nancy.Conventions;
 using Nancy.Hosting.Self;
+using anthilla.core;
 
 namespace AnthillaTest {
     internal class Application {
@@ -52,6 +53,22 @@ namespace AnthillaTest {
 
             Get["/date"] = _ => {
                 return Response.AsJson(new Times { App = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), Hw = Hwclock() });
+            };
+
+            Get["/cls"] = x => {
+                return ApiConsumer.GetJson("http://localhost:8086/cluster");
+            };
+
+            Post["/ok"] = x => {
+                return ApiConsumer.Post("http://localhost:8086/device/ok");
+            };
+
+            Get["/chk"] = x => {
+                return ApiConsumer.Post("http://localhost:8086/device/checklist");
+            };
+
+            Get["/clschk"] = x => {
+                return ApiConsumer.Post("http://localhost:8086/device/clusterchecklist");
             };
         }
 
