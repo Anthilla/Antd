@@ -205,7 +205,7 @@ namespace Antd {
 
         private static void Mounts() {
             Mount.Set();
-            ConsoleLogger.Log("mounts ready");
+            ConsoleLogger.Log("[mounts] ready");
         }
 
         private static void CheckUnitsLocation() {
