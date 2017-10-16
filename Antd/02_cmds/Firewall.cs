@@ -58,7 +58,7 @@ namespace Antd.cmds {
                         var rule = chain.Rules[r];
                         lines.Add(CommonString.Append("        ", rule.Match, " ", rule.MatchArgument, " ", rule.Object, " ", rule.Jump).Replace("  ", " "));
                     }
-                    var logPrefix = CommonString.Append("a=T", firewalTable.Name, "C", chain.Hook);
+                    var logPrefix = CommonString.Append("\"a=T", firewalTable.Name, "C", chain.Hook, "\"");
                     lines.Add(CommonString.Append("        log prefix ", logPrefix, " accept"));
                     lines.Add("    }");
                 }
@@ -124,6 +124,8 @@ namespace Antd.cmds {
             };
 
             public static string[] RuleMatch = new string[] {
+                "iif",
+                "oif",
                 "meta",
                 "icmp",
                 "icmpv6",

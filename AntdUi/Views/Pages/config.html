@@ -3801,6 +3801,8 @@
                                         <td>
                                             <div class="input-control select width100pc">
                                                 <select name="singleSelect" ng-model="chain.NewRule.Match" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                                    <option value="iif">iif</option>
+                                                    <option value="oif">oif</option>
                                                     <option value="meta">meta</option>
                                                     <option value="icmp">icmp</option>
                                                     <option value="icmpv6">icmpv6</option>
@@ -3859,7 +3861,7 @@
                                         </td>
                                         <td>
                                             <div class="input-control select width100pc">
-                                                <select name="singleSelect" ng-model="chain.NewRule.Jumps" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                                <select name="singleSelect" ng-model="chain.NewRule.Jump" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                                     <option value="accept">accept</option>
                                                     <option value="reject">reject</option>
                                                     <option value="drop">drop</option>
@@ -3880,6 +3882,8 @@
                                         <td>
                                             <div class="input-control select width100pc">
                                                 <select name="singleSelect" ng-model="rule.Match" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                                    <option value="iif">iif</option>
+                                                    <option value="oif">oif</option>
                                                     <option value="meta">meta</option>
                                                     <option value="icmp">icmp</option>
                                                     <option value="icmpv6">icmpv6</option>
@@ -3938,7 +3942,7 @@
                                         </td>
                                         <td>
                                             <div class="input-control select width100pc">
-                                                <select name="singleSelect" ng-model="rule.Jumps" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
+                                                <select name="singleSelect" ng-model="rule.Jump" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                                     <option value="accept">accept</option>
                                                     <option value="reject">reject</option>
                                                     <option value="drop">drop</option>
@@ -3960,7 +3964,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid condensed fg-white" style="margin-top: 1.75em;" ng-show="Firewall!=null&&Firewall.Active==true">
+            <div class="grid condensed fg-white" style="margin-top: 1.75em;" ng-show="Firewall!=null">
                 <div class="row cells6">
                     <div class="cell colspan1">
                     </div>
