@@ -22,8 +22,8 @@ namespace Antd.cmds {
 
         public static VirshDomainModel[] GetDomains() {
             var result = CommonProcess.Execute(virshFileLocation, listArg).Skip(2).ToArray();
-            var list = new VirshDomainModel[result.Length];
-            for(var i = 0; i < result.Length; i++) {
+            var list = new VirshDomainModel[result.Length - 1];
+            for(var i = 0; i < result.Length - 1; i++) {
                 var currentLineData = result[i].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 list[i] = new VirshDomainModel() {
                     Id = currentLineData[0],
