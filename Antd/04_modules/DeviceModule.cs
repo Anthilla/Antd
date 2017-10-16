@@ -25,6 +25,10 @@ namespace Antd.Modules {
             Get["/clusterchecklist"] = x => {
                 return JsonConvert.SerializeObject(Application.ClusterChecklist);
             };
+
+            Get["/vm"] = x => {
+                return JsonConvert.SerializeObject(Application.RunningConfiguration.Services.Virsh);
+            };
         }
     }
 }

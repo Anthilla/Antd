@@ -47,6 +47,7 @@ namespace Antd {
         private const byte Ko = 1;
         private const string serviceStatusPath = "/device/ok";
         private const string machineChecklistPath = "/device/checklist";
+        private const string virshStatusPath = "/device/vm";
         private const string networkAddressPath = "/network/devices/addr";
         private const string localIp = "127.0.0.1";
 
@@ -117,6 +118,10 @@ namespace Antd {
             var nodeChecklist = ApiConsumer.Get<MachineStatusChecklistModel>(CommonString.Append(node.EntryPoint, machineChecklistPath)) ?? new MachineStatusChecklistModel();
             status.InternetReach = nodeChecklist.InternetReach;
             status.InternetDnsReach = nodeChecklist.InternetDnsReach;
+
+            //controllo servizio: virsh
+            var virshStatus = ApiConsumer.Get<VirshModel>(CommonString.Append(node.EntryPoint, virshStatusPath)) ?? new VirshModel();
+            status.VirshService = virshStatus;
 
             return status;
         }

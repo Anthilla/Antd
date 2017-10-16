@@ -956,6 +956,10 @@ namespace Antd.models {
         /// Raggiungibilità di antd
         /// </summary>
         public byte ServiceReach { get; set; } = 1;
+        /// <summary>
+        /// Stato del servizio: Virsh
+        /// </summary>
+        public VirshModel VirshService { get; set; } = new VirshModel();
 
         public override string ToString() {
             var dlines = new string[this.DiscoveredIpsReach.Length];

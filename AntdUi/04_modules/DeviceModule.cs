@@ -26,6 +26,10 @@ namespace AntdUi.Modules {
             Get["/clusterchecklist"] = x => {
                 return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
             };
+
+            Get["/vm"] = x => {
+                return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
+            };
         }
     }
 }

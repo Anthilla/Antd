@@ -711,14 +711,17 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="padding: 0 15px;" ng-init="NewBootModule.ModuleConfig=selectizeConfig(NewBootModule.Module);NewBootModule.ModuleOptions=selectizeOptions(NewBootModule.Module);">
+                            <selectize config="NewBootModule.ModuleConfig" options="NewBootModule.ModuleOptions" ng-model="NewBootModule.Module"></selectize>
+                        </td>
+                        <!--<td>
                             <div class="input-control select width100pc">
                                 <select name="singleSelect" ng-model="NewBootModule.Module" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                     <option ng-repeat="lib in ModulesList" value="{{lib}}">{{lib}}</option>
                                 </select>
                                 <button type="button" class="button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-green" style="border-left: 0px !important;"><span class="mif-chevron-thin-down"></span></button>
                             </div>
-                        </td>
+                        </td>-->
                         <td>
                             <label class="switch">
                                 <input type="checkbox" ng-model="NewBootModule.Active">
@@ -850,14 +853,17 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td>
+                        <td style="padding: 0 15px;" ng-init="NewBootService.ServiceConfig=selectizeConfig(NewBootService.Service);NewBootService.ServiceOptions=selectizeOptions(NewBootService.Service);">
+                            <selectize config="NewBootService.ServiceConfig" options="NewBootService.ServiceOptions" ng-model="NewBootService.Service"></selectize>
+                        </td>
+                        <!--<td>
                             <div class="input-control select width100pc">
                                 <select name="singleSelect" ng-model="NewBootService.Service" class="bg-anthilla-gray-2 bd-anthilla-green fg-white">
                                     <option ng-repeat="lib in ServicesList" value="{{lib}}">{{lib}}</option>
                                 </select>
                                 <button type="button" class="button bg-anthilla-gray-2 fg-anthilla-green bd-anthilla-green" style="border-left: 0px !important;"><span class="mif-chevron-thin-down"></span></button>
                             </div>
-                        </td>
+                        </td>-->
                         <td>
                             <label class="switch">
                                 <input type="checkbox" ng-model="NewBootService.Active">
