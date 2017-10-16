@@ -3,15 +3,24 @@ using System.IO;
 
 namespace Antd.cmds {
 
+    /// <summary>
+    /// From: https://wiki.archlinux.org/index.php/WPA_supplicant#At_boot_.28systemd.29
+    /// 
+    /// At boot (systemd)
+    ///
+    ///The wpa_supplicant package provides multiple systemd service files:
+    ///
+    ///wpa_supplicant.service - uses D-Bus, recommended for NetworkManager users.
+    ///wpa_supplicant@.service - accepts the interface name as an argument and starts the wpa_supplicant daemon for this interface. It reads a /etc/wpa_supplicant/wpa_supplicant-interface.conf configuration file.
+    ///wpa_supplicant-nl80211@.service - also interface specific, but explicitly forces the nl80211 driver(see below). The configuration file path is /etc/wpa_supplicant/wpa_supplicant-nl80211-interface.conf.
+    ///wpa_supplicant-wired@.service - also interface specific, uses the wired driver.The configuration file path is /etc/wpa_supplicant/wpa_supplicant-wired-interface.conf.
+    ///
+    ///To enable wireless at boot, enable an instance of one of the above services on a particular wireless interface. For example, enable the wpa_supplicant@interface systemd unit.
+    /// </summary>
     public class WiFi {
 
-        private const string wpasupplicantFileLocation = "/usr/sbin/wpa_supplicant";
-        private const string wpasupplicantConfFile = "/cfg/antd/conf/wpa_supplicant.conf";
-        private const string nftArgs = "-f ";
+        private const string wpasupplicantEtcFolder = "/etc/wpa_supplicant";
 
-        /// <summary>
-        /// wpa_supplicant -i wlan0 -c /mnt/cdrom/Config/network/wpa_supplicant-wlan0.conf -B
-        /// </summary>
         public static void Apply() {
             var current = Application.CurrentConfiguration.Network.WpaSupplicant;
             if(current == null) {
@@ -22,15 +31,13 @@ namespace Antd.cmds {
             }
             ConsoleLogger.Log($"[wifi] connecting '{current.Interface}' to '{current.Ssid}' ");
             WriteFile(current);
-            if(!File.Exists(wpasupplicantConfFile)) {
-                return;
-            }
-            var arg = CommonString.Append("-i ", current.Interface, " -c ", wpasupplicantConfFile, " -B");
-            CommonProcess.Do(wpasupplicantFileLocation);
-            ConsoleLogger.Warn(CommonString.Append(wpasupplicantFileLocation, " -i ", current.Interface, " -c ", wpasupplicantConfFile, " -B"));
+            Start();
         }
 
         public static void WriteFile(WpaSupplicant conf) {
+            if(!Directory.Exists(wpasupplicantEtcFolder)) {
+                return;
+            }
             var lines = new string[] {
                 "###### Global Configuration ######",
                 "ctrl_interface=/var/run/wpa_supplicant",
@@ -48,8 +55,20 @@ namespace Antd.cmds {
                 $"    psk=\"{conf.Password}\"",
                 "}"
             };
-            File.WriteAllLines(wpasupplicantConfFile, lines);
-            ConsoleLogger.Log("[wifi] configured");
+            var confFilePath = CommonString.Append(wpasupplicantEtcFolder, "wpa_supplicant-", conf.Interface, ".conf");
+            File.WriteAllLines(confFilePath, lines);
+        }
+
+        public static void Start() {
+            var conf = Application.CurrentConfiguration.Network.WpaSupplicant;
+            var serviceName = CommonString.Append("wpa_supplicant@", conf.Interface, ".service");
+            Systemctl.Start(serviceName);
+        }
+
+        public static void Stop() {
+            var conf = Application.CurrentConfiguration.Network.WpaSupplicant;
+            var serviceName = CommonString.Append("wpa_supplicant@", conf.Interface, ".service");
+            Systemctl.Stop(serviceName);
         }
     }
 }

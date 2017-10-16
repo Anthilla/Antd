@@ -1180,6 +1180,12 @@ function MachineConfigController($scope, $http, $interval, $timeout, $filter) {
             labelField: "value",
             searchField: ["value"],
             persist: true,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            },
             maxItems: 1
         };
     }
@@ -1291,6 +1297,12 @@ function MachineStatusController($scope, $http, $interval, $timeout, $filter) {
             labelField: "value",
             searchField: ["value"],
             persist: true,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            },
             maxItems: 1
         };
     }
@@ -1401,6 +1413,24 @@ function AssetController($scope, $http, $interval, $timeout, $filter) {
         VirtualPort: 0
     };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     $scope.iconSave = "mif-floppy-disk";
     $scope.iconApply = "mif-arrow-right";
     $scope.iconLoading = "mif-spinner2 mif-ani-spin";
@@ -1453,6 +1483,12 @@ function AssetController($scope, $http, $interval, $timeout, $filter) {
             labelField: "value",
             searchField: ["value"],
             persist: true,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            },
             maxItems: 1
         };
     }
