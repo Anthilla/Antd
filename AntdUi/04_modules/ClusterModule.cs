@@ -13,6 +13,10 @@ namespace AntdUi.Modules {
                 return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
             };
 
+            Get["/status"] = x => {
+                return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
+            };
+
             Post["/save"] = x => {
                 string data = Request.Form.Data;
                 var dict = new Dictionary<string, string> {

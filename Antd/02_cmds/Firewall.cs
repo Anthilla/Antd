@@ -56,7 +56,7 @@ namespace Antd.cmds {
 
                     for(var r = 0; r < chain.Rules.Length; r++) {
                         var rule = chain.Rules[r];
-                        lines.Add(CommonString.Append("        ", rule.Match, " ", rule.MatchArgument, " ", rule.Object, " ", rule.Jump).Replace("  ", " "));
+                        lines.Add(CommonString.Append("              ", rule.Match, " ", rule.MatchArgument, " ", rule.Object, " ", rule.Jump).Replace("  ", " "));
                     }
                     var logPrefix = CommonString.Append("\"a=T", firewalTable.Name, "C", chain.Hook, "\"");
                     lines.Add(CommonString.Append("        log prefix ", logPrefix, " accept"));

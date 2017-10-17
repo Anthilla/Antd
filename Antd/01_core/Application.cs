@@ -59,20 +59,14 @@ namespace Antd {
             Console.CancelKeyPress += (s, e) => { e.Cancel = true; resetEvent.Set(); };
             STOPWATCH = new Stopwatch();
             STOPWATCH.Start();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "start");
             ConsoleLogger.Log($"[{KeyName}] start");
             Scheduler = new JobManager();
 
             OsReadAndWrite();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "OsReadAndWrite");
             RemoveLimits();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "RemoveLimits");
             CreateWorkingDirectories();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "CreateWorkingDirectories");
             MountWorkingDirectories();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "MountWorkingDirectories");
             OverlayWatcher();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "OverlayWatcher");
 
             CurrentConfiguration = ConfigRepo.Read();
             if(CurrentConfiguration == null) {
@@ -114,73 +108,41 @@ namespace Antd {
             if(Checklist == null) {
                 Checklist = new MachineStatusChecklistModel();
             }
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "LoadConfiguration");
 
             Time();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Time");
             CheckUnitsLocation();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "CheckUnitsLocation");
             Mounts();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Mounts");
             Hostname();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Hostname");
             GenerateSecret();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "GenerateSecret");
             License();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "License");
 
             SetServices();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "SetServices");
             SetModules();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "SetModules");
             SetParameters();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "SetParameters");
 
             Users();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Users");
             Dns();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Dns");
             Network();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Network");
 
             Ntpd();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Ntpd");
             Firewall();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Firewall");
             Dhcpd();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Dhcpd");
             Bind();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Bind");
             ApplySetupConfiguration();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "ApplySetupConfiguration");
             Nginx();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Nginx");
             ManageSsh();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "ManageSsh");
             Samba();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Samba");
             Syslog();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Syslog");
             StorageZfs();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "StorageZfs");
             Ca();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Ca");
             Apps();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Apps");
             Rsync();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Rsync");
             VfsServer();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "VfsServer");
             Tor();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Tor");
             ManageCluster();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "ManageCluster");
             Gluster();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Gluster");
             DirectoryWatchers();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "DirectoryWatchers");
             CheckApplicationFileAcls();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "CheckApplicationFileAcls");
 
             var port = CurrentConfiguration.WebService.Port;
             var uri = $"http://localhost:{port}/";
@@ -191,17 +153,12 @@ namespace Antd {
 
             #region [    Working    ]
             PrepareGuiService();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "PrepareGuiService");
             StartRssdp();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "StartRssdp");
             LaunchJobs();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "LaunchJobs");
             Test();
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "Test");
             #endregion
 
             ConsoleLogger.Log($"[{KeyName}] loaded in: {STOPWATCH.ElapsedMilliseconds} ms");
-            AppendLine(STOPWATCH.ElapsedMilliseconds, "END");
 
             resetEvent.WaitOne();
             webService.Stop();

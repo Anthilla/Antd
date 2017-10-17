@@ -154,6 +154,64 @@
             </div>
         </div>
     </div>
+    <!--Cluster - Status-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div ng-click="loadClusterStatus()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Cluster - Status
+            </span>
+        </div>
+        <div class="content bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid; padding: 10px;">
+            <div class="width100pc padding20" ng-hide="ClusterStatus!=null">
+                <span class="mif-spinner2 mif-ani-spin mif-4x fg-yellow"></span>
+            </div>
+            <table ng-show="ClusterStatus!=null" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <td>MachineUid</td>
+                        <td>Hostname</td>
+                        <td>PublicIp</td>
+                        <td>InternetReach</td>
+                        <td>InternetDnsReach</td>
+                        <td>KnownPublicIpReach</td>
+                        <td>DiscoveredIpsReach</td>
+                        <td>ServiceReach</td>
+                        <td>VirshService</td>
+                    </tr>
+                    <tr ng-repeat="info in ClusterStatus">
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Node.MachineUid }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Node.Hostname }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Node.PublicIp }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Status.InternetReach }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Status.InternetDnsReach }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Status.KnownPublicIpReach }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Status.DiscoveredIpsReach }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Status.ServiceReach }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <p>{{ info.Status.VirshService }}</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <!--Cluster - Shared Network-->
     <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
         <div ng-click="loadCluster()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">

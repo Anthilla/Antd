@@ -1413,8 +1413,13 @@ function AssetController($scope, $http, $interval, $timeout, $filter) {
         VirtualPort: 0
     };
 
-
-
+    $scope.loadClusterStatus = function () {
+        console.log("loadClusterStatus");
+        $scope.ClusterStatus = null;
+        $http.get("/cluster/status").success(function (data) {
+            $scope.ClusterStatus = data
+        });
+    }
 
 
 

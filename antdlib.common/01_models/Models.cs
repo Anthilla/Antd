@@ -983,4 +983,9 @@ namespace Antd.models {
             return CommonString.Append(this.IpAddress, this.Status.ToString());
         }
     }
+
+    public class ClusterNodeStatusModel {
+        public ClusterNode Node { get; set; } = new ClusterNode();
+        public ClusterNodeChecklistModel Status { get; set; } = new ClusterNodeChecklistModel();
+    }
 }

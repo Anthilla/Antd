@@ -16,6 +16,19 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(Application.CurrentConfiguration.Cluster);
             };
 
+            Get["/status"] = x => {
+                var nodes = Application.CurrentConfiguration.Cluster.Nodes;
+                var nodesStatus = new ClusterNodeStatusModel[nodes.Length];
+                for(var i = 0; i < nodes.Length; i++) {
+                    var status = Application.ClusterChecklist.FirstOrDefault(_ => _.TargetNodeMachineUid == nodes[i].MachineUid);
+                    nodesStatus[i] = new ClusterNodeStatusModel() {
+                        Node = nodes[i],
+                        Status = status
+                    };
+                }
+                return JsonConvert.SerializeObject(nodesStatus);
+            };
+
             Post["/save"] = x => {
                 string data = Request.Form.Data;
                 var objects = JsonConvert.DeserializeObject<Cluster>(data);
