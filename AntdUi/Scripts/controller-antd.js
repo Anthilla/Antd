@@ -1434,8 +1434,6 @@ function AssetController($scope, $http, $interval, $timeout, $filter) {
 
 
 
-
-
     $scope.iconSave = "mif-floppy-disk";
     $scope.iconApply = "mif-arrow-right";
     $scope.iconLoading = "mif-spinner2 mif-ani-spin";
