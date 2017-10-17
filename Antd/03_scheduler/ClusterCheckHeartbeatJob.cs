@@ -48,6 +48,7 @@ namespace Antd {
         private const string serviceStatusPath = "/device/ok";
         private const string machineChecklistPath = "/device/checklist";
         private const string virshStatusPath = "/device/vm";
+        private const string appUptimePath = "/device/antduptime";
         private const string networkAddressPath = "/network/devices/addr";
         private const string localIp = "127.0.0.1";
 
@@ -113,6 +114,9 @@ namespace Antd {
                 ipStatusList[n] = ipStatus;
             }
             status.DiscoveredIpsReach = ipStatusList;
+
+            var uptime = ApiConsumer.GetString(CommonString.Append(node.EntryPoint, appUptimePath));
+            status.ApplicationUptime = uptime;
 
             //controllo stato nodo
             var nodeChecklist = ApiConsumer.Get<MachineStatusChecklistModel>(CommonString.Append(node.EntryPoint, machineChecklistPath)) ?? new MachineStatusChecklistModel();

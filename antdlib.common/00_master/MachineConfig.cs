@@ -941,7 +941,6 @@ namespace Antd {
 
     public class ClusterFsFile {
         public string Path { get; set; } = string.Empty;
-
     }
 
     /// <summary>

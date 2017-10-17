@@ -49,7 +49,7 @@ namespace Antd {
             var line = CommonString.Append("[", timeElapsed.ToString("D8"), "] ", context) + Environment.NewLine;
             File.WriteAllText(loadingtimerFile, line);
         }
-    
+
         private static void Main() {
             if(File.Exists(loadingtimerFile)) {
                 File.Delete(loadingtimerFile);
@@ -453,6 +453,7 @@ namespace Antd {
         }
 
         private static void ManageVirsh() {
+            Virsh.PrepareDirectory();
             if(CurrentConfiguration.Services.Virsh.Active) {
                 Virsh.StartAll();
             }

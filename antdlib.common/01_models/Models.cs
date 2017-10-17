@@ -957,6 +957,11 @@ namespace Antd.models {
         /// </summary>
         public byte ServiceReach { get; set; } = 1;
         /// <summary>
+        /// Uptime di antd
+        /// </summary>
+        public string ApplicationUptime { get; set; } = string.Empty;
+
+        /// <summary>
         /// Stato del servizio: Virsh
         /// </summary>
         public VirshModel VirshService { get; set; } = new VirshModel();

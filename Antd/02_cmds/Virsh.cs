@@ -1,10 +1,12 @@
 ﻿using Antd.models;
 using anthilla.core;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Antd.cmds {
     public class Virsh {
+        private const string virshEtcDirectory = "/etc/libvirt/qemu";
         private const string virshFileLocation = "/usr/bin/virsh";
         private const string destroyArg = "destroy";
         private const string rebootArg = "reboot";
@@ -26,7 +28,7 @@ namespace Antd.cmds {
             }
             var list = new VirshDomainModel[result.Length - 1];
             for(var i = 0; i < result.Length - 1; i++) {
-                var currentLineData = result[i].Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                var currentLineData = result[i].Split(new[] { ' ', '\t' }, 3, StringSplitOptions.RemoveEmptyEntries);
                 list[i] = new VirshDomainModel() {
                     Id = currentLineData[0],
                     Name = currentLineData[1],
@@ -112,6 +114,19 @@ namespace Antd.cmds {
             var args = CommonString.Append(dompmwakeupArg, " ", domain);
             CommonProcess.Do(virshFileLocation, args);
             return true;
+        }
+
+        //  /var/cache/libvirt
+        //  /var/log/libvirt
+        //  /var/lib/libvirt
+        public static void PrepareDirectory() {
+            var data = Directory.EnumerateFiles(virshEtcDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+            if(data.Any()) {
+                if(MountHelper.IsAlreadyMounted(virshEtcDirectory) == false) {
+
+                    Mount.AutoMountDirectory(virshEtcDirectory);
+                }
+            }
         }
     }
 }

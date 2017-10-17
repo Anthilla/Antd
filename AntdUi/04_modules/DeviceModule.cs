@@ -30,6 +30,10 @@ namespace AntdUi.Modules {
             Get["/vm"] = x => {
                 return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
             };
+
+            Get["/antduptime"] = x => {
+                return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
+            };
         }
     }
 }

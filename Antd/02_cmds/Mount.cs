@@ -42,10 +42,10 @@ namespace Antd.cmds {
         /// Ottiene la lista dei file e delle cartelle in /mnt/cdrom/DIRS e gestisce il loro montaggio
         /// </summary>
         public static void Set() {
-            var running = Application.RunningConfiguration.Storage.Mounts;
-            if(running.Length < 1) {
-                return;
-            }
+            //var running = Application.RunningConfiguration.Storage.Mounts;
+            //if(running.Length < 1) {
+            //    return;
+            //}
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             for(var i = 0; i < directories.Length; i++) {
                 var currentDirectory = directories[i];
@@ -91,6 +91,7 @@ namespace Antd.cmds {
             var source = MountHelper.ConvertDirectoryTargetPathToDirs(mountPoint);
             Directory.CreateDirectory(mountPoint);
             Directory.CreateDirectory(source);
+            CommonDirectory.Copy(mountPoint, source);
             MountWithBind(source, mountPoint);
         }
 
@@ -99,6 +100,7 @@ namespace Antd.cmds {
         /// </summary>
         public static void AutoMountFile(string mountPoint) {
             var source = MountHelper.ConvertFileTargetPathToDirs(mountPoint);
+            File.Copy(mountPoint, source, true);
             MountWithBind(source, mountPoint);
         }
 
@@ -122,7 +124,6 @@ namespace Antd.cmds {
                 DirectoryWithAcl.CreateDirectory(moduleDir);
                 MountSimple("/mnt/cdrom/Kernel/active-modules", moduleDir);
             }
-
             Bash.Execute("systemctl restart systemd-modules-load.service", false);
             foreach(var dir in DefaultWorkingDirectories) {
                 var mntDir = MountHelper.ConvertDirectoryTargetPathToDirs(dir);

@@ -170,42 +170,64 @@
                 <tbody>
                     <tr>
                         <td colspan="2">Host</td>
+                        <td>Uptime</td>
                         <td>InternetReach</td>
                         <td>InternetDnsReach</td>
                         <td>KnownPublicIpReach</td>
                         <td>ServiceReach</td>
-                        <td>DiscoveredIpsReach</td>
-                        <td>VirshService</td>
+                        <td colspan="2">DiscoveredIpsReach</td>
+                        <td colspan="2">VirshService</td>
                     </tr>
                     <tr ng-repeat="info in ClusterStatus">
                         <td colspan="2" style="padding: 0 15px;">
                             <p>{{ info.Node.Hostname }}</p>
                         </td>
                         <td style="padding: 0 15px;">
-                            <p>{{ info.Status.InternetReach }}</p>
+                            <p>{{ info.Status.ApplicationUptime }}</p>
+                        </td>
+                        <td style="padding: 0 15px;">
                             <div ng-show="info.Status.InternetReach==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                             <div ng-show="info.Status.InternetReach==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                         </td>
                         <td style="padding: 0 15px;">
-                            <p>{{ info.Status.InternetDnsReach }}</p>
                             <div ng-show="info.Status.InternetDnsReach==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                             <div ng-show="info.Status.InternetDnsReach==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                         </td>
                         <td style="padding: 0 15px;">
-                            <p>{{ info.Status.KnownPublicIpReach }}</p>
-                            <div ng-show="info.Status.KnownPublicIpReach==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
-                            <div ng-show="info.Status.KnownPublicIpReach==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
+                            <div ng-show="info.Status.KnownPublicIpReach==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222; display: inline-block;"></div>
+                            <div ng-show="info.Status.KnownPublicIpReach==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222; display: inline-block;"></div>
+                            <p style="display: inline-block;" class="no-margin">{{ info.Node.PublicIp }}</p>
                         </td>
                         <td style="padding: 0 15px;">
-                            <p>{{ info.Status.ServiceReach }}</p>
                             <div ng-show="info.Status.ServiceReach==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                             <div ng-show="info.Status.ServiceReach==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                         </td>
-                        <td style="padding: 0 15px;">
-                            <p>{{ info.Status.DiscoveredIpsReach }}</p>
+                        <td colspan="2" style="padding: 0 15px;">
+                            <table class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                                <tr ng-repeat="ip in info.Status.DiscoveredIpsReach">
+                                    <td style="padding: 0 15px;">
+                                        <p>{{ ip.IpAddress }}</p>
+                                    </td>
+                                    <td style="padding: 0 15px;">
+                                        <div ng-show="ip.Status==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
+                                        <div ng-show="ip.Status==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
-                        <td style="padding: 0 15px;">
-                            <p>{{ info.Status.VirshService }}</p>
+                        <td colspan="2" style="padding: 0 15px;">
+                            <table class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                                <tr ng-repeat="vm in info.Status.VirshService">
+                                    <td style="padding: 0 15px;">
+                                        <p>{{ vm.Name }}</p>
+                                    </td>
+                                    <td style="padding: 0 15px;">
+                                        <p>{{ vm.State }}</p>
+                                        <div ng-show="vm.State==0" class="bg-green" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
+                                        <div ng-show="vm.State==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </tbody>

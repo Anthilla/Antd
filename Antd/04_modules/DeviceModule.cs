@@ -29,6 +29,10 @@ namespace Antd.Modules {
             Get["/vm"] = x => {
                 return JsonConvert.SerializeObject(Application.RunningConfiguration.Services.Virsh);
             };
+
+            Get["/antduptime"] = x => {
+                return JsonConvert.SerializeObject(Application.STOPWATCH.ElapsedMilliseconds);
+            };
         }
     }
 }
