@@ -2,6 +2,7 @@
 using anthilla.core;
 using anthilla.scheduler;
 using System;
+using System.Linq;
 using System.Net.NetworkInformation;
 
 namespace Antd {
@@ -103,11 +104,9 @@ namespace Antd {
 
             //controllo gli IP scoperti
             var nodeIps = ApiConsumer.Get<string[]>(CommonString.Append(node.EntryPoint, networkAddressPath)) ?? new string[0];
+            nodeIps = nodeIps.Where(_ => _ != localIp).ToArray();
             var ipStatusList = new ClusterNodeIpStatusModel[nodeIps.Length];
             for(var n = 0; n < nodeIps.Length; n++) {
-                if(CommonString.AreEquals(nodeIps[n], localIp) == true) {
-                    continue;
-                }
                 var ipStatus = new ClusterNodeIpStatusModel();
                 ipStatus.IpAddress = nodeIps[n];
                 ipStatus.Status = PingStatus(nodeIps[n]);
