@@ -2,6 +2,7 @@
 using anthilla.core;
 using System.Linq;
 using System.IO;
+using System;
 
 namespace Antd.cmds {
 
@@ -13,17 +14,28 @@ namespace Antd.cmds {
 
         private const string haproxyVarLib = "/var/lib/haproxy";
         private const string ipNonlocalBindSysctlKey = "net.ipv4.ip_nonlocal_bind";
-        private const string ipNonlocalBindSysctlValue = "1";
         private const string ipNonlocalBindSysctlFile = "/proc/sys/net/ipv4/ip_nonlocal_bind";
+        private const string ipNonlocalBindSysctlValue = "1";
         private const string keepalivedFileOutput = "/cfg/antd/conf/keepalived.conf";
         private const string haproxyFileOutput = "/cfg/antd/conf/haproxy.conf";
 
+        private const string clusterCfgFolder = "/cfg/antd/cluster";
+
+        /// <summary>
+        /// Prepara le cartelle e i parametri necessari per avviare i servizi del cluster
+        /// </summary>
         private static void Prepare() {
             Directory.CreateDirectory(haproxyVarLib);
             Bash.Execute($"chown haproxy:haproxy {haproxyVarLib}");
             Bash.Execute($"chmod 755 {haproxyVarLib}");
             if(File.Exists(ipNonlocalBindSysctlFile)) {
                 File.WriteAllText(ipNonlocalBindSysctlFile, ipNonlocalBindSysctlValue);
+            }
+            Directory.CreateDirectory(clusterCfgFolder);
+            var nodes = Application.CurrentConfiguration.Cluster.Nodes;
+            for(var i = 0; i < nodes.Length; i++) {
+                var nodeFolder = CommonString.Append(clusterCfgFolder, "/", nodes[i].MachineUid);
+                Directory.CreateDirectory(nodeFolder);
             }
         }
 
@@ -197,7 +209,7 @@ namespace Antd.cmds {
                 "    }",
                 "}",
             };
-            FileWithAcl.WriteAllLines(keepalivedFileOutput, lines);
+            File.WriteAllLines(keepalivedFileOutput, lines);
             Keepalived.Stop();
             Keepalived.Start(keepalivedFileOutput);
         }
@@ -206,6 +218,29 @@ namespace Antd.cmds {
             if(fsConfig == null) {
                 ConsoleLogger.Log("[cluster] shared fs is disabled");
                 return;
+            }
+        }
+
+        /// <summary>
+        /// Controlla la configurazione dei servizi del cluster e applica le modifiche del caso
+        /// </summary>
+        public static void ApplyServices() {
+            var services = Application.RunningConfiguration.Cluster.SharedService;
+            if(services == null) {
+                return;
+            }
+            ConsoleLogger.Log("[cluster] prepare services sync");
+            if(Application.LIBVIRT_WATCHER == null) {
+                ConsoleLogger.Log("[cluster] init virsh sync");
+                Application.LIBVIRT_WATCHER = new LibvirtWatcher();
+            }
+            ConsoleLogger.Log($"aaaaaaaaaaaa is === {services.Virsh}");
+            if(services.Virsh == true) {
+                Application.LIBVIRT_WATCHER.Start();
+                ConsoleLogger.Log("[cluster] prepare virsh sync");
+            }
+            else {
+                Application.LIBVIRT_WATCHER.Stop();
             }
         }
     }

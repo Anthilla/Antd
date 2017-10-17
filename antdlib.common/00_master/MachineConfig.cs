@@ -636,7 +636,7 @@ namespace Antd {
             return CommonString.Append(this.Id, this.HardwareConfiguration.ToString(), this.PrimaryAddressConfiguration.ToString(), CommonString.Build(this.SecondaryAddressConfigurations.Select(_ => _.ToString()).ToArray()));
         }
     }
-    
+
     /// <summary>
     /// Configurazione dei Gateway
     /// Vanno poi utilizzati da NetRoute 
@@ -894,6 +894,11 @@ namespace Antd {
         public ClusterNetwork SharedNetwork { get; set; } = new ClusterNetwork();
 
         /// <summary>
+        /// Sincronizzazione di servizi
+        /// </summary>
+        public ClusterService SharedService { get; set; } = new ClusterService();
+
+        /// <summary>
         /// Condivisione dei dati sui dischi -> gluster e rsync
         /// </summary>
         public ClusterFs SharedFs { get; set; } = new ClusterFs();
@@ -919,6 +924,28 @@ namespace Antd {
         public string NetworkInterface { get; set; }
         public string VirtualIpAddress { get; set; }
         public PortMapping[] PortMapping { get; set; } = new PortMapping[0];
+    }
+
+    /// <summary>
+    /// Sincronizzazione di servizi
+    /// Se il servizio è true allora viene sincronizzato tra i vari nodi del cluster
+    /// NB  probabilmente ogni servizio avrà un metodo di sincronizzazione personalizzato
+    ///     non tutti i servizi potranno essere sincronizzati al 100%
+    /// </summary>
+    public class ClusterService {
+        public bool Ssh { get; set; } = false;
+        public bool Sshd { get; set; } = false;
+        public bool Firewall { get; set; } = false;
+        public bool Dhcpd { get; set; } = false;
+        public bool Bind { get; set; } = false;
+        public bool Nginx { get; set; } = false;
+        public bool Samba { get; set; } = false;
+        public bool SyslogNg { get; set; } = false;
+        public bool Tor { get; set; } = false;
+        public bool Ca { get; set; } = false;
+        public bool Gluster { get; set; } = false;
+        public bool Rsync { get; set; } = false;
+        public bool Virsh { get; set; } = false;
     }
 
     public class PortMapping {

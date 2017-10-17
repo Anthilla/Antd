@@ -56,7 +56,6 @@ namespace Antd.cmds {
                 return;
             }
             _directories = conf.Directories;
-
             var paths = _directories.Select(_ => _.Type == "file" ? Path.GetDirectoryName(_.Source) : _.Source).ToArray();
             ConsoleLogger.Log("[watcher rsync] start");
             if(!Watchers.Any()) {
@@ -73,7 +72,6 @@ namespace Antd.cmds {
                     IncludeSubdirectories = true,
                     EnableRaisingEvents = true
                 };
-
                 fsw.Changed += FileChanged;
                 Watchers.Add(fsw);
             }
@@ -121,6 +119,40 @@ namespace Antd.cmds {
                     Rsync.SyncDeleteAfter(src, dst);
                 }
             }
+        }
+    }
+
+    public class LibvirtWatcher {
+
+        private const string virshEtcDirectory = "/etc/libvirt/qemu";
+        private static FileSystemWatcher _fileSystemWatcher;
+
+        public void Start() {
+            if(_fileSystemWatcher != null) {
+                return;
+            }
+            ConsoleLogger.Log($"[watcher] start on '{virshEtcDirectory}'");
+            _fileSystemWatcher = new FileSystemWatcher(virshEtcDirectory) {
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime,
+                IncludeSubdirectories = true,
+                EnableRaisingEvents = true
+            };
+            _fileSystemWatcher.Changed += FileChanged;
+        }
+
+        public void Stop() {
+            if(_fileSystemWatcher == null) {
+                return;
+            }
+            _fileSystemWatcher.Dispose();
+        }
+
+        private void FileChanged(object source, FileSystemEventArgs e) {
+            var fileName = Path.GetFileName(e.FullPath);
+            if(!File.Exists(e.FullPath)) {
+                return;
+            }
+            ConsoleLogger.Log($"[watcher] file '{e.FullPath}' changed");
         }
     }
 }

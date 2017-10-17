@@ -94,17 +94,17 @@ namespace Antd {
 
             //controllo antd
             var serviceStatus = ApiConsumer.Post(CommonString.Append(node.EntryPoint, serviceStatusPath));
-            if(serviceStatus != Nancy.HttpStatusCode.OK) {
-                //ConsoleLogger.Warn($"[hb] {node.Hostname}'s antd is unreachable at its known public ip");
-                return status;
-            }
-            else {
+            if(serviceStatus == Nancy.HttpStatusCode.OK) {
                 status.ServiceReach = 0;
             }
 
+            //controllo se ho già salvato delle informazioni
+            var storedNodeIps = Application.ClusterChecklist?.FirstOrDefault(_ => _.TargetNodeMachineUid == node.MachineUid)?.DiscoveredIpsReach?.Select(_ => _.IpAddress) ?? new string[0];
+
             //controllo gli IP scoperti
             var nodeIps = ApiConsumer.Get<string[]>(CommonString.Append(node.EntryPoint, networkAddressPath)) ?? new string[0];
-            nodeIps = nodeIps.Where(_ => _ != localIp).ToArray();
+            nodeIps = storedNodeIps.Union(nodeIps).Where(_ => _ != localIp).ToArray();
+
             var ipStatusList = new ClusterNodeIpStatusModel[nodeIps.Length];
             for(var n = 0; n < nodeIps.Length; n++) {
                 var ipStatus = new ClusterNodeIpStatusModel();

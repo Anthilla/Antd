@@ -43,18 +43,9 @@ namespace Antd {
         public static Stopwatch STOPWATCH;
         public static string Agent;
 
-        private const string loadingtimerFile = "/cfg/antd/loadingtimer.txt";
-
-        private static void AppendLine(long timeElapsed, string context) {
-            var line = CommonString.Append("[", timeElapsed.ToString("D8"), "] ", context) + Environment.NewLine;
-            File.WriteAllText(loadingtimerFile, line);
-        }
+        public static LibvirtWatcher LIBVIRT_WATCHER;
 
         private static void Main() {
-            if(File.Exists(loadingtimerFile)) {
-                File.Delete(loadingtimerFile);
-            }
-
             var resetEvent = new AutoResetEvent(initialState: false);
             Console.CancelKeyPress += (s, e) => { e.Cancel = true; resetEvent.Set(); };
             STOPWATCH = new Stopwatch();
@@ -139,6 +130,7 @@ namespace Antd {
             Rsync();
             VfsServer();
             Tor();
+            ManageVirsh();
             ManageCluster();
             Gluster();
             DirectoryWatchers();
@@ -439,9 +431,17 @@ namespace Antd {
             }
         }
 
+        private static void ManageVirsh() {
+            Virsh.PrepareDirectory();
+            if(CurrentConfiguration.Services.Virsh.Active) {
+                Virsh.StartAll();
+            }
+        }
+
         private static void ManageCluster() {
             if(CurrentConfiguration.Cluster.Active) {
                 cmds.Cluster.Apply();
+                cmds.Cluster.ApplyServices();
                 ConsoleLogger.Log("[cluster] ready");
             }
         }
@@ -449,13 +449,6 @@ namespace Antd {
         private static void Gluster() {
             if(CurrentConfiguration.Services.Gluster.Active) {
                 cmds.Gluster.Apply();
-            }
-        }
-
-        private static void ManageVirsh() {
-            Virsh.PrepareDirectory();
-            if(CurrentConfiguration.Services.Virsh.Active) {
-                Virsh.StartAll();
             }
         }
 

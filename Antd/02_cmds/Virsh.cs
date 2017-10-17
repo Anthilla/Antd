@@ -123,7 +123,6 @@ namespace Antd.cmds {
             var data = Directory.EnumerateFiles(virshEtcDirectory, "*.xml", SearchOption.TopDirectoryOnly);
             if(data.Any()) {
                 if(MountHelper.IsAlreadyMounted(virshEtcDirectory) == false) {
-
                     Mount.AutoMountDirectory(virshEtcDirectory);
                 }
             }

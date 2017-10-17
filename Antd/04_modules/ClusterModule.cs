@@ -41,9 +41,6 @@ namespace Antd.Modules {
             Post["/import"] = x => {
                 string data = Request.Form.Data;
                 var objects = JsonConvert.DeserializeObject<Cluster>(data);
-
-                ConsoleLogger.Log(JsonConvert.SerializeObject(objects.SharedNetwork.PortMapping));
-
                 Application.CurrentConfiguration.Cluster = objects;
                 ConfigRepo.Save();
                 ConsoleLogger.Log("[cluster] save cluster configuration");
@@ -59,6 +56,7 @@ namespace Antd.Modules {
             Post["/apply"] = x => {
                 //Inizio ad applicarla localmente
                 cmds.Cluster.Apply();
+                cmds.Cluster.ApplyServices();
                 ConsoleLogger.Log("[cluster] apply local configuration");
                 return HttpStatusCode.OK;
             };
@@ -77,7 +75,6 @@ namespace Antd.Modules {
                     var dict = new Dictionary<string, string> {
                         { "Data", configuration }
                     };
-                    ConsoleLogger.Log(configuration);
                     ConsoleLogger.Log($"[cluster] {node.Hostname}: send configuration to node");
                     var status = ApiConsumer.Post(CommonString.Append(node.EntryPoint, "cluster/import"), dict);
                     if(status == HttpStatusCode.OK) {

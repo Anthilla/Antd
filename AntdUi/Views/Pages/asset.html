@@ -170,11 +170,11 @@
                 <tbody>
                     <tr>
                         <td colspan="2">Host</td>
-                        <td>Uptime</td>
+                        <td>Antd Uptime</td>
                         <td>InternetReach</td>
                         <td>InternetDnsReach</td>
                         <td>KnownPublicIpReach</td>
-                        <td>ServiceReach</td>
+                        <td>Antd Reach</td>
                         <td colspan="2">DiscoveredIpsReach</td>
                         <td colspan="2">VirshService</td>
                     </tr>
@@ -203,7 +203,7 @@
                             <div ng-show="info.Status.ServiceReach==1" class="bg-red" style="height: 24px; width: 24px; border-radius: 12px; border: 1px solid #222222;"></div>
                         </td>
                         <td colspan="2" style="padding: 0 15px;">
-                            <table class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                            <table class="table bordered fg-white" style="table-layout: fixed;">
                                 <tr ng-repeat="ip in info.Status.DiscoveredIpsReach">
                                     <td style="padding: 0 15px;">
                                         <p>{{ ip.IpAddress }}</p>
@@ -216,7 +216,7 @@
                             </table>
                         </td>
                         <td colspan="2" style="padding: 0 15px;">
-                            <table class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                            <table class="table bordered fg-white" style="table-layout: fixed;">
                                 <tr ng-repeat="vm in info.Status.VirshService.Domains">
                                     <td style="padding: 0 15px;">
                                         <p>{{ vm.Name }}</p>
@@ -351,6 +351,222 @@
                         </td>
                         <td style="padding: 0 15px;">
                             <button ng-click="removeFromList($index, Cluster.SharedNetwork.PortMapping)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc">{{ 'REMOVE' | translate }}</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="grid condensed" style="margin-top: 1.75em;" ng-show="Cluster!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1">
+                    </div>
+                    <div class="cell colspan2 padding-right10">
+                        <button ng-click="click(saveCluster)" ng-style="buttonStyle"><span class="{{iconSave}}" ng-style="iconStyle"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    </div>
+                    <div class="cell colspan2 padding-left10">
+                        <button ng-click="click(applyCluster)" ng-style="buttonStyle"><span class="{{iconApply}}" ng-style="iconStyle"></span>&nbsp;{{ 'APPLY' | translate }}</button>
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Cluster - Shared Services-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div ng-click="loadCluster()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Cluster - Shared Services
+            </span>
+        </div>
+        <div class="content bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid; padding: 10px;">
+            <div class="width100pc padding20" ng-hide="Cluster!=null">
+                <span class="mif-spinner2 mif-ani-spin mif-4x fg-yellow"></span>
+            </div>
+            <table ng-show="Cluster!=null" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <td colspan="2">Service</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Virsh</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Virsh">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Virsh">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Ssh</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Ssh">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Ssh">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Sshd</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Sshd">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Sshd">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Firewall</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Firewall">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Firewall">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Dhcpd</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Dhcpd">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Dhcpd">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Bind</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Bind">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Bind">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Nginx</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Nginx">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Nginx">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Samba</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Samba">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Samba">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>SyslogNg</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.SyslogNg">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.SyslogNg">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 0 15px;" class="fg-anthilla-green">
+                            <p>Gluster</p>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <label class="switch">
+                                <input type="checkbox" ng-model="Cluster.SharedService.Gluster">
+                                <span class="check"></span>
+                                <span class="caption padding-left10">
+                                    <span ng-switch="Cluster.SharedService.Gluster">
+                                        <span ng-switch-when="true">enabled</span>
+                                        <span ng-switch-when="false">disabled</span>
+                                        <span ng-switch-default>&nbsp;</span>
+                                    </span>
+                                </span>
+                            </label>
                         </td>
                     </tr>
                 </tbody>

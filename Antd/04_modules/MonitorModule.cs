@@ -23,7 +23,7 @@ namespace Antd.Modules {
                 var uptime = Application.RunningConfiguration.Info.Uptime.Uptime;
                 var loadAverage = Application.RunningConfiguration.Info.Uptime.LoadAverage;
                 var free = Application.RunningConfiguration.Info.Free[0];
-                var memoryUsage = GetPercentage(int.Parse(free.Total), int.Parse(free.Used)).ToString();
+                var memoryUsage = GetPercentage(long.Parse(free.Total), long.Parse(free.Used)).ToString();
                 var diskUsage = Application.RunningConfiguration.Info.DiskUsage.FirstOrDefault(_ => _.MountedOn == localDisk).UsePercentage;
                 var model = new MonitorModel {
                     Hostname = hostName,
@@ -36,12 +36,12 @@ namespace Antd.Modules {
             };
         }
 
-        private static int GetPercentage(int tot, int part) {
+        private static int GetPercentage(long tot, long part) {
             if(tot == 0 || part == 0) {
                 return 0;
             }
             var p = part * 100 / tot;
-            return p <= 100 ? p : 0;
+            return p <= 100 ? (int)p : 0;
         }
     }
 }
