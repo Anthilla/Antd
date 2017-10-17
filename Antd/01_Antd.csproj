@@ -121,8 +121,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="02_cmds\Applicative.cs" />
+    <Compile Include="02_cmds\Journalctl.cs" />
     <Compile Include="02_cmds\Ntp.cs" />
     <Compile Include="02_cmds\Qemu.cs" />
+    <Compile Include="02_cmds\VfsClient.cs" />
     <Compile Include="02_cmds\WiFi.cs" />
     <Compile Include="02_cmds\Uname.cs" />
     <Compile Include="02_cmds\Ca.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="04_modules\DeviceModule.cs" />
     <Compile Include="04_modules\ClusterModule.cs" />
     <Compile Include="04_modules\GlusterModule.cs" />
+    <Compile Include="04_modules\StorageServerModule.cs" />
     <Compile Include="04_modules\VirshModule.cs" />
     <Compile Include="04_modules\InfoModule.cs" />
     <Compile Include="04_modules\MonitorModule.cs" />
@@ -189,7 +192,6 @@
     <Compile Include="02_cmds\Mod.cs" />
     <Compile Include="02_cmds\Secret.cs" />
     <Compile Include="02_cmds\Sysctl.cs" />
-    <Compile Include="02_cmds\Vfs.cs" />
     <Compile Include="02_cmds\Zfs.cs" />
     <Compile Include="02_cmds\Zpool.cs" />
     <Compile Include="02_cmds\Versioning.cs" />
@@ -258,10 +260,6 @@
     <ProjectReference Include="..\..\_shared\anthilla.scheduler\anthilla.scheduler.csproj">
       <Project>{906b8907-f2ea-4baa-bf11-9f80c6e8bbbd}</Project>
       <Name>anthilla.scheduler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
-      <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
-      <Name>StorageServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.common\03_antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>

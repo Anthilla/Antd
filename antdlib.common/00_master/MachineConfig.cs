@@ -828,10 +828,6 @@ namespace Antd {
         /// </summary>
         public MountElement[] Mounts { get; set; } = new MountElement[0];
 
-        public bool ActiveStorageServer { get; set; } = false;
-
-        public int StorageServerPort { get; set; } = 40888;
-
         public ZpoolModel[] Zpools { get; set; } = new ZpoolModel[0];
 
         public ZfsDatasetModel[] ZfsDatasets { get; set; } = new ZfsDatasetModel[0];

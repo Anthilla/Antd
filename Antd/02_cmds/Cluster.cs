@@ -225,19 +225,18 @@ namespace Antd.cmds {
         /// Controlla la configurazione dei servizi del cluster e applica le modifiche del caso
         /// </summary>
         public static void ApplyServices() {
-            var services = Application.RunningConfiguration.Cluster.SharedService;
+            var services = Application.CurrentConfiguration.Cluster.SharedService;
             if(services == null) {
                 return;
             }
             ConsoleLogger.Log("[cluster] prepare services sync");
             if(Application.LIBVIRT_WATCHER == null) {
-                ConsoleLogger.Log("[cluster] init virsh sync");
                 Application.LIBVIRT_WATCHER = new LibvirtWatcher();
+                ConsoleLogger.Log("[cluster] prepare virsh sync");
             }
-            ConsoleLogger.Log($"aaaaaaaaaaaa is === {services.Virsh}");
             if(services.Virsh == true) {
                 Application.LIBVIRT_WATCHER.Start();
-                ConsoleLogger.Log("[cluster] prepare virsh sync");
+                ConsoleLogger.Log("[cluster] start virsh sync process");
             }
             else {
                 Application.LIBVIRT_WATCHER.Stop();

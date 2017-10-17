@@ -128,7 +128,6 @@ namespace Antd {
             Ca();
             Apps();
             Rsync();
-            VfsServer();
             Tor();
             ManageVirsh();
             ManageCluster();
@@ -407,21 +406,6 @@ namespace Antd {
         private static void Rsync() {
             if(CurrentConfiguration.Services.Rsync.Active) {
                 RsyncWatcher.Start();
-            }
-        }
-
-        private static void VfsServer() {
-            if(CurrentConfiguration.Storage.Server.Active) {
-                Vfs.SetDefaults();
-                ThreadPool.QueueUserWorkItem(new WaitCallback((state) => {
-                    var srv = new Kvpbase.StorageServer(Vfs.GetSystemConfiguration());
-                    try {
-                        srv.Start();
-                    }
-                    catch(Exception) {
-
-                    }
-                }));
             }
         }
 
