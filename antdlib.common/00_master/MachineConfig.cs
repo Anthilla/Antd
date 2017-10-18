@@ -974,7 +974,8 @@ namespace Antd {
 
     public class GlusterVolume {
         /// <summary>
-        /// Nome del volume di gluster, sarà compreso nell'array di Gluster2ConfigurationModel.VolumesLabels
+        /// Nome del volume di gluster, sarà compreso nell'array di ClusterFs.VolumesLabels
+        /// Se il valore di Label non è presente anche in ClusterFs.VolumesLabels la procedura di creazione del volume non verrà eseguita
         /// </summary>
         public string Label { get; set; }
 

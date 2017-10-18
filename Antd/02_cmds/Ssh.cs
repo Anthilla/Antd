@@ -2,10 +2,12 @@
 using System.IO;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Antd.cmds {
     public class Ssh {
 
+        private const string sshFileLocation = "/usr/bin/ssh";
         private const string sshkeygenFileLocation = "/usr/bin/ssh-keygen";
         private const string sshkeygenArg = "-t rsa -N '' -f ";
 
@@ -64,6 +66,16 @@ namespace Antd.cmds {
             }
             File.WriteAllLines(authorizedKeysFile, lines);
             return true;
+        }
+
+        public static void Do(string user, string host, string command) {
+            var args = CommonString.Append(user, "@", host, " ", command);
+            CommonProcess.Do(sshFileLocation, args);
+        }
+
+        public static IEnumerable<string> Execute(string user, string host, string command) {
+            var args = CommonString.Append(user, "@", host, " ", command);
+            return CommonProcess.Execute(sshFileLocation, args);
         }
     }
 }

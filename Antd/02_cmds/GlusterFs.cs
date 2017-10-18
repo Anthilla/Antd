@@ -4,10 +4,6 @@ using System.Linq;
 
 namespace Antd.cmds {
 
-    /// <summary>
-    /// TODO
-    /// Converti Bash in CommonProcess
-    /// </summary>
     public class GlusterFs {
 
         //systemctl enable glusterd
@@ -18,24 +14,22 @@ namespace Antd.cmds {
         //mkdir -p /Data/GData
         //mount -t glusterfs avm702:GlusterE /Data/GData
 
-        private const string ServiceName = "glusterd.service";
-
-        public static void Apply() {
-            Start();
-        }
+        private const string serviceName = "glusterd.service";
+        private const string glusterFileLocation = "/usr/sbin/gluster";
+        private const string includeNodeArg = "peer probe";
 
         public static void Stop() {
-            Systemctl.Stop(ServiceName);
+            Systemctl.Stop(serviceName);
             ConsoleLogger.Log("[gluster] stop");
         }
 
-        public static void Start() {
+        public static void Set() {
             var options = Application.CurrentConfiguration.Cluster.SharedFs;
             if(options == null) {
                 return;
             }
-            Systemctl.Enable(ServiceName);
-            Systemctl.Start(ServiceName);
+            Systemctl.Enable(serviceName);
+            Systemctl.Start(serviceName);
             var nodes = Application.CurrentConfiguration.Cluster.Nodes;
             for(var i = 0; i < nodes.Length; i++) {
                 IncludeNode(nodes[i].Hostname);
@@ -49,8 +43,9 @@ namespace Antd.cmds {
             ConsoleLogger.Log("[gluster] start");
         }
 
-        private static void IncludeNode(string node) {
-            Bash.Execute($"gluster peer probe {node}", false);
+        private static void IncludeNode(string nodeName) {
+            var args = CommonString.Append(includeNodeArg, " ", nodeName);
+            CommonProcess.Do(glusterFileLocation, args);
         }
 
         private static void StartVolume(string volumeLabel, ClusterNode[] nodes) {
@@ -70,19 +65,18 @@ namespace Antd.cmds {
                     activeNodes.Add(currentNode);
                 }
             }
-
             if(volumeCount == 0) {
                 //non ci sono volumi configurati... evito possibili errori
                 return;
             }
-
             //creo il volume di gluster e lo avvio
             ConsoleLogger.Log($"[gluster] gluster volume create {volumeLabel} replica {volumeCount} transport tcp {replicaString} force");
-            Bash.Execute($"gluster volume create {volumeLabel} replica {volumeCount} transport tcp {replicaString} force", false);
+            var glusterCreateArg = CommonString.Append("volume create ", volumeLabel, " replica ", volumeCount.ToString(), " transport tcp ", replicaString, " force");
+            CommonProcess.Do(glusterFileLocation, glusterCreateArg);
             System.Threading.Thread.Sleep(500);
             ConsoleLogger.Log($"[gluster] gluster volume start {volumeLabel}");
-            Bash.Execute($"gluster volume start {volumeLabel}", false);
-
+            var glusterStartArg = CommonString.Append("volume start ", volumeLabel);
+            CommonProcess.Do(glusterFileLocation, glusterStartArg);
             //a questo punto posso montare il volume di Gluster sul filesystem, su ogni nodo
             MountVolume(volumeLabel, activeNodes.ToArray());
         }
@@ -90,18 +84,19 @@ namespace Antd.cmds {
         private static void MountVolume(string volumeLabel, ClusterNode[] nodes) {
             //ogni nodo monterà sul proprio filesystem il volume di gluster configurato su se stesso
             //i nodi in questo caso so già che conterranno le informazioni del volume
-
             for(var i = 0; i < nodes.Length; i++) {
-                var currentNode = nodes[i];
-                var currentVolume = currentNode.Volumes.FirstOrDefault(_ => _.Label == volumeLabel);
-                if(currentVolume != null) {
-                    //per evitare errori controllo che ci siano le info del volume
-                    //poi dovrò lanciare i comandi ssh per creare la cartella e montarla
-                    ConsoleLogger.Log($"[gluster] ssh root@{currentNode.Hostname} mkdir -p {currentVolume.MountPoint}");
-                    Bash.Execute($"ssh root@{currentNode.Hostname} mkdir -p {currentVolume.MountPoint}", false);
-                    ConsoleLogger.Log($"[gluster] ssh root@{currentNode.Hostname} mount -t glusterfs {currentNode.Hostname}:{volumeLabel} {currentVolume.MountPoint}");
-                    Bash.Execute($"ssh root@{currentNode.Hostname} mount -t glusterfs {currentNode.Hostname}:{volumeLabel} {currentVolume.MountPoint}", false);
+                var currentVolume = nodes[i].Volumes.FirstOrDefault(_ => _.Label == volumeLabel);
+                //per evitare errori controllo che ci siano le info del volume
+                if(currentVolume == null) {
+                    continue;
                 }
+                //poi lancio i comandi ssh per creare la cartella e montarla
+                ConsoleLogger.Log($"[gluster] ssh root@{nodes[i].Hostname} mkdir -p {currentVolume.MountPoint}");
+                var prepareMountPointCommand = CommonString.Append("mkdir -p ", currentVolume.MountPoint);
+                Ssh.Do("root", nodes[i].Hostname, prepareMountPointCommand);
+                ConsoleLogger.Log($"[gluster] ssh root@{nodes[i].Hostname} mount -t glusterfs {nodes[i].Hostname}:{volumeLabel} {currentVolume.MountPoint}");
+                var mountVolumeCommand = CommonString.Append("mount -t glusterfs ", nodes[i].Hostname, ":", volumeLabel, " ", currentVolume.MountPoint);
+                Ssh.Do("root", nodes[i].Hostname, mountVolumeCommand);
             }
         }
     }
