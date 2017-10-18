@@ -1544,3 +1544,117 @@ function ClusterController($scope, $http, $interval, $timeout, $filter) {
         return options;
     }
 }
+
+app.controller("LogController", ["$scope", "$http", "$interval", "$timeout", "$filter", LogController]);
+
+function LogController($scope, $http, $interval, $timeout, $filter) {
+
+    $scope.loadJournalctl = function () {
+        console.log("loadLog");
+        $scope.Journalctl = null;
+        $http.get("/journalctl").success(function (data) {
+            $scope.Journalctl = data
+        });
+    }
+    $scope.loadJournalctl();
+
+
+
+
+
+
+
+
+
+    $scope.iconSave = "mif-floppy-disk";
+    $scope.iconApply = "mif-arrow-right";
+    $scope.iconLoading = "mif-spinner2 mif-ani-spin";
+
+    $scope.iconStyle = {
+        "padding-right": "20px",
+        color: "#A7BD39",
+    };
+
+    $scope.buttonOriginal = {
+        width: "100%",
+        color: "white",
+        height: "32px",
+        "background-color": "#3A3A3A",
+        border: "1px solid #222222",
+        cursor: "pointer"
+    };
+
+    $scope.buttonDisabled = {
+        width: "100%",
+        color: "white",
+        height: "32px",
+        "background-color": "#8C8C8C",
+        border: "1px solid #222222",
+        cursor: "wait"
+    };
+
+    $scope.buttonStyle = $scope.buttonOriginal;
+
+    $scope.click = function (action) {
+        $scope.buttonStyle = $scope.buttonDisabled;
+        action();
+        $timeout(function () {
+            $scope.buttonStyle = $scope.buttonOriginal;
+        }, 500);
+    }
+
+    $scope.addToList = function (element, list) {
+        var newElement = angular.copy(element);
+        list.push(newElement);
+    }
+
+    $scope.removeFromList = function (index, list) {
+        list.splice(index, 1);
+    }
+
+    $scope.selectizeSingleConfig = function () {
+        return {
+            valueField: "value",
+            labelField: "value",
+            searchField: ["value"],
+            persist: true,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            },
+            maxItems: 1
+        };
+    }
+
+    $scope.selectizeConfig = function (list) {
+        return {
+            valueField: "value",
+            labelField: "value",
+            searchField: ["value"],
+            persist: true,
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input
+                }
+            },
+            onChange: function (values) {
+                list = [];
+                angular.forEach(values, function (value) {
+                    list.push(value);
+                });
+            },
+            delimiter: ","
+        };
+    }
+
+    $scope.selectizeOptions = function (list) {
+        var options = [];
+        angular.forEach(list, function (el) {
+            options.push({ value: el });
+        });
+        return options;
+    }
+}
