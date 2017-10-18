@@ -142,6 +142,7 @@
     <Compile Include="04_modules\BondModule.cs" />
     <Compile Include="04_modules\DeviceModule.cs" />
     <Compile Include="04_modules\ClusterModule.cs" />
+    <Compile Include="04_modules\JournalctlModule.cs" />
     <Compile Include="04_modules\StorageServerModule.cs" />
     <Compile Include="04_modules\VirshModule.cs" />
     <Compile Include="04_modules\InfoModule.cs" />

@@ -138,6 +138,7 @@
     <Compile Include="04_modules\BootModule.cs" />
     <Compile Include="04_modules\DeviceModule.cs" />
     <Compile Include="04_modules\BondModule.cs" />
+    <Compile Include="04_modules\JournalctlModule.cs" />
     <Compile Include="04_modules\VirshModule.cs" />
     <Compile Include="04_modules\SshModule.cs" />
     <Compile Include="04_modules\RssdpModule.cs" />

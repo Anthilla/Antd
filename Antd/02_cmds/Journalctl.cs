@@ -10,24 +10,24 @@ namespace Antd.cmds {
         private const string journalctlFileLocation = "/usr/bin/journalctl";
         private const string journalctlOptions = "--no-pager --quiet";
 
-        public string[] GetLog() {
+        public static string[] GetLog() {
             return CommonProcess.Execute(journalctlFileLocation, journalctlOptions).ToArray();
         }
 
-        public string[] GetUnitLog(string unitName) {
+        public static string[] GetUnitLog(string unitName) {
             var args = CommonString.Append(journalctlOptions, " -u ", unitName);
             return CommonProcess.Execute(journalctlFileLocation, args).ToArray();
         }
 
-        public string[] GetAntdLog() {
+        public static string[] GetAntdLog() {
             return GetUnitLog("app-antd-03-launcher");
         }
 
-        public string[] GetAntdUiLog() {
+        public static string[] GetAntdUiLog() {
             return GetUnitLog("app-antdui-03-launcher");
         }
 
-        public string[] GetLastHours(int hours) {
+        public static string[] GetLastHours(int hours) {
             var args = CommonString.Append(journalctlOptions, " --since='", hours.ToString(), "h ago'");
             return CommonProcess.Execute(journalctlFileLocation, args).ToArray();
         }
