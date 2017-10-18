@@ -117,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="02_cmds\Applicative.cs" />
+    <Compile Include="02_cmds\Dmesg.cs" />
     <Compile Include="02_cmds\Journalctl.cs" />
     <Compile Include="02_cmds\Ntp.cs" />
     <Compile Include="02_cmds\Qemu.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="04_modules\BondModule.cs" />
     <Compile Include="04_modules\DeviceModule.cs" />
     <Compile Include="04_modules\ClusterModule.cs" />
+    <Compile Include="04_modules\DmesgModule.cs" />
     <Compile Include="04_modules\JournalctlModule.cs" />
     <Compile Include="04_modules\StorageServerModule.cs" />
     <Compile Include="04_modules\VirshModule.cs" />
