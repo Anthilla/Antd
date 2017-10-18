@@ -587,4 +587,132 @@
             </div>
         </div>
     </div>
+    <!--Cluster - Shared Shared Fs-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div ng-click="loadCluster()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                Cluster - Shared Fs (glusterfs)
+            </span>
+        </div>
+        <div class="content bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid; padding: 10px;">
+            <div class="width100pc padding20" ng-hide="Cluster!=null">
+                <span class="mif-spinner2 mif-ani-spin mif-4x fg-yellow"></span>
+            </div>
+            <div class="grid condensed fg-white" ng-show="Cluster!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>Active</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <label class="switch" style="margin-top: 13px;">
+                            <input type="checkbox" ng-model="Cluster.SharedFs.Active">
+                            <span class="check"></span>
+                            <span class="caption padding-left10">
+                                <span ng-switch="Cluster.SharedFs.Active">
+                                    <span ng-switch-when="true">enabled</span>
+                                    <span ng-switch-when="false">disabled</span>
+                                    <span ng-switch-default>&nbsp;</span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+            <table ng-show="Cluster!=null" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <td>Volume Label</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0 15px;">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="NewLabel" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <button ng-click="addToList(NewLabel, Cluster.SharedFs.VolumesLabels);refreshNodeConfiguration(Cluster.SharedFs.VolumesLabels, Cluster.Nodes);" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc"><span class="mif-plus fg-anthilla-blue padding-right20"></span>&nbsp;{{ 'ADD' | translate }}</button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="label in Cluster.SharedFs.VolumesLabels">
+                        <td style="padding: 0 15px;">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="label" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </td>
+                        <td style="padding: 0 15px;">
+                            <button ng-click="removeFromList($index, Cluster.SharedFs.VolumesLabels);refreshNodeConfiguration();" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc">{{ 'REMOVE' | translate }}</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr class="bg-anthilla-gray-2" />
+            <table ng-show="Cluster!=null" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <td>Host</td>
+                        <td colspan="3">Volumes</td>
+                    </tr>
+                    <tr ng-repeat="node in Cluster.Nodes">
+                        <td style="padding: 0 15px;">
+                            <p>{{ node.Hostname }}</p>
+                        </td>
+                        <td colspan="3" style="padding: 0 15px;">
+                            <table class="table bordered fg-white" style="table-layout: fixed;">
+                                <tbody>
+                                    <tr>
+                                        <td>Label</td>
+                                        <td>Brick</td>
+                                        <td>Mountpoint</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr ng-repeat="volume in node.Volumes">
+                                        <td style="padding: 0 15px;">
+                                            <p>{{volume.Label}}</p>
+                                        </td>
+                                        <td style="padding: 0 15px;">
+                                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                                <input type="text" ng-model="volume.Brick" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 0 15px;">
+                                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                                <input type="text" ng-model="volume.Mountpoint" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 0 15px;">
+                                            <button ng-click="removeFromList($index, node.Volumes)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc">{{ 'REMOVE' | translate }}</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="grid condensed" style="margin-top: 1.75em;" ng-show="Cluster!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1">
+                    </div>
+                    <div class="cell colspan2 padding-right10">
+                        <button ng-click="click(saveCluster)" ng-style="buttonStyle"><span class="{{iconSave}}" ng-style="iconStyle"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    </div>
+                    <div class="cell colspan2 padding-left10">
+                        <button ng-click="click(applyCluster)" ng-style="buttonStyle"><span class="{{iconApply}}" ng-style="iconStyle"></span>&nbsp;{{ 'APPLY' | translate }}</button>
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

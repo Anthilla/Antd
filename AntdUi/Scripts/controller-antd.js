@@ -1421,7 +1421,25 @@ function ClusterController($scope, $http, $interval, $timeout, $filter) {
         });
     }
 
+    $scope.NewGlusterVolume = {
+        Label: '',
+        Brick: '',
+        Mountpoint: ''
+    };
 
+    $scope.refreshNodeConfiguration = function (labels, nodes) {
+        angular.forEach(nodes, function (node) {
+            var volumes = [];
+            angular.forEach(labels, function (label) {
+                volumes.push({
+                    Label: label,
+                    Brick: '',
+                    Mountpoint: ''
+                });
+            });
+            node.Volumes = volumes;
+        });
+    }
 
 
 
