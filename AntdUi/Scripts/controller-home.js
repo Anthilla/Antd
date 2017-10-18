@@ -29,11 +29,11 @@ app.config(function ($translateProvider, $stateProvider, $urlRouterProvider) {
             'content': { templateUrl: "pages/status.html?v=" + new Date() }
         }
     })
-    .state("asset", {
+    .state("cluster", {
         cache: false,
-        url: "^/asset",
+        url: "^/cluster",
         views: {
-            'content': { templateUrl: "pages/asset.html?v=" + new Date() }
+            'content': { templateUrl: "pages/cluster.html?v=" + new Date() }
         }
     })
     ;
@@ -137,7 +137,7 @@ function ToolbarController($scope, $http) {
     $scope.Menu = [
         { AclId: "0000000a", Href: "config", Label: "MACHINE_CONFIG", Icon: "cog", IsActive: "active", SubMenu: [] },
         { AclId: "0000000a", Href: "status", Label: "MACHINE_STATUS", Icon: "stack3", IsActive: "", SubMenu: [] },
-        { AclId: "0000000a", Href: "asset", Label: "ASSET", Icon: "wifi-connect", IsActive: "", SubMenu: [] },
+        { AclId: "0000000a", Href: "cluster", Label: "CLUSTER", Icon: "wifi-connect", IsActive: "", SubMenu: [] },
     ];
 
     $scope.SubMenu = $scope.Menu[0].SubMenu;

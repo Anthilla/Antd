@@ -904,7 +904,7 @@ namespace Antd {
         public string PublicIp { get; set; }
         public string EntryPoint { get; set; }
         public ClusterNodeService[] Services { get; set; } = new ClusterNodeService[0];
-        public GlusterVolumeModel[] Volumes { get; set; } = new GlusterVolumeModel[0];
+        public GlusterVolume[] Volumes { get; set; } = new GlusterVolume[0];
     }
 
     public class ClusterNodeService {
@@ -970,6 +970,25 @@ namespace Antd {
 
     public class ClusterFsFile {
         public string Path { get; set; } = string.Empty;
+    }
+
+    public class GlusterVolume {
+        /// <summary>
+        /// Nome del volume di gluster, sarà compreso nell'array di Gluster2ConfigurationModel.VolumesLabels
+        /// </summary>
+        public string Label { get; set; }
+
+        /// <summary>
+        /// Percorso del 'brick' di Gluster
+        /// es: /Data/Storage02/Brick01
+        /// </summary>
+        public string Brick { get; set; }
+
+        /// <summary>
+        /// Mountpoint del volume sul fs dell'host
+        /// es: /Data/gv01 o /cfg/sync
+        /// </summary>
+        public string MountPoint { get; set; }
     }
 
     /// <summary>

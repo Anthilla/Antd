@@ -1338,9 +1338,9 @@ function MachineStatusController($scope, $http, $interval, $timeout, $filter) {
     }
 }
 
-app.controller("AssetController", ["$scope", "$http", "$interval", "$timeout", "$filter", AssetController]);
+app.controller("ClusterController", ["$scope", "$http", "$interval", "$timeout", "$filter", ClusterController]);
 
-function AssetController($scope, $http, $interval, $timeout, $filter) {
+function ClusterController($scope, $http, $interval, $timeout, $filter) {
 
     $scope.Neighborhood = null;
 

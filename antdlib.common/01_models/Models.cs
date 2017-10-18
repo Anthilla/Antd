@@ -554,50 +554,6 @@ namespace Antd.models {
         }
     }
 
-    //public class GlusterModel {
-    //    public bool Active { get; set; } = false;
-
-    //    /// <summary>
-    //    /// Lista delle etichette dei volumi configurati
-    //    /// per ognuno di questi valori vado a prendere le informazioni dei volumi configurati in GlusterModel.Nodes.Volumes
-    //    /// in modo da avere: nome del volume, percorso del brick in ogni nodo e infine il mountpoint
-    //    /// </summary>
-    //    public string[] VolumesLabels { get; set; } = new string[0];
-
-    //    /// <summary>
-    //    /// Lista dei nodi/peer di Gluster
-    //    /// </summary>
-    //    public GlusterNodeModel[] Nodes { get; set; } = new GlusterNodeModel[0];
-    //}
-
-    //public class GlusterNodeModel {
-    //    /// <summary>
-    //    /// Hostname del nodo Gluster, dovrà essere presente in /etc/hosts
-    //    /// </summary>
-    //    public string Hostname { get; set; }
-
-    //    public GlusterVolumeModel[] Volumes { get; set; }
-    //}
-
-    public class GlusterVolumeModel {
-        /// <summary>
-        /// Nome del volume di gluster, sarà compreso nell'array di Gluster2ConfigurationModel.VolumesLabels
-        /// </summary>
-        public string Label { get; set; }
-
-        /// <summary>
-        /// Percorso del 'brick' di Gluster
-        /// es: /Data/Storage02/Brick01
-        /// </summary>
-        public string Brick { get; set; }
-
-        /// <summary>
-        /// Mountpoint del volume sul fs dell'host
-        /// es: /Data/gv01 o /cfg/sync
-        /// </summary>
-        public string MountPoint { get; set; }
-    }
-
     public class SambaModel {
         public bool Active { get; set; } = false;
 
