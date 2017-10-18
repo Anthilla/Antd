@@ -66,10 +66,6 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="KvpbaseSDK, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KvpbaseSDK.2.0.2\lib\KvpbaseSDK.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\packages\LiteDB.3.1.0\lib\net35\LiteDB.dll</HintPath>
       <Private>True</Private>
@@ -124,7 +120,7 @@
     <Compile Include="02_cmds\Journalctl.cs" />
     <Compile Include="02_cmds\Ntp.cs" />
     <Compile Include="02_cmds\Qemu.cs" />
-    <Compile Include="02_cmds\VfsClient.cs" />
+    <Compile Include="02_cmds\StorageClient.cs" />
     <Compile Include="02_cmds\WiFi.cs" />
     <Compile Include="02_cmds\Uname.cs" />
     <Compile Include="02_cmds\Ca.cs" />
