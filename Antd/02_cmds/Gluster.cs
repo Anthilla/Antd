@@ -27,11 +27,11 @@ namespace Antd.cmds {
 
         public static void Stop() {
             Systemctl.Stop(ServiceName);
-            ConsoleLogger.Log("[dhcpd] stop");
+            ConsoleLogger.Log("[gluster] stop");
         }
 
         public static void Start() {
-            var options = Application.CurrentConfiguration.Services.Gluster;
+            var options = Application.CurrentConfiguration.Cluster.GlusterFs;
             if(options == null) {
                 return;
             }

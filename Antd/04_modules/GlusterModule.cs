@@ -21,7 +21,7 @@ namespace Antd.Modules {
             Post["/set"] = x => {
                 string data = Request.Form.Data;
                 var objects = JsonConvert.DeserializeObject<GlusterModel>(data);
-                Application.CurrentConfiguration.Services.Gluster = objects;
+                Application.CurrentConfiguration.Cluster.GlusterFs = objects;
                 ConfigRepo.Save();
                 return HttpStatusCode.OK;
             };

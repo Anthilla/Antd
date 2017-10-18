@@ -55,7 +55,7 @@ namespace Antd.Modules {
             /// </summary>
             Post["/apply"] = x => {
                 //Inizio ad applicarla localmente
-                cmds.Cluster.Apply();
+                cmds.Cluster.ApplyNetwork();
                 cmds.Cluster.ApplyServices();
                 ConsoleLogger.Log("[cluster] apply local configuration");
                 return HttpStatusCode.OK;

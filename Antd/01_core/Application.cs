@@ -20,6 +20,7 @@ namespace Antd {
     ///     - aggiungere al Modulo Nancy il get parziale/contestuale
     /// - aggiungere configurazione Storage > Retention/Gestione Spazio Libero
     /// - consulta log -> journalctl syslog
+    /// - re-implementa "rsync"
     /// </summary>
     internal class Application {
 
@@ -424,14 +425,15 @@ namespace Antd {
 
         private static void ManageCluster() {
             if(CurrentConfiguration.Cluster.Active) {
-                cmds.Cluster.Apply();
+                cmds.Cluster.ApplyNetwork();
                 cmds.Cluster.ApplyServices();
+                cmds.Cluster.ApplyFs();
                 ConsoleLogger.Log("[cluster] ready");
             }
         }
 
         private static void Gluster() {
-            if(CurrentConfiguration.Services.Gluster.Active) {
+            if(CurrentConfiguration.Cluster.GlusterFs.Active) {
                 cmds.Gluster.Apply();
             }
         }

@@ -261,7 +261,7 @@ namespace Antd.cmds {
         /// <param name="node">Nodo del cluster di riferimento</param>
         /// <param name="destinationPath">Percorso assoluto del file sul nodo di riferimento</param>
         /// <returns></returns>
-        public static bool CreateFile(string sourcePath, ClusterNode node, string destinationPath) {
+        public static bool CreateFile(ClusterNode node, string sourcePath, string destinationPath) {
             if(!File.Exists(sourcePath)) {
                 ConsoleLogger.Log($"[storage_client] local file '{sourcePath}' not found");
                 return false;

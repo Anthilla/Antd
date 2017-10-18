@@ -125,6 +125,8 @@ namespace Antd.cmds {
     public class LibvirtWatcher {
 
         private const string virshEtcDirectory = "/etc/libvirt/qemu";
+        private const string clusterCfgFolder = "/cfg/antd/cluster";
+        private const string destinationFolderName = "DIR_etc_libvirt_qemu";
         private static FileSystemWatcher _fileSystemWatcher;
 
         public void Start() {
@@ -147,12 +149,27 @@ namespace Antd.cmds {
             _fileSystemWatcher.Dispose();
         }
 
+        /// <summary>
+        /// Quando un file viene modificato lo invio agli altri nodi del cluster
+        /// E verrà salvato nella cartella /cfg/antd/cluster/{machineUid}/DIR_etc_libvirt_qemu
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private void FileChanged(object source, FileSystemEventArgs e) {
             var fileName = Path.GetFileName(e.FullPath);
             if(!File.Exists(e.FullPath)) {
                 return;
             }
             ConsoleLogger.Log($"[watcher] file '{e.FullPath}' changed");
+            var nodes = Application.CurrentConfiguration.Cluster.Nodes;
+            for(var i = 0; i < nodes.Length; i++) {
+                if(CommonString.AreEquals(nodes[i].MachineUid, Application.CurrentConfiguration.Host.MachineUid.ToString()) == true) {
+                    continue;
+                }
+                var destinationPath = CommonString.Append(clusterCfgFolder, "/", Application.CurrentConfiguration.Host.MachineUid.ToString(), "/", destinationFolderName, "/", e.Name);
+                ConsoleLogger.Log($"sync '{e.FullPath}' -> '{destinationPath}'");
+                StorageClient.CreateFile(nodes[i], e.FullPath, destinationPath);
+            }
         }
     }
 }

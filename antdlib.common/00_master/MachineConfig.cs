@@ -796,8 +796,6 @@ namespace Antd {
 
         public CaModel Ca { get; set; } = new CaModel();
 
-        public GlusterModel Gluster { get; set; } = new GlusterModel();
-
         public RsyncModel Rsync { get; set; } = new RsyncModel();
 
         public VirshModel Virsh { get; set; } = new VirshModel();
@@ -898,6 +896,8 @@ namespace Antd {
         /// Condivisione dei dati sui dischi -> gluster e rsync
         /// </summary>
         public ClusterFs SharedFs { get; set; } = new ClusterFs();
+
+        public GlusterModel GlusterFs { get; set; } = new GlusterModel();
     }
 
     public class ClusterNode {

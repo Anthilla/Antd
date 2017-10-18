@@ -39,7 +39,7 @@ namespace Antd.cmds {
             }
         }
 
-        public static bool Apply() {
+        public static bool ApplyNetwork() {
             ConsoleLogger.Log("[cluster] init applying changes");
             var config = Application.CurrentConfiguration.Cluster;
             if(config == null) {
@@ -64,14 +64,8 @@ namespace Antd.cmds {
                 ConsoleLogger.Log("[cluster] shared network is disabled");
                 return false;
             }
-
-            var fsConfig = config.SharedFs;
-
             SaveHaproxy(networkConfig, nodesConfig);
-
             SaveKeepalived(networkConfig, nodesConfig);
-
-            SaveFileSystemSync(fsConfig, nodesConfig);
             return true;
         }
 
@@ -214,13 +208,6 @@ namespace Antd.cmds {
             Keepalived.Start(keepalivedFileOutput);
         }
 
-        private static void SaveFileSystemSync(ClusterFs fsConfig, ClusterNode[] nodesConfig) {
-            if(fsConfig == null) {
-                ConsoleLogger.Log("[cluster] shared fs is disabled");
-                return;
-            }
-        }
-
         /// <summary>
         /// Controlla la configurazione dei servizi del cluster e applica le modifiche del caso
         /// </summary>
@@ -240,6 +227,33 @@ namespace Antd.cmds {
             }
             else {
                 Application.LIBVIRT_WATCHER.Stop();
+            }
+        }
+
+        public static bool ApplyFs() {
+            var config = Application.CurrentConfiguration.Cluster;
+            if(config == null) {
+                ConsoleLogger.Error("[cluster] exit: config == null");
+                return false;
+            }
+            var nodesConfig = config.Nodes;
+            if(nodesConfig == null) {
+                ConsoleLogger.Error("[cluster] exit: nodesConfig == null");
+                return false;
+            }
+            if(!nodesConfig.Any()) {
+                ConsoleLogger.Log("[cluster] shared network is disabled");
+                return false;
+            }
+            var fsConfig = config.SharedFs;
+            SaveFileSystemSync(fsConfig, nodesConfig);
+            return true;
+        }
+
+        private static void SaveFileSystemSync(ClusterFs fsConfig, ClusterNode[] nodesConfig) {
+            if(fsConfig == null) {
+                ConsoleLogger.Log("[cluster] shared fs is disabled");
+                return;
             }
         }
     }
