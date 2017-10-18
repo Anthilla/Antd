@@ -896,8 +896,6 @@ namespace Antd {
         /// Condivisione dei dati sui dischi -> gluster e rsync
         /// </summary>
         public ClusterFs SharedFs { get; set; } = new ClusterFs();
-
-        public GlusterModel GlusterFs { get; set; } = new GlusterModel();
     }
 
     public class ClusterNode {
@@ -906,6 +904,7 @@ namespace Antd {
         public string PublicIp { get; set; }
         public string EntryPoint { get; set; }
         public ClusterNodeService[] Services { get; set; } = new ClusterNodeService[0];
+        public GlusterVolumeModel[] Volumes { get; set; } = new GlusterVolumeModel[0];
     }
 
     public class ClusterNodeService {
@@ -951,11 +950,18 @@ namespace Antd {
     }
 
     public class ClusterFs {
-        public bool EnableSharedFs { get; set; } = false;
+        public bool Active { get; set; } = false;
 
         public ClusterFsDirectory[] SyncDirectories { get; set; } = new ClusterFsDirectory[0];
 
         public ClusterFsFile[] SyncFiles { get; set; } = new ClusterFsFile[0];
+
+        /// <summary>
+        /// Lista delle etichette dei volumi configurati
+        /// per ognuno di questi valori vado a prendere le informazioni dei volumi configurati in Cluster.Nodes.Volumes
+        /// in modo da avere: nome del volume, percorso del brick in ogni nodo e infine il mountpoint
+        /// </summary>
+        public string[] VolumesLabels { get; set; } = new string[0];
     }
 
     public class ClusterFsDirectory {

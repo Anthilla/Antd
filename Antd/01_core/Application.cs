@@ -132,7 +132,6 @@ namespace Antd {
             Tor();
             ManageVirsh();
             ManageCluster();
-            Gluster();
             DirectoryWatchers();
             CheckApplicationFileAcls();
 
@@ -429,12 +428,6 @@ namespace Antd {
                 cmds.Cluster.ApplyServices();
                 cmds.Cluster.ApplyFs();
                 ConsoleLogger.Log("[cluster] ready");
-            }
-        }
-
-        private static void Gluster() {
-            if(CurrentConfiguration.Cluster.GlusterFs.Active) {
-                cmds.Gluster.Apply();
             }
         }
 

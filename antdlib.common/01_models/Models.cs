@@ -554,30 +554,30 @@ namespace Antd.models {
         }
     }
 
-    public class GlusterModel {
-        public bool Active { get; set; } = false;
+    //public class GlusterModel {
+    //    public bool Active { get; set; } = false;
 
-        /// <summary>
-        /// Lista delle etichette dei volumi configurati
-        /// per ognuno di questi valori vado a prendere le informazioni dei volumi configurati in Gluster2ConfigurationModel.Nodes.Volumes
-        /// in modo da avere: nome del volume, percorso del brick in ogni nodo e infine il mountpoint
-        /// </summary>
-        public string[] VolumesLabels { get; set; } = new string[0];
+    //    /// <summary>
+    //    /// Lista delle etichette dei volumi configurati
+    //    /// per ognuno di questi valori vado a prendere le informazioni dei volumi configurati in GlusterModel.Nodes.Volumes
+    //    /// in modo da avere: nome del volume, percorso del brick in ogni nodo e infine il mountpoint
+    //    /// </summary>
+    //    public string[] VolumesLabels { get; set; } = new string[0];
 
-        /// <summary>
-        /// Lista dei nodi/peer di Gluster
-        /// </summary>
-        public GlusterNodeModel[] Nodes { get; set; } = new GlusterNodeModel[0];
-    }
+    //    /// <summary>
+    //    /// Lista dei nodi/peer di Gluster
+    //    /// </summary>
+    //    public GlusterNodeModel[] Nodes { get; set; } = new GlusterNodeModel[0];
+    //}
 
-    public class GlusterNodeModel {
-        /// <summary>
-        /// Hostname del nodo Gluster, dovrà essere presente in /etc/hosts
-        /// </summary>
-        public string Hostname { get; set; }
+    //public class GlusterNodeModel {
+    //    /// <summary>
+    //    /// Hostname del nodo Gluster, dovrà essere presente in /etc/hosts
+    //    /// </summary>
+    //    public string Hostname { get; set; }
 
-        public GlusterVolumeModel[] Volumes { get; set; }
-    }
+    //    public GlusterVolumeModel[] Volumes { get; set; }
+    //}
 
     public class GlusterVolumeModel {
         /// <summary>

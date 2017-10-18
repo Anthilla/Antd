@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using anthilla.core;
 using System.Linq;
-using Antd.models;
 
 namespace Antd.cmds {
 
@@ -9,7 +8,7 @@ namespace Antd.cmds {
     /// TODO
     /// Converti Bash in CommonProcess
     /// </summary>
-    public class Gluster {
+    public class GlusterFs {
 
         //systemctl enable glusterd
         //systemctl start glusterd
@@ -31,20 +30,21 @@ namespace Antd.cmds {
         }
 
         public static void Start() {
-            var options = Application.CurrentConfiguration.Cluster.GlusterFs;
+            var options = Application.CurrentConfiguration.Cluster.SharedFs;
             if(options == null) {
                 return;
             }
             Systemctl.Enable(ServiceName);
             Systemctl.Start(ServiceName);
-            for(var i = 0; i < options.Nodes.Length; i++) {
-                IncludeNode(options.Nodes[i].Hostname);
+            var nodes = Application.CurrentConfiguration.Cluster.Nodes;
+            for(var i = 0; i < nodes.Length; i++) {
+                IncludeNode(nodes[i].Hostname);
             }
 
             for(var i = 0; i < options.VolumesLabels.Length; i++) {
                 var currentLabel = options.VolumesLabels[i];
                 //creo e avvio il volume di Gluster sui vari nodi in cui è configurato
-                StartVolume(currentLabel, options.Nodes);
+                StartVolume(currentLabel, nodes);
             }
             ConsoleLogger.Log("[gluster] start");
         }
@@ -53,11 +53,11 @@ namespace Antd.cmds {
             Bash.Execute($"gluster peer probe {node}", false);
         }
 
-        private static void StartVolume(string volumeLabel, GlusterNodeModel[] nodes) {
+        private static void StartVolume(string volumeLabel, ClusterNode[] nodes) {
             ConsoleLogger.Log($"[gluster] create {volumeLabel}");
             int volumeCount = 0;
             string replicaString = "";
-            List<GlusterNodeModel> activeNodes = new List<GlusterNodeModel>();
+            List<ClusterNode> activeNodes = new List<ClusterNode>();
             for(var i = 0; i < nodes.Length; i++) {
                 var currentNode = nodes[i];
                 var currentVolume = currentNode.Volumes.FirstOrDefault(_ => _.Label == volumeLabel);
@@ -87,7 +87,7 @@ namespace Antd.cmds {
             MountVolume(volumeLabel, activeNodes.ToArray());
         }
 
-        private static void MountVolume(string volumeLabel, GlusterNodeModel[] nodes) {
+        private static void MountVolume(string volumeLabel, ClusterNode[] nodes) {
             //ogni nodo monterà sul proprio filesystem il volume di gluster configurato su se stesso
             //i nodi in questo caso so già che conterranno le informazioni del volume
 

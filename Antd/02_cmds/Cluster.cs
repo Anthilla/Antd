@@ -247,6 +247,7 @@ namespace Antd.cmds {
             }
             var fsConfig = config.SharedFs;
             SaveFileSystemSync(fsConfig, nodesConfig);
+            GlusterFs.Apply();
             return true;
         }
 

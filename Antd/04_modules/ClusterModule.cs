@@ -57,6 +57,7 @@ namespace Antd.Modules {
                 //Inizio ad applicarla localmente
                 cmds.Cluster.ApplyNetwork();
                 cmds.Cluster.ApplyServices();
+                cmds.Cluster.ApplyFs();
                 ConsoleLogger.Log("[cluster] apply local configuration");
                 return HttpStatusCode.OK;
             };
