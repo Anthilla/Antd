@@ -778,7 +778,7 @@
     <Content Include="Scripts\angular-ui-router.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Pages\asset.html">
+    <Content Include="Views\Pages\cluster.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Pages\config.html">
