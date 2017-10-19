@@ -473,11 +473,12 @@ namespace Antd {
         }
 
         private static void Test() {
-            //var testNode = new ClusterNode() {
-            //    EntryPoint = "http://127.0.0.1:8084/"
-            //};
-
+            //var testNode = new ClusterNode() { EntryPoint = "http://127.0.0.1:8084/" };
             //StorageClient.GetFolder(testNode, "/");
+            //Thread thread = new Thread(() => {
+            //    Ip.EnableNetworkAdapter("eth0");
+            //});
+            //thread.Start();
         }
     }
 }

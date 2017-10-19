@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using LukeSkywalker.IPNetwork;
 using Antd.models;
+using System.Threading;
 
 namespace Antd.cmds {
     public class Network {
@@ -167,8 +168,12 @@ namespace Antd.cmds {
             if(running.Length > 0) {
                 ConsoleLogger.Log($"[network] start prepare");
                 for(var i = 0; i < running.Length; i++) {
-                    SetInterfaceHardwareConfiguration(running[i]);
-                    Ip.EnableNetworkAdapter(running[i].Id);
+                    var nif = running[i];
+                    Thread thread = new Thread(() => {
+                        SetInterfaceHardwareConfiguration(nif);
+                        Ip.EnableNetworkAdapter(nif.Id);
+                    });
+                    thread.Start();
                 }
                 ConsoleLogger.Log($"[network] end prepare");
             }

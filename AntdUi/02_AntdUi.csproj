@@ -89,10 +89,6 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="LiteDB, Version=3.1.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiteDB.3.1.0\lib\net35\LiteDB.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
       <Private>True</Private>
@@ -814,10 +810,6 @@
     <ProjectReference Include="..\..\_shared\anthilla.scheduler\anthilla.scheduler.csproj">
       <Project>{906b8907-f2ea-4baa-bf11-9f80c6e8bbbd}</Project>
       <Name>anthilla.scheduler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
-      <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
-      <Name>StorageServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.common\03_antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>
