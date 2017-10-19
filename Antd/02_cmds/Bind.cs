@@ -52,7 +52,7 @@ namespace Antd.cmds {
         public static void DownloadRootServerHits() {
             var text = ApiConsumer.GetString("https://www.internic.net/domain/named.named");
             const string namedHintsFile = "/etc/bind/named.named";
-            FileWithAcl.WriteAllText(namedHintsFile, text, "644", "named", "named");
+            File.WriteAllText(namedHintsFile, text);
             RndcReload();
         }
 
@@ -180,7 +180,7 @@ namespace Antd.cmds {
             //lines.Add("");
 
             lines.Add("include \"/etc/bind/master/blackhole.zones\";");
-            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "named", "named");
+            File.WriteAllLines(MainFilePath, lines);
 
             var keyLines = new List<string> {
                 $"key \"{options.KeyName}\" {{",
@@ -189,7 +189,7 @@ namespace Antd.cmds {
                 "};",
                 ""
             };
-            FileWithAcl.WriteAllLines(RndcKeyFile, keyLines, "644", "named", "named");
+            File.WriteAllLines(RndcKeyFile, keyLines);
 
             var rndcConfLines = new List<string>{
                 $"key \"{options.KeyName}\" {{",
@@ -203,7 +203,7 @@ namespace Antd.cmds {
                 $"default-port \"{options.ControlPort}\";",
                 "};"
             };
-            FileWithAcl.WriteAllLines(RndcConfFile, rndcConfLines, "644", "named", "named");
+            File.WriteAllLines(RndcConfFile, rndcConfLines);
 
             #endregion
             Start();

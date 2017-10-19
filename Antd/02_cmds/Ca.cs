@@ -55,23 +55,23 @@ namespace Antd.cmds {
             //chmod 700 private
             //touch index.txt
             //echo 1000 > serial
-            DirectoryWithAcl.CreateDirectory(CaMainDirectory, "755", "root", "wheel");
+            Directory.CreateDirectory(CaMainDirectory);
             foreach(var dir in CaMainSubdirectories) {
-                DirectoryWithAcl.CreateDirectory($"{CaMainDirectory}/{dir}", "755", "root", "wheel");
+                Directory.CreateDirectory($"{CaMainDirectory}/{dir}");
             }
             Bash.Execute($"chmod 700 ${CaMainDirectory}/private");
             if(!File.Exists($"{CaMainDirectory}/index.txt")) {
-                FileWithAcl.WriteAllText($"{CaMainDirectory}/index.txt", "", "644", "root", "wheel");
+                File.WriteAllText($"{CaMainDirectory}/index.txt", "");
             }
             if(!File.Exists($"{CaMainDirectory}/serial")) {
-                FileWithAcl.WriteAllText($"{CaMainDirectory}/serial", "1000", "644", "root", "wheel");
+                File.WriteAllText($"{CaMainDirectory}/serial", "1000");
             }
         }
 
         public static void PrepareConfigurationFile() {
             // /data/ca/openssl.cnf
             if(!File.Exists($"{CaMainDirectory}/openssl.cnf")) {
-                FileWithAcl.WriteAllLines($"{CaMainDirectory}/openssl.cnf", RootCaOpensslCnf(CaMainDirectory), "644", "root", "wheel");
+                File.WriteAllLines($"{CaMainDirectory}/openssl.cnf", RootCaOpensslCnf(CaMainDirectory));
             }
         }
 
@@ -120,19 +120,19 @@ namespace Antd.cmds {
 
         #region [    ca - Intermediate    ]
         public static void PrepareIntermediateDirectory() {
-            DirectoryWithAcl.CreateDirectory(CaIntermediateDirectory, "755", "root", "wheel");
+            Directory.CreateDirectory(CaIntermediateDirectory);
             foreach(var dir in CaIntermediateSubdirectories) {
-                DirectoryWithAcl.CreateDirectory($"{CaIntermediateDirectory}/{dir}", "755", "root", "wheel");
+                Directory.CreateDirectory($"{CaIntermediateDirectory}/{dir}");
             }
             Bash.Execute($"chmod 700 ${CaIntermediateDirectory}/private");
             if(!File.Exists($"{CaIntermediateDirectory}/index.txt")) {
-                FileWithAcl.WriteAllText($"{CaIntermediateDirectory}/index.txt", "", "644", "root", "wheel");
+                File.WriteAllText($"{CaIntermediateDirectory}/index.txt", "");
             }
             if(!File.Exists($"{CaIntermediateDirectory}/serial")) {
-                FileWithAcl.WriteAllText($"{CaIntermediateDirectory}/serial", "1000", "644", "root", "wheel");
+                File.WriteAllText($"{CaIntermediateDirectory}/serial", "1000");
             }
             if(!File.Exists($"{CaIntermediateDirectory}/crlnumber")) {
-                FileWithAcl.WriteAllText($"{CaIntermediateDirectory}/crlnumber", "1000", "644", "root", "wheel");
+                File.WriteAllText($"{CaIntermediateDirectory}/crlnumber", "1000");
             }
         }
 
@@ -143,7 +143,7 @@ namespace Antd.cmds {
         public static void PrepareIntermediateConfigurationFile() {
             if(!File.Exists($"{CaIntermediateDirectory}/openssl.cnf")) {
                 var port = Application.CurrentConfiguration.WebService.Port;
-                FileWithAcl.WriteAllLines($"{CaIntermediateDirectory}/openssl.cnf", IntermediateCaOpensslCnf(CaIntermediateDirectory, $"http://{GetThisIp()}:{port}/services/ca/crl"), "644", "root", "wheel");
+                File.WriteAllLines($"{CaIntermediateDirectory}/openssl.cnf", IntermediateCaOpensslCnf(CaIntermediateDirectory, $"http://{GetThisIp()}:{port}/services/ca/crl"));
             }
         }
 
@@ -194,7 +194,7 @@ namespace Antd.cmds {
             line2.ToList().AddRange(line1);
             var chain = $"{CaIntermediateDirectory}/certs/ca-chain.cert.pem";
             if(!File.Exists(chain)) {
-                FileWithAcl.WriteAllLines(chain, line2, "644", "root", "wheel");
+                File.WriteAllLines(chain, line2);
             }
         }
         #endregion
@@ -240,12 +240,12 @@ namespace Antd.cmds {
             var config = $"{CaIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
                 var port = Application.CurrentConfiguration.WebService.Port;
-                FileWithAcl.WriteAllLines(config, IntermediateCaDomainControllerOpensslCnf(
+                File.WriteAllLines(config, IntermediateCaDomainControllerOpensslCnf(
                         CaIntermediateDirectory,
                         $"http://{GetThisIp()}:{port}/services/ca/crl",
                         dcGuid,
                         dcDns
-                    ), "644", "root", "wheel");
+                    ));
             }
             var key = $"{CaIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {
@@ -267,11 +267,11 @@ namespace Antd.cmds {
             var config = $"{CaIntermediateDirectory}/{name}.openssl.cnf";
             if(!File.Exists(config)) {
                 var port = Application.CurrentConfiguration.WebService.Port;
-                FileWithAcl.WriteAllLines(config, IntermediateCaSmartCardOpensslCnf(
+                File.WriteAllLines(config, IntermediateCaSmartCardOpensslCnf(
                         CaIntermediateDirectory,
                         $"http://{GetThisIp()}:{port}/services/ca/crl",
                         upn
-                    ), "644", "root", "wheel");
+                    ));
             }
             var key = $"{CaIntermediateDirectory}/private/{name}.key.pem";
             if(!File.Exists(key)) {

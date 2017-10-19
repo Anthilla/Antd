@@ -173,16 +173,16 @@ namespace Antd.Modules {
                 }
                 Application.CurrentConfiguration.Services.Ssh.AuthorizedKey = keys.ToArray();
                 ConfigRepo.Save();
-                DirectoryWithAcl.CreateDirectory("/root/.ssh");
+                Directory.CreateDirectory("/root/.ssh");
                 const string authorizedKeysPath = "/root/.ssh/authorized_keys";
                 if(File.Exists(authorizedKeysPath)) {
                     var f = File.ReadAllText(authorizedKeysPath);
                     if(!f.Contains(apple)) {
-                        FileWithAcl.AppendAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
+                        File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
                     }
                 }
                 else {
-                    FileWithAcl.WriteAllLines(authorizedKeysPath, new List<string> { apple }, "644", "root", "wheel");
+                    File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
                 }
                 return HttpStatusCode.OK;
             };

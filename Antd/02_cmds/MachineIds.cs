@@ -34,7 +34,7 @@ namespace Antd.cmds {
             else {
                 var machineUuid = new Model();
                 var json = JsonConvert.SerializeObject(machineUuid, Formatting.Indented);
-                FileWithAcl.WriteAllText(IdPath, json, "644", "root", "wheel");
+                File.WriteAllText(IdPath, json);
                 return machineUuid;
             }
             return new Model();

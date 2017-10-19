@@ -137,7 +137,7 @@ namespace Antd.cmds {
                 lines.Add("}");
             }
             lines.Add("}");
-            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "nginx", "nginx");
+            File.WriteAllLines(MainFilePath, lines);
             SetParametersFiles();
             #endregion
             Start();
@@ -162,7 +162,7 @@ namespace Antd.cmds {
             //var fastcgiconf = "/etc/nginx/fastcgi.conf";
             //if(!File.Exists(fastcgiconf)) {
             //    var fastcgiconfLines = new List<string>();
-            //    FileWithAcl.WriteAllLines(fastcgiconf, fastcgiconfLines, "644", "nginx", "nginx");
+            //    File.WriteAllLines(fastcgiconf, fastcgiconfLines, "644", "nginx", "nginx");
             //}
         }
     }

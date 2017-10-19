@@ -96,7 +96,7 @@ namespace Antd.cmds {
                 lines.Add($"path = {resource.Path}");
                 lines.Add("");
             }
-            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
+            File.WriteAllLines(MainFilePath, lines);
             #endregion
             Start();
         }

@@ -121,7 +121,7 @@ namespace Antd.cmds {
             if(MountHelper.IsAlreadyMounted("/mnt/cdrom/Kernel/active-modules") == false &&
                 linkedRelease.Contains(kernelRelease)) {
                 var moduleDir = $"/lib64/modules/{kernelRelease}/";
-                DirectoryWithAcl.CreateDirectory(moduleDir);
+                Directory.CreateDirectory(moduleDir);
                 MountSimple("/mnt/cdrom/Kernel/active-modules", moduleDir);
             }
             Bash.Execute("systemctl restart systemd-modules-load.service", false);

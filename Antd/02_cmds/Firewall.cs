@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using anthilla.core;
+using System.IO;
 
 namespace Antd.cmds {
 
@@ -65,7 +66,7 @@ namespace Antd.cmds {
                 lines.Add("}");
             }
 
-            FileWithAcl.WriteAllLines(nftablesFile, lines, "644", "root", "wheel");
+            File.WriteAllLines(nftablesFile, lines);
             #endregion
             Start();
         }

@@ -24,7 +24,7 @@ namespace Antd.cmds {
                 return;
             }
             Stop();
-            DirectoryWithAcl.CreateDirectory(LibDirMnt, "755", "root", "root");
+            Directory.CreateDirectory(LibDirMnt);
             Mount.MountWithBind(LibDirMnt, LibDir);
             #region [    torrc generation    ]
             if(File.Exists(MainFilePath)) {
@@ -43,11 +43,11 @@ namespace Antd.cmds {
                 //HiddenServiceDir /var/lib/tor/hidden_service/
                 //HiddenServicePort 80 127.0.0.1:8080
                 var dire = $"{LibDirMnt}/{svc.Name}";
-                DirectoryWithAcl.CreateDirectory(dire, "755", "root", "root");
+                Directory.CreateDirectory(dire);
                 lines.Add($"HiddenServiceDir {dire}");
                 lines.Add($"HiddenServicePort {svc.TorPort} {svc.IpAddress}");
             }
-            FileWithAcl.WriteAllLines(MainFilePath, lines, "700", "tor", "root");
+            File.WriteAllLines(MainFilePath, lines);
             #endregion
             Start();
         }

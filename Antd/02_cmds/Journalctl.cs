@@ -36,12 +36,12 @@ namespace Antd.cmds {
             private static readonly string ReportDir = "/cfg/antd/reports";
 
             public IEnumerable<string> Get() {
-                DirectoryWithAcl.CreateDirectory(ReportDir, "755", "root", "wheel");
+                Directory.CreateDirectory(ReportDir);
                 return Directory.EnumerateFiles(ReportDir).Where(_ => _.EndsWith("antd-report.txt"));
             }
 
             public void GenerateReport() {
-                DirectoryWithAcl.CreateDirectory(ReportDir, "755", "root", "wheel");
+                Directory.CreateDirectory(ReportDir);
                 var lines = new List<string> {
                     "+================================+",
                     $"|    Antd Report @ {DateTime.Now:yyyy-MM-dd}    |",
@@ -57,7 +57,7 @@ namespace Antd.cmds {
                 };
                 lines.AddRange(GetSecurityReport());
 
-                FileWithAcl.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines, "644", "root", "wheel");
+                File.WriteAllLines($"{ReportDir}/{Timestamp.Now}-antd-report.txt", lines);
             }
 
             private static IEnumerable<string> GetSecurityReport() {

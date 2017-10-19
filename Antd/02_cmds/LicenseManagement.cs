@@ -46,7 +46,7 @@ namespace Antd.cmds {
             };
             var lic = ApiConsumer.Post<string>($"{cloudaddress}license/create", dict);
             if(lic != null) {
-                FileWithAcl.WriteAllText(_licensePath, lic, "644", "root", "wheel");
+                File.WriteAllText(_licensePath, lic);
             }
         }
 

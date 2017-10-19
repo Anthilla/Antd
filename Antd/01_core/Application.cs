@@ -167,7 +167,7 @@ namespace Antd {
             const string limitsFile = "/etc/security/limits.conf";
             if(File.Exists(limitsFile)) {
                 if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
-                    FileWithAcl.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" }, "644", "root", "wheel");
+                    File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
                 }
             }
             Bash.Execute("ulimit -n 1024000", false);
@@ -260,10 +260,10 @@ namespace Antd {
 
         private static void GenerateSecret() {
             if(!File.Exists(Parameter.AntdCfgSecret)) {
-                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
+                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
             }
             if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
-                FileWithAcl.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen(), "644", "root", "wheel");
+                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
             }
         }
 
