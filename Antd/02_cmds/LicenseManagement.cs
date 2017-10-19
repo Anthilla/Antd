@@ -14,18 +14,18 @@ namespace Antd.cmds {
             if(File.Exists(_licensePath))
                 return;
             var cloudaddress = Application.CurrentConfiguration.WebService.Cloud;
-            //try {
-            //    var p = new Ping();
-            //    var pingReply = p.Send(cloudaddress);
-            //    if(pingReply?.Status != IPStatus.Success) {
-            //        ConsoleLogger.Log("[cloud] unreachable");
-            //        return;
-            //    }
-            //}
-            //catch(Exception) {
-            //    ConsoleLogger.Log("[cloud] unreachable");
-            //    return;
-            //}
+
+            try {
+                ConsoleLogger.Log($"[cloud] check {cloudaddress} ping");
+                var p = new Ping();
+                var pingReply = p.Send(cloudaddress, 500);
+                if(pingReply?.Status != IPStatus.Success) {
+                    return;
+                }
+            }
+            catch(Exception) {
+                return;
+            }
 
             if(string.IsNullOrEmpty(cloudaddress)) {
                 return;
@@ -54,14 +54,12 @@ namespace Antd.cmds {
             var cloudaddress = Application.CurrentConfiguration.WebService.Cloud;
             try {
                 var p = new Ping();
-                var pingReply = p.Send(cloudaddress);
+                var pingReply = p.Send(cloudaddress, 500);
                 if(pingReply?.Status != IPStatus.Success) {
-                    ConsoleLogger.Log("[cloud] unreachable");
                     return null;
                 }
             }
             catch(Exception) {
-                ConsoleLogger.Log("[cloud] unreachable");
                 return null;
             }
             if(string.IsNullOrEmpty(cloudaddress)) {
