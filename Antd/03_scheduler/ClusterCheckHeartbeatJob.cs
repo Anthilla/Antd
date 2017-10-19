@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 
 namespace Antd {
-    public class ClusterHeartbeatCheckJob : Job {
+    public class ClusterCheckHeartbeatJob : Job {
 
         #region [    Core Parameter    ]
         private bool _isRepeatable = true;

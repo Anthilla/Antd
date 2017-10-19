@@ -467,7 +467,8 @@ namespace Antd {
             Scheduler.ExecuteJob<FetchRemoteCommandsJob>();
             Scheduler.ExecuteJob<UpdateCloudInfoJob>();
             Scheduler.ExecuteJob<UpdateRestAgentJob>();
-            Scheduler.ExecuteJob<ClusterHeartbeatCheckJob>();
+            Scheduler.ExecuteJob<ClusterCheckHeartbeatJob>();
+            Scheduler.ExecuteJob<ClusterCheckHostnameJob>();
             Scheduler.ExecuteJob<MachineChecklistJob>();
         }
 

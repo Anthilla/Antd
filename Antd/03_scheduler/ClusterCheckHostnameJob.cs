@@ -53,6 +53,9 @@ namespace Antd {
                 return;
             }
             var clusterStatus = Application.ClusterChecklist;
+            if(clusterStatus == null) {
+                return;
+            }
             if(clusterStatus.Length < 1) {
                 return;
             }

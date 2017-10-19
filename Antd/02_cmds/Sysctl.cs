@@ -74,7 +74,7 @@ namespace Antd.cmds {
                 return;
             }
             var runningValue = File.ReadAllText(key).Trim();
-            if(CommonString.AreEquals(value, runningValue) == true) {
+            if(CommonString.AreEquals(value.Trim(), runningValue) == true) {
                 return;
             }
             ConsoleLogger.Log($"[sysctl] {key} = {value}");

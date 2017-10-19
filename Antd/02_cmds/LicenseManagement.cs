@@ -16,7 +16,6 @@ namespace Antd.cmds {
             var cloudaddress = Application.CurrentConfiguration.WebService.Cloud;
 
             try {
-                ConsoleLogger.Log($"[cloud] check {cloudaddress} ping");
                 var p = new Ping();
                 var pingReply = p.Send(cloudaddress, 500);
                 if(pingReply?.Status != IPStatus.Success) {

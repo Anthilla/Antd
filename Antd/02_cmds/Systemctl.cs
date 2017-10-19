@@ -121,21 +121,21 @@ namespace Antd.cmds {
         public static bool Start(string unit) {
             var args = CommonString.Append(startArg, " ", unit);
             CommonProcess.Do(systemctlFileLocation, args);
-            ConsoleLogger.Log($"[service] start {unit}");
+            ConsoleLogger.Log($"[systemctl] start {unit}");
             return true;
         }
 
         public static bool Stop(string unit) {
             var args = CommonString.Append(stopArg, " ", unit);
             CommonProcess.Do(systemctlFileLocation, args);
-            ConsoleLogger.Log($"[service] stop {unit}");
+            ConsoleLogger.Log($"[systemctl] stop {unit}");
             return true;
         }
 
         public static bool Restart(string unit) {
             var args = CommonString.Append(restartArg, " ", unit);
             CommonProcess.Do(systemctlFileLocation, args);
-            ConsoleLogger.Log($"[service] restart {unit}");
+            ConsoleLogger.Log($"[systemctl] restart {unit}");
             return true;
         }
 
@@ -177,21 +177,21 @@ namespace Antd.cmds {
         public static bool Enable(string unit) {
             var args = CommonString.Append(enableArg, " ", unit);
             CommonProcess.Do(systemctlFileLocation, args);
-            ConsoleLogger.Log($"[service] enable {unit}");
+            ConsoleLogger.Log($"[systemctl] enable {unit}");
             return true;
         }
 
         public static bool Disable(string unit) {
             var args = CommonString.Append(disableArg, " ", unit);
             CommonProcess.Do(systemctlFileLocation, args);
-            ConsoleLogger.Log($"[service] disable {unit}");
+            ConsoleLogger.Log($"[systemctl] disable {unit}");
             return true;
         }
 
         public static bool Mask(string unit) {
             var args = CommonString.Append(maskArg, " ", unit);
             CommonProcess.Do(systemctlFileLocation, args);
-            ConsoleLogger.Log($"[service] mask {unit}");
+            ConsoleLogger.Log($"[systemctl] mask {unit}");
             return true;
         }
 

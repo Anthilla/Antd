@@ -164,6 +164,28 @@
     <Compile Include="04_modules\FirewallModule.cs" />
     <Compile Include="04_modules\RemoteVfsService.cs" />
     <Compile Include="04_modules\WiFiModule.cs" />
+    <Compile Include="96_filesync\Rsync.cs" />
+    <Compile Include="96_filesync\sync\Adler32Checksum.cs" />
+    <Compile Include="96_filesync\sync\BlockLookup.cs" />
+    <Compile Include="96_filesync\sync\ChecksumFileReader.cs" />
+    <Compile Include="96_filesync\sync\ChecksumFileWriter.cs" />
+    <Compile Include="96_filesync\sync\ChecksumGenerator.cs" />
+    <Compile Include="96_filesync\sync\DeltaBlock.cs" />
+    <Compile Include="96_filesync\sync\DeltaFile.cs" />
+    <Compile Include="96_filesync\sync\Enums\CopyDeltaCommand.cs" />
+    <Compile Include="96_filesync\sync\Enums\LiteralDeltaCommand.cs" />
+    <Compile Include="96_filesync\sync\Exceptions\SyncFailedException.cs" />
+    <Compile Include="96_filesync\sync\Exceptions\WrongPathTypeException.cs" />
+    <Compile Include="96_filesync\sync\Fletcher32Checksum.cs" />
+    <Compile Include="96_filesync\sync\RDiffBinary.cs" />
+    <Compile Include="96_filesync\sync\Signature.cs" />
+    <Compile Include="96_filesync\sync\Strings\ChecksumFile.Designer.cs" />
+    <Compile Include="96_filesync\sync\Strings\DeltaFile.Designer.cs" />
+    <Compile Include="96_filesync\sync\Strings\Program.Designer.cs" />
+    <Compile Include="96_filesync\sync\Strings\RDiffBinary.Designer.cs" />
+    <Compile Include="96_filesync\sync\Strings\RollingBuffer.Designer.cs" />
+    <Compile Include="96_filesync\sync\Strings\Utility.Designer.cs" />
+    <Compile Include="96_filesync\sync\Utility.cs" />
     <Compile Include="97_parsers\BindParser.cs" />
     <Compile Include="97_parsers\DhcpParser.cs" />
     <Compile Include="97_parsers\NginxParser.cs" />
@@ -239,6 +261,7 @@
     <Content Include="01_core\_01_info.txt" />
     <Content Include="02_cmds\_02_info.txt" />
     <Content Include="03_scheduler\_03_info.txt" />
+    <Content Include="96_filesync\_96_info.txt" />
     <Content Include="97_parsers\_97_info.txt" />
     <Content Include="98_defaults\_98_info.txt" />
     <Content Include="99_common\_99_info.txt" />
@@ -267,6 +290,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="96_filesync\sync\Strings\ChecksumFile.resx" />
+    <EmbeddedResource Include="96_filesync\sync\Strings\DeltaFile.resx" />
+    <EmbeddedResource Include="96_filesync\sync\Strings\Program.resx" />
+    <EmbeddedResource Include="96_filesync\sync\Strings\RDiffBinary.resx" />
+    <EmbeddedResource Include="96_filesync\sync\Strings\RollingBuffer.resx" />
+    <EmbeddedResource Include="96_filesync\sync\Strings\Utility.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
