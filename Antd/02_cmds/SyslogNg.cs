@@ -7,7 +7,7 @@ namespace Antd.cmds {
     public class SyslogNg {
 
         private const string syslogngConfFile = "/etc/syslog-ng/syslog-ng.conf";
-        private const string syslogngTmpConfFile = "/etc/syslog-ng/syslog-ng.conf";
+        //private const string syslogngTmpConfFile = "/etc/syslog-ng/syslog-ng.conf";
         private const string sclConfFile = "/etc/syslog-ng/scl.conf";
         private const string sclTmpConfFile = "/etc/syslog-ng/scl.conf.tmp";
         private const string serviceName = "syslog-ng.service";
@@ -69,15 +69,15 @@ namespace Antd.cmds {
                 "log {source(s_Int0); destination(d_Int0);};",
                 ""
             };
-            File.WriteAllLines(syslogngTmpConfFile, lines);
-            var newHash = CommonFile.GetHash(syslogngTmpConfFile);
-            var existingHash = File.Exists(syslogngConfFile) ? CommonFile.GetHash(syslogngConfFile) : string.Empty;
-            if(CommonString.AreEquals(existingHash, newHash) == false) {
-                File.Copy(syslogngTmpConfFile, syslogngConfFile, true);
-            }
-            if(File.Exists(syslogngTmpConfFile)) {
-                File.Delete(syslogngTmpConfFile);
-            }
+            File.WriteAllLines(syslogngConfFile, lines);
+            //var newHash = CommonFile.GetHash(syslogngTmpConfFile);
+            //var existingHash = File.Exists(syslogngConfFile) ? CommonFile.GetHash(syslogngConfFile) : string.Empty;
+            //if(CommonString.AreEquals(existingHash, newHash) == false) {
+            //    File.Copy(syslogngTmpConfFile, syslogngConfFile, true);
+            //}
+            //if(File.Exists(syslogngTmpConfFile)) {
+            //    File.Delete(syslogngTmpConfFile);
+            //}
             ConsoleLogger.Log("[syslogng] apply conf");
             Start();
         }

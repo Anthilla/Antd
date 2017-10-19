@@ -40,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ignorethis_misc", "ignoreth
 		ignorethis_misc\samba-user.cnf = ignorethis_misc\samba-user.cnf
 		ignorethis_misc\script_domainController_ca.sh = ignorethis_misc\script_domainController_ca.sh
 		ignorethis_misc\setCaStructure.sh = ignorethis_misc\setCaStructure.sh
+		ignorethis_misc\smb.conf.bck = ignorethis_misc\smb.conf.bck
 		ignorethis_misc\todo-ui.txt = ignorethis_misc\todo-ui.txt
 		ignorethis_misc\TODO.txt = ignorethis_misc\TODO.txt
 		ignorethis_misc\zones_blockeddomain.hosts.tmpl = ignorethis_misc\zones_blockeddomain.hosts.tmpl
