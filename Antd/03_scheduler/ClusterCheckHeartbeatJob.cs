@@ -84,6 +84,7 @@ namespace Antd {
             //ConsoleLogger.Log($"[hb] check node {node.Hostname} {node.MachineUid}");
             var status = new ClusterNodeChecklistModel();
             status.TargetNodeMachineUid = node.MachineUid;
+            status.Hostname = node.Hostname;
 
             //controllo l'IP pubblico
             status.KnownPublicIpReach = PingStatus(node.PublicIp);

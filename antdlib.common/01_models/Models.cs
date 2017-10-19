@@ -879,6 +879,10 @@ namespace Antd.models {
         /// </summary>
         public string TargetNodeMachineUid { get; set; } = string.Empty;
         /// <summary>
+        /// Hostname del nodo analizzato
+        /// </summary>
+        public string Hostname { get; set; } = string.Empty;
+        /// <summary>
         /// Prova a raggiungere "internet" tramite un IP
         /// es  8.8.8.8
         /// </summary>

@@ -136,6 +136,7 @@
     <Compile Include="02_cmds\Dhcpd.cs" />
     <Compile Include="02_cmds\Firewall.cs" />
     <Compile Include="02_cmds\DirectoryWatcher.cs" />
+    <Compile Include="03_scheduler\ClusterCheckHostnameJob.cs" />
     <Compile Include="03_scheduler\MachineChecklistJob.cs" />
     <Compile Include="03_scheduler\ClusterCheckHeartbeatJob.cs" />
     <Compile Include="03_scheduler\UpdateRestAgentJob.cs" />
