@@ -3980,8 +3980,120 @@
             </div>
         </div>
     </div>
-
-
+    <!--SyslogNg-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div ng-click="loadSyslogNg()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                SyslogNg
+            </span>
+        </div>
+        <div class="content bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid; padding-left: 10px;">
+            <div class="width100pc padding20" ng-hide="SyslogNg!=null">
+                <span class="mif-spinner2 mif-ani-spin mif-4x fg-yellow"></span>
+            </div>
+            <div class="grid condensed fg-white" ng-show="SyslogNg!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>Enable</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <label class="switch" style="margin-top: 13px;">
+                            <input type="checkbox" ng-model="SyslogNg.Active">
+                            <span class="check"></span>
+                            <span class="caption padding-left10">
+                                <span ng-switch="SyslogNg.Active">
+                                    <span ng-switch-when="true">enabled</span>
+                                    <span ng-switch-when="false">disabled</span>
+                                    <span ng-switch-default>&nbsp;</span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+            <div class="grid condensed fg-white" ng-show="SyslogNg!=null&&SyslogNg.Active==true">
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>RootPath</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="SyslogNg.RootPath" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>PortLevelApplication</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="SyslogNg.PortLevelApplication" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>PortLevelSecurity</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="SyslogNg.PortLevelSecurity" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+                <div class="row cells6">
+                    <div class="cell colspan1 uppercase fg-anthilla-green">
+                        <p>PortLevelSystem</p>
+                    </div>
+                    <div class="cell colspan2">
+                        <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                            <input type="text" ng-model="SyslogNg.PortLevelSystem" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                        </div>
+                    </div>
+                    <div class="cell colspan2 padding-left20">
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+            <div class="grid condensed fg-white" style="margin-top: 1.75em;" ng-show="SyslogNg!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1">
+                    </div>
+                    <div class="cell colspan2 padding-right10">
+                        <button ng-click="click(saveSyslogNg)" ng-style="buttonStyle"><span class="{{iconSave}}" ng-style="iconStyle"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    </div>
+                    <div class="cell colspan2 padding-left10">
+                        <button ng-click="click(applySyslogNg)" ng-style="buttonStyle"><span class="{{iconApply}}" ng-style="iconStyle"></span>&nbsp;{{ 'APPLY' | translate }}</button>
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

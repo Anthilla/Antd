@@ -6,97 +6,108 @@ namespace Antd.cmds {
 
     public class SyslogNg {
 
-        private static readonly string CfgFile = $"{Parameter.AntdCfgConf}/syslogng.conf";
-        private const string ServiceName = "syslog-ng.service";
-        private const string MainFilePath = "/etc/syslog-ng/syslog-ng.conf";
-        private const string MainFilePathBackup = "/etc/syslog-ng/.syslog-ng.conf";
-
-        public static void Parse() {
-            return;
-        }
+        private const string syslogngConfFile = "/etc/syslog-ng/syslog-ng.conf";
+        private const string syslogngTmpConfFile = "/etc/syslog-ng/syslog-ng.conf";
+        private const string sclConfFile = "/etc/syslog-ng/scl.conf";
+        private const string sclTmpConfFile = "/etc/syslog-ng/scl.conf.tmp";
+        private const string serviceName = "syslog-ng.service";
 
         public static void Apply() {
             var options = Application.CurrentConfiguration.Services.SyslogNg;
             if(options == null) {
                 return;
             }
-            Stop();
-            #region [    syslog-ng.conf generation    ]
-            if(File.Exists(MainFilePath)) {
-                if(File.Exists(MainFilePathBackup)) {
-                    File.Delete(MainFilePathBackup);
-                }
-                File.Copy(MainFilePath, MainFilePathBackup);
-            }
+            WriteSclFile();
             var lines = new List<string> {
                 "@version: 3.7",
                 "@include \"scl.conf\"",
-                "options {"
+                "",
+                "options {",
+                "    threaded(yes);",
+                "    chain_hostnames(no);",
+                "    stats_freq(43200);",
+                "    mark_freq(3600);",
+                "    bad_hostname(\"^gconfd$\",",
+                "    check_hostname(yes);",
+                "    create_dirs(yes);",
+                "    dir_perm(yes);",
+                "    dns_cache(yes);",
+                "    keep_hostname(yes);",
+                "    perm(0644);",
+                "    time_reap(30);",
+                "    time_reopen(10);",
+                "    use_dns(yes);",
+                "    use_fqdn(yes);",
+                "    flush_lines(0);",
+                "};",
+                "",
+                "source s_Int0 {internal();};",
+                "",
+                "source s_Net1 {",
+                CommonString.Append("    udp(port(", options.PortLevelApplication, ") flags(\"sanitize-utf8\",\"syslog-protocol\"));"),
+                CommonString.Append("    tcp(port(", options.PortLevelApplication, ") flags(\"sanitize-utf8\",\"syslog-protocol\"));"),
+                "};",
+                "",
+                "source s_Net2 {",
+                CommonString.Append("    udp(port(", options.PortLevelSecurity, ") flags(\"sanitize-utf8\",\"syslog-protocol\"));"),
+                CommonString.Append("    tcp(port(", options.PortLevelSecurity, ") flags(\"sanitize-utf8\",\"syslog-protocol\"));"),
+                "};",
+                "",
+                "source s_Net3 {",
+                CommonString.Append("    udp(port(", options.PortLevelSystem, ") flags(\"sanitize-utf8\",\"syslog-protocol\"));"),
+                CommonString.Append("    tcp(port(", options.PortLevelSystem, ") flags(\"sanitize-utf8\",\"syslog-protocol\"));"),
+                "};",
+                "",
+                CommonString.Append("destination d_Net1 { file(\"", options.RootPath,"/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/Application.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };"),
+                CommonString.Append("destination d_Net2 { file(\"", options.RootPath,"/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/Security.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };"),
+                CommonString.Append("destination d_Net3 { file(\"", options.RootPath,"/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/System.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };"),
+                CommonString.Append("destination d_Int0 { file(\"", options.RootPath,"/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/Int0.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };"),
+                "",
+                "log {source(s_Net1); destination(d_Net1);};",
+                "log {source(s_Net2); destination(d_Net2);};",
+                "log {source(s_Net3); destination(d_Net3);};",
+                "log {source(s_Int0); destination(d_Int0);};",
+                ""
             };
-            lines.Add($"threaded({options.Threaded});");
-            lines.Add($"chain_hostnames({options.ChainHostname});");
-            lines.Add($"stats_freq({options.StatsFrequency});");
-            lines.Add($"mark_freq({options.MarkFrequency});");
-            lines.Add("bad_hostname(\"^gconfd$\");");
-            lines.Add($"check_hostname({options.CheckHostname});");
-            lines.Add($"create_dirs({options.CreateDirectories});");
-            lines.Add($"dir_perm({options.DirAcl});");
-            lines.Add($"dns_cache({options.DnsCache});");
-            lines.Add($"keep_hostname({options.KeepHostname});");
-            lines.Add($"perm({options.Acl});");
-            lines.Add("time_reap(30);");
-            lines.Add("time_reopen(10);");
-            lines.Add($"use_dns({options.UseDns});");
-            lines.Add($"use_fqdn({options.UseFqdn});");
-            lines.Add("flush_lines(0);");
-            lines.Add("};");
-            lines.Add("");
-            lines.Add("source s_Int0 {internal();};");
-
-            lines.Add("source s_Net1 {");
-            lines.Add($"udp(port({options.PortLevelApplication}) flags(\"sanitize-utf8\",\"syslog-protocol\"));");
-            lines.Add($"tcp(port({options.PortLevelApplication}) flags(\"sanitize-utf8\",\"syslog-protocol\"));");
-            lines.Add("};");
-            lines.Add("source s_Net2 {");
-            lines.Add($"udp(port({options.PortLevelSecurity}) flags(\"sanitize-utf8\",\"syslog-protocol\"));");
-            lines.Add($"tcp(port({options.PortLevelSecurity}) flags(\"sanitize-utf8\",\"syslog-protocol\"));");
-            lines.Add("};");
-            lines.Add("source s_Net3 {");
-            lines.Add($"udp(port({options.PortLevelSystem}) flags(\"sanitize-utf8\",\"syslog-protocol\"));");
-            lines.Add($"tcp(port({options.PortLevelSystem}) flags(\"sanitize-utf8\",\"syslog-protocol\"));");
-            lines.Add("};");
-            lines.Add("");
-
-            lines.Add("destination d_Net1 {{ file(\"/var/log/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/Application.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); }};");
-            lines.Add("destination d_Net2 { file(\"/var/log/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/Security.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };");
-            lines.Add("destination d_Net3 { file(\"/var/log/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/System.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };");
-            lines.Add("destination d_Int0 { file(\"/var/log/00_HOSTS_00/$HOST/$YEAR/$MONTH/$DAY/Int0.log\" owner(root) group(wheel) perm(0644) dir_perm(0755) create_dirs(yes)); };");
-            lines.Add("");
-
-            lines.Add("log {source(s_Net1); destination(d_Net1);};");
-            lines.Add("log {source(s_Net2); destination(d_Net2);};");
-            lines.Add("log {source(s_Net3); destination(d_Net3);};");
-            lines.Add("log {source(s_Int0); destination(d_Int0);};");
-            lines.Add("");
-
-            FileWithAcl.WriteAllLines(MainFilePath, lines, "644", "root", "wheel");
-            #endregion
+            File.WriteAllLines(syslogngTmpConfFile, lines);
+            var newHash = CommonFile.GetHash(syslogngTmpConfFile);
+            var existingHash = File.Exists(syslogngConfFile) ? CommonFile.GetHash(syslogngConfFile) : string.Empty;
+            if(CommonString.AreEquals(existingHash, newHash) == false) {
+                File.Copy(syslogngTmpConfFile, syslogngConfFile, true);
+            }
+            if(File.Exists(syslogngTmpConfFile)) {
+                File.Delete(syslogngTmpConfFile);
+            }
+            ConsoleLogger.Log("[syslogng] apply conf");
             Start();
         }
 
-        public static void Stop() {
-            Systemctl.Stop(ServiceName);
-            ConsoleLogger.Log("[syslogng] stop");
+        private static void WriteSclFile() {
+            var lines = new string[] {
+                "@define scl-root \"`syslog-ng-data`/include/scl\"",
+                "@define include-path \"`include-path`:`syslog-ng-data`/include\"",
+                "",
+                "@include 'scl/*/*.conf'"
+            };
+            File.WriteAllLines(sclTmpConfFile, lines);
+            var newHash = CommonFile.GetHash(sclTmpConfFile);
+            var existingHash = File.Exists(sclConfFile) ? CommonFile.GetHash(sclConfFile) : string.Empty;
+            if(CommonString.AreEquals(existingHash, newHash) == false) {
+                File.Copy(sclTmpConfFile, sclConfFile, true);
+            }
+            if(File.Exists(sclTmpConfFile)) {
+                File.Delete(sclTmpConfFile);
+            }
         }
 
         public static void Start() {
-            if(Systemctl.IsEnabled(ServiceName) == false) {
-                Systemctl.Enable(ServiceName);
+            if(Systemctl.IsEnabled(serviceName) == false) {
+                Systemctl.Enable(serviceName);
             }
-            if(Systemctl.IsActive(ServiceName) == false) {
-                Systemctl.Restart(ServiceName);
+            if(Systemctl.IsActive(serviceName) == false) {
+                Systemctl.Restart(serviceName);
             }
-            ConsoleLogger.Log("[syslogng] start");
+            ConsoleLogger.Log("[syslogng] start service");
         }
     }
 }

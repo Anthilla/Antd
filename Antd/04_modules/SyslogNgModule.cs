@@ -8,21 +8,20 @@ namespace Antd.Modules {
 
         public SyslogNgModule() : base("/syslogng") {
 
-            Post["/apply"] = x => {
-                SyslogNg.Apply();
-                return HttpStatusCode.OK;
+            Get["/"] = x => {
+                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Services.SyslogNg);
             };
 
-            Post["/start"] = x => {
-                SyslogNg.Start();
-                return HttpStatusCode.OK;
-            };
-
-            Post["/set"] = x => {
+            Post["/save"] = x => {
                 string data = Request.Form.Data;
                 var objects = JsonConvert.DeserializeObject<SyslogNgModel>(data);
                 Application.CurrentConfiguration.Services.SyslogNg = objects;
                 ConfigRepo.Save();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/apply"] = x => {
+                SyslogNg.Apply();
                 return HttpStatusCode.OK;
             };
         }

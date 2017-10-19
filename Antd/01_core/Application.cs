@@ -182,6 +182,7 @@ namespace Antd {
             Directory.CreateDirectory(Parameter.AntdCfgConf);
             Directory.CreateDirectory(Parameter.AntdCfgKeys);
             Directory.CreateDirectory(Parameter.AntdCfgVfs);
+            Directory.CreateDirectory(Parameter.AntdCfgLog);
             Directory.CreateDirectory(Parameter.AntdCfgSetup);
             if(!File.Exists($"{Parameter.AntdCfgSetup}/setup.conf")) {
                 File.WriteAllText($"{Parameter.AntdCfgSetup}/setup.conf", "echo Hello World!");
@@ -374,7 +375,7 @@ namespace Antd {
 
         private static void Syslog() {
             if(CurrentConfiguration.Services.SyslogNg.Active) {
-                cmds.SyslogNg.Apply();
+                SyslogNg.Apply();
             }
         }
 
@@ -466,7 +467,7 @@ namespace Antd {
             Scheduler.ExecuteJob<FetchRemoteCommandsJob>();
             Scheduler.ExecuteJob<UpdateCloudInfoJob>();
             Scheduler.ExecuteJob<UpdateRestAgentJob>();
-            Scheduler.ExecuteJob<ClusterCheckHeartbeatJob>();
+            Scheduler.ExecuteJob<ClusterHeartbeatCheckJob>();
             Scheduler.ExecuteJob<MachineChecklistJob>();
         }
 

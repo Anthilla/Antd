@@ -1112,7 +1112,34 @@ function MachineConfigController($scope, $http, $interval, $timeout, $filter) {
         return result;
     }
 
+    $scope.SyslogNg = null;
 
+    $scope.loadSyslogNg = function () {
+        console.log("loadSyslogNg");
+        $scope.SyslogNg = null;
+        $http.get("/syslogng").success(function (data) {
+            $scope.SyslogNg = data
+        });
+    }
+
+    $scope.saveSyslogNg = function () {
+        console.log("saveSyslogNg");
+        var data = $.param({
+            Data: angular.toJson($scope.SyslogNg)
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/save", data).then(function () {
+            $scope.loadSyslogNg();
+        }, function (r) { console.log(r); });
+    }
+
+    $scope.applySyslogNg = function () {
+        console.log("applySyslogNg");
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/syslogng/apply").then(function () {
+            $scope.loadSyslogNg();
+        }, function (r) { console.log(r); });
+    }
 
 
 

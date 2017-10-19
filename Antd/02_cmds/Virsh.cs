@@ -127,5 +127,17 @@ namespace Antd.cmds {
                 }
             }
         }
+
+        /// <summary>
+        /// Test di migrazione vm
+        /// step 1) sync dischi
+        /// step 2) virsh migrate
+        ///  
+        /// rsync --progress vhd001.qed root@192.168.111.102:/Data/Data01/002_NET_HWK_Debian/vhd001.qed
+        /// virsh migrate 002_NET_HWK_Debian qemu+ssh://root@box02/system --live --unsafe --verbose
+        /// </summary>
+        public static void MigrateVm(string domain) {
+
+        }
     }
 }
