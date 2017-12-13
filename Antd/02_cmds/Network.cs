@@ -169,6 +169,7 @@ namespace Antd.cmds {
                 ConsoleLogger.Log($"[network] start prepare");
                 for(var i = 0; i < running.Length; i++) {
                     var nif = running[i];
+                    if(nif.Type == models.NetworkAdapterType.Virtual) { continue; }
                     Thread thread = new Thread(() => {
                         SetInterfaceHardwareConfiguration(nif);
                         Ip.EnableNetworkAdapter(nif.Id);

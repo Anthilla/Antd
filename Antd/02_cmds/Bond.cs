@@ -26,7 +26,7 @@ namespace Antd.cmds {
             var running = Application.RunningConfiguration.Network.Bonds;
             for(var i = 0; i < current.Length; i++) {
                 var br = current[i];
-                var run = running.FirstOrDefault(_ => _.Id == br.Id).ToString();
+                var run = running.FirstOrDefault(_ => _.Id == br.Id)?.ToString();
                 if(CommonString.AreEquals(run, br.ToString()) == false) {
                     Set(br.Id);
                     for(var l = 0; l < br.Lower.Length; l++) {
@@ -43,10 +43,15 @@ namespace Antd.cmds {
             Ip.AddNetworkAdapted(bondName, networkAdapterType);
             Ip.SetNetworkAdapterTxqueuelen(bondName, bondTxqueuelen);
             Ip.DisableNetworkAdapter(bondName);
-            File.WriteAllText($"/sys/class/net/{bondName}/bonding/mode", "4");
-            File.WriteAllText($"/sys/class/net/{bondName}/bonding/lacp_rate", "1");
-            File.WriteAllText($"/sys/class/net/{bondName}/lacp_rate", "1");
-            File.WriteAllText($"/sys/class/net/{bondName}/bonding/miimon", "100");
+
+            var bondDirectory = $"/sys/class/net/{bondName}";
+            if(Directory.Exists(bondDirectory)) {
+                Echo.PipeToFile("4", $"/sys/class/net/{bondName}/bonding/mode");
+                Echo.PipeToFile("1", $"/sys/class/net/{bondName}/bonding/lacp_rate");
+                Echo.PipeToFile("1", $"/sys/class/net/{bondName}/lacp_rate");
+                Echo.PipeToFile("100", $"/sys/class/net/{bondName}/bonding/miimon");
+            }
+
             Ip.EnableNetworkAdapter(bondName);
             return true;
         }
