@@ -46,10 +46,10 @@ namespace Antd.cmds {
 
             var bondDirectory = $"/sys/class/net/{bondName}";
             if(Directory.Exists(bondDirectory)) {
-                Echo.PipeToFile("4", $"/sys/class/net/{bondName}/bonding/mode");
-                Echo.PipeToFile("1", $"/sys/class/net/{bondName}/bonding/lacp_rate");
-                Echo.PipeToFile("1", $"/sys/class/net/{bondName}/lacp_rate");
-                Echo.PipeToFile("100", $"/sys/class/net/{bondName}/bonding/miimon");
+                Echo.PipeToFile("4", $"{bondDirectory}/bonding/mode");
+                Echo.PipeToFile("1", $"{bondDirectory}/bonding/lacp_rate");
+                Echo.PipeToFile("1", $"{bondDirectory}/lacp_rate");
+                Echo.PipeToFile("100", $"{bondDirectory}/bonding/miimon");
             }
 
             Ip.EnableNetworkAdapter(bondName);
