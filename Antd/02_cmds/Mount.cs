@@ -62,6 +62,9 @@ namespace Antd.cmds {
                 var targetFile = MountHelper.ConvertFileDirsPathToTarget(files[i]);
                 if(MountHelper.IsAlreadyMounted(targetFile) == false) {
                     ConsoleLogger.Log($"[mount] {files[i]} -> {targetFile}");
+                    if(!File.Exists(targetFile)) {
+                        File.WriteAllBytes(targetFile, new byte[] { 0 });
+                    }
                     MountWithBind(files[i], targetFile);
                 }
             }
