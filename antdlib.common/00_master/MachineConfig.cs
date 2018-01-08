@@ -326,7 +326,7 @@ namespace Antd {
         public string Alias { get; set; } = string.Empty;
 
         /// <summary>
-        /// La password salvata deve essere come hashing compatibile con shadow e passwd
+        /// La password deve essere applicata come hashing compatibile con shadow e passwd
         /// Se l'utente non è abilitato la password viene settata vuota
         /// </summary>
         public string Password { get; set; } = string.Empty;
@@ -360,6 +360,7 @@ namespace Antd {
         /// <summary>
         /// Dati dell'utente da confrontare
         /// Saranno oscurati, es: hashing
+        /// Se l'utente non è abilitato la password viene settata vuota
         /// </summary>
         public string[] Claims { get; set; } = new string[0];
     }

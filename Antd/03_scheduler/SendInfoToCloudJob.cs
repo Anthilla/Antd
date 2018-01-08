@@ -58,13 +58,17 @@ namespace Antd {
                 return;
             }
             var servicesNames = new List<string>();
-            var antdUnits = Directory.EnumerateFiles("/mnt/cdrom/Units/antd.target.wants").ToArray();
-            for(var i = 0; i < antdUnits.Length; i++) {
-                servicesNames.Add(Path.GetFileName(antdUnits[i]));
+            if(Directory.Exists(Parameter.AntdUnits)) {
+                var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits).ToArray();
+                for(var i = 0; i < antdUnits.Length; i++) {
+                    servicesNames.Add(Path.GetFileName(antdUnits[i]));
+                }
             }
-            var applicativeUnits = Directory.EnumerateFiles("/mnt/cdrom/Units/applicative.target.wants").ToArray();
-            for(var i = 0; i < applicativeUnits.Length; i++) {
-                servicesNames.Add(Path.GetFileName(applicativeUnits[i]));
+            if(Directory.Exists(Parameter.ApplicativeUnits)) {
+                var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits).ToArray();
+                for(var i = 0; i < applicativeUnits.Length; i++) {
+                    servicesNames.Add(Path.GetFileName(applicativeUnits[i]));
+                }
             }
             var arrServicesNames = servicesNames.ToArray();
             var services = new ServiceStatus[arrServicesNames.Length];
@@ -80,7 +84,7 @@ namespace Antd {
             for(var i = 0; i < du.Length; i++) {
                 dus[i] = new DiskUsageStatus {
                     Device = du[i].MountedOn,
-                    Used = int.Parse(du[i].UsePercentage.Replace("%", ""))
+                    Used = ParseInt(du[i].UsePercentage.Replace("%", ""))
                 };
             }
 
@@ -96,6 +100,11 @@ namespace Antd {
                     BuffCache = ParseInt(free[i].BuffCache),
                     Available = ParseInt(free[i].Available)
                 };
+            }
+
+            if(frees.Length == 0 && du.Length == 0) {
+                ConsoleLogger.Log($"[mqtt] mqtt server is unreachable");
+                return;
             }
 
             var status = new CurrentMachineStatus() {

@@ -48,23 +48,21 @@ namespace Antd.cmds {
             //}
             var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             for(var i = 0; i < directories.Length; i++) {
-                var currentDirectory = directories[i];
-                var targetDirectory = MountHelper.ConvertDirectoryDirsPathToTarget(currentDirectory);
+                var targetDirectory = MountHelper.ConvertDirectoryDirsPathToTarget(directories[i]);
                 if(MountHelper.IsAlreadyMounted(targetDirectory) == false) {
-                    if(Directory.Exists(currentDirectory)) {
-                        ConsoleLogger.Log($"[mount] {currentDirectory} -> {targetDirectory}");
+                    if(Directory.Exists(directories[i])) {
+                        ConsoleLogger.Log($"[mount] {directories[i]} -> {targetDirectory}");
                         Directory.CreateDirectory(targetDirectory);
-                        MountWithBind(currentDirectory, targetDirectory);
+                        MountWithBind(directories[i], targetDirectory);
                     }
                 }
             }
             var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
             for(var i = 0; i < files.Length; i++) {
-                var currentFile = files[i];
-                var targetFile = MountHelper.ConvertFileDirsPathToTarget(currentFile);
+                var targetFile = MountHelper.ConvertFileDirsPathToTarget(files[i]);
                 if(MountHelper.IsAlreadyMounted(targetFile) == false) {
-                    ConsoleLogger.Log($"[mount] {currentFile} -> {targetFile}");
-                    MountWithBind(currentFile, targetFile);
+                    ConsoleLogger.Log($"[mount] {files[i]} -> {targetFile}");
+                    MountWithBind(files[i], targetFile);
                 }
             }
         }

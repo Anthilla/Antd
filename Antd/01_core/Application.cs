@@ -501,7 +501,7 @@ namespace Antd {
                     .WithTopic($"/control/{CurrentConfiguration.Host.MachineUid}/{CurrentConfiguration.Host.PartNumber}/{CurrentConfiguration.Host.SerialNumber}")
                     .Build()
                     );
-                ConsoleLogger.Log("[mqtt] connected");
+                ConsoleLogger.Log($"[mqtt] connected to {CurrentConfiguration.WebService.Cloud}");
                 _connected_to_cloud = true;
             };
             MQTTCLIENT.Disconnected += async (s, e) => {

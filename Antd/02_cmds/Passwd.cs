@@ -30,16 +30,10 @@ namespace Antd.cmds {
 
         public static bool Set() {
             var current = Application.CurrentConfiguration.Users.SystemUsers;
-            var running = Application.CurrentConfiguration.Users.SystemUsers;
             for(var i = 0; i < current.Length; i++) {
-                var currentUser = current[i];
-                var runningUser = running.FirstOrDefault(_ => _.Alias == currentUser.Alias);
-                if(runningUser == null) {
-                    AddUser(currentUser.Alias);
-                }
-                if(CommonString.AreEquals(currentUser.Password, runningUser.Password) == false) {
-                    SetPassword(currentUser.Alias, currentUser.Password);
-                }
+                AddUser(current[i].Alias);
+                var password = HashPasswd(current[i].Password);
+                SetPassword(current[i].Alias, password);
             }
             return true;
         }
@@ -49,13 +43,14 @@ namespace Antd.cmds {
         }
 
         public static string HashPasswd(string input) {
-            var result = CommonProcess.Execute(mkpasswdFileLocation, input).ToArray();
+            var arg = CommonString.Append("-m sha-512 '", input, "'");
+            var result = CommonProcess.Execute(mkpasswdFileLocation, arg).ToArray();
             return result[0];
         }
 
         public static void SetPassword(string user, string password) {
             var args = CommonString.Append("-p '", password, "' ", user);
-            CommonProcess.Do(useraddFileLocation, user);
+            CommonProcess.Do(usermodFileLocation, args);
         }
     }
 }

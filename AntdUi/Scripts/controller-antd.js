@@ -1141,6 +1141,42 @@ function MachineConfigController($scope, $http, $interval, $timeout, $filter) {
         }, function (r) { console.log(r); });
     }
 
+    $scope.UserSystem = null;
+
+    $scope.NewUserSystem = {
+        Active: true,
+        Alias: '',
+        Password: ''
+    };
+
+    $scope.loadUserSystem = function () {
+        console.log("loadUserSystem");
+        $scope.UserSystem = null;
+        $http.get("/user/get/system").success(function (data) {
+            $scope.UserSystem = data
+        });
+    }
+
+    $scope.saveUserSystem = function () {
+        console.log("saveUserSystem");
+        var data = $.param({
+            Data: angular.toJson($scope.UserSystem)
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/user/save/system", data).then(function () {
+            $scope.loadUserSystem();
+        }, function (r) { console.log(r); });
+    }
+
+    $scope.applyUserSystem = function () {
+        console.log("applyUserSystem");
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/user/apply/system").then(function () {
+            $scope.loadUserSystem();
+        }, function (r) { console.log(r); });
+    }
+
+
 
 
 

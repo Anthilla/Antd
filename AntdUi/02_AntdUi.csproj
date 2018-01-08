@@ -140,6 +140,7 @@
     <Compile Include="04_modules\DmesgModule.cs" />
     <Compile Include="04_modules\JournalctlModule.cs" />
     <Compile Include="04_modules\SyslogNgModule.cs" />
+    <Compile Include="04_modules\UserModule.cs" />
     <Compile Include="04_modules\VirshModule.cs" />
     <Compile Include="04_modules\SshModule.cs" />
     <Compile Include="04_modules\RssdpModule.cs" />

@@ -226,8 +226,6 @@
     <Compile Include="02_cmds\Versioning.cs" />
     <Compile Include="03_scheduler\ZfsSnapshotLaunchJob.cs" />
     <Compile Include="03_scheduler\ZfsSnapshotCleanupJob.cs" />
-    <Compile Include="03_scheduler\FetchRemoteCommandsJob.cs" />
-    <Compile Include="03_scheduler\UpdateCloudInfoJob.cs" />
     <Compile Include="04_modules\BootModule.cs" />
     <Compile Include="04_modules\SetupCommandsModule.cs" />
     <Compile Include="04_modules\NsswitchModule.cs" />

@@ -26,12 +26,12 @@ namespace Antd {
             return source.Replace(Parameter.RepoDirs, "").Replace("FILE", "").Replace("_", "/").Replace("\\", "/").Replace("//", "/");
         }
 
-        public static bool IsAlreadyMounted(string directory) {
+        public static bool IsAlreadyMounted(string path) {
             if(!File.Exists("/proc/mounts")) {
                 return false;
             }
             var procMounts = File.ReadAllLines("/proc/mounts");
-            return procMounts.Any(_ => _.Contains(directory));
+            return procMounts.Any(_ => _.Contains(path));
         }
 
         public static bool IsAlreadyMounted(string source, string destination) {

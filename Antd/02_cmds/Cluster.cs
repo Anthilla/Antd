@@ -185,7 +185,7 @@ namespace Antd.cmds {
             ConsoleLogger.Log("[cluster] set configuration file");
             var lines = new string[] {
                 "vrrp_script chk_haproxy {",
-                "    script \"killall -0 haproxy\"",
+                "    script \"/usr/bin/killall -0 haproxy\"",
                 "    interval 30",
                 "    weight 2",
                 "}",

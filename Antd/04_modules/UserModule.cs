@@ -8,23 +8,31 @@ namespace Antd.Modules {
 
         public UserModule() : base("/user") {
 
-            Post["/apply"] = x => {
+            Get["/get/system"] = x => {
+                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.SystemUsers);
+            };
+
+            Get["/get/applicative"] = x => {
+                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.ApplicativeUsers);
+            };
+
+            Post["/apply/system"] = x => {
                 Passwd.Set();
                 return HttpStatusCode.OK;
             };
 
-            Post["/set/users/applicative"] = x => {
+            Post["/save/system"] = x => {
                 string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<ApplicativeUser[]>(data);
-                Application.CurrentConfiguration.Users.ApplicativeUsers = objects;
+                var objects = JsonConvert.DeserializeObject<SystemUser[]>(data);
+                Application.CurrentConfiguration.Users.SystemUsers = objects;
                 ConfigRepo.Save();
                 return HttpStatusCode.OK;
             };
 
-            Post["/set/users/system"] = x => {
+            Post["/save/applicative"] = x => {
                 string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<SystemUser[]>(data);
-                Application.CurrentConfiguration.Users.SystemUsers = objects;
+                var objects = JsonConvert.DeserializeObject<ApplicativeUser[]>(data);
+                Application.CurrentConfiguration.Users.ApplicativeUsers = objects;
                 ConfigRepo.Save();
                 return HttpStatusCode.OK;
             };
