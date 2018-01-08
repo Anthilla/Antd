@@ -153,6 +153,8 @@ namespace Antd {
             PrepareGuiService();
             StartRssdp();
             LaunchJobs();
+            ConnectToCloudViaMqttAsync().GetAwaiter().GetResult();
+            StartCloudUpdateJob();
             Test();
             #endregion
 
