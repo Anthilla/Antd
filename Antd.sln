@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A079F4E6-D4D4-42FD-A7A5-A9DFB6DDB61B}"
 	ProjectSection(SolutionItems) = preProject
@@ -72,6 +72,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ignorethis_OldAntdUi", "ignorethis_OldAntdUi\ignorethis_OldAntdUi.csproj", "{3EF41AE3-B2CC-456F-95F9-9E3C6F8A76D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "99_AnthillaTest", "AnthillaTest\99_AnthillaTest.csproj", "{AD5252FA-6EEF-4150-BC38-EA0F166B95CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05_antd-tools", "antd-tools\05_antd-tools.csproj", "{B4B2A51B-817F-4452-8EA1-152C5F9F457D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -444,8 +446,41 @@ Global
 		{AD5252FA-6EEF-4150-BC38-EA0F166B95CF}.Release|x64.Build.0 = Release|Any CPU
 		{AD5252FA-6EEF-4150-BC38-EA0F166B95CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD5252FA-6EEF-4150-BC38-EA0F166B95CF}.Release|x86.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug_Ubuntu|x64.ActiveCfg = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug_Ubuntu|x64.Build.0 = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug_Ubuntu|x86.ActiveCfg = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug_Ubuntu|x86.Build.0 = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug|x64.Build.0 = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Debug|x86.Build.0 = Debug|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Library|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Library|Any CPU.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Library|x64.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Library|x64.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Library|x86.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Library|x86.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release_Ubuntu|x64.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release_Ubuntu|x64.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release_Ubuntu|x86.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release_Ubuntu|x86.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release|x64.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release|x64.Build.0 = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release|x86.ActiveCfg = Release|Any CPU
+		{B4B2A51B-817F-4452-8EA1-152C5F9F457D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {361D59AA-D751-469D-9D42-A02BE91593A7}
 	EndGlobalSection
 EndGlobal

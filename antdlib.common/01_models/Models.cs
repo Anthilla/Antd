@@ -46,6 +46,46 @@ namespace Antd.models {
         public string Available { get; set; }
     }
 
+    public class FreeStatus {
+        public string Name { get; set; }
+        public int Total { get; set; }
+        public int Used { get; set; }
+        public int Free { get; set; }
+        public int Shared { get; set; }
+        public int BuffCache { get; set; }
+        public int Available { get; set; }
+    }
+
+    public class DiskUsageStatus {
+        public string Device { get; set; }
+        public int Used { get; set; }
+    }
+
+    public class DateStatus {
+        public DateTime Date1 { get; set; }
+        public string Date2 { get; set; }
+    }
+
+    public class ServiceStatus {
+        public string Name { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class MachineIdStatus {
+        public Guid PartNumber { get; set; }
+        public Guid SerialNumber { get; set; }
+        public Guid MachineUid { get; set; }
+    }
+
+    public class CurrentMachineStatus {
+        public string PublicIp { get; set; }
+        public MachineIdStatus MachineId { get; set; }
+        public DateStatus Date { get; set; }
+        public FreeStatus[] Free { get; set; }
+        public DiskUsageStatus[] DiskUsage { get; set; }
+        public ServiceStatus[] Services { get; set; }
+    }
+
     public class LosetupModel {
         public string Name { get; set; }
         public string Sizelimit { get; set; }

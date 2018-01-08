@@ -43,7 +43,6 @@ namespace Antd.cmds {
             Ip.AddNetworkAdapted(bondName, networkAdapterType);
             Ip.SetNetworkAdapterTxqueuelen(bondName, bondTxqueuelen);
             Ip.DisableNetworkAdapter(bondName);
-
             var bondDirectory = $"/sys/class/net/{bondName}";
             if(Directory.Exists(bondDirectory)) {
                 Echo.PipeToFile("4", $"{bondDirectory}/bonding/mode");
@@ -51,7 +50,6 @@ namespace Antd.cmds {
                 Echo.PipeToFile("1", $"{bondDirectory}/lacp_rate");
                 Echo.PipeToFile("100", $"{bondDirectory}/bonding/miimon");
             }
-
             Ip.EnableNetworkAdapter(bondName);
             return true;
         }

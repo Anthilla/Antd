@@ -55,7 +55,7 @@ namespace Antd.cmds {
                 $"    psk=\"{conf.Password}\"",
                 "}"
             };
-            var confFilePath = CommonString.Append(wpasupplicantEtcFolder, "wpa_supplicant-", conf.Interface, ".conf");
+            var confFilePath = CommonString.Append(wpasupplicantEtcFolder, "/wpa_supplicant-", conf.Interface, ".conf");
             File.WriteAllLines(confFilePath, lines);
         }
 

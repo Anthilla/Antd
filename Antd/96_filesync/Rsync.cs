@@ -20,7 +20,7 @@ namespace Antd {
 
         private static string SignatureFileExtension = ".sign";
         private static string DeltaFileExtension = ".delta";
-        private static string TmpFileExtension = ".tmp";
+        //private static string TmpFileExtension = ".tmp";
 
         #region [    Sync: local ←→ local    ]
         public static void SyncDirectory(string sourcePath, string destinationPath, bool recursive = false) {

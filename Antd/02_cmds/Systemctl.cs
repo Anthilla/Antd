@@ -8,7 +8,7 @@ namespace Antd.cmds {
 
     public class Systemctl {
 
-        private const string systemctlFileLocation = "/usr/bin/systemctl";
+        private const string systemctlFileLocation = "/bin/systemctl";
         private const string daemonReloadArg = "daemon-reload";
         private const string startArg = "start";
         private const string stopArg = "stop";

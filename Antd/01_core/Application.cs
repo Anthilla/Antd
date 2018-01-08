@@ -3,6 +3,9 @@ using Antd.models;
 using anthilla.core;
 using anthilla.crypto;
 using anthilla.scheduler;
+using MQTTnet;
+using MQTTnet.Core;
+using MQTTnet.Core.Client;
 using Nancy;
 using Nancy.Hosting.Self;
 using System;
@@ -10,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Antd {
 
@@ -19,7 +23,7 @@ namespace Antd {
     ///     - aggiornare i valori in maniera parziale/contestuale per ridurre il carico
     ///     - aggiungere al Modulo Nancy il get parziale/contestuale
     /// - aggiungere configurazione Storage > Retention/Gestione Spazio Libero
-    /// - consulta log -> journalctl syslog
+    /// - consulta log -> journalctl / syslog
     /// - re-implementa "rsync"
     /// </summary>
     internal class Application {
@@ -45,6 +49,9 @@ namespace Antd {
         public static string Agent;
 
         public static LibvirtWatcher LIBVIRT_WATCHER;
+        public static IMqttClient MQTTCLIENT;
+        public static MachineIdStatus MACHINE_ID;
+        private static bool _connected_to_cloud = false;
 
         private static void Main() {
             var resetEvent = new AutoResetEvent(initialState: false);
@@ -277,6 +284,12 @@ namespace Antd {
             ConsoleLogger.Log(licenseStatus == null
                 ? "[license] license results null"
                 : $"[license] {licenseStatus.Status} - {licenseStatus.Message}");
+
+            MACHINE_ID = new MachineIdStatus() {
+                MachineUid = CurrentConfiguration.Host.MachineUid,
+                PartNumber = CurrentConfiguration.Host.PartNumber,
+                SerialNumber = CurrentConfiguration.Host.SerialNumber
+            };
         }
 
         private static void SetParameters() {
@@ -464,12 +477,54 @@ namespace Antd {
 
         private static void LaunchJobs() {
             Scheduler.ExecuteJob<ImportRunningConfigurationJob>();
-            Scheduler.ExecuteJob<FetchRemoteCommandsJob>();
-            Scheduler.ExecuteJob<UpdateCloudInfoJob>();
             Scheduler.ExecuteJob<UpdateRestAgentJob>();
             Scheduler.ExecuteJob<ClusterCheckHeartbeatJob>();
             Scheduler.ExecuteJob<ClusterCheckHostnameJob>();
             Scheduler.ExecuteJob<MachineChecklistJob>();
+        }
+
+        private static async Task ConnectToCloudViaMqttAsync() {
+            var factory = new MqttFactory();
+            MQTTCLIENT = factory.CreateMqttClient();
+            var clientOptions = new MqttClientOptionsBuilder()
+                .WithClientId(CurrentConfiguration.Host.MachineUid.ToString())
+                .WithTcpServer(CurrentConfiguration.WebService.Cloud, CurrentConfiguration.WebService.CloudPort)
+                .WithCredentials(CurrentConfiguration.WebService.CloudUser, CurrentConfiguration.WebService.CloudPassword)
+                .WithCleanSession()
+                .Build();
+            MQTTCLIENT.Connected += async (s, e) => {
+                await MQTTCLIENT.SubscribeAsync(new TopicFilterBuilder().WithTopic("/status").Build());
+                await MQTTCLIENT.SubscribeAsync(
+                    new TopicFilterBuilder()
+                    .WithTopic($"/control/{CurrentConfiguration.Host.MachineUid}/{CurrentConfiguration.Host.PartNumber}/{CurrentConfiguration.Host.SerialNumber}")
+                    .Build()
+                    );
+                ConsoleLogger.Log("[mqtt] connected");
+                _connected_to_cloud = true;
+            };
+            MQTTCLIENT.Disconnected += async (s, e) => {
+                _connected_to_cloud = false;
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                try {
+                    await MQTTCLIENT.ConnectAsync(clientOptions);
+                }
+                catch {
+                    ConsoleLogger.Error("[mqtt] unable to reconnect");
+                }
+            };
+            MQTTCLIENT.ApplicationMessageReceived += (s, e) => {
+                Cloud.ParsePayload(e.ApplicationMessage.Topic, e.ApplicationMessage.Payload);
+            };
+            await MQTTCLIENT.ConnectAsync(clientOptions);
+
+            Scheduler = new JobManager();
+            Scheduler.ExecuteJob<SendInfoToCloudJob>();
+        }
+
+        private static void StartCloudUpdateJob() {
+            if(_connected_to_cloud) {
+                Scheduler.ExecuteJob<SendInfoToCloudJob>();
+            }
         }
 
         private static void Test() {

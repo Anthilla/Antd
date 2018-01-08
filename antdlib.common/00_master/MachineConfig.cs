@@ -719,7 +719,10 @@ namespace Antd {
         public int Port { get; set; } = 8084;
         public int GuiWebServicePort { get; set; } = 8086;
 
-        public string Cloud { get; set; } = "http://api.anthilla.com";
+        public string Cloud { get; set; } = "cloud.anthilla.com";
+        public int CloudPort { get; set; } = 21883;
+        public string CloudUser { get; set; } = "user";
+        public string CloudPassword { get; set; } = "password";
 
         public string MasterPassword { get; set; } = "252975977253103541671893814013814116237132841698924515721578242135731312536863201";
 
