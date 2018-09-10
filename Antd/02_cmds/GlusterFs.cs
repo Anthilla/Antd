@@ -6,20 +6,23 @@ namespace Antd.cmds {
 
     public class GlusterFs {
 
-        //systemctl enable glusterd
-        //systemctl start glusterd
+        //OLD VERSION systemctl enable glusterd
+        //OLD VERSION systemctl start glusterd
+        //glusterd
         //gluster peer probe avm702
         //gluster volume create GlusterE replica 2 transport tcp avm701.local:/Data/DataE avm702.local:/Data/DataE force
         //gluster volume start GlusterE
         //mkdir -p /Data/GData
         //mount -t glusterfs avm702:GlusterE /Data/GData
 
-        private const string serviceName = "glusterd.service";
+        //private const string serviceName = "glusterd.service";
         private const string glusterFileLocation = "/usr/sbin/gluster";
+        private const string glusterdFileLocation = "/usr/sbin/glusterd";
         private const string includeNodeArg = "peer probe";
 
         public static void Stop() {
-            Systemctl.Stop(serviceName);
+            //Systemctl.Stop(serviceName);
+            Kill.All("glusterd");
             ConsoleLogger.Log("[gluster] stop");
         }
 
@@ -28,10 +31,13 @@ namespace Antd.cmds {
             if(options == null) {
                 return;
             }
-            Systemctl.Enable(serviceName);
-            Systemctl.Start(serviceName);
+            //Systemctl.Enable(serviceName);
+            //Systemctl.Start(serviceName);
+            ConsoleLogger.Log("[gluster] init daemon");
+            CommonProcess.Do(glusterdFileLocation);
             var nodes = Application.CurrentConfiguration.Cluster.Nodes;
             for(var i = 0; i < nodes.Length; i++) {
+                ConsoleLogger.Log($"[gluster] include {nodes[i].Hostname}");
                 IncludeNode(nodes[i].Hostname);
             }
 
@@ -57,6 +63,8 @@ namespace Antd.cmds {
                 var currentNode = nodes[i];
                 var currentVolume = currentNode.Volumes.FirstOrDefault(_ => _.Label == volumeLabel);
                 if(currentVolume != null) {
+                    //creo la directory del brick
+                    System.IO.Directory.CreateDirectory(currentVolume.Brick);
                     //qui  ho trovato all'interno della conf del nodo una conf del volume corrispondente all'etichetta presa in considerazione
                     //quindi prendo queste info relative all'host e al suo volume per comporre la stringa di creazione del volume stesso
                     replicaString += $"{currentNode.Hostname}:{currentVolume.Brick} ";

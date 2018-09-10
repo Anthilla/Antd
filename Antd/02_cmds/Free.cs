@@ -7,7 +7,7 @@ namespace Antd.cmds {
     public class Free {
   
         private const string freeFileLocation = "/usr/bin/free";
-        private const string freeOptions = "-b";
+        private const string freeOptions = "-btl";
 
         public static FreeModel[] Get() {
             var result = CommonProcess.Execute(freeFileLocation, freeOptions).Skip(1).Where(_ => !string.IsNullOrEmpty(_)).ToArray();

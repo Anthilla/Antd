@@ -30,7 +30,7 @@ namespace Antd.cmds {
 
         private const string localAddress = "127.0.0.1";
 
-        private static readonly string CaMainDirectory = $"{Parameter.AntdCfg}/ca";
+        private static readonly string CaMainDirectory = $"{Const.AntdCfg}/ca";
         private static readonly string[] CaMainSubdirectories = {
             "certs",
             "crl",
@@ -38,7 +38,7 @@ namespace Antd.cmds {
             "private"
         };
 
-        private static readonly string CaIntermediateDirectory = $"{Parameter.AntdCfg}/ca/intermediate";
+        private static readonly string CaIntermediateDirectory = $"{Const.AntdCfg}/ca/intermediate";
         private static readonly string[] CaIntermediateSubdirectories = {
             "certs",
             "crl",

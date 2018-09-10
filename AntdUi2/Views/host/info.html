@@ -1,0 +1,76 @@
+﻿<div ng-controller="HostInfoController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Host - Info</h3>
+        </div>
+        <div class="title_right">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Host Name</th>
+                                <td>
+                                    <input ng-model="Host.HostName" class="form-control" type="text">
+                                </td>
+                                <td>{{ HostRunning.HostName }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Host Chassis</th>
+                                <td>
+                                    <select ng-model="Host.HostChassis" class="form-control">
+                                        <option value="desktop">Desktop</option>
+                                        <option value="laptop">Laptop</option>
+                                        <option value="server">Server</option>
+                                        <option value="tablet">Tablet</option>
+                                        <option value="handset">Handset</option>
+                                        <option value="watch">Watch</option>
+                                        <option value="embedded">Embedded</option>
+                                        <option value="vm">Vm</option>
+                                        <option value="container">Container</option>
+                                    </select>
+                                </td>
+                                <td>{{ HostRunning.HostChassis }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Host Deployment</th>
+                                <td>
+                                    <input ng-model="Host.HostDeployment" class="form-control" type="text">
+                                </td>
+                                <td>{{ HostRunning.HostDeployment }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Host Location</th>
+                                <td>
+                                    <input ng-model="Host.HostLocation" class="form-control" type="text">
+                                </td>
+                                <td>{{ HostRunning.HostLocation }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

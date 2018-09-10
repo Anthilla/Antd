@@ -1,0 +1,136 @@
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Cluster - Shared Services</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Virsh</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Virsh"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Ssh</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Ssh"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sshd</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Sshd"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Firewall</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Firewall"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Dhcpd</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Dhcpd"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Bind</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Bind"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Nginx</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Nginx"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Samba</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Samba"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">SyslogNg</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.SyslogNg"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Gluster</th>
+                                <td>
+                                    <input ng-model="Cluster.SharedService.Gluster"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

@@ -120,6 +120,7 @@ namespace Antd.cmds {
         //  /var/log/libvirt
         //  /var/lib/libvirt
         public static void PrepareDirectory() {
+            if(!Directory.Exists(virshEtcDirectory)) { return; }
             var data = Directory.EnumerateFiles(virshEtcDirectory, "*.xml", SearchOption.TopDirectoryOnly);
             if(data.Any()) {
                 if(MountHelper.IsAlreadyMounted(virshEtcDirectory) == false) {

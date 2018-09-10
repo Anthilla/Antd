@@ -15,7 +15,7 @@ namespace Antd.cmds {
             var result = File.ReadAllLines(procMeminfoFile).Where(_ => !string.IsNullOrEmpty(_)).ToArray();
             var meminfo = new MemInfoModel[result.Length];
             for(var i = 0; i < result.Length; i++) {
-                var currentData = result[i].Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                var currentData = result[i].Replace("kB", "").Trim().Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                 meminfo[i] = new MemInfoModel() {
                     Key = currentData[0],
                     Value = currentData.Length == 1 ? string.Empty : currentData[1]

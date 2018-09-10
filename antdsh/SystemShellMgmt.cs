@@ -73,23 +73,23 @@ namespace antdsh {
             var systemTmp = $"/tmp/system";
             ApiConsumer.GetFile("/url/download/system", $"{systemTmp}");
 
-            Bash.Execute($"cp {firmwareTmp} {Parameter.RepoKernel}");
-            Bash.Execute($"cp {initrdTmp} {Parameter.RepoKernel}");
-            Bash.Execute($"cp {kernelTmp} {Parameter.RepoKernel}");
-            Bash.Execute($"cp {modulesTmp} {Parameter.RepoKernel}");
-            Bash.Execute($"cp {systemTmp} {Parameter.RepoSystem}");
+            Bash.Execute($"cp {firmwareTmp} {Const.RepoKernel}");
+            Bash.Execute($"cp {initrdTmp} {Const.RepoKernel}");
+            Bash.Execute($"cp {kernelTmp} {Const.RepoKernel}");
+            Bash.Execute($"cp {modulesTmp} {Const.RepoKernel}");
+            Bash.Execute($"cp {systemTmp} {Const.RepoSystem}");
 
-            Bash.Execute($"rm {Parameter.RepoKernel}/active-firmware");
-            Bash.Execute($"rm {Parameter.RepoKernel}/active-initrd");
-            Bash.Execute($"rm {Parameter.RepoKernel}/active-kernel");
-            Bash.Execute($"rm {Parameter.RepoKernel}/active-modules");
-            Bash.Execute($"rm {Parameter.RepoSystem}/active-system");
+            Bash.Execute($"rm {Const.RepoKernel}/active-firmware");
+            Bash.Execute($"rm {Const.RepoKernel}/active-initrd");
+            Bash.Execute($"rm {Const.RepoKernel}/active-kernel");
+            Bash.Execute($"rm {Const.RepoKernel}/active-modules");
+            Bash.Execute($"rm {Const.RepoSystem}/active-system");
 
-            Bash.Execute($"ln -s {Parameter.RepoKernel}/firmware {Parameter.RepoKernel}/active-firmware");
-            Bash.Execute($"ln -s {Parameter.RepoKernel}/initrd {Parameter.RepoKernel}/active-initrd");
-            Bash.Execute($"ln -s {Parameter.RepoKernel}/kernel {Parameter.RepoKernel}/active-kernel");
-            Bash.Execute($"ln -s {Parameter.RepoKernel}/modules {Parameter.RepoKernel}/active-modules");
-            Bash.Execute($"ln -s {Parameter.RepoSystem}/system {Parameter.RepoSystem}/active-system");
+            Bash.Execute($"ln -s {Const.RepoKernel}/firmware {Const.RepoKernel}/active-firmware");
+            Bash.Execute($"ln -s {Const.RepoKernel}/initrd {Const.RepoKernel}/active-initrd");
+            Bash.Execute($"ln -s {Const.RepoKernel}/kernel {Const.RepoKernel}/active-kernel");
+            Bash.Execute($"ln -s {Const.RepoKernel}/modules {Const.RepoKernel}/active-modules");
+            Bash.Execute($"ln -s {Const.RepoSystem}/system {Const.RepoSystem}/active-system");
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace antdsh {
         /// </summary>
         public void SetAndMountDirs() {
             Console.WriteLine("Mounting directories and files: ");
-            var directories = Directory.EnumerateDirectories(Parameter.RepoDirs).Where(d => !d.Contains(".ori"));
+            var directories = Directory.EnumerateDirectories(Const.RepoDirs).Where(d => !d.Contains(".ori"));
             foreach(var t in directories) {
                 var path = Path.GetFileName(t);
                 if(path == null)
@@ -142,7 +142,7 @@ namespace antdsh {
                 Bash.Execute($"mount --bind {t} {newPath}");
             }
 
-            var files = Directory.EnumerateFiles(Parameter.RepoDirs).Where(f => !f.Contains(".ori"));
+            var files = Directory.EnumerateFiles(Const.RepoDirs).Where(f => !f.Contains(".ori"));
             foreach(var t in files) {
                 var path = Path.GetFileName(t);
                 if(path == null)

@@ -1,0 +1,76 @@
+<div ng-controller="ClusterController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Cluster - Configuration</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Active</th>
+                                <td>
+                                    <input ng-model="Cluster.Active"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Label</th>
+                                <td>
+                                    <input ng-model="Cluster.Label" class="form-control" type="text">
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tbody>
+
+                        <tbody>
+                            <tr>
+                                <th>MachineUid</th>
+                                <th>Hostname</th>
+                                <th>PublicIp</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="node in Cluster.Nodes">
+                                <td>
+                                    {{ node.MachineUid }}
+                                </td>
+                                <td>
+                                    {{ node.Hostname }}
+                                </td>
+                                <td>
+                                    {{ node.PublicIp }}
+                                </td>
+                                <td>
+                                    <button ng-click="removeFromList($index, Cluster.Nodes)" class="btn btn-warning">{{ 'REMOVE' | translate }}</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

@@ -5,11 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd {
+
     /// <summary>
     /// Controlla gli ip dei nodi del cluster
     /// Per ogni ip gli associa un hostname 
     /// da importare in KnownHosts 
     /// e poi da salvare in /etc/hosts
+    /// 
+    /// In /etc/hosts posso avere più righe con lo stesso ip, per esempio:
+    ///  
+    ///     10.1.2.3 hostname.local hostname
+    ///     
+    /// può anche essere scritto
+    ///     
+    ///     10.1.2.4 hostname.local
+    ///     10.1.2.4 hostname
+    ///     
     /// </summary>
     public class ClusterCheckHostnameJob : Job {
 
@@ -52,41 +63,36 @@ namespace Antd {
             if(Application.CurrentConfiguration.Cluster.Active == false) {
                 return;
             }
-            var clusterStatus = Application.ClusterChecklist;
-            if(clusterStatus == null) {
+            var clusterNodes = Application.CurrentConfiguration.Cluster.Nodes;
+            if(clusterNodes == null) {
                 return;
             }
-            if(clusterStatus.Length < 1) {
+            if(clusterNodes.Length < 1) {
                 return;
-            }
-            var nodesKnownHosts = new List<KnownHost>();
-            for(var i = 0; i < clusterStatus.Length; i++) {
-                var nodeIPs = clusterStatus[i].DiscoveredIpsReach;
-                var nodeName = clusterStatus[i].Hostname;
-                var commonNames = new string[] {
-                    CommonString.Append(nodeName, "int", i.ToString())
-                };
-                for(var p = 0; p < nodeIPs.Length; p++) {
-                    var knownHost = new KnownHost() {
-                        IpAddr = nodeIPs[p].IpAddress,
-                        CommonNames = commonNames
-                    };
-                    nodesKnownHosts.Add(knownHost);
-                }
             }
             var currentKnownHosts = Application.CurrentConfiguration.Network.KnownHosts.ToList();
-            foreach(var nodeHost in nodesKnownHosts) {
-                //i casi possono essere tre:
-                //  1) l'ip non è presente nella CurrentConfiguration   -> aggiungo il nuovo KnownHost
-                //  2) l'ip è presente ma i CommonNames sono differenti -> aggiorno solamente i CommonNames del KnownHost corrispondente
-                //  3) l'ip è presente e i CommonNames coincidono       -> non faccio nulla
-                if(!currentKnownHosts.Any(_ => CommonString.AreEquals(_.IpAddr, nodeHost.IpAddr) == true)) {
-                    currentKnownHosts.Add(nodeHost);
+
+            //per ogni nodo del cluster
+            for(var i = 0; i < clusterNodes.Length; i++) {
+                var nodeIPs = clusterNodes[i].PublicIp;
+                var nodeName = clusterNodes[i].Hostname;
+
+                //controllo nella configurazione di KnownHosts se contiene già info sul nodo
+                var currentKnownNode = currentKnownHosts.FirstOrDefault(_ => CommonString.AreEquals(_.IpAddr, nodeIPs));
+                if(currentKnownNode == null) {
+                    //aggiungo uno nuovo host
+                    var host = new KnownHost() {
+                        IpAddr = nodeIPs,
+                        CommonNames = new string[] { nodeName }
+                    };
+                    currentKnownHosts.Add(host);
                 }
                 else {
-                    var existingCn = currentKnownHosts.FirstOrDefault(_ => CommonString.AreEquals(_.IpAddr, nodeHost.IpAddr) == true).CommonNames;
-                    if(CommonString.AreEquals(CommonString.Build(existingCn), CommonString.Build(nodeHost.CommonNames)) == false) {
-                        currentKnownHosts.FirstOrDefault(_ => CommonString.AreEquals(_.IpAddr, nodeHost.IpAddr) == true).CommonNames = nodeHost.CommonNames;
+                    //controllo i common names
+                    if(!currentKnownNode.CommonNames.Contains(nodeName)) {
+                        var commonNamesUpdate = currentKnownNode.CommonNames.ToList();
+                        commonNamesUpdate.Add(nodeName);
+                        currentKnownNode.CommonNames = commonNamesUpdate.ToArray();
                     }
                 }
             }

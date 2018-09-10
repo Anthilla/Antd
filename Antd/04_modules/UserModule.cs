@@ -12,6 +12,14 @@ namespace Antd.Modules {
                 return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.SystemUsers);
             };
 
+            Get["/get/group"] = x => {
+                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.SystemGroups);
+            };
+
+            Get["/get/group/running"] = x => {
+                return JsonConvert.SerializeObject(Application.RunningConfiguration.Users.SystemGroups);
+            };
+
             Get["/get/applicative"] = x => {
                 return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.ApplicativeUsers);
             };
@@ -21,10 +29,23 @@ namespace Antd.Modules {
                 return HttpStatusCode.OK;
             };
 
+            Post["/apply/group"] = x => {
+                Group.Set();
+                return HttpStatusCode.OK;
+            };
+
             Post["/save/system"] = x => {
                 string data = Request.Form.Data;
                 var objects = JsonConvert.DeserializeObject<SystemUser[]>(data);
                 Application.CurrentConfiguration.Users.SystemUsers = objects;
+                ConfigRepo.Save();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/save/group"] = x => {
+                string data = Request.Form.Data;
+                var objects = JsonConvert.DeserializeObject<SystemGroup[]>(data);
+                Application.CurrentConfiguration.Users.SystemGroups = objects;
                 ConfigRepo.Save();
                 return HttpStatusCode.OK;
             };

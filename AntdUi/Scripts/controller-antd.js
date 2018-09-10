@@ -1176,7 +1176,32 @@ function MachineConfigController($scope, $http, $interval, $timeout, $filter) {
         }, function (r) { console.log(r); });
     }
 
+    $scope.UserApplicative = null;
 
+    $scope.NewUserApplicative = {
+        Active: true,
+        Alias: '',
+        Password: ''
+    };
+
+    $scope.loadUserApplicative = function () {
+        console.log("loadUserApplicative");
+        $scope.UserApplicative = null;
+        $http.get("/user/get/applicative").success(function (data) {
+            $scope.UserApplicative = data
+        });
+    }
+
+    $scope.saveUserApplicative = function () {
+        console.log("saveUserApplicative");
+        var data = $.param({
+            Data: angular.toJson($scope.UserApplicative)
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/user/save/applicative", data).then(function () {
+            $scope.loadUserApplicative();
+        }, function (r) { console.log(r); });
+    }
 
 
 

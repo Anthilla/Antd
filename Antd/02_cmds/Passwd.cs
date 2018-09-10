@@ -29,11 +29,17 @@ namespace Antd.cmds {
         }
 
         public static bool Set() {
+            if(Const.IsUnix == false) {
+                return false;
+            }
             var current = Application.CurrentConfiguration.Users.SystemUsers;
             for(var i = 0; i < current.Length; i++) {
                 AddUser(current[i].Alias);
                 var password = HashPasswd(current[i].Password);
                 SetPassword(current[i].Alias, password);
+                if(!string.IsNullOrEmpty(current[i].Group)) {
+                    AssignGroup(current[i].Alias, current[i].Group);
+                }
             }
             return true;
         }
@@ -50,6 +56,12 @@ namespace Antd.cmds {
 
         public static void SetPassword(string user, string password) {
             var args = CommonString.Append("-p '", password, "' ", user);
+            CommonProcess.Do(usermodFileLocation, args);
+        }
+
+        //usermod -a -G editorial olivia
+        public static void AssignGroup(string user, string group) {
+            var args = CommonString.Append("-a -G ", group, " ", user);
             CommonProcess.Do(usermodFileLocation, args);
         }
     }

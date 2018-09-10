@@ -6,13 +6,13 @@ namespace antdsh {
     public class Units {
         #region [    Private Vars    ]
         private const string Antdsh01RemountService = "tt-antdsh-01-remount.service";
-        private static readonly string Antdsh01RemountServicePath = $"{Parameter.TimerUnits}/{Antdsh01RemountService}";
+        private static readonly string Antdsh01RemountServicePath = $"{Const.TimerUnits}/{Antdsh01RemountService}";
         private const string Antdsh01RemountTimer = "tt-antdsh-01-remount.timer";
-        private static readonly string Antdsh01RemountTimerPath = $"{Parameter.TimerUnits}/{Antdsh01RemountTimer}";
+        private static readonly string Antdsh01RemountTimerPath = $"{Const.TimerUnits}/{Antdsh01RemountTimer}";
         private const string Antdsh02UmountService = "tt-antdsh-02-umount.service";
-        private static readonly string Antdsh02UmountServicePath = $"{Parameter.TimerUnits}/{Antdsh02UmountService}";
+        private static readonly string Antdsh02UmountServicePath = $"{Const.TimerUnits}/{Antdsh02UmountService}";
         private const string Antdsh03MountService = "tt-antdsh-03-mount.service";
-        private static readonly string Antdsh03MountServicePath = $"{Parameter.TimerUnits}/{Antdsh03MountService}";
+        private static readonly string Antdsh03MountServicePath = $"{Const.TimerUnits}/{Antdsh03MountService}";
         #endregion
 
         public void CreateRemountUnits() {
@@ -28,9 +28,9 @@ namespace antdsh {
             if(!File.Exists(Antdsh03MountServicePath)) {
                 CreateMountServiceFile();
             }
-            Bash.Execute($"chown -R root:wheel {Parameter.TimerUnits}/");
-            Bash.Execute($"chmod 775 {Parameter.TimerUnits}/");
-            Bash.Execute($"chmod 644 {Parameter.TimerUnits}/*");
+            Bash.Execute($"chown -R root:wheel {Const.TimerUnits}/");
+            Bash.Execute($"chmod 775 {Const.TimerUnits}/");
+            Bash.Execute($"chmod 644 {Const.TimerUnits}/*");
             Bash.Execute("systemctl daemon-reload");
         }
 

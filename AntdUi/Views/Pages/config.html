@@ -2155,7 +2155,7 @@
                             Enable/Disable
                         </td>
                         <td class="fg-anthilla-green">
-                            Address Mode (static/dhcp)
+                            Static Address (disabled = dhcp)
                         </td>
                         <td class="fg-anthilla-green">
                             IP Address
@@ -4136,7 +4136,6 @@
             </div>
         </div>
     </div>
-
     <!--User - System-->
     <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
         <div ng-click="loadUserSystem()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
@@ -4203,6 +4202,78 @@
                     </div>
                     <div class="cell colspan2 padding-left10">
                         <button ng-click="click(applyUserSystem)" ng-style="buttonStyle"><span class="{{iconApply}}" ng-style="iconStyle"></span>&nbsp;{{ 'APPLY' | translate }}</button>
+                    </div>
+                    <div class="cell colspan1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--User - Applicative-->
+    <div class="panel collapsed margin10 no-margin-left no-margin-right no-margin-top" data-role="panel">
+        <div ng-click="loadUserApplicative()" class="heading bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 2px solid;">
+            <span class="icon mif-file-text fg-anthilla-violet bg-anthilla-gray-2 no-margin" style="height: 40px;"></span>
+            <span class="title">
+                User - Applicative
+            </span>
+        </div>
+        <div class="content bg-anthilla-gray-1 bd-anthilla-gray-2" style="border: 1px solid;">
+            <div class="width100pc padding20" ng-hide="UserApplicative!=null">
+                <span class="mif-spinner2 mif-ani-spin mif-4x fg-yellow"></span>
+            </div>
+            <table ng-show="UserApplicative!=null" class="table bordered fg-white" style="font-size: 0.85em; table-layout: fixed;">
+                <tbody>
+                    <tr>
+                        <td class="fg-anthilla-green">
+                            Alias
+                        </td>
+                        <td class="fg-anthilla-green">
+                            Password
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="fg-anthilla-green">
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="NewUserApplicative.Alias" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </td>
+                        <td class="fg-anthilla-green">
+                            <div data-role="input" class="input-control password full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="password" ng-model="NewUserApplicative.Password" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            </div>
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewUserApplicative, UserApplicative)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc"><span class="mif-plus fg-anthilla-blue padding-right20"></span>&nbsp;{{ 'ADD' | translate }}</button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="user in UserApplicative">
+                        <td>
+                            <div data-role="input" class="input-control text full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="text" ng-model="user.Alias" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                                <button class="button helper-button clear bg-anthilla-gray-2 fg-anthilla-green" tabindex="-1" type="button"><span class="mif-cross"></span></button>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-role="input" class="input-control password full-size bd-anthilla-green bg-anthilla-gray-2">
+                                <input type="password" ng-model="user.Password" style="padding-right: 42px;" class="bd-anthilla-green bg-anthilla-gray-2 fg-white">
+                            </div>
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, UserApplicative)" class="button bg-anthilla-gray-2 fg-white bd-anthilla-gray-3 padding-left20 padding-right10 width100pc">{{ 'REMOVE' | translate }}</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="grid condensed fg-white" style="margin-top: 1.75em;" ng-show="UserApplicative!=null">
+                <div class="row cells6">
+                    <div class="cell colspan1">
+                    </div>
+                    <div class="cell colspan2 padding-right10">
+                        <button ng-click="click(saveUserApplicative)" ng-style="buttonStyle"><span class="{{iconSave}}" ng-style="iconStyle"></span>&nbsp;{{ 'SAVE' | translate }}</button>
+                    </div>
+                    <div class="cell colspan2 padding-left10">
                     </div>
                     <div class="cell colspan1">
                     </div>

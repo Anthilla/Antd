@@ -21,8 +21,8 @@ namespace Antd.cmds {
             if(_fileSystemWatcher != null) {
                 return;
             }
-            ConsoleLogger.Log($"[watcher] start on '{Parameter.AntdCfgSetup}'");
-            _fileSystemWatcher = new FileSystemWatcher(Parameter.AntdCfgSetup) {
+            ConsoleLogger.Log($"[watcher] start on '{Const.AntdCfgSetup}'");
+            _fileSystemWatcher = new FileSystemWatcher(Const.AntdCfgSetup) {
                 NotifyFilter = NotifyFilters.LastWrite,
                 IncludeSubdirectories = true,
                 EnableRaisingEvents = true

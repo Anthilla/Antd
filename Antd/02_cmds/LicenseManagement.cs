@@ -8,7 +8,7 @@ using System;
 namespace Antd.cmds {
     public class LicenseManagement {
 
-        private static readonly string _licensePath = $"{Parameter.AntdCfg}/license.lic";
+        private static readonly string _licensePath = $"{Const.AntdCfg}/license.lic";
 
         public static void Download(string appName, byte[] publicKey) {
             if(File.Exists(_licensePath))

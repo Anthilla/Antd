@@ -1,0 +1,338 @@
+<div ng-controller="BindController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Bind - Configuration</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Enable
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.Active"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="Bind.Active">
+                            <tr>
+                                <th scope="row">
+                                    Notify
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.Notify" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    MaxCacheSize
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.MaxCacheSize" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    MaxCacheTtl
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.MaxCacheTtl" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    MaxNcacheTtl
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.MaxNcacheTtl" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Forwarders
+                                </th>
+                                <td ng-init="Bind.ForwardersConfig=selectizeConfig(Bind.Forwarders);Bind.ForwardersOptions=selectizeOptions(Bind.Forwarders);">
+                                    <selectize config="Bind.ForwardersConfig" options="Bind.ForwardersOptions" ng-model="Bind.Forwarders"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    AllowNotify
+                                </th>
+                                <td ng-init="Bind.AllowNotifyConfig=selectizeConfig(Bind.AllowNotify);Bind.AllowNotifyOptions=selectizeOptions(Bind.AllowNotify);">
+                                    <selectize config="Bind.AllowNotifyConfig" options="Bind.AllowNotifyOptions" ng-model="Bind.AllowNotify"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    AllowTransfer
+                                </th>
+                                <td ng-init="Bind.AllowTransferConfig=selectizeConfig(Bind.AllowTransfer);Bind.AllowTransferOptions=selectizeOptions(Bind.AllowTransfer);">
+                                    <selectize config="Bind.AllowTransferConfig" options="Bind.AllowTransferOptions" ng-model="Bind.AllowTransfer"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Recursion
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.Recursion" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    TransferFormat
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.TransferFormat" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    QuerySourceAddress
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.QuerySourceAddress" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    QuerySourcePort
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.QuerySourcePort" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    Version
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.Version" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    AllowQuery
+                                </th>
+                                <td ng-init="Bind.AllowQueryConfig=selectizeConfig(Bind.AllowQuery);Bind.AllowQueryOptions=selectizeOptions(Bind.AllowQuery);">
+                                    <selectize config="Bind.AllowQueryConfig" options="Bind.AllowQueryOptions" ng-model="Bind.AllowQuery"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    AllowRecursion
+                                </th>
+                                <td ng-init="Bind.AllowRecursionConfig=selectizeConfig(Bind.AllowRecursion);Bind.AllowRecursionOptions=selectizeOptions(Bind.AllowRecursion);">
+                                    <selectize config="Bind.AllowRecursionConfig" options="Bind.AllowRecursionOptions" ng-model="Bind.AllowRecursion"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    IxfrFromDifferences
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.IxfrFromDifferences" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    ListenOnV6
+                                </th>
+                                <td ng-init="Bind.ListenOnV6Config=selectizeConfig(Bind.ListenOnV6);Bind.ListenOnV6Options=selectizeOptions(Bind.ListenOnV6);">
+                                    <selectize config="Bind.ListenOnV6Config" options="Bind.ListenOnV6Options" ng-model="Bind.ListenOnV6"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    ListenOnPort53
+                                </th>
+                                <td ng-init="Bind.ListenOnPort53Config=selectizeConfig(Bind.ListenOnPort53);Bind.ListenOnPort53Options=selectizeOptions(Bind.ListenOnPort53);">
+                                    <selectize config="Bind.ListenOnPort53Config" options="Bind.ListenOnPort53Options" ng-model="Bind.ListenOnPort53"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    DnssecEnabled
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.DnssecEnabled" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    DnssecValidation
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.DnssecValidation" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    DnssecLookaside
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.DnssecLookaside" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    AuthNxdomain
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.AuthNxdomain" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    KeyName
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.KeyName" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    KeySecret
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.KeySecret" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    ControlIp
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.ControlIp" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    ControlPort
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.ControlPort" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    ControlAllow
+                                </th>
+                                <td ng-init="Bind.ControlAllowConfig=selectizeConfig(Bind.ControlAllow);Bind.ControlAllowOptions=selectizeOptions(Bind.ControlAllow);">
+                                    <selectize config="Bind.ControlAllowConfig" options="Bind.ControlAllowOptions" ng-model="Bind.ControlAllow"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    ControlKeys
+                                </th>
+                                <td ng-init="Bind.ControlKeysConfig=selectizeConfig(Bind.ControlKeys);Bind.ControlKeysOptions=selectizeOptions(Bind.ControlKeys);">
+                                    <selectize config="Bind.ControlKeysConfig" options="Bind.ControlKeysOptions" ng-model="Bind.ControlKeys"></selectize>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    SyslogSeverity
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.SyslogSeverity" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    SyslogPrintCategory
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.SyslogPrintCategory" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    SyslogPrintSeverity
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.SyslogPrintSeverity" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    SyslogPrintTime
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.SyslogPrintTime" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    TrustedKeys
+                                </th>
+                                <td>
+                                    <input ng-model="Bind.TrustedKeys" class="form-control" type="text">
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

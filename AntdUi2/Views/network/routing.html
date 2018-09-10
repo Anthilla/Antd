@@ -1,0 +1,97 @@
+<div ng-controller="RoutingController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Network - Routing</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <thead>
+                            <tr>
+                                <th>Is Default</th>
+                                <th>Destination</th>
+                                <th>Gateway</th>
+                                <th>Device</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input ng-model="NewRoute.Default"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td>
+                                    <input ng-model="NewRoute.Destination" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <select ng-model="NewRoute.Gateway" class="form-control">
+                                        <option ng-repeat="gw in Gateways" value="{{gw.IpAddress}}">{{gw.Id}}&nbsp;-&nbsp;{{gw.IpAddress}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="NewRoute.Device" class="form-control">
+                                        <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button ng-click="addToList(NewRoute, Routes)" type="button" class="btn btn-primary">
+                                        <span class="fa fa-plus-circle"></span> Add
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="el in Routes">
+                                <td>
+                                    <input ng-model="el.Default"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td>
+                                    <input ng-model="el.Destination" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <select ng-model="el.Gateway" class="form-control">
+                                        <option ng-repeat="gw in Gateways" value="{{gw.IpAddress}}">{{gw.Id}}&nbsp;-&nbsp;{{gw.IpAddress}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select ng-model="el.Device" class="form-control">
+                                        <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button ng-click="removeFromList($index, Routes)" type="button" class="btn btn-danger">
+                                        <span class="fa fa-minus-circle"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

@@ -6,13 +6,13 @@ namespace Antd.cmds {
 
     public class Tor {
 
-        private static readonly string CfgFile = $"{Parameter.AntdCfgConf}/tor.conf";
+        private static readonly string CfgFile = $"{Const.AntdCfgConf}/tor.conf";
         private const string ServiceName = "tor.service";
         private const string MainFilePath = "/etc/tor/torrc";
         private const string MainFilePathBackup = "/etc/tor/.torrc";
 
         private const string LibDir = "/var/lib/tor";
-        private static readonly string LibDirMnt = $"{Parameter.RepoDirs}/DIR_lib_tor";
+        private static readonly string LibDirMnt = $"{Const.RepoDirs}/DIR_lib_tor";
 
         public static void Parse() {
             return;

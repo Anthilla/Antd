@@ -87,16 +87,15 @@
       <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=106.2.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.2.0\lib\net452\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Rssdp, Version=3.5.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rssdp.3.5.7\lib\net45\Rssdp.dll</HintPath>
@@ -120,10 +119,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="02_cmds\App.cs" />
     <Compile Include="02_cmds\Applicative.cs" />
     <Compile Include="02_cmds\Date.cs" />
     <Compile Include="02_cmds\Dmesg.cs" />
     <Compile Include="02_cmds\Echo.cs" />
+    <Compile Include="02_cmds\Kill.cs" />
+    <Compile Include="02_cmds\Group.cs" />
     <Compile Include="02_cmds\PublicIp.cs" />
     <Compile Include="02_cmds\Journalctl.cs" />
     <Compile Include="02_cmds\Ntp.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="04_modules\DeviceModule.cs" />
     <Compile Include="04_modules\ClusterModule.cs" />
     <Compile Include="04_modules\DmesgModule.cs" />
+    <Compile Include="04_modules\AppModule.cs" />
     <Compile Include="04_modules\JournalctlModule.cs" />
     <Compile Include="04_modules\StorageServerModule.cs" />
     <Compile Include="04_modules\VirshModule.cs" />
@@ -172,6 +175,12 @@
     <Compile Include="04_modules\FirewallModule.cs" />
     <Compile Include="04_modules\RemoteVfsService.cs" />
     <Compile Include="04_modules\WiFiModule.cs" />
+    <Compile Include="95_mqtt\MqttBroker.cs" />
+    <Compile Include="95_mqtt\MqttSyncClient.cs" />
+    <Compile Include="95_mqtt\MqttTestConnectionJob.cs" />
+    <Compile Include="95_mqtt\RetainedMessageHandler.cs" />
+    <Compile Include="95_mqtt\MqttTestJob.cs" />
+    <Compile Include="95_mqtt\SyncController.cs" />
     <Compile Include="96_filesync\Rsync.cs" />
     <Compile Include="96_filesync\sync\Adler32Checksum.cs" />
     <Compile Include="96_filesync\sync\BlockLookup.cs" />
@@ -267,6 +276,7 @@
     <Content Include="01_core\_01_info.txt" />
     <Content Include="02_cmds\_02_info.txt" />
     <Content Include="03_scheduler\_03_info.txt" />
+    <Content Include="95_mqtt\_95_mqtt.txt" />
     <Content Include="96_filesync\_96_info.txt" />
     <Content Include="97_parsers\_97_info.txt" />
     <Content Include="98_defaults\_98_info.txt" />
@@ -274,6 +284,7 @@
     <Content Include="04_modules\_04_info.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -288,6 +299,10 @@
     <ProjectReference Include="..\..\_shared\anthilla.scheduler\anthilla.scheduler.csproj">
       <Project>{906b8907-f2ea-4baa-bf11-9f80c6e8bbbd}</Project>
       <Name>anthilla.scheduler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\_shared\storage-server\StorageServer\StorageServer.csproj">
+      <Project>{fbcac97e-ae38-4055-91e5-7d4bb3c7d8fa}</Project>
+      <Name>StorageServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\antdlib.common\03_antdlib.common.csproj">
       <Project>{8d27b042-c49c-40f3-85c1-5959b25e39fe}</Project>

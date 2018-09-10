@@ -1,11 +1,13 @@
 ﻿using Antd.cmds;
 using Antd.models;
+using Antd.Mqtt;
 using anthilla.core;
 using anthilla.crypto;
 using anthilla.scheduler;
 using MQTTnet;
 using MQTTnet.Core;
 using MQTTnet.Core.Client;
+using MQTTnet.Core.Server;
 using Nancy;
 using Nancy.Hosting.Self;
 using System;
@@ -138,6 +140,7 @@ namespace Antd {
             Rsync();
             Tor();
             ManageVirsh();
+            ManageMQTT().GetAwaiter().GetResult();
             ManageCluster();
             DirectoryWatchers();
             CheckApplicationFileAcls();
@@ -153,7 +156,7 @@ namespace Antd {
             PrepareGuiService();
             StartRssdp();
             LaunchJobs();
-            ConnectToCloudViaMqttAsync().GetAwaiter().GetResult();
+            //ConnectToCloudViaMqttAsync().GetAwaiter().GetResult();
             StartCloudUpdateJob();
             Test();
             #endregion
@@ -183,18 +186,18 @@ namespace Antd {
         }
 
         private static void CreateWorkingDirectories() {
-            Directory.CreateDirectory(Parameter.RepoDirs);
-            Directory.CreateDirectory(Parameter.TimerUnits);
-            Directory.CreateDirectory(Parameter.AnthillaUnits);
-            Directory.CreateDirectory(Parameter.AntdCfg);
-            Directory.CreateDirectory(Parameter.AntdCfgRestore);
-            Directory.CreateDirectory(Parameter.AntdCfgConf);
-            Directory.CreateDirectory(Parameter.AntdCfgKeys);
-            Directory.CreateDirectory(Parameter.AntdCfgVfs);
-            Directory.CreateDirectory(Parameter.AntdCfgLog);
-            Directory.CreateDirectory(Parameter.AntdCfgSetup);
-            if(!File.Exists($"{Parameter.AntdCfgSetup}/setup.conf")) {
-                File.WriteAllText($"{Parameter.AntdCfgSetup}/setup.conf", "echo Hello World!");
+            Directory.CreateDirectory(Const.RepoDirs);
+            Directory.CreateDirectory(Const.TimerUnits);
+            Directory.CreateDirectory(Const.AnthillaUnits);
+            Directory.CreateDirectory(Const.AntdCfg);
+            Directory.CreateDirectory(Const.AntdCfgRestore);
+            Directory.CreateDirectory(Const.AntdCfgConf);
+            Directory.CreateDirectory(Const.AntdCfgKeys);
+            Directory.CreateDirectory(Const.AntdCfgVfs);
+            Directory.CreateDirectory(Const.AntdCfgLog);
+            Directory.CreateDirectory(Const.AntdCfgSetup);
+            if(!File.Exists($"{Const.AntdCfgSetup}/setup.conf")) {
+                File.WriteAllText($"{Const.AntdCfgSetup}/setup.conf", "echo Hello World!");
             }
         }
 
@@ -210,7 +213,7 @@ namespace Antd {
         }
 
         private static void OverlayWatcher() {
-            //if(Directory.Exists(Parameter.Overlay)) {
+            //if(Directory.Exists(Const.Overlay)) {
             //    new OverlayWatcher().StartWatching();
             //    ConsoleLogger.Log("overlay watcher ready");
             //}
@@ -222,29 +225,31 @@ namespace Antd {
         }
 
         private static void CheckUnitsLocation() {
-            var anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
+            if(!Directory.Exists(Const.AnthillaUnits)) { return; }
+            if(!Directory.Exists(Const.AntdUnits)) { return; }
+            var anthillaUnits = Directory.EnumerateFiles(Const.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
             if(!anthillaUnits.Any()) {
-                var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
+                var antdUnits = Directory.EnumerateFiles(Const.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in antdUnits) {
-                    var trueUnit = unit.Replace(Parameter.AntdUnits, Parameter.AnthillaUnits);
+                    var trueUnit = unit.Replace(Const.AntdUnits, Const.AnthillaUnits);
                     if(!File.Exists(trueUnit)) {
                         File.Copy(unit, trueUnit);
                     }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
-                var kernelUnits = Directory.EnumerateFiles(Parameter.KernelUnits, "*.*", SearchOption.TopDirectoryOnly);
+                var kernelUnits = Directory.EnumerateFiles(Const.KernelUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in kernelUnits) {
-                    var trueUnit = unit.Replace(Parameter.KernelUnits, Parameter.AnthillaUnits);
+                    var trueUnit = unit.Replace(Const.KernelUnits, Const.AnthillaUnits);
                     if(!File.Exists(trueUnit)) {
                         File.Copy(unit, trueUnit);
                     }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
-                var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
+                var applicativeUnits = Directory.EnumerateFiles(Const.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
                 foreach(var unit in applicativeUnits) {
-                    var trueUnit = unit.Replace(Parameter.ApplicativeUnits, Parameter.AnthillaUnits);
+                    var trueUnit = unit.Replace(Const.ApplicativeUnits, Const.AnthillaUnits);
                     if(!File.Exists(trueUnit)) {
                         File.Copy(unit, trueUnit);
                     }
@@ -252,7 +257,7 @@ namespace Antd {
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
             }
-            //anthillaUnits = Directory.EnumerateFiles(Parameter.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
+            //anthillaUnits = Directory.EnumerateFiles(Const.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
             if(!anthillaUnits.Any()) {
                 foreach(var unit in anthillaUnits) {
                     Bash.Execute($"chown root:wheel {unit}");
@@ -268,16 +273,16 @@ namespace Antd {
         }
 
         private static void GenerateSecret() {
-            if(!File.Exists(Parameter.AntdCfgSecret)) {
-                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+            if(!File.Exists(Const.AntdCfgSecret)) {
+                File.WriteAllText(Const.AntdCfgSecret, Secret.Gen());
             }
-            if(string.IsNullOrEmpty(File.ReadAllText(Parameter.AntdCfgSecret))) {
-                File.WriteAllText(Parameter.AntdCfgSecret, Secret.Gen());
+            if(string.IsNullOrEmpty(File.ReadAllText(Const.AntdCfgSecret))) {
+                File.WriteAllText(Const.AntdCfgSecret, Secret.Gen());
             }
         }
 
         private static void License() {
-            Keys = new AsymmetricKeys(Parameter.AntdCfgKeys, KeyName);
+            Keys = new AsymmetricKeys(Const.AntdCfgKeys, KeyName);
             ConsoleLogger.Log($"[part_number] {CurrentConfiguration.Host.PartNumber}");
             ConsoleLogger.Log($"[serial_number] {CurrentConfiguration.Host.SerialNumber}");
             ConsoleLogger.Log($"[machine_id] {CurrentConfiguration.Host.MachineUid}");
@@ -438,11 +443,50 @@ namespace Antd {
             }
         }
 
+        public static IMqttServer MQTT;
+        public static ClusterNode[] CLUSTER_NODES;
+        public static MqttSyncClient[] CLUSTER_MQTT_CLIENTS;
+        public const int MQTT_DEFAULT_PORT = 31883;
+
+        private static async Task ManageMQTT() {
+            if(Const.IsUnix == false) {
+                return;
+            }
+            if(!CurrentConfiguration.Cluster.Active) {
+                return;
+            }
+            CLUSTER_NODES = CurrentConfiguration.Cluster.Nodes;
+            if(CLUSTER_NODES.Length < 1) {
+                return;
+            }
+            MQTT = MqttBroker.StartMqttServer(MQTT_DEFAULT_PORT).GetAwaiter().GetResult();
+            CLUSTER_MQTT_CLIENTS = new MqttSyncClient[CLUSTER_NODES.Length];
+            Thread.Sleep(5000);
+            for(var i = 0; i < CLUSTER_NODES.Length; i++) {
+                if(CommonString.AreEquals(CLUSTER_NODES[i].MachineUid.ToLowerInvariant(), MACHINE_ID.MachineUid.ToString().ToLowerInvariant())) {
+                    ConsoleLogger.Log($"[mqtt] node #{i}: {CLUSTER_NODES[i].Hostname} - {CLUSTER_NODES[i].PublicIp} (self)");
+                    continue;
+                }
+                ConsoleLogger.Log($"[mqtt] node #{i}: {CLUSTER_NODES[i].Hostname} - {CLUSTER_NODES[i].PublicIp}");
+                CLUSTER_MQTT_CLIENTS[i] = new MqttSyncClient(CLUSTER_NODES[i].PublicIp, MQTT_DEFAULT_PORT);
+                await CLUSTER_MQTT_CLIENTS[i].Connect();
+            }
+            //Scheduler.ExecuteJob<MqttTestJob>();
+            Scheduler.ExecuteJob<MqttTestConnectionJob>();
+        }
+
+        public const int STORAGESERVER_DEFAULT_PORT = 38008;
+
         private static void ManageCluster() {
             if(CurrentConfiguration.Cluster.Active) {
                 cmds.Cluster.ApplyNetwork();
                 cmds.Cluster.ApplyServices();
                 cmds.Cluster.ApplyFs();
+
+                var settings =  Kvpbase.Settings.FromFile("/cfg/antd/vfs/system.json");
+                var ss = new Kvpbase.StorageServer(settings);
+                ss.Start();
+
                 ConsoleLogger.Log("[cluster] ready");
             }
         }
@@ -452,7 +496,7 @@ namespace Antd {
         }
 
         private static void CheckApplicationFileAcls() {
-            //var files = Directory.EnumerateFiles(Parameter.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories);
+            //var files = Directory.EnumerateFiles(Const.RepoApps, "*.squashfs.xz", SearchOption.AllDirectories);
             //foreach(var file in files) {
             //    Bash.Execute($"chmod 644 {file}");
             //    Bash.Execute($"chown root:wheel {file}");
@@ -461,7 +505,7 @@ namespace Antd {
         }
 
         private static void PrepareGuiService() {
-            var hostReferenceFile = $"{Parameter.AntdCfg}/host_reference";
+            var hostReferenceFile = $"{Const.AntdCfg}/host_reference";
             var url = CommonString.Append(CurrentConfiguration.WebService.Protocol, "://", CurrentConfiguration.WebService.Host, ":", CurrentConfiguration.WebService.Port.ToString());
             File.WriteAllText(hostReferenceFile, url);
         }
@@ -486,6 +530,9 @@ namespace Antd {
         }
 
         private static async Task ConnectToCloudViaMqttAsync() {
+            if(Const.IsUnix == false) {
+                return;
+            }
             var factory = new MqttFactory();
             MQTTCLIENT = factory.CreateMqttClient();
             var clientOptions = new MqttClientOptionsBuilder()
@@ -524,6 +571,9 @@ namespace Antd {
         }
 
         private static void StartCloudUpdateJob() {
+            if(Const.IsUnix == false) {
+                return;
+            }
             if(_connected_to_cloud) {
                 Scheduler.ExecuteJob<SendInfoToCloudJob>();
             }

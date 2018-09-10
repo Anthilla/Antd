@@ -1,0 +1,190 @@
+<div ng-controller="NetworkInterfacesController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Network - Interfaces</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Enable/Disable</th>
+                                <th>Static Address (disabled = dhcp)</th>
+                                <th>IP Address</th>
+                                <th>Network (range/byte)</th>
+                                <th>MTU</th>
+                                <th>Txqueuelen</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select ng-model="NewNetworkInterface.Id" class="form-control">
+                                        <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input ng-model="NewNetworkInterface.Active"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td>
+                                    <input ng-model="NewNetworkInterface.PrimaryAddressConfiguration.StaticAddress"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td>
+                                    <input ng-model="NewNetworkInterface.PrimaryAddressConfiguration.IpAddr" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <select ng-model="NewNetworkInterface.PrimaryAddressConfiguration.NetworkRange" class="form-control">
+                                        <option value="">_</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                        <option value="32">32</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input ng-model="NewNetworkInterface.HardwareConfiguration.Mtu" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <input ng-model="NewNetworkInterface.HardwareConfiguration.Txqueuelen" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <button ng-click="addToList(NewNetworkInterface, NetworkInterfaces)" type="button" class="btn btn-primary">
+                                        <span class="fa fa-plus-circle"></span> Add
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="el in NetworkInterfaces">
+                                <td>
+                                    <select ng-model="el.Id" class="form-control">
+                                        <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input ng-model="el.Active"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td>
+                                    <input ng-model="el.PrimaryAddressConfiguration.StaticAddress"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td>
+                                    <input ng-model="el.PrimaryAddressConfiguration.IpAddr" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <select ng-model="el.PrimaryAddressConfiguration.NetworkRange" class="form-control">
+                                        <option value="">_</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                        <option value="32">32</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input ng-model="el.HardwareConfiguration.Mtu" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <input ng-model="el.HardwareConfiguration.Txqueuelen" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <button ng-click="removeFromList($index, NetworkInterfaces)" type="button" class="btn btn-danger">
+                                        <span class="fa fa-minus-circle"></span> Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

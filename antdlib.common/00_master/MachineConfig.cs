@@ -308,9 +308,21 @@ namespace Antd {
     /// Informazioni su utenti di sistema e utenti applicativi
     /// </summary>
     public class Users {
+        public SystemGroup[] SystemGroups { get; set; } = new SystemGroup[0];
+
         public SystemUser[] SystemUsers { get; set; } = new SystemUser[0];
 
         public ApplicativeUser[] ApplicativeUsers { get; set; } = new ApplicativeUser[0];
+    }
+
+    public class SystemGroup {
+        /// <summary>
+        /// Definisce se l'utente è abilitato
+        ///     default = 1
+        /// </summary>
+        public bool Active { get; set; } = true;
+
+        public string Alias { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -330,8 +342,10 @@ namespace Antd {
         /// Se l'utente non è abilitato la password viene settata vuota
         /// </summary>
         public string Password { get; set; } = string.Empty;
-    }
 
+        public string Group { get; set; } = string.Empty;
+    }
+ 
     /// <summary>
     /// Informazioni sulle utenze applicative, le applicazioni faranno il confronto su questi dati
     /// Questo repository sarà una mappatura dei vari meccanismi di autenticazione integrati
@@ -922,6 +936,7 @@ namespace Antd {
         public bool Active { get; set; } = false;
         public string NetworkInterface { get; set; }
         public string VirtualIpAddress { get; set; }
+        public string VirtualIpRange { get; set; }
         public PortMapping[] PortMapping { get; set; } = new PortMapping[0];
     }
 
@@ -997,9 +1012,35 @@ namespace Antd {
     }
 
     /// <summary>
-    /// Applicazioni di Anthilla gestite da antd
+    /// Applicazioni gestite da antd
     /// </summary>
     public class Applications {
+        /// <summary>
+        /// Applicazioni di Anthilla gestite da antd
+        /// </summary>
+        public LocalApplication[] LocalApplications { get; set; } = new LocalApplication[0];
 
+        /// <summary>
+        /// Applicazioni terze gestite da antd
+        /// </summary>
+        public ThirdPartyApplication[] ThirdPartyApplications { get; set; } = new ThirdPartyApplication[0];
+    }
+
+    public class LocalApplication {
+        public string Name { get; set; } = string.Empty;
+
+        public bool Prepared { get; set; } = true;
+        public bool Mounted { get; set; } = true;
+        public bool Launched { get; set; } = true;
+
+        public string[] Status { get; set; } = new string[0];
+
+        public string LauncherUnit { get; set; } = string.Empty;
+    }
+
+    public class ThirdPartyApplication {
+        public bool Active { get; set; } = true;
+
+        public string Name { get; set; } = string.Empty;
     }
 }

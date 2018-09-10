@@ -22,7 +22,7 @@ namespace Antd {
                 Formatting = Formatting.Indented
             };
             var text = JsonConvert.SerializeObject(Application.CurrentConfiguration, settings);
-            var filePath = CommonString.Append(Parameter.AntdCfg, "/", fileName, fileExtension);
+            var filePath = CommonString.Append(Const.AntdCfg, "/", fileName, fileExtension);
             Backup();
             //if(File.Exists(filePath)) {
             //    var backupFilePath = CommonString.Append(Parameter.AntdCfg, "/", fileName, fileExtension, ".bck");
@@ -37,13 +37,13 @@ namespace Antd {
         /// Crea una copia di backup dell'ultima configurazione salvata
         /// </summary>
         public static void Backup() {
-            Directory.CreateDirectory(Parameter.AntdCfgRestore);
-            var filePath = CommonString.Append(Parameter.AntdCfg, "/", fileName, fileExtension);
+            Directory.CreateDirectory(Const.AntdCfgRestore);
+            var filePath = CommonString.Append(Const.AntdCfg, "/", fileName, fileExtension);
             if(!File.Exists(filePath)) {
                 return;
             }
             var version = DateTime.Now.ToString("yyyyMMddHHmmss");
-            var backupFilePath = CommonString.Append(Parameter.AntdCfgRestore, "/", fileName, version, fileExtension);
+            var backupFilePath = CommonString.Append(Const.AntdCfgRestore, "/", fileName, version, fileExtension);
             File.Copy(filePath, backupFilePath, true);
         }
 
@@ -52,7 +52,7 @@ namespace Antd {
         /// </summary>
         /// <returns></returns>
         public static MachineConfig Read() {
-            var filePath = CommonString.Append(Parameter.AntdCfg, "/", fileName, fileExtension);
+            var filePath = CommonString.Append(Const.AntdCfg, "/", fileName, fileExtension);
             if(!File.Exists(filePath)) {
                 return null;
             }
@@ -66,7 +66,7 @@ namespace Antd {
         /// <param name="version">Versione della configurazione: data con formato 'yyyyMMddHHmmss'</param>
         /// <returns></returns>
         public static MachineConfig Read(string version) {
-            var filePath = CommonString.Append(Parameter.AntdCfgRestore, "/", fileName, version, fileExtension);
+            var filePath = CommonString.Append(Const.AntdCfgRestore, "/", fileName, version, fileExtension);
             if(!File.Exists(filePath)) {
                 return null;
             }
@@ -106,6 +106,7 @@ namespace Antd {
             master.Boot.Modules = bootModules;
             master.Boot.Services = cmds.Systemctl.GetAll();
             master.Boot.Parameters = Sysctl.Get();
+            master.Users.SystemGroups = Group.Get();
             master.Users.SystemUsers = Passwd.Get();
             master.Users.ApplicativeUsers = new ApplicativeUser[] { new ApplicativeUser() { Active = true, Type = AuthenticationType.simple, Id = "master", Claims = new[] { SHA.Generate("master") } } };
 

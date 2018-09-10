@@ -58,14 +58,14 @@ namespace Antd {
                 return;
             }
             var servicesNames = new List<string>();
-            if(Directory.Exists(Parameter.AntdUnits)) {
-                var antdUnits = Directory.EnumerateFiles(Parameter.AntdUnits).ToArray();
+            if(Directory.Exists(Const.AntdUnits)) {
+                var antdUnits = Directory.EnumerateFiles(Const.AntdUnits).ToArray();
                 for(var i = 0; i < antdUnits.Length; i++) {
                     servicesNames.Add(Path.GetFileName(antdUnits[i]));
                 }
             }
-            if(Directory.Exists(Parameter.ApplicativeUnits)) {
-                var applicativeUnits = Directory.EnumerateFiles(Parameter.ApplicativeUnits).ToArray();
+            if(Directory.Exists(Const.ApplicativeUnits)) {
+                var applicativeUnits = Directory.EnumerateFiles(Const.ApplicativeUnits).ToArray();
                 for(var i = 0; i < applicativeUnits.Length; i++) {
                     servicesNames.Add(Path.GetFileName(applicativeUnits[i]));
                 }

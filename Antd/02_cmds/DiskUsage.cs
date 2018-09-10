@@ -10,7 +10,7 @@ namespace Antd.cmds {
         private const string dfOptions = "-HTP";
 
         public static DiskUsageModel[] Get() {
-            var result = CommonProcess.Execute(dfFileLocation, dfOptions).ToArray();
+            var result = CommonProcess.Execute(dfFileLocation, dfOptions).Skip(1).ToArray();
             var free = new DiskUsageModel[result.Length];
             for(var i = 0; i < result.Length; i++) {
                 var currentData = result[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);

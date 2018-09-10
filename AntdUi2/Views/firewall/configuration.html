@@ -1,0 +1,411 @@
+<div ng-controller="FirewallController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Firewall - Configuration</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <table class="table table-fixed">
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Enable
+                                </th>
+                                <td>
+                                    <input ng-model="Firewall.Active"
+                                           i-check
+                                           checked=""
+                                           type="checkbox">
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="Firewall.Active">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Sets </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table class="table table-fixed">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th>Elements</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select ng-model="NewSet.Type" ng-change="suggestSetName(NewSet)" class="form-control">
+                                            <option value="ct_state">ct_state</option>
+                                            <option value="iface_index">iface_index</option>
+                                            <option value="ipv4_addr">ipv4_addr</option>
+                                            <option value="ipv6_addr">ipv6_addr</option>
+                                            <option value="icmpv6_type">icmpv6_type</option>
+                                            <option value="ether_addr">ether_addr</option>
+                                            <option value="inet_proto">inet_proto</option>
+                                            <option value="inet_service">inet_service</option>
+                                            <option value="mark">mark</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input ng-model="NewSet.Name" class="form-control" type="text">
+                                    </td>
+                                    <td ng-init="NewSet.ElementsConfig=selectizeConfig(NewSet.Elements);NewSet.ElementsOptions=selectizeOptions(NewSet.Elements);">
+                                        <selectize config="NewSet.ElementsConfig" options="NewSet.ElementsOptions" ng-model="NewSet.Elements"></selectize>
+                                    </td>
+                                    <td>
+                                        <button ng-click="addToList(NewSet, Firewall.Sets)" type="button" class="btn btn-primary">
+                                            <span class="fa fa-plus-circle"></span> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="set in Firewall.Sets">
+                                    <td>
+                                        {{ set.Type }}
+                                    </td>
+                                    <td>
+                                        <input ng-model="set.Name" class="form-control" type="text">
+                                    </td>
+                                    <td ng-init="set.ElementsConfig=selectizeConfig(set.Elements);set.ElementsOptions=selectizeOptions(set.Elements);">
+                                        <selectize config="set.ElementsConfig" options="set.ElementsOptions" ng-model="set.Elements"></selectize>
+                                    </td>
+                                    <td>
+                                        <button ng-click="removeFromList($index, Firewall.Sets)" type="button" class="btn btn-danger">
+                                            <span class="fa fa-minus-circle"></span> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Tables </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table class="table table-fixed">
+                            <thead>
+                                <tr>
+                                    <th>Family</th>
+                                    <th>Type</th>
+                                    <th>Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select ng-model="NewFirewallTable.Family" class="form-control">
+                                            <option value="ip">ip</option>
+                                            <option value="ip6">ip6</option>
+                                            <option value="arp">arp</option>
+                                            <option value="bridge">bridge</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select ng-model="NewFirewallTable.Type" class="form-control">
+                                            <option value="filter">filter</option>
+                                            <option value="route">route</option>
+                                            <option value="nat">nat</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input ng-model="NewFirewallTable.Name" class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <button ng-click="addToList(NewFirewallTable, Firewall.Tables)" type="button" class="btn btn-primary">
+                                            <span class="fa fa-plus-circle"></span> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="table in Firewall.Tables">
+                                    <td>
+                                        {{ table.Family }}
+                                    </td>
+                                    <td>
+                                        {{ table.Type }}
+                                    </td>
+                                    <td>
+                                        {{ table.Name }}
+                                    </td>
+                                    <td>
+                                        <button ng-click="removeFromList($index, Firewall.Tables)" type="button" class="btn btn-danger">
+                                            <span class="fa fa-minus-circle"></span> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-repeat="table in Firewall.Tables">
+            <div ng-show="Firewall.Active" class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>table {{ table.Family }}&nbsp;{{ table.Name }} </h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a ng-click="removeFromList($index, Firewall.Tables)" class="close-link"><i class="fa fa-close"></i></a>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table class="table table-fixed">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Sets</th>
+                                    <td colspan="4" ng-init="table.SetsConfig=selectizeFirewallTableSetsConfig(Firewall.Sets, table);table.TmpSets=createTmpSets(table.Sets);">
+                                        <selectize config="table.SetsConfig" options="Firewall.Sets" ng-model="table.TmpSets"></selectize>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <tbody>
+                                <tr ng-init="table.NewChain.Type=table.Type">
+                                    <th scope="row">Add Chain</th>
+                                    <td>
+                                        <select ng-model="table.NewChain.Hook" class="form-control">
+                                            <option value="prerouting">prerouting</option>
+                                            <option value="input">input</option>
+                                            <option value="forward">forward</option>
+                                            <option value="output">output</option>
+                                            <option value="postrouting">postrouting</option>
+                                            <option value="ingress">ingress</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="3">
+                                        <button ng-click="addToList(table.NewChain, table.Chains)" type="button" class="btn btn-primary">
+                                            <span class="fa fa-plus-circle"></span> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <tbody ng-repeat="chain in table.Chains">
+                                <tr>
+                                    <th scope="row">chain {{chain.Hook}}</th>
+                                    <td>
+                                        <select ng-model="table.NewChain.Hook" class="form-control">
+                                            <option value="prerouting">prerouting</option>
+                                            <option value="input">input</option>
+                                            <option value="forward">forward</option>
+                                            <option value="output">output</option>
+                                            <option value="postrouting">postrouting</option>
+                                            <option value="ingress">ingress</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="3">
+                                        <button ng-click="removeFromList($index, table.Chains)" type="button" class="btn btn-danger">
+                                            <span class="fa fa-minus-circle"></span> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th colspan="5">Rules</th>
+                                </tr>
+                                <tr>
+                                    <th>Match</th>
+                                    <th>Match Argument</th>
+                                    <th>Object</th>
+                                    <th>Action</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <select ng-model="chain.NewRule.Match" class="form-control">
+                                            <option value="iif">iif</option>
+                                            <option value="oif">oif</option>
+                                            <option value="meta">meta</option>
+                                            <option value="icmp">icmp</option>
+                                            <option value="icmpv6">icmpv6</option>
+                                            <option value="ip">ip</option>
+                                            <option value="ip6">ip6</option>
+                                            <option value="tcp">tcp</option>
+                                            <option value="udp">udp</option>
+                                            <option value="sctp">sctp</option>
+                                            <option value="ct state">ct state</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select ng-model="chain.NewRule.MatchArgument" class="form-control">
+                                            <option value=""></option>
+                                            <option ng-show="chain.NewRule.Match==='meta'" value="oif">oif</option>
+                                            <option ng-show="chain.NewRule.Match==='meta'" value="iif">iif</option>
+                                            <option ng-show="chain.NewRule.Match==='meta'" value="oifname">oifname</option>
+                                            <option ng-show="chain.NewRule.Match==='meta'" value="iifname">iifname</option>
+
+                                            <option ng-show="chain.NewRule.Match==='icmp'" value="type">type</option>
+
+                                            <option ng-show="chain.NewRule.Match==='icmpv6'" value="type">type</option>
+
+                                            <option ng-show="chain.NewRule.Match==='ip'" value="protocol">protocol</option>
+                                            <option ng-show="chain.NewRule.Match==='ip'" value="daddr">daddr</option>
+                                            <option ng-show="chain.NewRule.Match==='ip'" value="saddr">saddr</option>
+
+                                            <option ng-show="chain.NewRule.Match==='ip6'" value="daddr">daddr</option>
+                                            <option ng-show="chain.NewRule.Match==='ip6'" value="saddr">saddr</option>
+
+                                            <option ng-show="chain.NewRule.Match==='tcp'" value="dport">dport</option>
+                                            <option ng-show="chain.NewRule.Match==='tcp'" value="sport">sport</option>
+
+                                            <option ng-show="chain.NewRule.Match==='udp'" value="dport">dport</option>
+                                            <option ng-show="chain.NewRule.Match==='udp'" value="sport">sport</option>
+
+                                            <option ng-show="chain.NewRule.Match==='sctp'" value="dport">dport</option>
+                                            <option ng-show="chain.NewRule.Match==='sctp'" value="sport">sport</option>
+
+                                            <option ng-show="chain.NewRule.Match==='ct state'" value="new">new</option>
+                                            <option ng-show="chain.NewRule.Match==='ct state'" value="established">established</option>
+                                            <option ng-show="chain.NewRule.Match==='ct state'" value="related">related</option>
+                                            <option ng-show="chain.NewRule.Match==='ct state'" value="invalid">invalid</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input ng-model="chain.NewRule.Object" class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <select ng-model="chain.NewRule.Jump" class="form-control">
+                                            <option value="accept">accept</option>
+                                            <option value="reject">reject</option>
+                                            <option value="drop">drop</option>
+                                            <option value="snat">snat</option>
+                                            <option value="dnat">dnat</option>
+                                            <option value="counter">counter</option>
+                                            <option value="return">return</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button ng-click="addToList(chain.NewRule, chain.Rules)" type="button" class="btn btn-primary">
+                                            <span class="fa fa-plus-circle"></span> Add
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="rule in chain.Rules">
+                                    <td>
+                                        <select ng-model="rule.Match" class="form-control">
+                                            <option value="iif">iif</option>
+                                            <option value="oif">oif</option>
+                                            <option value="meta">meta</option>
+                                            <option value="icmp">icmp</option>
+                                            <option value="icmpv6">icmpv6</option>
+                                            <option value="ip">ip</option>
+                                            <option value="ip6">ip6</option>
+                                            <option value="tcp">tcp</option>
+                                            <option value="udp">udp</option>
+                                            <option value="sctp">sctp</option>
+                                            <option value="ct state">ct state</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select ng-model="rule.MatchArgument" class="form-control">
+                                            <option value=""></option>
+                                            <option ng-show="rule.Match==='meta'" value="oif">oif</option>
+                                            <option ng-show="rule.Match==='meta'" value="iif">iif</option>
+                                            <option ng-show="rule.Match==='meta'" value="oifname">oifname</option>
+                                            <option ng-show="rule.Match==='meta'" value="iifname">iifname</option>
+
+                                            <option ng-show="rule.Match==='icmp'" value="type">type</option>
+
+                                            <option ng-show="rule.Match==='icmpv6'" value="type">type</option>
+
+                                            <option ng-show="rule.Match==='ip'" value="protocol">protocol</option>
+                                            <option ng-show="rule.Match==='ip'" value="daddr">daddr</option>
+                                            <option ng-show="rule.Match==='ip'" value="saddr">saddr</option>
+
+                                            <option ng-show="rule.Match==='ip6'" value="daddr">daddr</option>
+                                            <option ng-show="rule.Match==='ip6'" value="saddr">saddr</option>
+
+                                            <option ng-show="rule.Match==='tcp'" value="dport">dport</option>
+                                            <option ng-show="rule.Match==='tcp'" value="sport">sport</option>
+
+                                            <option ng-show="rule.Match==='udp'" value="dport">dport</option>
+                                            <option ng-show="rule.Match==='udp'" value="sport">sport</option>
+
+                                            <option ng-show="rule.Match==='sctp'" value="dport">dport</option>
+                                            <option ng-show="rule.Match==='sctp'" value="sport">sport</option>
+
+                                            <option ng-show="rule.Match==='ct state'" value="new">new</option>
+                                            <option ng-show="rule.Match==='ct state'" value="established">established</option>
+                                            <option ng-show="rule.Match==='ct state'" value="related">related</option>
+                                            <option ng-show="rule.Match==='ct state'" value="invalid">invalid</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input ng-model="rule.Object" class="form-control" type="text">
+                                    </td>
+                                    <td>
+                                        <select ng-model="rule.Jump" class="form-control">
+                                            <option value="accept">accept</option>
+                                            <option value="reject">reject</option>
+                                            <option value="drop">drop</option>
+                                            <option value="snat">snat</option>
+                                            <option value="dnat">dnat</option>
+                                            <option value="counter">counter</option>
+                                            <option value="return">return</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button ng-click="removeFromList($index, chain.Rules)" type="button" class="btn btn-danger">
+                                            <span class="fa fa-minus-circle"></span> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-sm-8 col-xs-12">
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-12">
+            <a ng-click="apply()" class="btn btn-app float-right">
+                <i class="fa fa-play"></i> Apply
+            </a>
+            <a ng-click="save()" class="btn btn-app float-right">
+                <i class="fa fa-save"></i> Save
+            </a>
+            <a ng-click="load()" class="btn btn-app float-right">
+                <i class="fa fa-refresh"></i> Reload
+            </a>
+        </div>
+    </div>
+</div>

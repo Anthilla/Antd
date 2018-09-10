@@ -19,7 +19,7 @@ namespace Antd.cmds {
             public Guid MachineUid { get; set; }
         }
 
-        private static readonly string IdPath = $"{Parameter.AntdCfg}/machine-id";
+        private static readonly string IdPath = $"{Const.AntdCfg}/machine-id";
 
         public static Model Get() {
             if(File.Exists(IdPath)) {

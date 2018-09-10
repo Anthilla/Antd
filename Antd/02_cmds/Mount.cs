@@ -46,7 +46,7 @@ namespace Antd.cmds {
             //if(running.Length < 1) {
             //    return;
             //}
-            var directories = Directory.EnumerateDirectories(Parameter.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
+            var directories = Directory.EnumerateDirectories(Const.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             for(var i = 0; i < directories.Length; i++) {
                 var targetDirectory = MountHelper.ConvertDirectoryDirsPathToTarget(directories[i]);
                 if(MountHelper.IsAlreadyMounted(targetDirectory) == false) {
@@ -57,7 +57,7 @@ namespace Antd.cmds {
                     }
                 }
             }
-            var files = Directory.EnumerateFiles(Parameter.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
+            var files = Directory.EnumerateFiles(Const.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
             for(var i = 0; i < files.Length; i++) {
                 var targetFile = MountHelper.ConvertFileDirsPathToTarget(files[i]);
                 if(MountHelper.IsAlreadyMounted(targetFile) == false) {
@@ -105,7 +105,7 @@ namespace Antd.cmds {
             MountWithBind(source, mountPoint);
         }
 
-        private static readonly string[] DefaultWorkingDirectories = { Parameter.AntdCfg, Parameter.EtcSsh, Parameter.Root };
+        private static readonly string[] DefaultWorkingDirectories = { Const.AntdCfg, Const.EtcSsh, Const.Root };
 
         private static readonly Dictionary<string, string> DefaultWorkingDirectoriesWithOptions = new Dictionary<string, string> {
             {"/dev/shm", "-o remount,nodev,nosuid,mode=1777"},

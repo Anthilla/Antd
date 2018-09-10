@@ -47,7 +47,9 @@ namespace Antd.cmds {
                 return false;
             }
             var networkConfig = config.SharedNetwork;
-
+            if(!networkConfig.Active) {
+                return false;
+            }
             ConsoleLogger.Log("[cluster] applying changes");
             Prepare();
             var publicIp = networkConfig.VirtualIpAddress;
@@ -196,7 +198,7 @@ namespace Antd.cmds {
                 "    virtual_router_id 51",
                 $"    priority 100",
                 "    virtual_ipaddress {",
-                $"        {networkConfig.VirtualIpAddress}",
+                $"        {networkConfig.VirtualIpAddress}/{networkConfig.VirtualIpRange}",
                 "    }",
                 "    track_script {",
                 "        chk_haproxy",
@@ -234,6 +236,9 @@ namespace Antd.cmds {
             var config = Application.CurrentConfiguration.Cluster;
             if(config == null) {
                 ConsoleLogger.Error("[cluster] exit: config == null");
+                return false;
+            }
+            if(!config.SharedFs.Active) {
                 return false;
             }
             var nodesConfig = config.Nodes;
