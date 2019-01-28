@@ -25,6 +25,9 @@ namespace Antd.Modules {
 
             Post["/apply"] = x => {
                 Timedatectl.Apply();
+                if(Application.CurrentConfiguration.TimeDate.SyncFromRemoteServer) {
+                    Ntpdate.SyncFromRemoteServer(Application.CurrentConfiguration.TimeDate.RemoteNtpServer);
+                }
                 return HttpStatusCode.OK;
             };
         }

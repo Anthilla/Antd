@@ -43,6 +43,12 @@ namespace Antd {
             if(Application.CurrentConfiguration.TimeDate.SyncLocalClock) {
                 Timedatectl.SyncClock();
             }
+            if(Application.CurrentConfiguration.TimeDate.SyncFromRemoteServer) {
+                if(Systemctl.IsActive(Ntp.Service)) {
+                    Ntp.Stop();
+                }
+                Ntpdate.SyncFromRemoteServer(Application.CurrentConfiguration.TimeDate.RemoteNtpServer);
+            }
         }
     }
 }

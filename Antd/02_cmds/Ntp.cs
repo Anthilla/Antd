@@ -4,16 +4,20 @@ using System.IO;
 namespace Antd.cmds {
     public class Ntp {
 
-        private const string ntpdService = "ntpd.service";
+        public const string Service = "ntpd.service";
         private const string ntpConfFile = "/etc/ntp.conf";
         private const string ntpConfFileTmp = "/etc/ntp.conf.tmp";
 
         public static void Prepare() {
-            Systemctl.Enable(ntpdService);
+            Systemctl.Enable(Service);
         }
 
         public static void Start() {
-            Systemctl.Start(ntpdService);
+            Systemctl.Start(Service);
+        }
+
+        public static void Stop() {
+            Systemctl.Stop(Service);
         }
 
         public static bool Set() {
@@ -59,7 +63,7 @@ namespace Antd.cmds {
             if(File.Exists(ntpConfFileTmp)) {
                 File.Delete(ntpConfFileTmp);
             }
-            Systemctl.Start(ntpdService);
+            Systemctl.Start(Service);
             return true;
         }
     }
