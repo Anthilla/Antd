@@ -1,14 +1,11 @@
-"use strict";
+app.controller("SharedController", ["$scope", SharedController]);
 
-app.controller("SharedController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", SharedController]);
-
-function SharedController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function SharedController($scope) {
 
     $scope.addUnloadEvent = function () {
         if (window.addEventListener) {
             window.addEventListener("beforeunload", handleUnloadEvent);
         } else {
-            //For IE browsers
             window.attachEvent("onbeforeunload", handleUnloadEvent);
         }
     };
@@ -52,7 +49,7 @@ function SharedController($scope, $http, $interval, $timeout, $filter, notificat
 
     $scope.removeFromList = function (index, list) {
         list.splice(index, 1);
-    }
+    };
 
     $scope.selectizeSingleConfig = function () {
         return {
@@ -64,11 +61,11 @@ function SharedController($scope, $http, $interval, $timeout, $filter, notificat
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             maxItems: 1
         };
-    }
+    };
 
     $scope.selectizeConfig = function (list) {
         return {
@@ -80,7 +77,7 @@ function SharedController($scope, $http, $interval, $timeout, $filter, notificat
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -90,7 +87,7 @@ function SharedController($scope, $http, $interval, $timeout, $filter, notificat
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -98,12 +95,12 @@ function SharedController($scope, $http, $interval, $timeout, $filter, notificat
             options.push({ value: el });
         });
         return options;
-    }
+    };
 }
 
-app.controller("DashboardController", ["$rootScope", "$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", DashboardController]);
+app.controller("DashboardController", ["$rootScope", "$scope", "$http", "$interval", "notificationService", DashboardController]);
 
-function DashboardController($rootScope, $scope, $http, $interval, $timeout, $filter, notificationService) {
+function DashboardController($rootScope, $scope, $http, $interval, notificationService) {
 
     $scope.Dashboard = {
         LastUpdated: moment().toDate()
@@ -142,9 +139,9 @@ function DashboardController($rootScope, $scope, $http, $interval, $timeout, $fi
     });
 }
 
-app.controller("HostInfoController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", HostInfoController]);
+app.controller("HostInfoController", ["$scope", "$http", "notificationService", HostInfoController]);
 
-function HostInfoController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function HostInfoController($scope, $http, notificationService) {
 
     $scope.Host = null;
 
@@ -161,7 +158,7 @@ function HostInfoController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -176,7 +173,7 @@ function HostInfoController($scope, $http, $interval, $timeout, $filter, notific
         }, function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyHost");
@@ -187,12 +184,12 @@ function HostInfoController($scope, $http, $interval, $timeout, $filter, notific
         }, function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
 }
 
-app.controller("HostTimedateController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", HostTimedateController]);
+app.controller("HostTimedateController", ["$scope", "$http", "notificationService", HostTimedateController]);
 
-function HostTimedateController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function HostTimedateController($scope, $http, notificationService) {
     $scope.TimeDate = null;
 
     $scope.load = function () {
@@ -208,7 +205,7 @@ function HostTimedateController($scope, $http, $interval, $timeout, $filter, not
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -221,7 +218,7 @@ function HostTimedateController($scope, $http, $interval, $timeout, $filter, not
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyTimeDate");
@@ -230,12 +227,12 @@ function HostTimedateController($scope, $http, $interval, $timeout, $filter, not
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("HostWebserviceController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", HostWebserviceController]);
+app.controller("HostWebserviceController", ["$scope", "$http", "notificationService", HostWebserviceController]);
 
-function HostWebserviceController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function HostWebserviceController($scope, $http, notificationService) {
     $scope.Webservice = null;
 
     $scope.load = function () {
@@ -246,7 +243,7 @@ function HostWebserviceController($scope, $http, $interval, $timeout, $filter, n
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -259,7 +256,7 @@ function HostWebserviceController($scope, $http, $interval, $timeout, $filter, n
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyWebservice");
@@ -268,12 +265,12 @@ function HostWebserviceController($scope, $http, $interval, $timeout, $filter, n
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("BootParametersController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", BootParametersController]);
+app.controller("BootParametersController", ["$scope", "$http", "notificationService", BootParametersController]);
 
-function BootParametersController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function BootParametersController($scope, $http, notificationService) {
     $scope.BootParameters = null;
 
     $scope.load = function () {
@@ -284,7 +281,7 @@ function BootParametersController($scope, $http, $interval, $timeout, $filter, n
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -297,7 +294,7 @@ function BootParametersController($scope, $http, $interval, $timeout, $filter, n
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyBootParameters");
@@ -306,12 +303,12 @@ function BootParametersController($scope, $http, $interval, $timeout, $filter, n
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("BootModulesController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", BootModulesController]);
+app.controller("BootModulesController", ["$scope", "$http", "notificationService", BootModulesController]);
 
-function BootModulesController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function BootModulesController($scope, $http, notificationService) {
     $scope.BootModules = [];
 
     $scope.NewBootModule = {
@@ -328,7 +325,7 @@ function BootModulesController($scope, $http, $interval, $timeout, $filter, noti
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -341,7 +338,7 @@ function BootModulesController($scope, $http, $interval, $timeout, $filter, noti
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyBootModules");
@@ -350,12 +347,12 @@ function BootModulesController($scope, $http, $interval, $timeout, $filter, noti
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("BootServicesController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", BootServicesController]);
+app.controller("BootServicesController", ["$scope", "$http", "notificationService", BootServicesController]);
 
-function BootServicesController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function BootServicesController($scope, $http, notificationService) {
     $scope.BootServices = [];
 
     $scope.load = function () {
@@ -365,7 +362,7 @@ function BootServicesController($scope, $http, $interval, $timeout, $filter, not
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -378,7 +375,7 @@ function BootServicesController($scope, $http, $interval, $timeout, $filter, not
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyBootServices");
@@ -387,7 +384,7 @@ function BootServicesController($scope, $http, $interval, $timeout, $filter, not
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
 app.controller("SetupCommandsController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", SetupCommandsController]);
@@ -406,7 +403,7 @@ function SetupCommandsController($scope, $http, $interval, $timeout, $filter, no
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -419,7 +416,7 @@ function SetupCommandsController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applySetupCommands");
@@ -428,9 +425,9 @@ function SetupCommandsController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
-    $scope.moveUp = function (cmd, index, list) { //-1
+    $scope.moveUp = function (index, list) { //-1
         var from = index;
         var to = index - 1;
         var target = list[from];
@@ -439,9 +436,9 @@ function SetupCommandsController($scope, $http, $interval, $timeout, $filter, no
             list[k] = list[k + increment];
         }
         list[to] = target;
-    }
+    };
 
-    $scope.moveDown = function (cmd, index, list) { //+1
+    $scope.moveDown = function (index, list) { //+1
         var from = index;
         var to = index + 1;
         var target = list[from];
@@ -450,12 +447,12 @@ function SetupCommandsController($scope, $http, $interval, $timeout, $filter, no
             list[k] = list[k + increment];
         }
         list[to] = target;
-    }
+    };
 }
 
-app.controller("KnownDnsController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", KnownDnsController]);
+app.controller("KnownDnsController", ["$scope", "$http", "notificationService", KnownDnsController]);
 
-function KnownDnsController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function KnownDnsController($scope, $http, notificationService) {
     $scope.selectizeConfig = function (list) {
         return {
             valueField: "value",
@@ -466,7 +463,7 @@ function KnownDnsController($scope, $http, $interval, $timeout, $filter, notific
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -476,7 +473,7 @@ function KnownDnsController($scope, $http, $interval, $timeout, $filter, notific
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -484,7 +481,7 @@ function KnownDnsController($scope, $http, $interval, $timeout, $filter, notific
             options.push({ value: el });
         });
         return options;
-    }
+    };
 
     $scope.KnownDns = [];
 
@@ -498,7 +495,7 @@ function KnownDnsController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -511,7 +508,7 @@ function KnownDnsController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyKnownDns");
@@ -520,12 +517,12 @@ function KnownDnsController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("KnownHostsController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", KnownHostsController]);
+app.controller("KnownHostsController", ["$scope", "$http", "notificationService", KnownHostsController]);
 
-function KnownHostsController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function KnownHostsController($scope, $http, notificationService) {
     $scope.selectizeConfig = function (list) {
         return {
             valueField: "value",
@@ -536,7 +533,7 @@ function KnownHostsController($scope, $http, $interval, $timeout, $filter, notif
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -546,7 +543,7 @@ function KnownHostsController($scope, $http, $interval, $timeout, $filter, notif
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -554,7 +551,7 @@ function KnownHostsController($scope, $http, $interval, $timeout, $filter, notif
             options.push({ value: el });
         });
         return options;
-    }
+    };
 
     $scope.KnownHosts = [];
 
@@ -582,7 +579,7 @@ function KnownHostsController($scope, $http, $interval, $timeout, $filter, notif
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -595,7 +592,7 @@ function KnownHostsController($scope, $http, $interval, $timeout, $filter, notif
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyKnownHosts");
@@ -604,12 +601,12 @@ function KnownHostsController($scope, $http, $interval, $timeout, $filter, notif
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("KnownNetworksController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", KnownNetworksController]);
+app.controller("KnownNetworksController", ["$scope", "$http", "notificationService", KnownNetworksController]);
 
-function KnownNetworksController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function KnownNetworksController($scope, $http, notificationService) {
     $scope.KnownNetworks = [];
 
     $scope.NewKnownNetwork = {
@@ -629,7 +626,7 @@ function KnownNetworksController($scope, $http, $interval, $timeout, $filter, no
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -642,7 +639,7 @@ function KnownNetworksController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyKnownNetworks");
@@ -651,12 +648,12 @@ function KnownNetworksController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("TunController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", TunController]);
+app.controller("TunController", ["$scope", "$http", "notificationService", TunController]);
 
-function TunController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function TunController($scope, $http, notificationService) {
     $scope.Tuns = [];
 
     $scope.NewTun = {
@@ -670,7 +667,7 @@ function TunController($scope, $http, $interval, $timeout, $filter, notification
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -683,7 +680,7 @@ function TunController($scope, $http, $interval, $timeout, $filter, notification
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyTuns");
@@ -692,12 +689,12 @@ function TunController($scope, $http, $interval, $timeout, $filter, notification
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("TapController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", TapController]);
+app.controller("TapController", ["$scope", "$http", "notificationService", TapController]);
 
-function TapController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function TapController($scope, $http, notificationService) {
     $scope.Taps = [];
 
     $scope.NewTap = {
@@ -711,7 +708,7 @@ function TapController($scope, $http, $interval, $timeout, $filter, notification
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -724,7 +721,7 @@ function TapController($scope, $http, $interval, $timeout, $filter, notification
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyTaps");
@@ -733,12 +730,12 @@ function TapController($scope, $http, $interval, $timeout, $filter, notification
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("BridgeController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", BridgeController]);
+app.controller("BridgeController", ["$scope", "$http", "notificationService", BridgeController]);
 
-function BridgeController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function BridgeController($scope, $http, notificationService) {
     $scope.selectizeConfig = function (list) {
         return {
             valueField: "value",
@@ -749,7 +746,7 @@ function BridgeController($scope, $http, $interval, $timeout, $filter, notificat
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -759,7 +756,7 @@ function BridgeController($scope, $http, $interval, $timeout, $filter, notificat
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -767,7 +764,7 @@ function BridgeController($scope, $http, $interval, $timeout, $filter, notificat
             options.push({ value: el });
         });
         return options;
-    }
+    };
 
     $scope.Bridges = [];
     $scope.NetworkDevices = [];
@@ -796,7 +793,7 @@ function BridgeController($scope, $http, $interval, $timeout, $filter, notificat
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -809,7 +806,7 @@ function BridgeController($scope, $http, $interval, $timeout, $filter, notificat
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyBridges");
@@ -818,12 +815,12 @@ function BridgeController($scope, $http, $interval, $timeout, $filter, notificat
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("BondController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", BondController]);
+app.controller("BondController", ["$scope", "$http", "notificationService", BondController]);
 
-function BondController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function BondController($scope, $http, notificationService) {
     $scope.selectizeConfig = function (list) {
         return {
             valueField: "value",
@@ -834,7 +831,7 @@ function BondController($scope, $http, $interval, $timeout, $filter, notificatio
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -844,7 +841,7 @@ function BondController($scope, $http, $interval, $timeout, $filter, notificatio
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -852,7 +849,7 @@ function BondController($scope, $http, $interval, $timeout, $filter, notificatio
             options.push({ value: el });
         });
         return options;
-    }
+    };
 
     $scope.Bonds = [];
     $scope.NetworkDevices = [];
@@ -881,7 +878,7 @@ function BondController($scope, $http, $interval, $timeout, $filter, notificatio
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -894,7 +891,7 @@ function BondController($scope, $http, $interval, $timeout, $filter, notificatio
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyBonds");
@@ -903,12 +900,12 @@ function BondController($scope, $http, $interval, $timeout, $filter, notificatio
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("InternalNetworkController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", InternalNetworkController]);
+app.controller("InternalNetworkController", ["$scope", "$http", "notificationService", InternalNetworkController]);
 
-function InternalNetworkController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function InternalNetworkController($scope, $http, notificationService) {
     $scope.InternalNetwork = null;
     $scope.NetworkDevices = [];
 
@@ -924,7 +921,7 @@ function InternalNetworkController($scope, $http, $interval, $timeout, $filter, 
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -937,7 +934,7 @@ function InternalNetworkController($scope, $http, $interval, $timeout, $filter, 
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyInternalNetwork");
@@ -946,12 +943,12 @@ function InternalNetworkController($scope, $http, $interval, $timeout, $filter, 
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("ExternalNetworkController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", ExternalNetworkController]);
+app.controller("ExternalNetworkController", ["$scope", "$http", "notificationService", ExternalNetworkController]);
 
-function ExternalNetworkController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function ExternalNetworkController($scope, $http, notificationService) {
     $scope.ExternalNetwork = null;
     $scope.NetworkDevices = [];
 
@@ -967,7 +964,7 @@ function ExternalNetworkController($scope, $http, $interval, $timeout, $filter, 
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -980,7 +977,7 @@ function ExternalNetworkController($scope, $http, $interval, $timeout, $filter, 
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyExternalNetwork");
@@ -989,12 +986,12 @@ function ExternalNetworkController($scope, $http, $interval, $timeout, $filter, 
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("GatewaysController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", GatewaysController]);
+app.controller("GatewaysController", ["$scope", "$http", "notificationService", GatewaysController]);
 
-function GatewaysController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function GatewaysController($scope, $http, notificationService) {
     $scope.Gateways = [];
 
     $scope.NewGateway = {
@@ -1009,7 +1006,7 @@ function GatewaysController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1022,12 +1019,12 @@ function GatewaysController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("RoutingTablesController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", RoutingTablesController]);
+app.controller("RoutingTablesController", ["$scope", "$http", "notificationService", RoutingTablesController]);
 
-function RoutingTablesController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function RoutingTablesController($scope, $http, notificationService) {
     $scope.RoutingTables = [];
 
     $scope.NewRoutingTable = {
@@ -1042,7 +1039,7 @@ function RoutingTablesController($scope, $http, $interval, $timeout, $filter, no
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1055,7 +1052,7 @@ function RoutingTablesController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyRoutingTables");
@@ -1064,12 +1061,12 @@ function RoutingTablesController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("RoutingController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", RoutingController]);
+app.controller("RoutingController", ["$scope", "$http", "notificationService", RoutingController]);
 
-function RoutingController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function RoutingController($scope, $http, notificationService) {
     $scope.Routes = [];
     $scope.NetworkDevices = [];
     $scope.Gateways = [];
@@ -1098,7 +1095,7 @@ function RoutingController($scope, $http, $interval, $timeout, $filter, notifica
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1111,7 +1108,7 @@ function RoutingController($scope, $http, $interval, $timeout, $filter, notifica
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyRouting");
@@ -1120,12 +1117,12 @@ function RoutingController($scope, $http, $interval, $timeout, $filter, notifica
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("NetworkInterfacesController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", NetworkInterfacesController]);
+app.controller("NetworkInterfacesController", ["$scope", "$http", "notificationService", NetworkInterfacesController]);
 
-function NetworkInterfacesController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function NetworkInterfacesController($scope, $http, notificationService) {
     $scope.NetworkInterfaces = [];
     $scope.NetworkDevices = [];
 
@@ -1156,7 +1153,7 @@ function NetworkInterfacesController($scope, $http, $interval, $timeout, $filter
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1169,7 +1166,7 @@ function NetworkInterfacesController($scope, $http, $interval, $timeout, $filter
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyNetworkInterfaces");
@@ -1178,12 +1175,12 @@ function NetworkInterfacesController($scope, $http, $interval, $timeout, $filter
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("WifiController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", WifiController]);
+app.controller("WifiController", ["$scope", "$http", "notificationService", WifiController]);
 
-function WifiController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function WifiController($scope, $http, notificationService) {
     $scope.WiFi = null;
     $scope.NetworkDevices = [];
 
@@ -1199,7 +1196,7 @@ function WifiController($scope, $http, $interval, $timeout, $filter, notificatio
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1212,7 +1209,7 @@ function WifiController($scope, $http, $interval, $timeout, $filter, notificatio
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyWiFi");
@@ -1221,12 +1218,12 @@ function WifiController($scope, $http, $interval, $timeout, $filter, notificatio
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("PublicKeyController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", PublicKeyController]);
+app.controller("PublicKeyController", ["$scope", "$http", "notificationService", PublicKeyController]);
 
-function PublicKeyController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function PublicKeyController($scope, $http, notificationService) {
     $scope.PublicKey = {
         Value: "",
         Copyicon: "fa-clipboard",
@@ -1240,18 +1237,18 @@ function PublicKeyController($scope, $http, $interval, $timeout, $filter, notifi
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.changeIcon = function () {
         $scope.PublicKey.Copyicon = "fa-check";
         $scope.PublicKey.Copycolor = "fg-success";
-    }
+    };
 }
 
-app.controller("AuthorizedKeyController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", AuthorizedKeyController]);
+app.controller("AuthorizedKeyController", ["$scope", "$http", "notificationService", AuthorizedKeyController]);
 
-function AuthorizedKeyController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function AuthorizedKeyController($scope, $http, notificationService) {
     $scope.AuthorizedKeys = [];
 
     $scope.NewAuthorizedKey = {
@@ -1267,7 +1264,7 @@ function AuthorizedKeyController($scope, $http, $interval, $timeout, $filter, no
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1280,7 +1277,7 @@ function AuthorizedKeyController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyAuthorizedKeys");
@@ -1289,12 +1286,12 @@ function AuthorizedKeyController($scope, $http, $interval, $timeout, $filter, no
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("BindController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", BindController]);
+app.controller("BindController", ["$scope", "$http", "notificationService", BindController]);
 
-function BindController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function BindController($scope, $http, notificationService) {
     $scope.selectizeConfig = function (list) {
         return {
             valueField: "value",
@@ -1305,7 +1302,7 @@ function BindController($scope, $http, $interval, $timeout, $filter, notificatio
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -1315,7 +1312,7 @@ function BindController($scope, $http, $interval, $timeout, $filter, notificatio
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -1323,7 +1320,7 @@ function BindController($scope, $http, $interval, $timeout, $filter, notificatio
             options.push({ value: el });
         });
         return options;
-    }
+    };
 
     $scope.Bind = null;
 
@@ -1350,27 +1347,27 @@ function BindController($scope, $http, $interval, $timeout, $filter, notificatio
         $http.get("/bind").then(function (r) {
             $scope.Bind = r.data;
             $scope.Bind.ForwardersConfig = $scope.selectizeConfig($scope.Bind.Forwarders);
-            $scope.Bind.ForwardersOptions = $scope.selectizeOptions($scope.Bind.Forwarders)
+            $scope.Bind.ForwardersOptions = $scope.selectizeOptions($scope.Bind.Forwarders);
             $scope.Bind.AllowNotifyConfig = $scope.selectizeConfig($scope.Bind.AllowNotify);
-            $scope.Bind.AllowNotifyOptions = $scope.selectizeOptions($scope.Bind.AllowNotify)
+            $scope.Bind.AllowNotifyOptions = $scope.selectizeOptions($scope.Bind.AllowNotify);
             $scope.Bind.AllowTransferConfig = $scope.selectizeConfig($scope.Bind.AllowTransfer);
-            $scope.Bind.AllowTransferOptions = $scope.selectizeOptions($scope.Bind.AllowTransfer)
+            $scope.Bind.AllowTransferOptions = $scope.selectizeOptions($scope.Bind.AllowTransfer);
             $scope.Bind.AllowQueryConfig = $scope.selectizeConfig($scope.Bind.AllowQuery);
-            $scope.Bind.AllowQueryOptions = $scope.selectizeOptions($scope.Bind.AllowQuery)
+            $scope.Bind.AllowQueryOptions = $scope.selectizeOptions($scope.Bind.AllowQuery);
             $scope.Bind.AllowRecursionConfig = $scope.selectizeConfig($scope.Bind.AllowRecursion);
-            $scope.Bind.AllowRecursionOptions = $scope.selectizeOptions($scope.Bind.AllowRecursion)
+            $scope.Bind.AllowRecursionOptions = $scope.selectizeOptions($scope.Bind.AllowRecursion);
             $scope.Bind.ListenOnV6Config = $scope.selectizeConfig($scope.Bind.ListenOnV6);
-            $scope.Bind.ListenOnV6Options = $scope.selectizeOptions($scope.Bind.ListenOnV6)
+            $scope.Bind.ListenOnV6Options = $scope.selectizeOptions($scope.Bind.ListenOnV6);
             $scope.Bind.ListenOnPort53Config = $scope.selectizeConfig($scope.Bind.ListenOnPort53);
-            $scope.Bind.ListenOnPort53Options = $scope.selectizeOptions($scope.Bind.ListenOnPort53)
+            $scope.Bind.ListenOnPort53Options = $scope.selectizeOptions($scope.Bind.ListenOnPort53);
             $scope.Bind.ControlAllowConfig = $scope.selectizeConfig($scope.Bind.ControlAllow);
-            $scope.Bind.ControlAllowOptions = $scope.selectizeOptions($scope.Bind.ControlAllow)
+            $scope.Bind.ControlAllowOptions = $scope.selectizeOptions($scope.Bind.ControlAllow);
             $scope.Bind.ControlKeysConfig = $scope.selectizeConfig($scope.Bind.ControlKeys);
-            $scope.Bind.ControlKeysOptions = $scope.selectizeOptions($scope.Bind.ControlKeys)
+            $scope.Bind.ControlKeysOptions = $scope.selectizeOptions($scope.Bind.ControlKeys);
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1383,7 +1380,7 @@ function BindController($scope, $http, $interval, $timeout, $filter, notificatio
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyBind");
@@ -1392,12 +1389,12 @@ function BindController($scope, $http, $interval, $timeout, $filter, notificatio
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("VirshController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", VirshController]);
+app.controller("VirshController", ["$scope", "$http", "notificationService", VirshController]);
 
-function VirshController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function VirshController($scope, $http, notificationService) {
     $scope.Virsh = null;
 
     $scope.load = function () {
@@ -1407,7 +1404,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1420,7 +1417,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyVirsh");
@@ -1429,7 +1426,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.save = function () {
         console.log("saveVirsh");
@@ -1441,7 +1438,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshDestroy = function (domain) {
         console.log("virshDestroy");
@@ -1453,7 +1450,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshReboot = function (domain) {
         console.log("virshReboot");
@@ -1465,7 +1462,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshReset = function (domain) {
         console.log("virshReset");
@@ -1477,7 +1474,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshRestore = function (domain) {
         console.log("virshRestore");
@@ -1489,7 +1486,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshResume = function (domain) {
         console.log("virshResume");
@@ -1501,7 +1498,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshShutdown = function (domain) {
         console.log("virshShutdown");
@@ -1513,7 +1510,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshStart = function (domain) {
         console.log("virshStart");
@@ -1525,7 +1522,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshSuspend = function (domain) {
         console.log("virshSuspend");
@@ -1537,7 +1534,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshDompmsuspend = function (domain) {
         console.log("virshDompmsuspend");
@@ -1549,7 +1546,7 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.virshDompmwakeup = function (domain) {
         console.log("virshDompmwakeup");
@@ -1561,12 +1558,12 @@ function VirshController($scope, $http, $interval, $timeout, $filter, notificati
             $scope.load();
             notificationService.success('OK');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("FirewallController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", FirewallController]);
+app.controller("FirewallController", ["$scope", "$http", "$filter", "notificationService", FirewallController]);
 
-function FirewallController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function FirewallController($scope, $http, $filter, notificationService) {
     $scope.selectizeConfig = function (list) {
         return {
             valueField: "value",
@@ -1577,7 +1574,7 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
                 return {
                     value: input,
                     text: input
-                }
+                };
             },
             onChange: function (values) {
                 list = [];
@@ -1587,7 +1584,7 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.selectizeOptions = function (list) {
         var options = [];
@@ -1595,7 +1592,7 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
             options.push({ value: el });
         });
         return options;
-    }
+    };
 
     $scope.Firewall = null;
 
@@ -1652,7 +1649,7 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1666,7 +1663,7 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
     }
-
+        ;
     $scope.apply = function () {
         console.log("applyFirewall");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -1674,13 +1671,13 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.suggestSetName = function (set) {
         if (set.Name.length < 1) {
             set.Name = set.Type + "000";
         }
-    }
+    };
 
     $scope.selectizeFirewallTableSetsConfig = function (options, table) {
         return {
@@ -1698,7 +1695,7 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
             },
             delimiter: ","
         };
-    }
+    };
 
     $scope.createTmpSets = function (list) {
         var result = [];
@@ -1706,12 +1703,12 @@ function FirewallController($scope, $http, $interval, $timeout, $filter, notific
             result.push(el.Name);
         });
         return result;
-    }
+    };
 }
 
-app.controller("SyslogNgController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", SyslogNgController]);
+app.controller("SyslogNgController", ["$scope", "$http", "notificationService", SyslogNgController]);
 
-function SyslogNgController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function SyslogNgController($scope, $http, notificationService) {
     $scope.SyslogNg = null;
 
     $scope.load = function () {
@@ -1721,7 +1718,7 @@ function SyslogNgController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1734,7 +1731,7 @@ function SyslogNgController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applySyslogNg");
@@ -1743,12 +1740,12 @@ function SyslogNgController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("GroupSysController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", GroupSysController]);
+app.controller("GroupSysController", ["$scope", "$http", "notificationService", GroupSysController]);
 
-function GroupSysController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function GroupSysController($scope, $http, notificationService) {
     $scope.Groups = [];
 
     $scope.NewGroup = {
@@ -1763,7 +1760,7 @@ function GroupSysController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1776,7 +1773,7 @@ function GroupSysController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyGroup");
@@ -1785,12 +1782,12 @@ function GroupSysController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("UserSysController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", UserSysController]);
+app.controller("UserSysController", ["$scope", "$http", "notificationService", UserSysController]);
 
-function UserSysController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function UserSysController($scope, $http, notificationService) {
     $scope.UserSystem = [];
     $scope.Groups = [];
 
@@ -1813,7 +1810,7 @@ function UserSysController($scope, $http, $interval, $timeout, $filter, notifica
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1826,7 +1823,7 @@ function UserSysController($scope, $http, $interval, $timeout, $filter, notifica
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyUserSystem");
@@ -1835,12 +1832,12 @@ function UserSysController($scope, $http, $interval, $timeout, $filter, notifica
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("UserAppController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", UserAppController]);
+app.controller("UserAppController", ["$scope", "$http", "notificationService", UserAppController]);
 
-function UserAppController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function UserAppController($scope, $http, notificationService) {
     $scope.UserApplicative = [];
 
     $scope.NewUserApplicative = {
@@ -1856,7 +1853,7 @@ function UserAppController($scope, $http, $interval, $timeout, $filter, notifica
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.save = function () {
@@ -1869,12 +1866,12 @@ function UserAppController($scope, $http, $interval, $timeout, $filter, notifica
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("AppLocalController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", AppLocalController]);
+app.controller("AppLocalController", ["$scope", "$http", "notificationService", AppLocalController]);
 
-function AppLocalController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function AppLocalController($scope, $http, notificationService) {
     $scope.Apps = [];
 
     $scope.load = function () {
@@ -1884,7 +1881,7 @@ function AppLocalController($scope, $http, $interval, $timeout, $filter, notific
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.restart = function (app) {
@@ -1897,12 +1894,12 @@ function AppLocalController($scope, $http, $interval, $timeout, $filter, notific
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("LogController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", LogController]);
+app.controller("LogController", ["$scope", "$http", "notificationService", LogController]);
 
-function LogController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function LogController($scope, $http, notificationService) {
     $scope.load = function () {
         console.log("loadLog");
         $http.get("/journalctl").then(function (r) {
@@ -1910,13 +1907,13 @@ function LogController($scope, $http, $interval, $timeout, $filter, notification
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 }
 
-app.controller("NeighborhoodController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", NeighborhoodController]);
+app.controller("NeighborhoodController", ["$scope", "$http", "notificationService", NeighborhoodController]);
 
-function NeighborhoodController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function NeighborhoodController($scope, $http, notificationService) {
     $scope.Neighborhood = [];
 
     $scope.load = function () {
@@ -1926,7 +1923,7 @@ function NeighborhoodController($scope, $http, $interval, $timeout, $filter, not
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.createCluster = function () {
@@ -1947,12 +1944,12 @@ function NeighborhoodController($scope, $http, $interval, $timeout, $filter, not
         }, function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
 }
 
-app.controller("ClusterController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", ClusterController]);
+app.controller("ClusterController", ["$scope", "$http", "notificationService", ClusterController]);
 
-function ClusterController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function ClusterController($scope, $http, notificationService) {
 
     $scope.NewPortMapping = {
         ServiceName: '',
@@ -1978,7 +1975,7 @@ function ClusterController($scope, $http, $interval, $timeout, $filter, notifica
             });
             node.Volumes = volumes;
         });
-    }
+    };
 
     $scope.Cluster = null;
     $scope.NetworkDevices = [];
@@ -1995,7 +1992,7 @@ function ClusterController($scope, $http, $interval, $timeout, $filter, notifica
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
     $scope.addVolumeToNodes = function (label, nodes) {
@@ -2007,7 +2004,7 @@ function ClusterController($scope, $http, $interval, $timeout, $filter, notifica
             };
             nodes[i].Volumes.push(newGlusterVolume);
         }
-    }
+    };
 
     $scope.save = function () {
         console.log("saveCluster");
@@ -2018,7 +2015,7 @@ function ClusterController($scope, $http, $interval, $timeout, $filter, notifica
         $http.post("/cluster/save", data).then(function () {
             $scope.load();
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 
     $scope.apply = function () {
         console.log("applyCluster");
@@ -2029,12 +2026,12 @@ function ClusterController($scope, $http, $interval, $timeout, $filter, notifica
         $http.post("/cluster/deploy").then(function () {
             $scope.load();
         }, function (r) { notificationService.error('Error! ' + r); });
-    }
+    };
 }
 
-app.controller("ClusterStatusController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", ClusterStatusController]);
+app.controller("ClusterStatusController", ["$scope", "$http", "notificationService", ClusterStatusController]);
 
-function ClusterStatusController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function ClusterStatusController($scope, $http, notificationService) {
     $scope.load = function () {
         console.log("loadClusterStatus");
         $http.get("/cluster/status").then(function (r) {
@@ -2042,7 +2039,7 @@ function ClusterStatusController($scope, $http, $interval, $timeout, $filter, no
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 }
 
