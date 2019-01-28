@@ -9,6 +9,7 @@ using anthilla.core.Serialization;
 using System;
 using Antd.models;
 using anthilla.core;
+using Newtonsoft.Json;
 
 namespace Antd {
     public class SendInfoToCloudJob : Job {
@@ -118,7 +119,8 @@ namespace Antd {
                 DiskUsage = dus,
                 Services = services
             };
-            var converted = MSG.Serialize(status);
+            //var converted = MSG.Serialize(status);
+            var converted = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(status));
             var message = new MqttApplicationMessageBuilder()
              .WithTopic("/status")
              .WithPayload(converted)
