@@ -1,5 +1,4 @@
-﻿using Antd.cmds;
-using anthilla.core;
+﻿using anthilla.core;
 
 namespace Antd {
     public class Default {
@@ -80,7 +79,7 @@ namespace Antd {
             network.Routing = new NetRoute[] {
                 new NetRoute() { Default = true, Destination = "default", Gateway = primaryGateway, Device= primaryNetworkAdapterBridge }
             };
-   
+
             return network;
         }
     }

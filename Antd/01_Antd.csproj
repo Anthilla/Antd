@@ -124,6 +124,7 @@
     <Compile Include="02_cmds\Date.cs" />
     <Compile Include="02_cmds\Dmesg.cs" />
     <Compile Include="02_cmds\Echo.cs" />
+    <Compile Include="02_cmds\Ntpdate.cs" />
     <Compile Include="02_cmds\Kill.cs" />
     <Compile Include="02_cmds\Group.cs" />
     <Compile Include="02_cmds\PublicIp.cs" />

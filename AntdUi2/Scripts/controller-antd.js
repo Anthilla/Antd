@@ -3,10 +3,52 @@
 app.controller("SharedController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", SharedController]);
 
 function SharedController($scope, $http, $interval, $timeout, $filter, notificationService) {
+
+    $scope.addUnloadEvent = function () {
+        if (window.addEventListener) {
+            window.addEventListener("beforeunload", handleUnloadEvent);
+        } else {
+            //For IE browsers
+            window.attachEvent("onbeforeunload", handleUnloadEvent);
+        }
+    };
+
+    function handleUnloadEvent(event) {
+        event.returnValue = "Your warning text";
+    }
+
+    //Call this when you want to remove the event, example, if users fills necessary info
+    $scope.removeUnloadEvent = function () {
+        if (window.removeEventListener) {
+            window.removeEventListener("beforeunload", handleUnloadEvent);
+        } else {
+            window.detachEvent("onbeforeunload", handleUnloadEvent);
+        }
+    };
+
+    //You could add the event when validating a form, for example
+    $scope.validateForm = function () {
+        if ($scope.yourform.$invalid) {
+            $scope.addUnloadEvent();
+            return;
+        }
+        else {
+            $scope.removeUnloadEvent();
+        }
+    };
+
+    $scope.scrollConfigSidebar = {
+        autoHideScrollbar: false,
+        theme: 'light-3',
+        mouseWheel: { preventDefault: true },
+        axis: "y",
+        scrollInertia: 0
+    };
+
     $scope.addToList = function (element, list) {
         var newElement = angular.copy(element);
         list.push(newElement);
-    }
+    };
 
     $scope.removeFromList = function (index, list) {
         list.splice(index, 1);
@@ -59,13 +101,13 @@ function SharedController($scope, $http, $interval, $timeout, $filter, notificat
     }
 }
 
-app.controller("DashboardController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", DashboardController]);
+app.controller("DashboardController", ["$rootScope", "$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", DashboardController]);
 
-function DashboardController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function DashboardController($rootScope, $scope, $http, $interval, $timeout, $filter, notificationService) {
 
     $scope.Dashboard = {
         LastUpdated: moment().toDate()
-    }
+    };
 
     $scope.memoryLabels = ["Used", "Free", "Shared", "Buff/Cache", "Available"];
     $scope.memoryData = [0, 0, 0, 0, 0];
@@ -87,12 +129,17 @@ function DashboardController($scope, $http, $interval, $timeout, $filter, notifi
         }).catch(function (r) {
             notificationService.error('Error! ' + r);
         });
-    }
+    };
     $scope.load();
 
-    $interval(function () {
+    $scope.loadInterval = $interval(function () {
         $scope.load();
     }, 3000);
+
+    var dereg = $rootScope.$on('$locationChangeSuccess', function () {
+        $interval.cancel($scope.loadInterval);
+        dereg();
+    });
 }
 
 app.controller("HostInfoController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", HostInfoController]);
