@@ -1,10 +1,9 @@
-﻿using Antd.models;
+﻿using Antd.cmds;
+using Antd.models;
 using anthilla.core;
 using Nancy;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Antd.Modules {
@@ -32,6 +31,11 @@ namespace Antd.Modules {
             Post["/save"] = x => {
                 string data = Request.Form.Data;
                 var objects = JsonConvert.DeserializeObject<Cluster>(data);
+                foreach(var node in objects.Nodes) {
+                    if(string.IsNullOrEmpty(node.EntryPoint)) {
+                        node.EntryPoint = $"http://{node.PublicIp}:8086/";
+                    }
+                }
                 Application.CurrentConfiguration.Cluster = objects;
                 ConfigRepo.Save();
                 ConsoleLogger.Log("[cluster] save local configuration");
@@ -55,10 +59,10 @@ namespace Antd.Modules {
             /// </summary>
             Post["/apply"] = x => {
                 //Inizio ad applicarla localmente
-                cmds.Cluster.ApplyNetwork();
-                cmds.Cluster.ApplyServices();
-                cmds.Cluster.ApplyFs();
                 ConsoleLogger.Log("[cluster] apply local configuration");
+                ClusterSetup.ApplyNetwork();
+                ClusterSetup.ApplyServices();
+                ClusterSetup.ApplyFs();
                 return HttpStatusCode.OK;
             };
 
@@ -72,15 +76,20 @@ namespace Antd.Modules {
                     if(CommonString.AreEquals(localMachineUid, node.MachineUid)) {
                         continue;
                     }
-                    ConsoleLogger.Log($"[cluster] deploy configuration on node: {node.Hostname}");
-                    var dict = new Dictionary<string, string> {
-                        { "Data", configuration }
-                    };
-                    ConsoleLogger.Log($"[cluster] {node.Hostname}: send configuration to node");
-                    var status = ApiConsumer.Post(CommonString.Append(node.EntryPoint, "cluster/import"), dict);
-                    if(status == HttpStatusCode.OK) {
-                        ConsoleLogger.Log($"[cluster] {node.Hostname}: send apply command to node");
-                        ApiConsumer.Post(CommonString.Append(node.EntryPoint, "cluster/apply"));
+                    try {
+                        ConsoleLogger.Log($"[cluster] deploy configuration on node: {node.Hostname}");
+                        var dict = new Dictionary<string, string> {
+                            { "Data", configuration }
+                        };
+                        ConsoleLogger.Log($"[cluster] {node.Hostname}: send configuration to node");
+                        var status = ApiConsumer.Post(CommonString.Append(node.EntryPoint, "cluster/import"), dict);
+                        if(status == HttpStatusCode.OK) {
+                            ConsoleLogger.Log($"[cluster] {node.Hostname}: send apply command to node");
+                            ApiConsumer.Post(CommonString.Append(node.EntryPoint, "cluster/apply"));
+                        }
+                    }
+                    catch(System.Exception ex) {
+                        ConsoleLogger.Error(ex.ToString());
                     }
                 }
                 return HttpStatusCode.OK;
@@ -91,99 +100,15 @@ namespace Antd.Modules {
                 string conf = Request.Form.Data;
                 var remoteNode = JsonConvert.DeserializeObject<NodeModel[]>(conf);
                 if(remoteNode == null) {
-                    return HttpStatusCode.InternalServerError;
+                    return HttpStatusCode.BadRequest;
                 }
-                const string pathToPrivateKey = "/root/.ssh/id_rsa";
-                const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
-                if(!File.Exists(pathToPublicKey)) {
-                    var k = Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
-                    ConsoleLogger.Log(k);
-                }
-                var key = File.ReadAllText(pathToPublicKey);
-                if(string.IsNullOrEmpty(key)) {
-                    return HttpStatusCode.InternalServerError;
-                }
-                var dict = new Dictionary<string, string> { { "ApplePie", key } };
-
-                //1. controllo la configurazione
-                var cluster = Application.CurrentConfiguration.Cluster;
-                if(cluster == null) {
-                    cluster = new Cluster();
-                    cluster.Label = CommonString.Append("AntdCluster-", cluster.Id.ToString().Substring(0, 8));
-                }
-
-                var nodes = cluster.Nodes.ToList();
-                for(var i = 0; i < remoteNode.Length; i++) {
-                    var handshakeResult = ApiConsumer.Post($"{remoteNode[i].ModelUrl}cluster/handshake", dict);
-                    if(handshakeResult != HttpStatusCode.OK) {
-                        return HttpStatusCode.InternalServerError;
-                    }
-                    //ottengo i servizi pubblicati da quel nodo
-                    var publishedServices = ApiConsumer.Get<ClusterNodeService[]>($"{remoteNode[i].ModelUrl}device/services");
-                    nodes.Add(new ClusterNode() {
-                        MachineUid = remoteNode[i].MachineUid,
-                        Hostname = remoteNode[i].Hostname,
-                        PublicIp = remoteNode[i].PublicIp,
-                        EntryPoint = remoteNode[i].ModelUrl,
-                        Services = publishedServices
-                    });
-                }
-                //ho fatto gli handshake, quindi il nodo richiesto è pronto per essere integrato nel cluster
-
-                cluster.Active = true;
-                if(cluster.Id == Guid.Empty) {
-                    cluster.Id = Guid.NewGuid();
-                }
-                cluster.Nodes = nodes.ToArray();
-
-                cluster.SharedNetwork.Active = false;
-                var virtualPorts = cluster.SharedNetwork.PortMapping.ToList();
-                foreach(var node in nodes) {
-                    foreach(var svc in node.Services) {
-                        var checkPort = virtualPorts.FirstOrDefault(_ => _.ServicePort == svc.Port.ToString());
-                        if(checkPort == null) {
-                            virtualPorts.Add(new PortMapping() {
-                                ServiceName = svc.Name,
-                                ServicePort = svc.Port.ToString(),
-                                VirtualPort = string.Empty
-                            });
-                        }
-                    }
-                }
-                cluster.SharedNetwork.PortMapping = virtualPorts.ToArray();
-
-                Application.CurrentConfiguration.Cluster = cluster;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
+                var result = ClusterSetup.HandshakeBegin(remoteNode);
+                return result ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
             };
 
             Post["/handshake"] = x => {
                 string apple = Request.Form.ApplePie;
-                var info = apple.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                var key = info[0];
-                var keys = Application.CurrentConfiguration.Services.Ssh.AuthorizedKey.ToList();
-                if(!keys.Any(_ => _.Key == key)) {
-                    var userInfo = info[1].Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
-                    var model = new AuthorizedKey {
-                        User = userInfo[0],
-                        Host = userInfo[1],
-                        Key = key
-                    };
-                    keys.Add(model);
-                }
-                Application.CurrentConfiguration.Services.Ssh.AuthorizedKey = keys.ToArray();
-                ConfigRepo.Save();
-                Directory.CreateDirectory("/root/.ssh");
-                const string authorizedKeysPath = "/root/.ssh/authorized_keys";
-                if(File.Exists(authorizedKeysPath)) {
-                    var f = File.ReadAllText(authorizedKeysPath);
-                    if(!f.Contains(apple)) {
-                        File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
-                    }
-                }
-                else {
-                    File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
-                }
+                ClusterSetup.Handshake(apple);
                 return HttpStatusCode.OK;
             };
 

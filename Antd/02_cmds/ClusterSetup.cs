@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Antd.models;
 using anthilla.core;
-using System.Linq;
-using System.IO;
+using Nancy;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Antd.cmds {
 
@@ -10,7 +12,7 @@ namespace Antd.cmds {
     /// TODO
     /// - sincronizza file da sincronizzare (in ClusterFs)  ->  DirectoryWatcher
     /// </summary>
-    public class Cluster {
+    public class ClusterSetup {
 
         private const string haproxyVarLib = "/var/lib/haproxy";
         private const string ipNonlocalBindSysctlKey = "net.ipv4.ip_nonlocal_bind";
@@ -261,6 +263,103 @@ namespace Antd.cmds {
                 ConsoleLogger.Log("[cluster] shared fs is disabled");
                 return;
             }
+        }
+
+        public static bool HandshakeBegin(NodeModel[] remoteNode) {
+            const string pathToPrivateKey = "/root/.ssh/id_rsa";
+            const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
+            if(!File.Exists(pathToPublicKey)) {
+                var k = Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                ConsoleLogger.Log(k);
+            }
+            var key = File.ReadAllText(pathToPublicKey);
+            if(string.IsNullOrEmpty(key)) {
+                return false;
+            }
+            var dict = new Dictionary<string, string> { { "ApplePie", key } };
+
+            //1. controllo la configurazione
+            var cluster = Application.CurrentConfiguration.Cluster;
+            if(cluster == null) {
+                cluster = new Cluster();
+                cluster.Label = CommonString.Append("AntdCluster-", cluster.Id.ToString().Substring(0, 8));
+            }
+
+            var nodes = cluster.Nodes.ToList();
+            for(var i = 0; i < remoteNode.Length; i++) {
+                if(remoteNode[i].MachineUid == Application.MACHINE_ID.ToString()) {
+                    continue;
+                }
+                var handshakeResult = ApiConsumer.Post($"{remoteNode[i].ModelUrl}cluster/handshake", dict);
+                if(handshakeResult != HttpStatusCode.OK) {
+                    return false;
+                }
+                //ottengo i servizi pubblicati da quel nodo
+                var publishedServices = ApiConsumer.Get<ClusterNodeService[]>($"{remoteNode[i].ModelUrl}device/services");
+                nodes.Add(new ClusterNode() {
+                    MachineUid = remoteNode[i].MachineUid,
+                    Hostname = remoteNode[i].Hostname,
+                    PublicIp = remoteNode[i].PublicIp,
+                    EntryPoint = remoteNode[i].ModelUrl,
+                    Services = publishedServices
+                });
+            }
+            //ho fatto gli handshake, quindi il nodo richiesto è pronto per essere integrato nel cluster
+
+            cluster.Active = true;
+            if(cluster.Id == Guid.Empty) {
+                cluster.Id = Guid.NewGuid();
+            }
+            cluster.Nodes = nodes.ToArray();
+
+            cluster.SharedNetwork.Active = false;
+            var virtualPorts = cluster.SharedNetwork.PortMapping.ToList();
+            foreach(var node in nodes) {
+                foreach(var svc in node.Services) {
+                    var checkPort = virtualPorts.FirstOrDefault(_ => _.ServicePort == svc.Port.ToString());
+                    if(checkPort == null) {
+                        virtualPorts.Add(new PortMapping() {
+                            ServiceName = svc.Name,
+                            ServicePort = svc.Port.ToString(),
+                            VirtualPort = string.Empty
+                        });
+                    }
+                }
+            }
+            cluster.SharedNetwork.PortMapping = virtualPorts.ToArray();
+
+            Application.CurrentConfiguration.Cluster = cluster;
+            ConfigRepo.Save();
+            return true;
+        }
+
+        public static bool Handshake(string apple) {
+            var info = apple.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+            var key = info[0];
+            var keys = Application.CurrentConfiguration.Services.Ssh.AuthorizedKey.ToList();
+            if(!keys.Any(_ => _.Key == key)) {
+                var userInfo = info[1].Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+                var model = new AuthorizedKey {
+                    User = userInfo[0],
+                    Host = userInfo[1],
+                    Key = key
+                };
+                keys.Add(model);
+            }
+            Application.CurrentConfiguration.Services.Ssh.AuthorizedKey = keys.ToArray();
+            ConfigRepo.Save();
+            Directory.CreateDirectory("/root/.ssh");
+            const string authorizedKeysPath = "/root/.ssh/authorized_keys";
+            if(File.Exists(authorizedKeysPath)) {
+                var f = File.ReadAllText(authorizedKeysPath);
+                if(!f.Contains(apple)) {
+                    File.AppendAllLines(authorizedKeysPath, new List<string> { apple });
+                }
+            }
+            else {
+                File.WriteAllLines(authorizedKeysPath, new List<string> { apple });
+            }
+            return true;
         }
     }
 }

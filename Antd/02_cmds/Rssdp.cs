@@ -114,7 +114,6 @@ namespace Antd.cmds {
                         device.ModelNumber = fullDevice.ModelNumber;
                         device.ModelUrl = device.DescriptionLocation.Replace("device/description", "");
                         device.SerialNumber = fullDevice.SerialNumber;
-                        ConsoleLogger.Log($"[rssdp] Found device: {device.Hostname}");
                     }
                     catch(Exception) {
                         //

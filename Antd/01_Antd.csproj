@@ -121,6 +121,7 @@
   <ItemGroup>
     <Compile Include="02_cmds\App.cs" />
     <Compile Include="02_cmds\Applicative.cs" />
+    <Compile Include="02_cmds\ClusterSetup.cs" />
     <Compile Include="02_cmds\Date.cs" />
     <Compile Include="02_cmds\Dmesg.cs" />
     <Compile Include="02_cmds\Echo.cs" />
@@ -135,7 +136,6 @@
     <Compile Include="02_cmds\WiFi.cs" />
     <Compile Include="02_cmds\Uname.cs" />
     <Compile Include="02_cmds\Ca.cs" />
-    <Compile Include="02_cmds\Cluster.cs" />
     <Compile Include="02_cmds\GlusterFs.cs" />
     <Compile Include="02_cmds\Keepalived.cs" />
     <Compile Include="02_cmds\Tor.cs" />
@@ -150,6 +150,7 @@
     <Compile Include="03_scheduler\ClusterCheckHostnameJob.cs" />
     <Compile Include="03_scheduler\MachineChecklistJob.cs" />
     <Compile Include="03_scheduler\ClusterCheckHeartbeatJob.cs" />
+    <Compile Include="03_scheduler\ScanRssdpServices.cs" />
     <Compile Include="03_scheduler\UpdateRestAgentJob.cs" />
     <Compile Include="04_modules\BrctlModule.cs" />
     <Compile Include="04_modules\BondModule.cs" />

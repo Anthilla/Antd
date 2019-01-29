@@ -483,9 +483,11 @@ namespace Antd {
                 cmds.ClusterSetup.ApplyServices();
                 cmds.ClusterSetup.ApplyFs();
 
-                var settings =  Kvpbase.Settings.FromFile("/cfg/antd/vfs/system.json");
-                var ss = new Kvpbase.StorageServer(settings);
-                ss.Start();
+                if(File.Exists("/cfg/antd/vfs/system.json")) {
+                    var settings = Kvpbase.Settings.FromFile("/cfg/antd/vfs/system.json");
+                    var ss = new Kvpbase.StorageServer(settings);
+                    ss.Start();
+                }
 
                 ConsoleLogger.Log("[cluster] ready");
             }

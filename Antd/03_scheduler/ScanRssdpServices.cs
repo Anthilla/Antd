@@ -55,6 +55,11 @@ namespace Antd {
                     }
                 }
                 ConsoleLogger.Log($"[rssdp] {ScannedDevices.Count()} devices found");
+                foreach (var dev in ScannedDevices) {
+                    ConsoleLogger.Log($"[rssdp] Found device: {dev.MachineUid}");
+                }
+
+                ScanRunning = false;
             }
             else {
                 ConsoleLogger.Log($"[rssdp] Scan already running");
