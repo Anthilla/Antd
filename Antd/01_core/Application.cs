@@ -479,9 +479,9 @@ namespace Antd {
 
         private static void ManageCluster() {
             if(CurrentConfiguration.Cluster.Active) {
-                cmds.Cluster.ApplyNetwork();
-                cmds.Cluster.ApplyServices();
-                cmds.Cluster.ApplyFs();
+                cmds.ClusterSetup.ApplyNetwork();
+                cmds.ClusterSetup.ApplyServices();
+                cmds.ClusterSetup.ApplyFs();
 
                 var settings =  Kvpbase.Settings.FromFile("/cfg/antd/vfs/system.json");
                 var ss = new Kvpbase.StorageServer(settings);
@@ -519,6 +519,7 @@ namespace Antd {
             else {
                 ConsoleLogger.Log("[rssdp] cannot publish device: missing some route");
             }
+            Scheduler.ExecuteJob<ScanRssdpServices>();
         }
 
         private static void LaunchJobs() {

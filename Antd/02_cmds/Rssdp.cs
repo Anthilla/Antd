@@ -94,10 +94,15 @@ namespace Antd.cmds {
 
             using(var deviceLocator = new SsdpDeviceLocator()) {
                 var foundDevices = await deviceLocator.SearchAsync();
+                if(!foundDevices.Any()) {
+                    ConsoleLogger.Log("[rssdp] Can not find any device");
+                    return new List<NodeModel>();
+                }
                 foreach(var foundDevice in foundDevices) {
-                    var device = new NodeModel();
-                    device.RawUid = foundDevice.Usn;
-                    device.DescriptionLocation = foundDevice.DescriptionLocation.ToString();
+                    var device = new NodeModel {
+                        RawUid = foundDevice.Usn,
+                        DescriptionLocation = foundDevice.DescriptionLocation.ToString()
+                    };
                     device.PublicIp = ipRegex.Match(device.DescriptionLocation).Groups[1].Value;
                     try {
                         var fullDevice = await foundDevice.GetDeviceInfo();
