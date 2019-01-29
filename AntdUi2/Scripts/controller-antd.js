@@ -124,7 +124,7 @@ function DashboardController($rootScope, $scope, $http, $interval, notificationS
             ];
 
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -151,12 +151,12 @@ function HostInfoController($scope, $http, notificationService) {
         $http.get("/host").then(function (r) {
             $scope.Host = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/host/running").then(function (r) {
             $scope.HostRunning = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -171,7 +171,7 @@ function HostInfoController($scope, $http, notificationService) {
             $scope.load();
             notificationService.success('Data saved');
         }, function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
 
@@ -182,7 +182,7 @@ function HostInfoController($scope, $http, notificationService) {
             $scope.load();
             notificationService.success('Data applied');
         }, function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
 }
@@ -198,12 +198,12 @@ function HostTimedateController($scope, $http, notificationService) {
         $http.get("/timedate").then(function (r) {
             $scope.TimeDate = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/timedate/running").then(function (r) {
             $scope.TimeDateRunning = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -241,7 +241,7 @@ function HostWebserviceController($scope, $http, notificationService) {
         $http.get("/webservice").then(function (r) {
             $scope.Webservice = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -279,7 +279,7 @@ function BootParametersController($scope, $http, notificationService) {
         $http.get("/boot/parameters").then(function (r) {
             $scope.BootParameters = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -323,7 +323,7 @@ function BootModulesController($scope, $http, notificationService) {
         $http.get("/boot/modules").then(function (r) {
             $scope.BootModules = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -360,7 +360,7 @@ function BootServicesController($scope, $http, notificationService) {
         $http.get("/boot/services").then(function (r) {
             $scope.BootServices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -401,7 +401,7 @@ function SetupCommandsController($scope, $http, $interval, $timeout, $filter, no
         $http.get("/boot/commands").then(function (r) {
             $scope.SetupCommands = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -493,7 +493,7 @@ function KnownDnsController($scope, $http, notificationService) {
             $scope.KnownDns.NameserverOptions = $scope.selectizeOptions($scope.KnownDns.Nameserver);
 
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -572,12 +572,12 @@ function KnownHostsController($scope, $http, notificationService) {
                 $scope.KnownHosts[i].CommonNamesOptions = $scope.selectizeOptions($scope.KnownHosts[i].CommonNames);
             }
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/network/default/hosts").then(function (r) {
             $scope.DefaultKnownHosts = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -619,12 +619,12 @@ function KnownNetworksController($scope, $http, notificationService) {
         $http.get("/network/knownnetworks").then(function (r) {
             $scope.KnownNetworks = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/network/default/networks").then(function (r) {
             $scope.DefaultKnownNetworks = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -665,7 +665,7 @@ function TunController($scope, $http, notificationService) {
         $http.get("/network/tuns").then(function (r) {
             $scope.Tuns = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -706,7 +706,7 @@ function TapController($scope, $http, notificationService) {
         $http.get("/network/taps").then(function (r) {
             $scope.Taps = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -779,7 +779,7 @@ function BridgeController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/brctl").then(function (r) {
             $scope.NewBridge.LowerConfig = $scope.selectizeConfig($scope.NewBridge.Lower);
@@ -791,7 +791,7 @@ function BridgeController($scope, $http, notificationService) {
                 $scope.Bridges[i].LowerOptions = $scope.selectizeOptions($scope.Bridges[i].Lower);
             }
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -864,7 +864,7 @@ function BondController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/bond").then(function (r) {
             $scope.NewBond.LowerConfig = $scope.selectizeConfig($scope.NewBond.Lower);
@@ -876,7 +876,7 @@ function BondController($scope, $http, notificationService) {
                 $scope.Bonds[i].LowerOptions = $scope.selectizeOptions($scope.Bonds[i].Lower);
             }
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -914,12 +914,12 @@ function InternalNetworkController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/network/internalnetwork").then(function (r) {
             $scope.InternalNetwork = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -957,12 +957,12 @@ function ExternalNetworkController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/network/externalnetwork").then(function (r) {
             $scope.ExternalNetwork = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1004,7 +1004,7 @@ function GatewaysController($scope, $http, notificationService) {
         $http.get("/gateway").then(function (r) {
             $scope.Gateways = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1037,7 +1037,7 @@ function RoutingTablesController($scope, $http, notificationService) {
         $http.get("/network/routingtables").then(function (r) {
             $scope.RoutingTables = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1083,17 +1083,17 @@ function RoutingController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/gateway").then(function (r) {
             $scope.Gateways = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/network/routing").then(function (r) {
             $scope.Routes = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1146,12 +1146,12 @@ function NetworkInterfacesController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/network/interfaces").then(function (r) {
             $scope.NetworkInterfaces = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1189,12 +1189,12 @@ function WifiController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/wifi").then(function (r) {
             $scope.WiFi = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1235,7 +1235,7 @@ function PublicKeyController($scope, $http, notificationService) {
         $http.get("/ssh/publickey").then(function (r) {
             $scope.PublicKey.Value = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1262,7 +1262,7 @@ function AuthorizedKeyController($scope, $http, notificationService) {
         $http.get("/ssh/authorizedkeys").then(function (r) {
             $scope.AuthorizedKeys = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1365,7 +1365,7 @@ function BindController($scope, $http, notificationService) {
             $scope.Bind.ControlKeysConfig = $scope.selectizeConfig($scope.Bind.ControlKeys);
             $scope.Bind.ControlKeysOptions = $scope.selectizeOptions($scope.Bind.ControlKeys);
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1402,7 +1402,7 @@ function VirshController($scope, $http, notificationService) {
         $http.get("/virsh").then(function (r) {
             $scope.Virsh = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1647,7 +1647,7 @@ function FirewallController($scope, $http, $filter, notificationService) {
 
 
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1716,7 +1716,7 @@ function SyslogNgController($scope, $http, notificationService) {
         $http.get("/syslogng").then(function (r) {
             $scope.SyslogNg = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1758,7 +1758,7 @@ function GroupSysController($scope, $http, notificationService) {
         $http.get("/user/get/group").then(function (r) {
             $scope.Groups = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1803,12 +1803,12 @@ function UserSysController($scope, $http, notificationService) {
         $http.get("/user/get/system").then(function (r) {
             $scope.UserSystem = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/user/get/group/running").then(function (r) {
             $scope.Groups = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1851,7 +1851,7 @@ function UserAppController($scope, $http, notificationService) {
         $http.get("/user/get/applicative").then(function (r) {
             $scope.UserApplicative = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1879,7 +1879,7 @@ function AppLocalController($scope, $http, notificationService) {
         $http.get("/app").then(function (r) {
             $scope.Apps = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1904,9 +1904,7 @@ function LogController($scope, $http, notificationService) {
         console.log("loadLog");
         $http.get("/journalctl").then(function (r) {
             $scope.Journalctl = r.data;
-        }).catch(function (r) {
-            notificationService.error('Error! ' + r);
-        });
+        }).catch(function (r) { notificationService.error('Error! ' + r.data); });
     };
     $scope.load();
 }
@@ -1921,7 +1919,7 @@ function NeighborhoodController($scope, $http, notificationService) {
         $http.get("/rssdp/discover").then(function (r) {
             $scope.Neighborhood = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -1942,7 +1940,7 @@ function NeighborhoodController($scope, $http, notificationService) {
         $http.post("/cluster/handshake/begin", data).then(function () {
             $scope.load();
         }, function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
 }
@@ -1991,12 +1989,12 @@ function ClusterController($scope, $http, notificationService) {
         $http.get("/network/devices").then(function (r) {
             $scope.NetworkDevices = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
         $http.get("/cluster").then(function (r) {
             $scope.Cluster = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
@@ -2046,7 +2044,7 @@ function ClusterStatusController($scope, $http, notificationService) {
         $http.get("/cluster/status").then(function (r) {
             $scope.ClusterStatus = r.data;
         }).catch(function (r) {
-            notificationService.error('Error! ' + r);
+            notificationService.error('Error! ' + r.data);
         });
     };
     $scope.load();
