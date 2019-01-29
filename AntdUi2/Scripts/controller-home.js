@@ -289,10 +289,10 @@ app.directive("convertToNumber", function () {
         require: "ngModel",
         link: function (scope, element, attrs, ngModel) {
             ngModel.$parsers.push(function (val) {
-                return val != null ? parseInt(val, 10) : null;
+                return val !== null ? parseInt(val, 10) : null;
             });
             ngModel.$formatters.push(function (val) {
-                return val != null ? "" + val : null;
+                return val !== null ? "" + val : null;
             });
         }
     };
@@ -307,7 +307,7 @@ app.directive('iCheck', function ($timeout, $parse) {
 
             return $timeout(function () {
 
-                $scope.$watch($attrs.ngModel, function (newValue) {
+                $scope.$watch($attrs.ngModel, function () {
                     $(element).iCheck('update');
                 });
 
@@ -333,7 +333,7 @@ app.directive('iCheck', function ($timeout, $parse) {
             });
         }
     };
-})
+});
 
 app.service("authenticationService", function () {
     var authenticatedUser = null;
@@ -345,7 +345,7 @@ app.service("authenticationService", function () {
         get: function () {
             return authenticatedUser;
         }
-    }
+    };
 });
 
 app.controller("LanguageSwitchController", ["$scope", "$rootScope", "$translate",
@@ -387,7 +387,7 @@ function NavbarController($scope, $http, $window, $interval) {
 
     $scope.User = {
         Name: "master"
-    }
+    };
 
     //$http.get("/auth/user").success(function (data) {
     //    if (data == null) {
@@ -398,14 +398,14 @@ function NavbarController($scope, $http, $window, $interval) {
     //});
 
     $scope.AclHide = function (functionCode) {
-        if (functionCode == "0000000a") { return false; }
+        if (functionCode === "0000000a") { return false; }
         //var hasAcl = false;
         //while ($scope.AuthenticatedUser != null) {
         //    hasAcl = $scope.AuthenticatedUser.FunctionCodes.indexOf(functionCode) > 0;
         //    break;
         //}
         //return !hasAcl;
-    }
+    };
 }
 
 app.controller("SidebarController", ["$scope", "$http", SidebarController]);
