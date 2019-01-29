@@ -15,6 +15,13 @@
                     <table class="table table-condensed table-hover bg-white no-border table-fixed">
                         <tbody>
                             <tr>
+                                <th scope="row">UID</th>
+                                <td>
+                                    {{ Host.MachineUid }}
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
                                 <th scope="row">Host Name</th>
                                 <td>
                                     <input ng-model="Host.HostName" class="form-control" type="text">
