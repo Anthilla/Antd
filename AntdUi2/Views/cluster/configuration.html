@@ -38,15 +38,31 @@
                                 <th>PublicIp</th>
                                 <th></th>
                             </tr>
+                            <tr>
+                                <td>
+                                    <input ng-model="NewClusterNode.MachineUid" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <input ng-model="NewClusterNode.Hostname" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <input ng-model="NewClusterNode.PublicIp" class="form-control" type="text">
+                                </td>
+                                <td>
+                                    <button ng-click="addToList(NewClusterNode, Cluster.Nodes)" type="button" class="btn btn-primary">
+                                        <span class="fa fa-plus-circle"></span> Add
+                                    </button>
+                                </td>
+                            </tr>
                             <tr ng-repeat="node in Cluster.Nodes">
                                 <td>
                                     {{ node.MachineUid }}
                                 </td>
                                 <td>
-                                    {{ node.Hostname }}
+                                    <input ng-model="node.Hostname" class="form-control" type="text">
                                 </td>
                                 <td>
-                                    {{ node.PublicIp }}
+                                    <input ng-model="node.PublicIp" class="form-control" type="text">
                                 </td>
                                 <td>
                                     <button ng-click="removeFromList($index, Cluster.Nodes)" class="btn btn-warning">{{ 'REMOVE' | translate }}</button>
