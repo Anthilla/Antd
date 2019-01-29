@@ -30,18 +30,15 @@ namespace AntdUi {
             var urlFile = $"{Const.AntdCfg}/host_reference";
             while(!File.Exists(urlFile)) {
                 Thread.Sleep(500);
-                Console.WriteLine("waiting for server");
             }
             while(string.IsNullOrEmpty(File.ReadAllText(urlFile))) {
                 Thread.Sleep(500);
-                Console.WriteLine("waiting for server");
             }
             ServerUrl = File.ReadAllText(urlFile);
             CurrentConfiguration = Help.GetCurrentConfiguration();
             while(CurrentConfiguration == null) {
                 Thread.Sleep(500);
                 CurrentConfiguration = Help.GetCurrentConfiguration();
-                Console.WriteLine("waiting for server");
             }
             var port = CurrentConfiguration.WebService.GuiWebServicePort;
             var uri = $"http://localhost:{port}/";
