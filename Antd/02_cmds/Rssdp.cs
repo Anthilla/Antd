@@ -87,6 +87,7 @@ namespace Antd.cmds {
         }
 
         public static async Task<List<NodeModel>> Discover() {
+            ConsoleLogger.Log("[rssdp] Start scanning");
             var uidRegex = new Regex("uuid\\:([a-zA-Z0-9\\-]+)\\:");
             var ipRegex = new Regex("([0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3}\\.[0-9]{0,3})");
             var list = new List<NodeModel>();
@@ -108,6 +109,7 @@ namespace Antd.cmds {
                         device.ModelNumber = fullDevice.ModelNumber;
                         device.ModelUrl = device.DescriptionLocation.Replace("device/description", "");
                         device.SerialNumber = fullDevice.SerialNumber;
+                        ConsoleLogger.Log($"[rssdp] Found device: {device.Hostname}");
                     }
                     catch(Exception) {
                         //

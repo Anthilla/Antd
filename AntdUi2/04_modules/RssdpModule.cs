@@ -11,6 +11,10 @@ namespace AntdUi.Modules {
             Get["/discover"] = x => {
                 return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
             };
+
+            Get["/clear"] = x => {
+                return ApiConsumer.GetJson(CommonString.Append(Application.ServerUrl, Request.Path));
+            };
         }
     }
 }
