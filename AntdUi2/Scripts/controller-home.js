@@ -539,13 +539,13 @@ function SidebarController($scope, $http) {
                         { Name: 'Dashboard', Destination: 'cluster_status', ActiveClass: '' }
                     ]
                 },
-                {
-                    Name: 'Neighborhood',
-                    Icon: 'fa-windows',
-                    Links: [
-                        { Name: 'Find devices', Destination: 'cluster_neighborhood', ActiveClass: '' }
-                    ]
-                },
+                //{
+                //    Name: 'Neighborhood',
+                //    Icon: 'fa-windows',
+                //    Links: [
+                //        { Name: 'Find devices', Destination: 'cluster_neighborhood', ActiveClass: '' }
+                //    ]
+                //},
                 {
                     Name: 'Cluster',
                     Icon: 'fa-sitemap',
