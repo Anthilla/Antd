@@ -3,6 +3,7 @@ using Antd.models;
 using Antd.Mqtt;
 using anthilla.core;
 using anthilla.crypto;
+using anthilla.fs.Server;
 using anthilla.scheduler;
 using MQTTnet;
 using MQTTnet.Core;
@@ -140,7 +141,7 @@ namespace Antd {
             Rsync();
             Tor();
             ManageVirsh();
-            ManageMQTT().GetAwaiter().GetResult();
+            //ManageMQTT().GetAwaiter().GetResult();
             ManageCluster();
             DirectoryWatchers();
             CheckApplicationFileAcls();
@@ -448,17 +449,19 @@ namespace Antd {
         public static MqttSyncClient[] CLUSTER_MQTT_CLIENTS;
         public const int MQTT_DEFAULT_PORT = 31883;
 
-        private static async Task ManageMQTT() {
+        //private static async Task ManageMQTT() {
             //await MqttHandler.MqttServerSetupForCluster();
-        }
+        //}
 
-        public const int STORAGESERVER_DEFAULT_PORT = 38008;
+        public static ClusterWatcher CLUSTER_WATCHER = null;
+        public const int STORAGESERVER_PORT = 38008;
+        public static FileManagerServer STORAGESERVER = null;
 
         private static void ManageCluster() {
             if(CurrentConfiguration.Cluster.Active) {
-                cmds.ClusterSetup.ApplyNetwork();
-                cmds.ClusterSetup.ApplyServices();
-                cmds.ClusterSetup.ApplyFs();
+                ClusterSetup.ApplyNetwork();
+                ClusterSetup.ApplyServices();
+                ClusterSetup.ApplyFs();
 
                 if(File.Exists("/cfg/antd/vfs/system.json")) {
                     var settings = Kvpbase.Settings.FromFile("/cfg/antd/vfs/system.json");

@@ -1244,6 +1244,15 @@ function PublicKeyController($scope, $http, notificationService) {
         $scope.PublicKey.Copyicon = "fa-check";
         $scope.PublicKey.Copycolor = "fg-success";
     };
+
+    $scope.regen = function () {
+        console.log("regen");
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/ssh/publickey/regen").then(function () {
+            $scope.load();
+            notificationService.success('Key regeneration');
+        }, function (r) { notificationService.error('Error! ' + r.data); });
+    };
 }
 
 app.controller("AuthorizedKeyController", ["$scope", "$http", "notificationService", AuthorizedKeyController]);
@@ -1948,6 +1957,14 @@ function NeighborhoodController($scope, $http, notificationService) {
 app.controller("ClusterController", ["$scope", "$http", "notificationService", ClusterController]);
 
 function ClusterController($scope, $http, notificationService) {
+
+    $scope.NewSyncDirectory = {
+        Path: ''
+    };
+
+    $scope.NewSyncFile = {
+        Path: ''
+    };
 
     $scope.NewClusterNode = {
         MachineUid: '',

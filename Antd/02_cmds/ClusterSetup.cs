@@ -1,5 +1,6 @@
 ﻿using Antd.models;
 using anthilla.core;
+using anthilla.fs.Server;
 using Nancy;
 using System;
 using System.Collections.Generic;
@@ -167,16 +168,16 @@ namespace Antd.cmds {
 
         private static void SaveKeepalived(ClusterNetwork networkConfig, ClusterNode[] nodesConfig) {
             if(networkConfig == null) {
-                ConsoleLogger.Log("[cluster] keepalived not configured: missing network parameters");
+                ConsoleLogger.Error("[cluster] keepalived not configured: missing network parameters");
                 return;
             }
             if(!networkConfig.Active) {
-                ConsoleLogger.Log("[cluster] shared network is disabled");
+                ConsoleLogger.Warn("[cluster] shared network is disabled");
                 return;
             }
             var ports = networkConfig.PortMapping;
             if(!ports.Any()) {
-                ConsoleLogger.Log("[cluster] exit: !ports.Any()");
+                ConsoleLogger.Warn("[cluster] exit: !ports.Any()");
                 return;
             }
 
@@ -249,19 +250,36 @@ namespace Antd.cmds {
                 return false;
             }
             if(!nodesConfig.Any()) {
-                ConsoleLogger.Log("[cluster] shared network is disabled");
+                ConsoleLogger.Warn("[cluster] shared network is disabled");
                 return false;
             }
             var fsConfig = config.SharedFs;
-            SaveFileSystemSync(fsConfig, nodesConfig);
-            GlusterFs.Set();
+            SetStorageServer();
+            SaveFileSystemSync();
+            //GlusterFs.Set();
             return true;
         }
 
-        private static void SaveFileSystemSync(ClusterFs fsConfig, ClusterNode[] nodesConfig) {
-            if(fsConfig == null) {
-                ConsoleLogger.Log("[cluster] shared fs is disabled");
-                return;
+        private static void SetStorageServer() {
+            if(Application.STORAGESERVER == null) {
+                var nodeConfig = Application.CurrentConfiguration.Cluster.Nodes.FirstOrDefault(_ => _.MachineUid == Application.CurrentConfiguration.Host.MachineUid.ToString());
+                var localIp = nodeConfig == null ? "127.0.0.1" : nodeConfig.PublicIp;
+                ConsoleLogger.Warn($"[cluster] init storage server at {localIp}");
+                Application.STORAGESERVER = new FileManagerServer("127.0.0.1", Application.STORAGESERVER_PORT);
+                while(!Application.STORAGESERVER.IsListening) {
+                    Application.STORAGESERVER.Start();
+                    System.Threading.Thread.Sleep(1000);
+                }
+                ConsoleLogger.Warn("[cluster] start storage server");
+            }
+        }
+
+        private static void SaveFileSystemSync() {
+            if(Application.CLUSTER_WATCHER == null) {
+                Application.CLUSTER_WATCHER = new ClusterWatcher();
+            }
+            else {
+                Application.CLUSTER_WATCHER.SetWatchers(Application.CurrentConfiguration.Cluster.SharedFs.SyncDirectories.Select(_ => _.Path).ToArray());
             }
         }
 

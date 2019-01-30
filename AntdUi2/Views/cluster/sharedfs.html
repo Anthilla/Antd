@@ -23,6 +23,95 @@
                 </tbody>
                 <tbody>
                     <tr>
+                        <th colspan="12">
+                            Sync Directories
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="9">
+                            <input ng-model="NewSyncDirectory.Path" class="form-control" type="text">
+                        </td>
+                        <td colspan="3">
+                            <button ng-click="addToList(NewSyncDirectory, Cluster.SharedFs.SyncDirectories)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in Cluster.SharedFs.SyncDirectories">
+                        <th>
+                            {{ ($index + 1) }}
+                        </th>
+                        <td colspan="8">
+                            <input ng-model="el.Path" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="moveUp(cmd, $index, Cluster.SharedFs.SyncDirectories)"
+                                    ng-hide="$index===0;"
+                                    type="button" class="btn btn-info">
+                                <span class="fa fa-arrow-circle-up"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button ng-click="moveDown(cmd, $index, Cluster.SharedFs.SyncDirectories)"
+                                    ng-hide="$index===SetupCommands.length-1;"
+                                    type="button" class="btn btn-info">
+                                <span class="fa fa-arrow-circle-down"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, Cluster.SharedFs.SyncDirectories)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <th colspan="12">
+                            Sync Files
+                        </th>
+                    </tr>
+                    <tr>
+                        <td colspan="9">
+                            <input ng-model="NewSyncFile.Path" class="form-control" type="text">
+                        </td>
+                        <td colspan="3">
+                            <button ng-click="addToList(NewSyncFile, Cluster.SharedFs.SyncFiles)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in Cluster.SharedFs.SyncFiles">
+                        <th>
+                            {{ ($index + 1) }}
+                        </th>
+                        <td colspan="8">
+                            <input ng-model="el.Path" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="moveUp(cmd, $index, Cluster.SharedFs.SyncFiles)"
+                                    ng-hide="$index===0;"
+                                    type="button" class="btn btn-info">
+                                <span class="fa fa-arrow-circle-up"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button ng-click="moveDown(cmd, $index, Cluster.SharedFs.SyncFiles)"
+                                    ng-hide="$index===SetupCommands.length-1;"
+                                    type="button" class="btn btn-info">
+                                <span class="fa fa-arrow-circle-down"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, Cluster.SharedFs.SyncFiles)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <!--<tbody>
+                    <tr>
                         <th colspan="2">Volume Label</th>
                         <th></th>
                     </tr>
@@ -36,7 +125,7 @@
                             </button>
                         </td>
                     </tr>
-                    <!--<tr ng-repeat="label in Cluster.SharedFs.VolumesLabels">
+                    <tr ng-repeat="label in Cluster.SharedFs.VolumesLabels">
                         <td colspan="2">
                             <input ng-model="label" class="form-control" type="text">
                         </td>
@@ -45,10 +134,9 @@
                                 <span class="fa fa-minus-circle"></span> Remove
                             </button>
                         </td>
-                    </tr>-->
-                </tbody>
-
-                <tbody>
+                    </tr>
+                </tbody>-->
+                <!--<tbody>
                     <tr>
                         <th>Host</th>
                         <th colspan="2">Volumes</th>
@@ -66,7 +154,7 @@
                                         <td>Mountpoint</td>
                                         <td></td>
                                     </tr>
-                                    <!--<tr>
+                                    <tr>
                                         <td>
                                             <input ng-model="NewGlusterVolume.Label" class="form-control" type="text">
                                         </td>
@@ -81,7 +169,7 @@
                                                 <span class="fa fa-plus-circle"></span> Add
                                             </button>
                                         </td>
-                                    </tr>-->
+                                    </tr>
                                     <tr ng-repeat="volume in node.Volumes">
                                         <td>
                                             {{ volume.Label }}
@@ -101,7 +189,7 @@
                                 </tbody>
                             </table>
                         </td>
-                </tbody>
+                </tbody>-->
             </table>
         </div>
     </div>

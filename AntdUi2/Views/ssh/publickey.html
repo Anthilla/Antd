@@ -11,10 +11,15 @@
             <div class="x_panel">
                 <div class="x_content">
                     <a ng-click="changeIcon()"
-                       ngclipboard 
+                       ngclipboard
                        data-clipboard-text="{{PublicKey.Value}}"
                        class="btn btn-app float-right">
                         <i class="fa {{PublicKey.Copyicon}} {{PublicKey.Copycolor}}"></i> Copy
+                    </a>
+
+                    <a ng-click="regen()"
+                       class="btn btn-app float-right">
+                        <i class="fa fa-circle-o-notch"></i> Regen
                     </a>
                 </div>
             </div>

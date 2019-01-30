@@ -1,4 +1,5 @@
 ﻿using Antd.cmds;
+using anthilla.core;
 using Nancy;
 using Newtonsoft.Json;
 
@@ -6,11 +7,6 @@ namespace Antd.Modules {
     public class SshModule : NancyModule {
 
         public SshModule() : base("/ssh") {
-
-            //Before += ctx => {
-            //    System.Console.WriteLine(Request.Headers.UserAgent);
-            //    return null;
-            //};
 
             Get["/authorizedkeys"] = x => {
                 return JsonConvert.SerializeObject(Application.CurrentConfiguration.Services.Ssh.AuthorizedKey);
@@ -30,6 +26,15 @@ namespace Antd.Modules {
 
             Post["/apply/authorizedkeys"] = x => {
                 Ssh.SetAuthorizedKey();
+                return HttpStatusCode.OK;
+            };
+
+            Post["/publickey/regen"] = x => {
+                ConsoleLogger.Log("[ssh] regen key");
+                Ssh.RegenRootKeys();
+                if(Application.CurrentConfiguration.Cluster.Active) {
+                    ClusterSetup.HandshakeCheck();
+                }
                 return HttpStatusCode.OK;
             };
         }

@@ -1,8 +1,9 @@
-﻿using System.IO;
-using System.Linq;
+﻿using Antd.models;
 using anthilla.core;
+using anthilla.sync;
 using System.Collections.Generic;
-using Antd.models;
+using System.IO;
+using System.Linq;
 
 namespace Antd.cmds {
 
@@ -169,6 +170,102 @@ namespace Antd.cmds {
                 var destinationPath = CommonString.Append(clusterCfgFolder, "/", Application.CurrentConfiguration.Host.MachineUid.ToString(), "/", destinationFolderName, "/", e.Name);
                 ConsoleLogger.Log($"sync '{e.FullPath}' -> '{destinationPath}'");
                 StorageClient.CreateFile(nodes[i], e.FullPath, destinationPath);
+            }
+        }
+    }
+
+    public class ClusterWatcher {
+
+        private static Dictionary<string, FileSystemWatcher> Watchers = new Dictionary<string, FileSystemWatcher>();
+
+        /// <summary>
+        /// Costruttore, inizializza i watcher prendendo i dati GIA configurati (es. all'avvio di antd)
+        /// </summary>
+        public ClusterWatcher() {
+            var paths = Application.CurrentConfiguration.Cluster.SharedFs.SyncDirectories.Select(_ => _.Path);
+            ConsoleLogger.Log("[cluster] start watching file system");
+            if(!Watchers.Any()) {
+                foreach(var w in Watchers) {
+                    w.Value.Dispose();
+                }
+            }
+            foreach(var path in paths) {
+                if(!Watchers.ContainsKey(path)) {
+                    if(!Directory.Exists(path)) {
+                        Directory.CreateDirectory(path);
+                    }
+                    var fsw = new FileSystemWatcher(path) {
+                        NotifyFilter = NotifyFilters.LastWrite,
+                        IncludeSubdirectories = true,
+                        EnableRaisingEvents = true
+                    };
+                    fsw.Changed += FileChanged;
+                    ConsoleLogger.Log($"[cluster] start watching directory: {path}");
+                    Watchers[path] = fsw;
+                }
+            }
+        }
+
+        public void SetWatchers(string[] paths) {
+            foreach(var path in paths) {
+                if(!Watchers.ContainsKey(path)) {
+                    //non contiene - aggiungo
+                    AddWatcher(path);
+                }
+                else if(Watchers.ContainsKey(path)) {
+                    //contiene - rimuovo
+                    RemoveWatcher(path);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Aggiunge un watcher quando la classe è già stata avviata (es. salvo e modifico la conf)
+        /// </summary>
+        public void AddWatcher(string path) {
+            if(!Watchers.ContainsKey(path)) {
+                if(!Directory.Exists(path)) {
+                    Directory.CreateDirectory(path);
+                }
+                var fsw = new FileSystemWatcher(path) {
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    IncludeSubdirectories = true,
+                    EnableRaisingEvents = true
+                };
+                fsw.Changed += FileChanged;
+                Watchers[path] = fsw;
+            }
+        }
+
+        public void RemoveWatcher(string path) {
+            if(Watchers.ContainsKey(path)) {
+                Watchers[path].Dispose();
+                Watchers.Remove(path);
+            }
+        }
+
+        private static void FileChanged(object source, FileSystemEventArgs e) {
+            var extension = Path.GetExtension(e.FullPath);
+            if(extension == ".sign") {
+                return;
+            }
+            if(extension == ".delta") {
+                return;
+            }
+            if(extension == ".tmp") {
+                return;
+            }
+            ConsoleLogger.Log($"[cluster] change at {e.FullPath}");
+            var paths = Application.CurrentConfiguration.Cluster.SharedFs.SyncDirectories.Select(_ => _.Path);
+            foreach(var node in Application.CurrentConfiguration.Cluster.Nodes) {
+                if(CommonString.AreEquals(Application.CurrentConfiguration.Host.MachineUid.ToString(), node.MachineUid)) {
+                    continue;
+                }
+                ConsoleLogger.Log($"[cluster] syncing {e.FullPath} towards {node.Hostname}");
+                //Tsync.SyncRemoteFile(e.FullPath, e.FullPath, node.PublicIp, Application.STORAGESERVER_PORT);
+                var dir = Path.GetDirectoryName(e.FullPath) + "/";
+                var destination = $"root@{node.PublicIp}:{dir}";
+                Rsync.Sync(dir, destination);
             }
         }
     }

@@ -553,7 +553,7 @@ function SidebarController($scope, $http) {
                         { Name: 'Configuration', Destination: 'cluster_configuration', ActiveClass: '' },
                         { Name: 'Shared Network', Destination: 'cluster_sharednetwork', ActiveClass: '' },
                         { Name: 'Shared Services', Destination: 'cluster_sharedservices', ActiveClass: '' },
-                        { Name: 'Shared FS (glusterfs)', Destination: 'cluster_sharedfs', ActiveClass: '' }
+                        { Name: 'Shared FS', Destination: 'cluster_sharedfs', ActiveClass: '' }
                     ]
                 }
             ]

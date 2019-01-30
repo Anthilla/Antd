@@ -299,6 +299,10 @@
       <Project>{87063138-EEB6-46EC-AA88-21E2A4BAC550}</Project>
       <Name>anthilla.crypto</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\_shared\anthilla.fs\anthilla.fs.csproj">
+      <Project>{95AF459F-95CD-41A8-8226-8FCCEAE10E5F}</Project>
+      <Name>anthilla.fs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\_shared\anthilla.scheduler\anthilla.scheduler.csproj">
       <Project>{906b8907-f2ea-4baa-bf11-9f80c6e8bbbd}</Project>
       <Name>anthilla.scheduler</Name>

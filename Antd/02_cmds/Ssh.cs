@@ -33,6 +33,13 @@ namespace Antd.cmds {
             return true;
         }
 
+        public static bool RegenRootKeys() {
+            File.Delete(rootPublicKeyPath);
+            File.Delete(rootPrivateKeyPath);
+            CommonProcess.Do(sshkeygenFileLocation, sshkeygenArg, rootPrivateKeyPath);
+            return true;
+        }
+
         private const string authorizedKeysFile = "/root/.ssh/authorized_keys";
         private const string sshKeyType = "ssh-rsa";
 

@@ -1,5 +1,6 @@
 ﻿using Antd.sync;
 using anthilla.core;
+using anthilla.fs.Client;
 using System;
 using System.IO;
 
@@ -20,7 +21,7 @@ namespace Antd {
 
         private static string SignatureFileExtension = ".sign";
         private static string DeltaFileExtension = ".delta";
-        //private static string TmpFileExtension = ".tmp";
+        private static string TmpFileExtension = ".tmp";
 
         #region [    Sync: local ←→ local    ]
         public static void SyncDirectory(string sourcePath, string destinationPath, bool recursive = false) {
@@ -101,7 +102,7 @@ namespace Antd {
         #endregion
 
         #region [    Sync: local ←→ remote    ]
-        //public static void SyncDirectory(string sourcePath, string destinationPath, bool recursive = false) {
+        //public static void SyncRemoteDirectory(string sourcePath, string destinationPath, bool recursive = false) {
         //    if(!Directory.Exists(sourcePath)) {
         //        throw new DirectoryNotFoundException(sourcePath);
         //    }
@@ -116,7 +117,7 @@ namespace Antd {
         //    foreach(var sourceFile in sourceContent) {
         //        var destinationFile = sourceFile.Replace(sourcePath, destinationPath);
         //        try {
-        //            SyncFile(sourceFile, destinationFile);
+        //            SyncRemoteFile(sourceFile, destinationFile);
         //        }
         //        catch(Exception) {
         //            //continue
@@ -129,7 +130,7 @@ namespace Antd {
         //            if(!Directory.Exists(destinationDir)) {
         //                Directory.CreateDirectory(destinationDir);
         //            }
-        //            SyncDirectory(sourceDir, destinationDir, recursive);
+        //            SyncRemoteDirectory(sourceDir, destinationDir, recursive);
         //        }
         //    }
         //}
@@ -142,33 +143,33 @@ namespace Antd {
         /// <param name="destinationPath">File Path remoto</param>
         /// <param name="destinationAddress"></param>
         /// <param name="destinationPort"></param>
-        //public static void SyncRemoteFile(string sourcePath, string destinationPath, string destinationAddress, string destinationPort) {
-        //    if(!File.Exists(sourcePath)) {
-        //        throw new FileNotFoundException(sourcePath);
-        //    }
-        //    var sourceType = FileSystem.GetPathType(sourcePath);
-        //    if(sourceType != PathType.File) {
-        //        throw new WrongPathTypeException(sourcePath);
-        //    }
-        //    var client = new FileManagerClient(destinationAddress, destinationPort);
-        //    var fileName = Path.GetFileName(sourcePath);
-        //    var tmpDestinationPath = $"{destinationPath}{TmpFileExtension}";
-        //    client.FileUpload(sourcePath, tmpDestinationPath);
-        //    var destinationDirectory = Path.GetDirectoryName(destinationPath);
-        //    var sourceSignaturePath = $@"{sourcePath}{SignatureFileExtension}";
-        //    var destinationSignaturePath = $"{destinationDirectory}/{fileName}{SignatureFileExtension}";
-        //    //sign del file sorgente
-        //    GenerateSignature(sourcePath, sourceSignaturePath);
-        //    client.FileUpload(sourceSignaturePath, destinationSignaturePath);
-        //    //genero il delta
-        //    var sourceDeltaPath = $@"{sourcePath}{DeltaFileExtension}";
-        //    var destinationDeltaPath = $"{destinationDirectory}/{fileName}{DeltaFileExtension}";
-        //    GenerateDelta(sourceSignaturePath, sourcePath, sourceDeltaPath);
-        //    client.FileUpload(sourceDeltaPath, destinationDeltaPath);
-        //    client.FileSync(tmpDestinationPath, destinationSignaturePath, destinationDeltaPath, new[] { sourceSignaturePath, destinationDeltaPath });
-        //    //File.Delete(sourceDeltaPath);
-        //    //File.Delete(sourceSignaturePath);
-        //}
+        public static void SyncRemoteFile(string sourcePath, string destinationPath, string destinationAddress, int destinationPort) {
+            if(!File.Exists(sourcePath)) {
+                throw new FileNotFoundException(sourcePath);
+            }
+            var sourceType = FileSystem.GetPathType(sourcePath);
+            if(sourceType != PathType.File) {
+                throw new WrongPathTypeException(sourcePath);
+            }
+            var client = new FileManagerClient(destinationAddress, destinationPort);
+            var fileName = Path.GetFileName(sourcePath);
+            var tmpDestinationPath = $"{destinationPath}{TmpFileExtension}";
+            client.FileUpload(sourcePath, tmpDestinationPath);
+            var destinationDirectory = Path.GetDirectoryName(destinationPath);
+            var sourceSignaturePath = $@"{sourcePath}{SignatureFileExtension}";
+            var destinationSignaturePath = $"{destinationDirectory}/{fileName}{SignatureFileExtension}";
+            //sign del file sorgente
+            GenerateSignature(sourcePath, sourceSignaturePath);
+            client.FileUpload(sourceSignaturePath, destinationSignaturePath);
+            //genero il delta
+            var sourceDeltaPath = $@"{sourcePath}{DeltaFileExtension}";
+            var destinationDeltaPath = $"{destinationDirectory}/{fileName}{DeltaFileExtension}";
+            GenerateDelta(sourceSignaturePath, sourcePath, sourceDeltaPath);
+            client.FileUpload(sourceDeltaPath, destinationDeltaPath);
+            client.FileSync(tmpDestinationPath, destinationSignaturePath, destinationDeltaPath, new[] { sourceSignaturePath, destinationDeltaPath });
+            //File.Delete(sourceDeltaPath);
+            //File.Delete(sourceSignaturePath);
+        }
         #endregion
 
         #region [    Signature    ]
