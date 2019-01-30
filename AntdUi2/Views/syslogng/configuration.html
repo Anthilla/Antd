@@ -8,64 +8,60 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Enable
-                                </th>
-                                <td>
-                                    <input ng-model="SyslogNg.Active"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tbody ng-show="SyslogNg.Active">
-                            <tr>
-                                <th scope="row">
-                                    RootPath
-                                </th>
-                                <td>
-                                    <input ng-model="SyslogNg.RootPath" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    PortLevelApplication
-                                </th>
-                                <td>
-                                    <input ng-model="SyslogNg.PortLevelApplication" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    PortLevelSecurity
-                                </th>
-                                <td>
-                                    <input ng-model="SyslogNg.PortLevelSecurity" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    PortLevelSystem
-                                </th>
-                                <td>
-                                    <input ng-model="SyslogNg.PortLevelSystem" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            Enable
+                        </th>
+                        <td>
+                            <input ng-model="SyslogNg.Active"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="SyslogNg.Active">
+                    <tr>
+                        <th scope="row">
+                            RootPath
+                        </th>
+                        <td>
+                            <input ng-model="SyslogNg.RootPath" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            PortLevelApplication
+                        </th>
+                        <td>
+                            <input ng-model="SyslogNg.PortLevelApplication" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            PortLevelSecurity
+                        </th>
+                        <td>
+                            <input ng-model="SyslogNg.PortLevelSecurity" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            PortLevelSystem
+                        </th>
+                        <td>
+                            <input ng-model="SyslogNg.PortLevelSystem" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

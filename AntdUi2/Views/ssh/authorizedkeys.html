@@ -8,54 +8,50 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Host</th>
-                                <th>Key</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input ng-model="NewAuthorizedKey.User" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="NewAuthorizedKey.Host" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="NewAuthorizedKey.Key" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(NewAuthorizedKey, AuthorizedKeys)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="el in AuthorizedKeys">
-                                <td>
-                                    <input ng-model="el.User" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="el.Host" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="el.Key" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, AuthorizedKeys)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Host</th>
+                        <th>Key</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input ng-model="NewAuthorizedKey.User" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="NewAuthorizedKey.Host" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="NewAuthorizedKey.Key" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewAuthorizedKey, AuthorizedKeys)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in AuthorizedKeys">
+                        <td>
+                            <input ng-model="el.User" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="el.Host" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="el.Key" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, AuthorizedKeys)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

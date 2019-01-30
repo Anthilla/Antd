@@ -8,56 +8,52 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th>Host Address</th>
-                                <th>Common Names</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input ng-model="NewKnownHost.IpAddr" class="form-control" type="text">
-                                </td>
-                                <td ng-init="NewKnownHost.CommonNamesConfig=selectizeConfig(NewKnownHost.CommonNames);NewKnownHost.CommonNamesOptions=selectizeOptions(NewKnownHost.CommonNames);">
-                                    <selectize config="NewKnownHost.CommonNamesConfig" options="NewKnownHost.CommonNamesOptions" ng-model="NewKnownHost.CommonNames"></selectize>
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(NewKnownHost, KnownHosts)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="el in DefaultKnownHosts">
-                                <th scope="row">
-                                    {{ el.IpAddr }}
-                                </th>
-                                <td>
-                                    <span ng-repeat="name in el.CommonNames" class="tag tag-primary">{{ name }}</span>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr ng-repeat="el in KnownHosts">
-                                <th scope="row">
-                                    {{ el.IpAddr }}
-                                </th>
-                                <td>
-                                    <selectize config="el.CommonNamesConfig" options="el.CommonNamesOptions" ng-model="el.CommonNames"></selectize>
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, KnownHosts)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>Host Address</th>
+                        <th>Common Names</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input ng-model="NewKnownHost.IpAddr" class="form-control" type="text">
+                        </td>
+                        <td ng-init="NewKnownHost.CommonNamesConfig=selectizeConfig(NewKnownHost.CommonNames);NewKnownHost.CommonNamesOptions=selectizeOptions(NewKnownHost.CommonNames);">
+                            <selectize config="NewKnownHost.CommonNamesConfig" options="NewKnownHost.CommonNamesOptions" ng-model="NewKnownHost.CommonNames"></selectize>
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewKnownHost, KnownHosts)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in DefaultKnownHosts">
+                        <th scope="row">
+                            {{ el.IpAddr }}
+                        </th>
+                        <td>
+                            <span ng-repeat="name in el.CommonNames" class="tag tag-primary">{{ name }}</span>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="el in KnownHosts">
+                        <th scope="row">
+                            {{ el.IpAddr }}
+                        </th>
+                        <td>
+                            <selectize config="el.CommonNamesConfig" options="el.CommonNamesOptions" ng-model="el.CommonNames"></selectize>
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, KnownHosts)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

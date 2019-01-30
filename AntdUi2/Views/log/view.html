@@ -8,25 +8,21 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input ng-model="query" class="form-control has-feedback-left" placeholder="Search" type="text">
-                                    <span class="fa fa-search form-control-feedback left"
-                                          style="height: 34px; top: 1px; padding-top: 4px;"
-                                          aria-hidden="true"></span>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="line in Journalctl track by $index | filter:query">
-                                <td>{{ line }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input ng-model="query" class="form-control has-feedback-left" placeholder="Search" type="text">
+                            <span class="fa fa-search form-control-feedback left"
+                                  style="height: 34px; top: 1px; padding-top: 4px;"
+                                  aria-hidden="true"></span>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="line in Journalctl track by $index | filter:query">
+                        <td>{{ line }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

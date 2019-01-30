@@ -8,45 +8,41 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th>Application</th>
-                                <th>Prepared</th>
-                                <th>Mounted</th>
-                                <th>Running</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="app in Apps">
-                                <td>
-                                    {{ app.Name }}
-                                </td>
-                                <td>
-                                    <i ng-hide="app.Prepared" class="fa fa-circle fg-warning"></i>
-                                    <i ng-show="app.Prepared" class="fa fa-circle fg-success"></i>
-                                </td>
-                                <td>
-                                    <i ng-hide="app.Mounted" class="fa fa-circle fg-warning"></i>
-                                    <i ng-show="app.Mounted" class="fa fa-circle fg-success"></i>
-                                </td>
-                                <td>
-                                    <i ng-hide="app.Launched" class="fa fa-circle fg-warning"></i>
-                                    <i ng-show="app.Launched" class="fa fa-circle fg-success"></i>
-                                </td>
-                                <td>
-                                    <button ng-click="restart(app.Name)" type="button" class="btn btn-primary">
-                                        Restart
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>Application</th>
+                        <th>Prepared</th>
+                        <th>Mounted</th>
+                        <th>Running</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="app in Apps">
+                        <td>
+                            {{ app.Name }}
+                        </td>
+                        <td>
+                            <i ng-hide="app.Prepared" class="fa fa-circle fg-warning"></i>
+                            <i ng-show="app.Prepared" class="fa fa-circle fg-success"></i>
+                        </td>
+                        <td>
+                            <i ng-hide="app.Mounted" class="fa fa-circle fg-warning"></i>
+                            <i ng-show="app.Mounted" class="fa fa-circle fg-success"></i>
+                        </td>
+                        <td>
+                            <i ng-hide="app.Launched" class="fa fa-circle fg-warning"></i>
+                            <i ng-show="app.Launched" class="fa fa-circle fg-success"></i>
+                        </td>
+                        <td>
+                            <button ng-click="restart(app.Name)" type="button" class="btn btn-primary">
+                                Restart
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

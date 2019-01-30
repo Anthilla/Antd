@@ -10,43 +10,39 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Search
-                                </th>
-                                <td>
-                                    <input ng-model="KnownDns.Search" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    Domain
-                                </th>
-                                <td>
-                                    <input ng-model="KnownDns.Domain" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    Nameservers
-                                </th>
-                                <td ng-init="KnownDns.NameserverConfig=selectizeConfig(KnownDns.Nameserver);KnownDns.NameserverOptions=selectizeOptions(KnownDns.Nameserver);">
-                                    <selectize config="KnownDns.NameserverConfig"
-                                               options="KnownDns.NameserverOptions"
-                                               ng-model="KnownDns.Nameserver"></selectize>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            Search
+                        </th>
+                        <td>
+                            <input ng-model="KnownDns.Search" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            Domain
+                        </th>
+                        <td>
+                            <input ng-model="KnownDns.Domain" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            Nameservers
+                        </th>
+                        <td ng-init="KnownDns.NameserverConfig=selectizeConfig(KnownDns.Nameserver);KnownDns.NameserverOptions=selectizeOptions(KnownDns.Nameserver);">
+                            <selectize config="KnownDns.NameserverConfig"
+                                       options="KnownDns.NameserverOptions"
+                                       ng-model="KnownDns.Nameserver"></selectize>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

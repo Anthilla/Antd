@@ -8,57 +8,53 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Enable
-                                </th>
-                                <td>
-                                    <input ng-model="WiFi.Active"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tbody ng-show="WiFi.Active">
-                            <tr>
-                                <th scope="row">
-                                    Network Adapter
-                                </th>
-                                <td>
-                                    <select ng-model="WiFi.NetworkAdapter" class="form-control">
-                                        <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
-                                    </select>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    Ssid
-                                </th>
-                                <td>
-                                    <input ng-model="WiFi.Ssid" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    Password
-                                </th>
-                                <td>
-                                    <input ng-model="WiFi.Password" class="form-control" type="password">
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            Enable
+                        </th>
+                        <td>
+                            <input ng-model="WiFi.Active"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="WiFi.Active">
+                    <tr>
+                        <th scope="row">
+                            Network Adapter
+                        </th>
+                        <td>
+                            <select ng-model="WiFi.NetworkAdapter" class="form-control">
+                                <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
+                            </select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            Ssid
+                        </th>
+                        <td>
+                            <input ng-model="WiFi.Ssid" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            Password
+                        </th>
+                        <td>
+                            <input ng-model="WiFi.Password" class="form-control" type="password">
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

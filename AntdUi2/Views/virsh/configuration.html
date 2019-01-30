@@ -8,52 +8,48 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Enable
-                                </th>
-                                <td>
-                                    <input ng-model="Virsh.Active"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td colspan="2"></td>
-                            </tr>
-                        </tbody>
-                        <tbody ng-show="Virsh.Active">
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>State</th>
-                                <th></th>
-                            </tr>
-                            <tr ng-repeat="el in Virsh.Domains">
-                                <td>
-                                    {{ el.Id }}
-                                </td>
-                                <td>
-                                    {{ el.Name }}
-                                </td>
-                                <td>
-                                    {{ el.State }}
-                                </td>
-                                <td>
-                                    <button ng-click="virshDestroy(el.Name)" type="button" class="btn btn-primary">Destroy</button>
-                                    <button ng-click="virshReboot(el.Name)" type="button" class="btn btn-primary">Reboot</button>
-                                    <button ng-click="virshReset(el.Name)" type="button" class="btn btn-primary">Reset</button>
-                                    <button ng-click="virshShutdown(el.Name)" type="button" class="btn btn-primary">Shutdown</button>
-                                    <button ng-click="virshStart(el.Name)" type="button" class="btn btn-primary">Start</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            Enable
+                        </th>
+                        <td>
+                            <input ng-model="Virsh.Active"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+                <tbody ng-show="Virsh.Active">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>State</th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="el in Virsh.Domains">
+                        <td>
+                            {{ el.Id }}
+                        </td>
+                        <td>
+                            {{ el.Name }}
+                        </td>
+                        <td>
+                            {{ el.State }}
+                        </td>
+                        <td>
+                            <button ng-click="virshDestroy(el.Name)" type="button" class="btn btn-primary">Destroy</button>
+                            <button ng-click="virshReboot(el.Name)" type="button" class="btn btn-primary">Reboot</button>
+                            <button ng-click="virshReset(el.Name)" type="button" class="btn btn-primary">Reset</button>
+                            <button ng-click="virshShutdown(el.Name)" type="button" class="btn btn-primary">Shutdown</button>
+                            <button ng-click="virshStart(el.Name)" type="button" class="btn btn-primary">Start</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

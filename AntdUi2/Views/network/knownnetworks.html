@@ -8,56 +8,52 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th>Host Address</th>
-                                <th>Common Names</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input ng-model="NewKnownNetwork.Label" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="NewKnownNetwork.NetAddr" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(NewKnownNetwork, KnownNetworks)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="el in DefaultKnownNetworks">
-                                <th scope="row">
-                                    {{ el.Label }}
-                                </th>
-                                <td>
-                                    <span class="tag tag-primary">{{ el.NetAddr }}</span>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr ng-repeat="el in KnownNetworks">
-                                <th scope="row">
-                                    {{ el.Label }}
-                                </th>
-                                <td>
-                                    <input ng-model="el.NetAddr" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, KnownNetworks)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>Host Address</th>
+                        <th>Common Names</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input ng-model="NewKnownNetwork.Label" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="NewKnownNetwork.NetAddr" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewKnownNetwork, KnownNetworks)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in DefaultKnownNetworks">
+                        <th scope="row">
+                            {{ el.Label }}
+                        </th>
+                        <td>
+                            <span class="tag tag-primary">{{ el.NetAddr }}</span>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr ng-repeat="el in KnownNetworks">
+                        <th scope="row">
+                            {{ el.Label }}
+                        </th>
+                        <td>
+                            <input ng-model="el.NetAddr" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, KnownNetworks)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

@@ -8,47 +8,43 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th>Select Device</th>
-                                <th>Host</th>
-                                <th>Address</th>
-                                <th>Manufacturer</th>
-                                <th>Model Name</th>
-                                <th>Url</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="machine in Neighborhood" ng-init="machine.IsSelected=false;">
-                                <td >
-                                    <input ng-model="machine.IsSelected"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td >
-                                    {{ machine.Hostname }}
-                                </td>
-                                <td >
-                                    {{ machine.PublicIp }}
-                                </td>
-                                <td >
-                                    {{ machine.Manufacturer }}
-                                </td>
-                                <td >
-                                    {{ machine.ModelName }}
-                                </td>
-                                <td >
-                                    {{ machine.ModelUrl }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>Select Device</th>
+                        <th>Host</th>
+                        <th>Address</th>
+                        <th>Manufacturer</th>
+                        <th>Model Name</th>
+                        <th>Url</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="machine in Neighborhood" ng-init="machine.IsSelected=false;">
+                        <td>
+                            <input ng-model="machine.IsSelected"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            {{ machine.Hostname }}
+                        </td>
+                        <td>
+                            {{ machine.PublicIp }}
+                        </td>
+                        <td>
+                            {{ machine.Manufacturer }}
+                        </td>
+                        <td>
+                            {{ machine.ModelName }}
+                        </td>
+                        <td>
+                            {{ machine.ModelUrl }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

@@ -8,141 +8,137 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th colspan="5">Zone Name</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th colspan="5" scope="row">
-                                    <input ng-model="NewBindZone.Name" class="form-control" type="text">
-                                </th>
-                                <td>
-                                    <button ng-click="addToList(NewBindZone, Bind.Zones)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tbody ng-repeat="el in Bind.Zones">
-                            <tr>
-                                <th colspan="5" scope="row">
-                                    {{ el.Name }}
-                                </th>
-                                <td>
-                                    <button ng-click="removeFromList($index, Bind.Zones)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Name</th>
-                                <th>TTL</th>
-                                <th>Class</th>
-                                <th>Type</th>
-                                <th>Record</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input ng-model="el.NewZoneRecord.Name" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="el.NewZoneRecord.TTL" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    IN
-                                </td>
-                                <td>
-                                    <select ng-model="el.NewZoneRecord.Type" class="form-control">
-                                        <option value="A">A</option>
-                                        <option value="AAAA">AAAA</option>
-                                        <option value="CAA">CAA</option>
-                                        <option value="CNAME">CNAME</option>
-                                        <option value="MX">MX</option>
-                                        <option value="SRV">SRV</option>
-                                        <option value="TXT">TXT</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select ng-show="el.NewZoneRecord.Type==='CAA'" ng-model="el.NewZoneRecord.CaaFlag" class="form-control">
-                                        <option value="" disabled selected>CAA Flag</option>
-                                        <option value="0">0</option>
-                                        <option value="1">1</option>
-                                    </select>
-                                    <select ng-show="el.NewZoneRecord.Type==='CAA'" name="singleSelect" ng-model="el.NewZoneRecord.CaaTag" class="form-control">
-                                        <option value="" disabled selected>CAA Tag</option>
-                                        <option value="issue">issue</option>
-                                        <option value="issuewild">issuewild</option>
-                                        <option value="iodef">iodef</option>
-                                    </select>
-                                    <input ng-show="el.NewZoneRecord.Type==='SRV'||el.NewZoneRecord.Type==='MX'" placeholder="Priority" type="text" ng-model="el.NewZoneRecord.Priority" class="form-control">
-                                    <input ng-show="el.NewZoneRecord.Type==='SRV'" placeholder="Weight" type="text" ng-model="el.NewZoneRecord.Weight" class="form-control">
-                                    <input ng-show="el.NewZoneRecord.Type==='SRV'" placeholder="Port" type="text" ng-model="el.NewZoneRecord.Port" class="form-control">
-                                    <input placeholder="Record" type="text" ng-model="el.NewZoneRecord.Value" class="form-control">
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(el.NewZoneRecord, el.Records)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="record in el.Records">
-                                <td>
-                                    <input ng-model="record.Name" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <input ng-model="record.TTL" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    IN
-                                </td>
-                                <td>
-                                    <select ng-model="record.Type" class="form-control">
-                                        <option value="A">A</option>
-                                        <option value="AAAA">AAAA</option>
-                                        <option value="CAA">CAA</option>
-                                        <option value="CNAME">CNAME</option>
-                                        <option value="MX">MX</option>
-                                        <option value="SRV">SRV</option>
-                                        <option value="TXT">TXT</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select ng-show="record.Type==='CAA'" ng-model="record.CaaFlag" class="form-control">
-                                        <option value="" disabled selected>CAA Flag</option>
-                                        <option value="0">0</option>
-                                        <option value="1">1</option>
-                                    </select>
-                                    <select ng-show="record.Type==='CAA'" name="singleSelect" ng-model="record.CaaTag" class="form-control">
-                                        <option value="" disabled selected>CAA Tag</option>
-                                        <option value="issue">issue</option>
-                                        <option value="issuewild">issuewild</option>
-                                        <option value="iodef">iodef</option>
-                                    </select>
-                                    <input ng-show="record.Type==='SRV'||record.Type==='MX'" placeholder="Priority" type="text" ng-model="record.Priority" class="form-control">
-                                    <input ng-show="record.Type==='SRV'" placeholder="Weight" type="text" ng-model="record.Weight" class="form-control">
-                                    <input ng-show="record.Type==='SRV'" placeholder="Port" type="text" ng-model="record.Port" class="form-control">
-                                    <input placeholder="Record" type="text" ng-model="record.Value" class="form-control">
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, el.Records)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="6"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th colspan="5">Zone Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th colspan="5" scope="row">
+                            <input ng-model="NewBindZone.Name" class="form-control" type="text">
+                        </th>
+                        <td>
+                            <button ng-click="addToList(NewBindZone, Bind.Zones)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody ng-repeat="el in Bind.Zones">
+                    <tr>
+                        <th colspan="5" scope="row">
+                            {{ el.Name }}
+                        </th>
+                        <td>
+                            <button ng-click="removeFromList($index, Bind.Zones)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>TTL</th>
+                        <th>Class</th>
+                        <th>Type</th>
+                        <th>Record</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input ng-model="el.NewZoneRecord.Name" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="el.NewZoneRecord.TTL" class="form-control" type="text">
+                        </td>
+                        <td>
+                            IN
+                        </td>
+                        <td>
+                            <select ng-model="el.NewZoneRecord.Type" class="form-control">
+                                <option value="A">A</option>
+                                <option value="AAAA">AAAA</option>
+                                <option value="CAA">CAA</option>
+                                <option value="CNAME">CNAME</option>
+                                <option value="MX">MX</option>
+                                <option value="SRV">SRV</option>
+                                <option value="TXT">TXT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-show="el.NewZoneRecord.Type==='CAA'" ng-model="el.NewZoneRecord.CaaFlag" class="form-control">
+                                <option value="" disabled selected>CAA Flag</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                            </select>
+                            <select ng-show="el.NewZoneRecord.Type==='CAA'" name="singleSelect" ng-model="el.NewZoneRecord.CaaTag" class="form-control">
+                                <option value="" disabled selected>CAA Tag</option>
+                                <option value="issue">issue</option>
+                                <option value="issuewild">issuewild</option>
+                                <option value="iodef">iodef</option>
+                            </select>
+                            <input ng-show="el.NewZoneRecord.Type==='SRV'||el.NewZoneRecord.Type==='MX'" placeholder="Priority" type="text" ng-model="el.NewZoneRecord.Priority" class="form-control">
+                            <input ng-show="el.NewZoneRecord.Type==='SRV'" placeholder="Weight" type="text" ng-model="el.NewZoneRecord.Weight" class="form-control">
+                            <input ng-show="el.NewZoneRecord.Type==='SRV'" placeholder="Port" type="text" ng-model="el.NewZoneRecord.Port" class="form-control">
+                            <input placeholder="Record" type="text" ng-model="el.NewZoneRecord.Value" class="form-control">
+                        </td>
+                        <td>
+                            <button ng-click="addToList(el.NewZoneRecord, el.Records)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="record in el.Records">
+                        <td>
+                            <input ng-model="record.Name" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="record.TTL" class="form-control" type="text">
+                        </td>
+                        <td>
+                            IN
+                        </td>
+                        <td>
+                            <select ng-model="record.Type" class="form-control">
+                                <option value="A">A</option>
+                                <option value="AAAA">AAAA</option>
+                                <option value="CAA">CAA</option>
+                                <option value="CNAME">CNAME</option>
+                                <option value="MX">MX</option>
+                                <option value="SRV">SRV</option>
+                                <option value="TXT">TXT</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select ng-show="record.Type==='CAA'" ng-model="record.CaaFlag" class="form-control">
+                                <option value="" disabled selected>CAA Flag</option>
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                            </select>
+                            <select ng-show="record.Type==='CAA'" name="singleSelect" ng-model="record.CaaTag" class="form-control">
+                                <option value="" disabled selected>CAA Tag</option>
+                                <option value="issue">issue</option>
+                                <option value="issuewild">issuewild</option>
+                                <option value="iodef">iodef</option>
+                            </select>
+                            <input ng-show="record.Type==='SRV'||record.Type==='MX'" placeholder="Priority" type="text" ng-model="record.Priority" class="form-control">
+                            <input ng-show="record.Type==='SRV'" placeholder="Weight" type="text" ng-model="record.Weight" class="form-control">
+                            <input ng-show="record.Type==='SRV'" placeholder="Port" type="text" ng-model="record.Port" class="form-control">
+                            <input placeholder="Record" type="text" ng-model="record.Value" class="form-control">
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, el.Records)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

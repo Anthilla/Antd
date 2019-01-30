@@ -10,92 +10,88 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <thead>
-                            <tr>
-                                <th>Service</th>
-                                <th>Enabled</th>
-                                <th>Start</th>
-                                <th>Forced Restart</th>
-                                <th>Masked</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    <input ng-model="NewBootService.Service" class="form-control" type="text">
-                                </th>
-                                <td>
-                                    <input ng-model="NewBootService.Active"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <input ng-model="NewBootService.Start"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <input ng-model="NewBootService.ForceRestart"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <input ng-model="NewBootService.Masking"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(NewBootService, BootServices)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="el in BootServices">
-                                <th scope="row">
-                                    {{ el.Service }}
-                                </th>
-                                <td>
-                                    <input ng-model="el.Active"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <input ng-model="el.Start"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <input ng-model="el.ForceRestart"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <input ng-model="el.Masking"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, BootServices)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Enabled</th>
+                        <th>Start</th>
+                        <th>Forced Restart</th>
+                        <th>Masked</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">
+                            <input ng-model="NewBootService.Service" class="form-control" type="text">
+                        </th>
+                        <td>
+                            <input ng-model="NewBootService.Active"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <input ng-model="NewBootService.Start"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <input ng-model="NewBootService.ForceRestart"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <input ng-model="NewBootService.Masking"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewBootService, BootServices)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in BootServices">
+                        <th scope="row">
+                            {{ el.Service }}
+                        </th>
+                        <td>
+                            <input ng-model="el.Active"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <input ng-model="el.Start"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <input ng-model="el.ForceRestart"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <input ng-model="el.Masking"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, BootServices)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

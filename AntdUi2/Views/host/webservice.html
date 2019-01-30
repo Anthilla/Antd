@@ -10,83 +10,79 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Port</th>
-                                <td>
-                                    <input ng-model="Webservice.HostName" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Gui Web Service Active</th>
-                                <td>
-                                    <input ng-model="Webservice.GuiWebServiceActive"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr ng-show="Webservice.GuiWebServiceActive==true">
-                                <th scope="row">Gui Web Service Port</th>
-                                <td>
-                                    <input ng-model="Webservice.GuiWebServicePort" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cloud</th>
-                                <td>
-                                    <input ng-model="Webservice.Cloud" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cloud Port</th>
-                                <td>
-                                    <input ng-model="Webservice.CloudPort" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cloud User</th>
-                                <td>
-                                    <input ng-model="Webservice.CloudUser" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cloud Password</th>
-                                <td>
-                                    <input ng-model="Webservice.CloudPassword" class="form-control" type="password">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Gui Reference Backend Host</th>
-                                <td>
-                                    <input ng-model="Webservice.Host" class="form-control" type="text">
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Gui Reference Backend Protocol</th>
-                                <td>
-                                    <select ng-model="Webservice.Protocol" class="form-control">
-                                        <option value="http">http</option>
-                                        <option value="https">https</option>
-                                    </select>
-                                </td>
-                                <td>{{ HostRunning.HostLocation }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <th scope="row">Port</th>
+                        <td>
+                            <input ng-model="Webservice.HostName" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Gui Web Service Active</th>
+                        <td>
+                            <input ng-model="Webservice.GuiWebServiceActive"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr ng-show="Webservice.GuiWebServiceActive==true">
+                        <th scope="row">Gui Web Service Port</th>
+                        <td>
+                            <input ng-model="Webservice.GuiWebServicePort" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cloud</th>
+                        <td>
+                            <input ng-model="Webservice.Cloud" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cloud Port</th>
+                        <td>
+                            <input ng-model="Webservice.CloudPort" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cloud User</th>
+                        <td>
+                            <input ng-model="Webservice.CloudUser" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Cloud Password</th>
+                        <td>
+                            <input ng-model="Webservice.CloudPassword" class="form-control" type="password">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Gui Reference Backend Host</th>
+                        <td>
+                            <input ng-model="Webservice.Host" class="form-control" type="text">
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Gui Reference Backend Protocol</th>
+                        <td>
+                            <select ng-model="Webservice.Protocol" class="form-control">
+                                <option value="http">http</option>
+                                <option value="https">https</option>
+                            </select>
+                        </td>
+                        <td>{{ HostRunning.HostLocation }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

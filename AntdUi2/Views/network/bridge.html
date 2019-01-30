@@ -8,47 +8,43 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-fixed">
-                        <thead>
-                            <tr>
-                                <th>Interface ID</th>
-                                <th>Lower Interfaces</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input ng-model="NewBridge.Id" class="form-control" type="text">
-                                </td>
-                                <td ng-init="NewBridge.LowerConfig=selectizeConfig(NewBridge.Lower);NewBridge.LowerOptions=selectizeOptions(NewBridge.Lower);">
-                                    <selectize config="NewBridge.LowerConfig" options="NewBridge.LowerOptions" ng-model="NewBridge.Lower"></selectize>
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(NewBridge, Bridges)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr ng-repeat="el in Bridges">
-                                <th scope="row">
-                                    {{ el.Id }}
-                                </th>
-                                <td>
-                                    <selectize config="el.LowerConfig" options="el.LowerOptions" ng-model="el.Lower"></selectize>
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, Bridges)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-fixed">
+                <thead>
+                    <tr>
+                        <th>Interface ID</th>
+                        <th>Lower Interfaces</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input ng-model="NewBridge.Id" class="form-control" type="text">
+                        </td>
+                        <td ng-init="NewBridge.LowerConfig=selectizeConfig(NewBridge.Lower);NewBridge.LowerOptions=selectizeOptions(NewBridge.Lower);">
+                            <selectize config="NewBridge.LowerConfig" options="NewBridge.LowerOptions" ng-model="NewBridge.Lower"></selectize>
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewBridge, Bridges)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in Bridges">
+                        <th scope="row">
+                            {{ el.Id }}
+                        </th>
+                        <td>
+                            <selectize config="el.LowerConfig" options="el.LowerOptions" ng-model="el.Lower"></selectize>
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, Bridges)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

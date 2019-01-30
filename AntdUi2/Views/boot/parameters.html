@@ -10,21 +10,17 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr ng-repeat="param in BootParameters">
-                                <th scope="row">{{ param.Key }}</th>
-                                <td>
-                                    <input ng-model="param.Value" class="form-control" type="text">
-                                </td>
-                                <td>{{ param.Running }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr ng-repeat="param in BootParameters">
+                        <th scope="row">{{ param.Key }}</th>
+                        <td>
+                            <input ng-model="param.Value" class="form-control" type="text">
+                        </td>
+                        <td>{{ param.Running }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">

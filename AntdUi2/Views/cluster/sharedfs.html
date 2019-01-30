@@ -8,105 +8,101 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_content">
-                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Active</th>
-                                <td>
-                                    <input ng-model="Cluster.SharedFs.Active"
-                                           i-check
-                                           checked=""
-                                           type="checkbox">
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tbody>
-                            <tr>
-                                <th colspan="2">Volume Label</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <input ng-model="NewLabel" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <button ng-click="addToList(NewLabel, Cluster.SharedFs.VolumesLabels);addVolumeToNodes(NewLabel, Cluster.Nodes)" type="button" class="btn btn-primary">
-                                        <span class="fa fa-plus-circle"></span> Add
-                                    </button>
-                                </td>
-                            </tr>
-                            <!--<tr ng-repeat="label in Cluster.SharedFs.VolumesLabels">
-                                <td colspan="2">
-                                    <input ng-model="label" class="form-control" type="text">
-                                </td>
-                                <td>
-                                    <button ng-click="removeFromList($index, Cluster.SharedFs.VolumesLabels)" type="button" class="btn btn-danger">
-                                        <span class="fa fa-minus-circle"></span> Remove
-                                    </button>
-                                </td>
-                            </tr>-->
-                        </tbody>
+            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                <tbody>
+                    <tr>
+                        <th scope="row">Active</th>
+                        <td>
+                            <input ng-model="Cluster.SharedFs.Active"
+                                   i-check
+                                   checked=""
+                                   type="checkbox">
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <th colspan="2">Volume Label</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input ng-model="NewLabel" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="addToList(NewLabel, Cluster.SharedFs.VolumesLabels);addVolumeToNodes(NewLabel, Cluster.Nodes)" type="button" class="btn btn-primary">
+                                <span class="fa fa-plus-circle"></span> Add
+                            </button>
+                        </td>
+                    </tr>
+                    <!--<tr ng-repeat="label in Cluster.SharedFs.VolumesLabels">
+                        <td colspan="2">
+                            <input ng-model="label" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <button ng-click="removeFromList($index, Cluster.SharedFs.VolumesLabels)" type="button" class="btn btn-danger">
+                                <span class="fa fa-minus-circle"></span> Remove
+                            </button>
+                        </td>
+                    </tr>-->
+                </tbody>
 
-                        <tbody>
-                            <tr>
-                                <th>Host</th>
-                                <th colspan="2">Volumes</th>
-                            </tr>
-                            <tr ng-repeat="node in Cluster.Nodes">
-                                <td>
-                                    {{ node.Hostname }}
-                                </td>
-                                <td colspan="2">
-                                    <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                                        <tbody>
-                                            <tr>
-                                                <td>Label</td>
-                                                <td>Brick</td>
-                                                <td>Mountpoint</td>
-                                                <td></td>
-                                            </tr>
-                                            <!--<tr>
-                                                <td>
-                                                    <input ng-model="NewGlusterVolume.Label" class="form-control" type="text">
-                                                </td>
-                                                <td>
-                                                    <input ng-model="NewGlusterVolume.Brick" class="form-control" type="text">
-                                                </td>
-                                                <td>
-                                                    <input ng-model="NewGlusterVolume.Mountpoint" class="form-control" type="text">
-                                                </td>
-                                                <td>
-                                                    <button ng-click="addToList(NewGlusterVolume, node.Volumes)" type="button" class="btn btn-primary">
-                                                        <span class="fa fa-plus-circle"></span> Add
-                                                    </button>
-                                                </td>
-                                            </tr>-->
-                                            <tr ng-repeat="volume in node.Volumes">
-                                                <td>
-                                                    {{ volume.Label }}
-                                                </td>
-                                                <td>
-                                                    <input ng-model="volume.Brick" class="form-control" type="text">
-                                                </td>
-                                                <td>
-                                                    <input ng-model="volume.MountPoint" class="form-control" type="text">
-                                                </td>
-                                                <td>
-                                                    <button ng-click="removeFromList($index, node.Volumes)" type="button" class="btn btn-danger">
-                                                        <span class="fa fa-minus-circle"></span> Remove
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                <tbody>
+                    <tr>
+                        <th>Host</th>
+                        <th colspan="2">Volumes</th>
+                    </tr>
+                    <tr ng-repeat="node in Cluster.Nodes">
+                        <td>
+                            {{ node.Hostname }}
+                        </td>
+                        <td colspan="2">
+                            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+                                <tbody>
+                                    <tr>
+                                        <td>Label</td>
+                                        <td>Brick</td>
+                                        <td>Mountpoint</td>
+                                        <td></td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>
+                                            <input ng-model="NewGlusterVolume.Label" class="form-control" type="text">
+                                        </td>
+                                        <td>
+                                            <input ng-model="NewGlusterVolume.Brick" class="form-control" type="text">
+                                        </td>
+                                        <td>
+                                            <input ng-model="NewGlusterVolume.Mountpoint" class="form-control" type="text">
+                                        </td>
+                                        <td>
+                                            <button ng-click="addToList(NewGlusterVolume, node.Volumes)" type="button" class="btn btn-primary">
+                                                <span class="fa fa-plus-circle"></span> Add
+                                            </button>
+                                        </td>
+                                    </tr>-->
+                                    <tr ng-repeat="volume in node.Volumes">
+                                        <td>
+                                            {{ volume.Label }}
+                                        </td>
+                                        <td>
+                                            <input ng-model="volume.Brick" class="form-control" type="text">
+                                        </td>
+                                        <td>
+                                            <input ng-model="volume.MountPoint" class="form-control" type="text">
+                                        </td>
+                                        <td>
+                                            <button ng-click="removeFromList($index, node.Volumes)" type="button" class="btn btn-danger">
+                                                <span class="fa fa-minus-circle"></span> Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row">
