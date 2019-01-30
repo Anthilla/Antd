@@ -1,7 +1,6 @@
 ﻿using Antd.cmds;
 using anthilla.core;
 using anthilla.scheduler;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd {
@@ -71,6 +70,7 @@ namespace Antd {
                 return;
             }
             var currentKnownHosts = Application.CurrentConfiguration.Network.KnownHosts.ToList();
+            bool configIsChanged = false;
 
             //per ogni nodo del cluster
             for(var i = 0; i < clusterNodes.Length; i++) {
@@ -86,6 +86,7 @@ namespace Antd {
                         CommonNames = new string[] { nodeName }
                     };
                     currentKnownHosts.Add(host);
+                    configIsChanged = true;
                 }
                 else {
                     //controllo i common names
@@ -93,11 +94,14 @@ namespace Antd {
                         var commonNamesUpdate = currentKnownNode.CommonNames.ToList();
                         commonNamesUpdate.Add(nodeName);
                         currentKnownNode.CommonNames = commonNamesUpdate.ToArray();
+                        configIsChanged = true;
                     }
                 }
             }
             Application.CurrentConfiguration.Network.KnownHosts = currentKnownHosts.ToArray();
-            ConfigRepo.Save();
+            if(configIsChanged) {
+                ConfigRepo.Save();
+            }
             Dns.Set();
         }
     }
