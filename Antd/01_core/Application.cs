@@ -449,7 +449,7 @@ namespace Antd {
         public const int MQTT_DEFAULT_PORT = 31883;
 
         private static async Task ManageMQTT() {
-            await MqttHandler.MqttServerSetupForCluster();
+            //await MqttHandler.MqttServerSetupForCluster();
         }
 
         public const int STORAGESERVER_DEFAULT_PORT = 38008;

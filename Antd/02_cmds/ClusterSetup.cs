@@ -265,6 +265,11 @@ namespace Antd.cmds {
             }
         }
 
+        /// <summary>
+        /// Deprecato
+        /// </summary>
+        /// <param name="remoteNode"></param>
+        /// <returns></returns>
         public static bool HandshakeBegin(NodeModel[] remoteNode) {
             const string pathToPrivateKey = "/root/.ssh/id_rsa";
             const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
@@ -333,12 +338,88 @@ namespace Antd.cmds {
             return true;
         }
 
+        public static bool HandshakeCheck() {
+            ConsoleLogger.Log("[handshake] check");
+            const string pathToPrivateKey = "/root/.ssh/id_rsa";
+            const string pathToPublicKey = "/root/.ssh/id_rsa.pub";
+            if(!File.Exists(pathToPublicKey)) {
+                ConsoleLogger.Log("[handshake] generate ssh key");
+                var k = Bash.Execute($"ssh-keygen -t rsa -N '' -f {pathToPrivateKey}");
+                ConsoleLogger.Log(k);
+            }
+            var key = File.ReadAllText(pathToPublicKey);
+            if(string.IsNullOrEmpty(key)) {
+                return false;
+            }
+            var dict = new Dictionary<string, string> { { "ApplePie", key } };
+
+            //1. controllo la configurazione
+            var cluster = Application.CurrentConfiguration.Cluster;
+            if(cluster == null) {
+                cluster = new Cluster();
+                cluster.Label = CommonString.Append("AntdCluster-", cluster.Id.ToString().Substring(0, 8));
+            }
+
+            var nodes = cluster.Nodes.ToList();
+            foreach(var node in Application.CurrentConfiguration.Cluster.Nodes) {
+                if(CommonString.AreEquals(Application.CurrentConfiguration.Host.MachineUid.ToString(), node.MachineUid)) {
+                    continue;
+                }
+                ConsoleLogger.Log($"[handshake] send to {node.Hostname}");
+
+                var handshakeResult = ApiConsumer.Post($"{node.EntryPoint}cluster/handshake", dict);
+                if(handshakeResult != HttpStatusCode.OK) {
+                    ConsoleLogger.Log($"[handshake] error handshaking with {node.Hostname}");
+                    return false;
+                }
+                //ottengo i servizi pubblicati da quel nodo
+                ConsoleLogger.Log($"[handshake] get service details {node.Hostname}");
+                var nodoDaModificare = nodes.FirstOrDefault(_ => _.MachineUid == node.MachineUid);
+                if(nodoDaModificare != null) {
+                    var publishedServices = ApiConsumer.Get<ClusterNodeService[]>($"{node.EntryPoint}device/services");
+                    nodoDaModificare.Services = publishedServices;
+                }
+            }
+            //ho fatto gli handshake, quindi il nodo richiesto è pronto per essere integrato nel cluster
+
+            ConsoleLogger.Log("[handshake] adjust configuration");
+            cluster.Active = true;
+            if(cluster.Id == Guid.Empty) {
+                cluster.Id = Guid.NewGuid();
+            }
+            cluster.Nodes = nodes.ToArray();
+
+            cluster.SharedNetwork.Active = false;
+            var virtualPorts = cluster.SharedNetwork.PortMapping.ToList();
+            foreach(var node in nodes) {
+                foreach(var svc in node.Services) {
+                    var checkPort = virtualPorts.FirstOrDefault(_ => _.ServicePort == svc.Port.ToString());
+                    if(checkPort == null) {
+                        virtualPorts.Add(new PortMapping() {
+                            ServiceName = svc.Name,
+                            ServicePort = svc.Port.ToString(),
+                            VirtualPort = string.Empty
+                        });
+                    }
+                }
+            }
+            cluster.SharedNetwork.PortMapping = virtualPorts.ToArray();
+
+            Application.CurrentConfiguration.Cluster = cluster;
+            ConfigRepo.Save();
+            return true;
+        }
+
         public static bool Handshake(string apple) {
-            var info = apple.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-            var key = info[0];
+            ConsoleLogger.Log("[handshake] received handshake");
+            //tipo      divisore    chiave  divisore    utente  divisore    host
+            //ssh-rsa   [ ]         xxx     [ ]         root    [@]         localhost
+            var info = apple.Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+            var key = CommonString.Append(info[0], " ", info[1]);
             var keys = Application.CurrentConfiguration.Services.Ssh.AuthorizedKey.ToList();
             if(!keys.Any(_ => _.Key == key)) {
-                var userInfo = info[1].Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+                ConsoleLogger.Log("[handshake] register new key");
+                var userInfo = info[2].Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
                 var model = new AuthorizedKey {
                     User = userInfo[0],
                     Host = userInfo[1],
@@ -346,6 +427,7 @@ namespace Antd.cmds {
                 };
                 keys.Add(model);
             }
+            ConsoleLogger.Log("[handshake] save and apply key configuration");
             Application.CurrentConfiguration.Services.Ssh.AuthorizedKey = keys.ToArray();
             ConfigRepo.Save();
             Directory.CreateDirectory("/root/.ssh");

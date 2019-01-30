@@ -1,6 +1,5 @@
 ﻿using Antd.cmds;
 using Antd.models;
-using Antd.Mqtt;
 using anthilla.core;
 using Nancy;
 using Newtonsoft.Json;
@@ -64,7 +63,8 @@ namespace Antd.Modules {
                 ClusterSetup.ApplyNetwork();
                 ClusterSetup.ApplyServices();
                 ClusterSetup.ApplyFs();
-                await MqttHandler.MqttServerSetupForCluster();
+                //await MqttHandler.MqttServerSetupForCluster();
+                ClusterSetup.HandshakeCheck();
                 return HttpStatusCode.OK;
             };
 
