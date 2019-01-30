@@ -1,5 +1,6 @@
 ﻿using Antd.cmds;
 using Antd.models;
+using Antd.Mqtt;
 using anthilla.core;
 using Nancy;
 using Newtonsoft.Json;
@@ -57,12 +58,13 @@ namespace Antd.Modules {
             /// Questa API viene richiesta da antdui
             /// Per ogni nodo configurato (escludendo se stesso -> vedi uid) invia la conf
             /// </summary>
-            Post["/apply"] = x => {
+            Post["/apply", true] = async (x, ct) => {
                 //Inizio ad applicarla localmente
                 ConsoleLogger.Log("[cluster] apply local configuration");
                 ClusterSetup.ApplyNetwork();
                 ClusterSetup.ApplyServices();
                 ClusterSetup.ApplyFs();
+                await MqttHandler.MqttServerSetupForCluster();
                 return HttpStatusCode.OK;
             };
 

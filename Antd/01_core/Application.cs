@@ -449,30 +449,7 @@ namespace Antd {
         public const int MQTT_DEFAULT_PORT = 31883;
 
         private static async Task ManageMQTT() {
-            if(Const.IsUnix == false) {
-                return;
-            }
-            if(!CurrentConfiguration.Cluster.Active) {
-                return;
-            }
-            CLUSTER_NODES = CurrentConfiguration.Cluster.Nodes;
-            if(CLUSTER_NODES.Length < 1) {
-                return;
-            }
-            MQTT = MqttBroker.StartMqttServer(MQTT_DEFAULT_PORT).GetAwaiter().GetResult();
-            CLUSTER_MQTT_CLIENTS = new MqttSyncClient[CLUSTER_NODES.Length];
-            Thread.Sleep(5000);
-            for(var i = 0; i < CLUSTER_NODES.Length; i++) {
-                if(CommonString.AreEquals(CLUSTER_NODES[i].MachineUid.ToLowerInvariant(), MACHINE_ID.MachineUid.ToString().ToLowerInvariant())) {
-                    ConsoleLogger.Log($"[mqtt] node #{i}: {CLUSTER_NODES[i].Hostname} - {CLUSTER_NODES[i].PublicIp} (self)");
-                    continue;
-                }
-                ConsoleLogger.Log($"[mqtt] node #{i}: {CLUSTER_NODES[i].Hostname} - {CLUSTER_NODES[i].PublicIp}");
-                CLUSTER_MQTT_CLIENTS[i] = new MqttSyncClient(CLUSTER_NODES[i].PublicIp, MQTT_DEFAULT_PORT);
-                await CLUSTER_MQTT_CLIENTS[i].Connect();
-            }
-            //Scheduler.ExecuteJob<MqttTestJob>();
-            Scheduler.ExecuteJob<MqttTestConnectionJob>();
+            await MqttHandler.MqttServerSetupForCluster();
         }
 
         public const int STORAGESERVER_DEFAULT_PORT = 38008;

@@ -1,10 +1,11 @@
-﻿using anthilla.scheduler;
+﻿using anthilla.core;
+using anthilla.scheduler;
 using System.Threading.Tasks;
-using System;
-using anthilla.core;
 
 namespace Antd.Mqtt {
     public class MqttTestConnectionJob : Job {
+
+        public static bool IsRunning = false;
 
         #region [    Core Parameter    ]
         private bool _isRepeatable = true;
@@ -42,10 +43,11 @@ namespace Antd.Mqtt {
         #endregion
 
         public override void DoJob() {
+            IsRunning = true;
             DoJobAsync().GetAwaiter().GetResult();
         }
 
-        static async Task DoJobAsync() {
+        private static async Task DoJobAsync() {
             for(var i = 0; i < Application.CLUSTER_NODES.Length; i++) {
                 if(CommonString.AreEquals(Application.CLUSTER_NODES[i].MachineUid.ToLowerInvariant(), Application.MACHINE_ID.MachineUid.ToString().ToLowerInvariant())) {
                     continue;
