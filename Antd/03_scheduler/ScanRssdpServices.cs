@@ -51,12 +51,9 @@ namespace Antd {
                 var foundDevices = cmds.Rssdp.Discover().Result;
                 foreach(var device in foundDevices) {
                     if(ScannedDevices.FirstOrDefault(_ => _.MachineUid == device.MachineUid) == null) {
+                        ConsoleLogger.Log($"[rssdp] Found new device: {device.MachineUid}");
                         ScannedDevices.Add(device);
                     }
-                }
-                ConsoleLogger.Log($"[rssdp] {ScannedDevices.Count()} devices found");
-                foreach (var dev in ScannedDevices) {
-                    ConsoleLogger.Log($"[rssdp] Found device: {dev.MachineUid}");
                 }
 
                 ScanRunning = false;
