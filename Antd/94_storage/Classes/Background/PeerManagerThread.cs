@@ -23,12 +23,12 @@ namespace Kvpbase {
                 return;
             }
 
-            if(settings.Topology.RefreshSec <= 0) {
-                ConsoleLogger.Warn("PeerManagerWorker setting topology refresh timer to 10 sec (config value too low: " + settings.Topology.RefreshSec + " sec)");
-                settings.Topology.RefreshSec = 10;
+            if(settings.DefaultRefreshSec <= 0) {
+                ConsoleLogger.Warn("PeerManagerWorker setting topology refresh timer to 10 sec (config value too low: " + settings.DefaultRefreshSec + " sec)");
+                settings.DefaultRefreshSec = 10;
             }
 
-            ConsoleLogger.Warn("PeerManagerWorker starting with topology refresh timer set to " + settings.Topology.RefreshSec + " sec");
+            ConsoleLogger.Warn("PeerManagerWorker starting with topology refresh timer set to " + settings.DefaultRefreshSec + " sec");
 
             #endregion
 
@@ -39,7 +39,7 @@ namespace Kvpbase {
                 #region Wait
 
                 if(!firstRun) {
-                    Thread.Sleep(settings.Topology.RefreshSec * 1000);
+                    Thread.Sleep(settings.DefaultRefreshSec * 1000);
                 }
                 else {
                     firstRun = false;

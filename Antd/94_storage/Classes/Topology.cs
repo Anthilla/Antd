@@ -1,7 +1,9 @@
-﻿using anthilla.core;
+﻿using Antd;
+using anthilla.core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Kvpbase {
     public class Topology {
@@ -51,6 +53,28 @@ namespace Kvpbase {
             }
 
             return ret;
+        }
+
+        public static Topology Import(ClusterNode[] nodes) {
+            var topologyNodes = new List<Node>();
+            for(var i = 0; i < nodes.Length; i++) {
+                var ntn = new Node() {
+                    NodeId = i + 1,
+                    NodeUid = nodes[i].MachineUid,
+                    DnsHostname = nodes[i].PublicIp,
+                    Port = Application.STORAGESERVER_PORT,
+                    Ssl = 0
+                };
+                topologyNodes.Add(ntn);
+            }
+            foreach(var node in topologyNodes) {
+                node.Neighbors = topologyNodes.Where(_ => _.NodeUid != node.NodeUid).Select(_ => _.NodeId).ToList();
+            }
+            var topology = new Topology() {
+                CurrNodeId = topologyNodes.FirstOrDefault(_ => _.NodeUid == Application.CurrentConfiguration.Host.MachineUid.ToString()).NodeId,
+                Nodes = topologyNodes
+            };
+            return topology;
         }
 
         #endregion

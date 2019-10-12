@@ -15,11 +15,10 @@ namespace Kvpbase {
         public string HomepageUrl;
         public string SupportEmail;
         public int EnableConsole;
+        public int DefaultRefreshSec;
 
-        public SettingsFiles Files;
         public SettingsServer Server;
         public SettingsRedirection Redirection;
-        public SettingsTopology Topology;
         public SettingsPerfmon Perfmon;
         public SettingsStorage Storage;
         public SettingsMessages Messages;
@@ -29,19 +28,8 @@ namespace Kvpbase {
         public SettingsPublicObj PublicObj;
         public SettingsTasks Tasks;
         public SettingsLogger Logger;
-        public SettingsSyslog Syslog;
-        public SettingsEmail Email;
         public SettingsEncryption Encryption;
         public SettingsRest Rest;
-        public SettingsMailgun Mailgun;
-        public SettingsDebug Debug;
-
-        public class SettingsFiles {
-            public string Topology;
-            public string UserMaster;
-            public string ApiKey;
-            public string Permission;
-        }
 
         public class SettingsServer {
             public string HeaderApiKey;
@@ -53,10 +41,6 @@ namespace Kvpbase {
             public string AdminApiKey;
             public int TokenExpirationSec;
             public int FailedRequestsIntervalSec;
-        }
-
-        public class SettingsTopology {
-            public int RefreshSec;
         }
 
         public class SettingsPerfmon {
@@ -137,33 +121,6 @@ namespace Kvpbase {
             public string DeleteRedirectString;
         }
 
-        public class SettingsSyslog {
-            public string ServerIp;
-            public int ServerPort;
-            public string Header;
-            public int MinimumLevel;
-            public int LogHttpRequests;
-            public int LogHttpResponses;
-            public int ConsoleLogging;
-        }
-
-        public class SettingsEmail {
-            public string EmailProvider;
-            public string SmtpServer;
-            public int SmtpPort;
-            public string SmtpUsername;
-            public string SmtpPassword;
-            public int SmtpSsl;
-
-            public int EmailExceptions;
-            public string EmailExceptionsTo;
-            public string EmailExceptionsFrom;
-            public string EmailExceptionsReplyTo;
-
-            public string EmailFrom;
-            public string EmailReplyTo;
-        }
-
         public class SettingsEncryption {
             public string Mode;
 
@@ -182,16 +139,6 @@ namespace Kvpbase {
             public int UseWebProxy;
             public string WebProxyUrl;
             public int AcceptInvalidCerts;
-        }
-
-        public class SettingsMailgun {
-            public string ApiKey;
-            public string Domain;
-        }
-
-        public class SettingsDebug {
-            public int DebugCompression;
-            public int DebugEncryption;
         }
 
         #endregion
@@ -233,6 +180,96 @@ namespace Kvpbase {
             }
 
             return ret;
+        }
+
+        public static Settings Default(string dir) {
+            return new Settings() {
+                ProductName = "",
+                ProductVersion = "",
+                DocumentationUrl = "www.anthilla.com",
+                Environment = "",
+                LogoUrl = "",
+                HomepageUrl = "www.anthilla.com",
+                SupportEmail = "info@anthilla.com",
+                EnableConsole = 0,
+                DefaultRefreshSec = 10,
+                Server = new SettingsServer() {
+                    HeaderApiKey = "x-api-key",
+                    HeaderEmail = "x-email",
+                    HeaderPassword = "x-password",
+                    HeaderToken = "x-token",
+                    HeaderVersion = "x-version",
+                    AdminApiKey = "kvpbaseadmin",
+                    TokenExpirationSec = 86400,
+                    FailedRequestsIntervalSec = 60
+                },
+                Redirection = new SettingsRedirection() {
+                    ReadRedirectionMode = "proxy",
+                    ReadRedirectHttpStatus = 301,
+                    ReadRedirectString = "Moved Permanently",
+                    SearchRedirectionMode = "proxy",
+                    SearchRedirectHttpStatus = 301,
+                    SearchRedirectString = "Moved Permanently",
+                    WriteRedirectionMode = "proxy",
+                    WriteRedirectHttpStatus = 301,
+                    WriteRedirectString = "Moved Permanently",
+                    DeleteRedirectionMode = "proxy",
+                    DeleteRedirectHttpStatus = 301,
+                    DeleteRedirectString = "Moved Permanently"
+                },
+                Perfmon = new SettingsPerfmon() {
+                    Enable = 1,
+                    RefreshSec = 10,
+                    Syslog = 0
+                },
+                Storage = new SettingsStorage() {
+                    Directory = dir,
+                    MaxObjectSize = 512000000,
+                    GatewayMode = 1,
+                    DefaultCompress = 0,
+                    DefaultEncrypt = 0
+                },
+                Messages = new SettingsMessages() {
+                    Directory = dir,
+                    RefreshSec = 10
+                },
+                Expiration = new SettingsExpiration() {
+                    Directory = dir,
+                    RefreshSec = 10,
+                    DefaultExpirationSec = 0
+                },
+                Replication = new SettingsReplication() {
+                    Directory = dir,
+                    ReplicationMode = "sync",
+                    RefreshSec = 10
+                },
+                Bunker = new SettingsBunker() {
+                    Enable = 0,
+                    Directory = dir,
+                    RefreshSec = 30
+                },
+                PublicObj = new SettingsPublicObj() {
+                    Directory = dir,
+                    RefreshSec = 600,
+                    DefaultExpirationSec = 7776000
+                },
+                Tasks = new SettingsTasks() {
+                    Directory = dir,
+                    RefreshSec = 10
+                },
+                Encryption = new SettingsEncryption() {
+                    Mode = "local",
+                    Port = 0,
+                    Ssl = 0,
+                    Passphrase = "0000000000000000",
+                    Salt = "0000000000000000",
+                    Iv = "0000000000000000"
+                },
+                Rest = new SettingsRest() {
+                    UseWebProxy = 0,
+                    AcceptInvalidCerts = 0
+                },
+            };
         }
 
         #endregion

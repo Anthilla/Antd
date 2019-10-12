@@ -58,6 +58,22 @@ namespace Kvpbase {
             return ret;
         }
 
+        public static List<ApiKey> Default() {
+            return new List<ApiKey>() {
+                new ApiKey() {
+                    ApiKeyId = 1,
+                    UserMasterId = 1,
+                    Guid = System.Guid.NewGuid().ToString(),
+                    Notes = "Created by setup script",
+                    Active = 1,
+                    Created = DateTime.Now,
+                    LastUpdate = DateTime.Now,
+                    Expiration = DateTime.Now.AddDays(30)
+                }
+            };
+        }
+
+
         #endregion
     }
 }

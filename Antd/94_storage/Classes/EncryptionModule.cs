@@ -43,10 +43,6 @@ namespace Kvpbase {
             if(clear.Length < 1)
                 return null;
 
-            // Taken from http://www.obviex.com/samples/Encryption.aspx
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalEncrypt clear: " + Common.BytesToBase64(clear));
-
             byte[] iv = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Iv);
             byte[] salt = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Salt);
             PasswordDeriveBytes password = new PasswordDeriveBytes(CurrentSettings.Encryption.Passphrase, salt, "SHA1", 2);
@@ -63,15 +59,11 @@ namespace Kvpbase {
             ms.Close();
             cs.Close();
 
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalEncrypt cipher: " + Common.BytesToBase64(cipherBytes));
             return cipherBytes;
         }
 
         public string LocalEncrypt(string clear) {
             // Taken from http://www.obviex.com/samples/Encryption.aspx
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalEncrypt clear: " + clear);
 
             byte[] iv = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Iv);
             byte[] salt = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Salt);
@@ -92,8 +84,6 @@ namespace Kvpbase {
             cs.Close();
             string cipher = Convert.ToBase64String(cipherBytes);
 
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalEncrypt cipher: " + cipher);
             return cipher;
         }
 
@@ -104,8 +94,8 @@ namespace Kvpbase {
                 return null;
 
             // Taken from http://www.obviex.com/samples/Encryption.aspx
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalDecrypt cipher: " + Common.BytesToBase64(cipher));
+            //if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
+            //    ConsoleLogger.Warn("LocalDecrypt cipher: " + Common.BytesToBase64(cipher));
 
             byte[] iv = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Iv);
             byte[] salt = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Salt);
@@ -122,15 +112,11 @@ namespace Kvpbase {
             ms.Close();
             cs.Close();
 
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalDecrypt clear: " + Common.BytesToBase64(clear));
             return clear;
         }
 
         public string LocalDecrypt(string cipher) {
             // Taken from http://www.obviex.com/samples/Encryption.aspx
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalDecrypt cipher: " + cipher);
 
             byte[] iv = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Iv);
             byte[] salt = Encoding.ASCII.GetBytes(CurrentSettings.Encryption.Salt);
@@ -149,8 +135,6 @@ namespace Kvpbase {
             cs.Close();
             string clear = Encoding.UTF8.GetString(clearBytes, 0, decryptedCount);
 
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                ConsoleLogger.Warn("LocalDecrypt clear: " + clear);
             return clear;
         }
 
@@ -198,12 +182,12 @@ namespace Kvpbase {
 
             clear = resp.Data;
 
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption)) {
-                ConsoleLogger.Warn("ServerDecrypt completed " + Common.TotalMsFrom(startTime) + "ms: " +
-                    cipher.Length + "B cipher " +
-                    clear.Length + "B clear, " +
-                    "KSN " + ksn);
-            }
+            //if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption)) {
+            //    ConsoleLogger.Warn("ServerDecrypt completed " + Common.TotalMsFrom(startTime) + "ms: " +
+            //        cipher.Length + "B cipher " +
+            //        clear.Length + "B clear, " +
+            //        "KSN " + ksn);
+            //}
 
             return true;
         }
@@ -263,12 +247,12 @@ namespace Kvpbase {
             cipher = ret.Cipher;
             ksn = ret.Ksn;
 
-            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption)) {
-                ConsoleLogger.Warn("ServerEncrypt completed " + Common.TotalMsFrom(startTime) + "ms: " +
-                    clear.Length + "B clear, " +
-                    cipher.Length + "B cipher " +
-                    "KSN " + ksn);
-            }
+            //if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption)) {
+            //    ConsoleLogger.Warn("ServerEncrypt completed " + Common.TotalMsFrom(startTime) + "ms: " +
+            //        clear.Length + "B clear, " +
+            //        cipher.Length + "B cipher " +
+            //        "KSN " + ksn);
+            //}
 
             return true;
         }

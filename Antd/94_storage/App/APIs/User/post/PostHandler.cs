@@ -25,7 +25,7 @@ namespace Kvpbase {
                     md.CurrentObj.Key = null;
                 }
 
-                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, Maintenance, EncryptionManager, Logger);
+                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, EncryptionManager);
                 return oh.ObjectWrite(md);
 
                 #endregion

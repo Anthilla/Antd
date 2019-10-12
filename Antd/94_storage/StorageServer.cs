@@ -8,40 +8,100 @@ using WatsonWebserver;
 namespace Kvpbase {
     public partial class StorageServer {
 
+        public StorageServer(string path) {
+            #region Initialize-Settings
+            CurrentSettings = Settings.Default(path);
+            #endregion
+        }
+
         public StorageServer(Settings settings) {
             #region Initialize-Settings
             CurrentSettings = settings;
             #endregion
         }
 
-        public void Start() {
-            #region Create Working Directories
-            Common.CreateDirectory(CurrentSettings.Storage.Directory);
-            Common.CreateDirectory(CurrentSettings.Storage.Directory + "/default");
-            Common.CreateDirectory(CurrentSettings.Messages.Directory);
-            Common.CreateDirectory(CurrentSettings.Expiration.Directory);
-            Common.CreateDirectory(CurrentSettings.Replication.Directory);
-            Common.CreateDirectory(CurrentSettings.Bunker.Directory);
-            Common.CreateDirectory(CurrentSettings.PublicObj.Directory);
-            Common.CreateDirectory(CurrentSettings.Tasks.Directory);
-            #endregion
+        //public void Start() {
+        //    #region Create Working Directories
+        //    Common.CreateDirectory(CurrentSettings.Storage.Directory);
+        //    Common.CreateDirectory(CurrentSettings.Storage.Directory + "/default");
+        //    Common.CreateDirectory(CurrentSettings.Messages.Directory);
+        //    Common.CreateDirectory(CurrentSettings.Expiration.Directory);
+        //    Common.CreateDirectory(CurrentSettings.Replication.Directory);
+        //    Common.CreateDirectory(CurrentSettings.Bunker.Directory);
+        //    Common.CreateDirectory(CurrentSettings.PublicObj.Directory);
+        //    Common.CreateDirectory(CurrentSettings.Tasks.Directory);
+        //    #endregion
 
-            //#region Verify-Storage-Directory-Access
-            //if(!Common.VerifyDirectoryAccess(CurrentSettings.Environment, CurrentSettings.Storage.Directory)) {
-            //    Common.ExitApplication("StorageServer", "Unable to verify storage directory access", -1);
-            //    return;
-            //}
-            //#endregion
+        //    //#region Verify-Storage-Directory-Access
+        //    //if(!Common.VerifyDirectoryAccess(CurrentSettings.Environment, CurrentSettings.Storage.Directory)) {
+        //    //    Common.ExitApplication("StorageServer", "Unable to verify storage directory access", -1);
+        //    //    return;
+        //    //}
+        //    //#endregion
 
+        //    #region Initialize-Global-Variables
+        //    Users = new UserManager(UserMaster.FromFile(CurrentSettings.Files.UserMaster));
+        //    ApiKeys = new ApiKeyManager(ApiKey.FromFile(CurrentSettings.Files.ApiKey), ApiKeyPermission.FromFile(CurrentSettings.Files.Permission));
+        //    CurrentTopology = Topology.FromFile(CurrentSettings.Files.Topology);
+        //    ConnManager = new ConnectionManager();
+        //    EncryptionManager = new EncryptionModule(CurrentSettings);
+        //    LockManager = new UrlLockManager();
+        //    #endregion
+
+        //    #region Verify-Topology
+        //    if(!CurrentTopology.ValidateTopology(out CurrentNode)) {
+        //        Common.ExitApplication("StorageServer", "Topology errors detected", -1);
+        //        return;
+        //    }
+
+        //    CurrentTopology.PopulateReplicas(CurrentNode);
+        //    ConsoleLogger.Log("Populated " + CurrentTopology.Replicas.Count + " replica nodes in topology");
+        //    #endregion
+
+        //    #region Check-for-HTTP-Listener
+        //    if(!HttpListener.IsSupported) {
+        //        Common.ExitApplication("StorageServer", "Your OS does not support HttpListener", -1);
+        //        return;
+        //    }
+        //    #endregion
+
+        //    #region Start-Threads
+        //    new PublicObjThread(CurrentSettings);
+        //    new FailedRequestsThread(CurrentSettings, FailedRequests);
+        //    new PeerManagerThread(CurrentSettings, CurrentTopology, CurrentNode);
+        //    new MessengerThread(CurrentSettings, CurrentTopology, CurrentNode);
+        //    new ExpirationThread(CurrentSettings);
+        //    new ReplicationThread(CurrentSettings, CurrentTopology, CurrentNode);
+        //    new TasksThread(CurrentSettings);
+        //    #endregion
+
+        //    #region Start-Server
+        //    Server watson = new Server(CurrentNode.DnsHostname, CurrentNode.Port, Common.IsTrue(CurrentNode.Ssl), RequestReceived, true) {
+        //        //DebugRestRequests = false,
+        //        //DebugRestResponses = false,
+        //        //ConsoleLogging = false
+        //    };
+        //    #endregion
+
+        //    #region Wait-for-Server-Thread
+        //    EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset, Guid.NewGuid().ToString());
+        //    bool waitHandleSignal = false;
+        //    do {
+        //        waitHandleSignal = waitHandle.WaitOne(1000);
+        //    } while(!waitHandleSignal);
+
+        //    ConsoleLogger.Warn("StorageServer exiting");
+        //    #endregion
+        //}
+
+        public void Start(Topology topology) {
             #region Initialize-Global-Variables
-            Users = new UserManager(UserMaster.FromFile(CurrentSettings.Files.UserMaster));
-            ApiKeys = new ApiKeyManager(ApiKey.FromFile(CurrentSettings.Files.ApiKey), ApiKeyPermission.FromFile(CurrentSettings.Files.Permission));
-            CurrentTopology = Topology.FromFile(CurrentSettings.Files.Topology);
+            Users = new UserManager(UserMaster.Default());
+            ApiKeys = new ApiKeyManager(ApiKey.Default(), ApiKeyPermission.Default());
+            CurrentTopology = topology;
             ConnManager = new ConnectionManager();
             EncryptionManager = new EncryptionModule(CurrentSettings);
             LockManager = new UrlLockManager();
-            Logger = new LoggerManager(CurrentSettings);
-            Maintenance = new MaintenanceManager();
             #endregion
 
             #region Verify-Topology
@@ -72,11 +132,7 @@ namespace Kvpbase {
             #endregion
 
             #region Start-Server
-            Server watson = new Server(CurrentNode.DnsHostname, CurrentNode.Port, Common.IsTrue(CurrentNode.Ssl), RequestReceived, true) {
-                //DebugRestRequests = false,
-                //DebugRestResponses = false,
-                //ConsoleLogging = false
-            };
+            Server watson = new Server(CurrentNode.DnsHostname, CurrentNode.Port, Common.IsTrue(CurrentNode.Ssl), RequestReceived, true);
             #endregion
 
             #region Wait-for-Server-Thread
@@ -89,6 +145,7 @@ namespace Kvpbase {
             ConsoleLogger.Warn("StorageServer exiting");
             #endregion
         }
+
 
         public HttpResponse RequestReceived(HttpRequest req) {
             try {
@@ -109,9 +166,6 @@ namespace Kvpbase {
                 md.CurrentHttpRequest = req;
                 md.CurrentNode = CurrentNode;
 
-                if(Common.IsTrue(CurrentSettings.Syslog.LogHttpRequests)) {
-                    ConsoleLogger.Warn("RequestReceived request received: " + Environment.NewLine + md.CurrentHttpRequest.ToString());
-                }
                 #endregion
 
                 #region Options-Handler
@@ -357,10 +411,6 @@ namespace Kvpbase {
                 #region Call-User-API
 
                 HttpResponse resp = StorageServer.UserApiHandler(md);
-
-                if(Common.IsTrue(CurrentSettings.Syslog.LogHttpRequests)) {
-                    ConsoleLogger.Warn("RequestReceived sending response: " + Environment.NewLine + resp.ToString());
-                }
 
                 return resp;
 

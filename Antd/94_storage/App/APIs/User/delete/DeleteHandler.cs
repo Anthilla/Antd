@@ -12,7 +12,7 @@ namespace Kvpbase {
             if(Common.IsTrue(md.CurrentObj.IsContainer)) {
                 #region Delete-Container
 
-                ContainerHandler cd = new ContainerHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, Maintenance, Logger);
+                ContainerHandler cd = new ContainerHandler(CurrentSettings, CurrentTopology, CurrentNode, Users);
                 return cd.ContainerDelete(md, recursive);
 
                 #endregion
@@ -26,7 +26,7 @@ namespace Kvpbase {
                         new ErrorResponse(2, 400, "Unable to find object key in URL.", null).ToJson(), true);
                 }
 
-                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, Maintenance, EncryptionManager, Logger);
+                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, EncryptionManager);
                 return oh.ObjectDelete(md);
 
                 #endregion

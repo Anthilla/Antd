@@ -10,6 +10,7 @@ namespace Kvpbase {
         #region Public-Members
 
         public int NodeId { get; set; }
+        public string NodeUid { get; set; }
         public string Name { get; set; }
         public string DnsHostname { get; set; }
         public int Port { get; set; }

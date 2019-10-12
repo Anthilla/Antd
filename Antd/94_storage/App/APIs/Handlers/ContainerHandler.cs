@@ -18,31 +18,23 @@ namespace Kvpbase {
         private Topology CurrentTopology;
         private Node CurrentNode;
         private UserManager Users;
-        private MaintenanceManager Maintenance;
-        private LoggerManager Logger;
 
         #endregion
 
         #region Constructors-and-Factories
 
-        public ContainerHandler(Settings settings, Topology topology, Node node, UserManager users, MaintenanceManager maintenance,  LoggerManager logger) {
+        public ContainerHandler(Settings settings, Topology topology, Node node, UserManager users) {
             if(settings == null)
                 throw new ArgumentNullException(nameof(settings));
             if(node == null)
                 throw new ArgumentNullException(nameof(node));
             if(users == null)
                 throw new ArgumentNullException(nameof(users));
-            if(maintenance == null)
-                throw new ArgumentNullException(nameof(maintenance));
-            if(logger == null)
-                throw new ArgumentNullException(nameof(logger));
 
             CurrentSettings = settings;
             CurrentTopology = topology;
             CurrentNode = node;
             Users = users;
-            Maintenance = maintenance;
-            Logger = logger;
         }
 
         #endregion
@@ -88,25 +80,25 @@ namespace Kvpbase {
 
                 currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                 if(currContainerPropertiesFile != null) {
-                    if(currContainerPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.DeleteContainer)) {
-                                #region Process-Logging
+                    //if(currContainerPropertiesFile.Logging != null) {
+                    //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                    //        if(Common.IsTrue(currContainerPropertiesFile.Logging.DeleteContainer)) {
+                    //            #region Process-Logging
 
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteContainer", null));
+                    //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteContainer", null));
 
-                                #endregion
-                            }
-                        }
-                    }
+                    //            #endregion
+                    //        }
+                    //    }
+                    //}
 
                     if(currContainerPropertiesFile.Permissions != null) {
                         #region Evaluate-Permissions
 
                         if(!ContainerPermission.GetPermission("DeleteContainer", md, currContainerPropertiesFile)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteContainer", "denied"));
-                            }
+                            //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                            //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteContainer", "denied"));
+                            //}
 
                             ConsoleLogger.Warn("ContainerDelete AllowDeleteContainer operation not authorized per container permissions");
                             return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -284,25 +276,25 @@ namespace Kvpbase {
 
                 currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                 if(currContainerPropertiesFile != null) {
-                    if(currContainerPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
-                                #region Process-Logging
+                    //if(currContainerPropertiesFile.Logging != null) {
+                    //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                    //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
+                    //            #region Process-Logging
 
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", null));
+                    //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", null));
 
-                                #endregion
-                            }
-                        }
-                    }
+                    //            #endregion
+                    //        }
+                    //    }
+                    //}
 
                     if(currContainerPropertiesFile.Permissions != null) {
                         #region Evaluate-Permissions
 
                         if(!ContainerPermission.GetPermission("ReadContainer", md, currContainerPropertiesFile)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", "denied"));
-                            }
+                            //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                            //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", "denied"));
+                            //}
 
                             ConsoleLogger.Warn("ContainerHead AllowReadContainer operation not authorized per container permissions");
                             return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -349,12 +341,12 @@ namespace Kvpbase {
                     case "proxy":
                         #region proxy
 
-                        if(Maintenance.IsEnabled()) {
-                            urls = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                        }
-                        else {
-                            urls = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                        }
+                        //if(Maintenance.IsEnabled()) {
+                        //    urls = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                        //}
+                        //else {
+                        //    urls = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                        //}
 
                         if(urls == null || urls.Count < 1) {
                             ConsoleLogger.Warn("ContainerHead unable to build replica URL list (null response)");
@@ -456,25 +448,25 @@ namespace Kvpbase {
 
                 currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                 if(currContainerPropertiesFile != null) {
-                    if(currContainerPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
-                                #region Process-Logging
+                    //if(currContainerPropertiesFile.Logging != null) {
+                    //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                    //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
+                    //            #region Process-Logging
 
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Move", null));
+                    //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Move", null));
 
-                                #endregion
-                            }
-                        }
-                    }
+                    //            #endregion
+                    //        }
+                    //    }
+                    //}
 
                     if(currContainerPropertiesFile.Permissions != null) {
                         #region Evaluate-Permissions
 
                         if(!ContainerPermission.GetPermission("WriteContainer", md, currContainerPropertiesFile)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Move", "denied"));
-                            }
+                            //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                            //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Move", "denied"));
+                            //}
 
                             ConsoleLogger.Warn("ContainerMove AllowWriteContainer operation not authorized per container permissions");
                             return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -825,25 +817,25 @@ namespace Kvpbase {
 
                 currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                 if(currContainerPropertiesFile != null) {
-                    if(currContainerPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
-                                #region Process-Logging
+                    //if(currContainerPropertiesFile.Logging != null) {
+                    //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                    //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
+                    //            #region Process-Logging
 
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", null));
+                    //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", null));
 
-                                #endregion
-                            }
-                        }
-                    }
+                    //            #endregion
+                    //        }
+                    //    }
+                    //}
 
                     if(currContainerPropertiesFile.Permissions != null) {
                         #region Evaluate-Permissions
 
                         if(!ContainerPermission.GetPermission("ReadContainer", md, currContainerPropertiesFile)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", "denied"));
-                            }
+                            //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                            //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadContainer", "denied"));
+                            //}
 
                             ConsoleLogger.Warn("ContainerRead AllowReadContainer operation not authorized per container permissions");
                             return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -1026,12 +1018,12 @@ namespace Kvpbase {
                     case "proxy":
                         #region proxy
 
-                        if(Maintenance.IsEnabled()) {
-                            urlList = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                        }
-                        else {
-                            urlList = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                        }
+                        //if(Maintenance.IsEnabled()) {
+                        //    urlList = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                        //}
+                        //else {
+                        //    urlList = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                        //}
 
                         if(urlList == null || urlList.Count < 1) {
                             ConsoleLogger.Warn("ContainerRead unable to build replica URL list (null response)");
@@ -1133,25 +1125,25 @@ namespace Kvpbase {
 
                 currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                 if(currContainerPropertiesFile != null) {
-                    if(currContainerPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
-                                #region Process-Logging
+                    //if(currContainerPropertiesFile.Logging != null) {
+                    //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                    //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
+                    //            #region Process-Logging
 
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Rename", null));
+                    //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Rename", null));
 
-                                #endregion
-                            }
-                        }
-                    }
+                    //            #endregion
+                    //        }
+                    //    }
+                    //}
 
                     if(currContainerPropertiesFile.Permissions != null) {
                         #region Evaluate-Permissions
 
                         if(!ContainerPermission.GetPermission("WriteContainer", md, currContainerPropertiesFile)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Rename", "denied"));
-                            }
+                            //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                            //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer-Rename", "denied"));
+                            //}
 
                             ConsoleLogger.Warn("ContainerRename AllowWriteContainer operation not authorized per container permissions");
                             return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -1411,25 +1403,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadContainer)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("WriteContainer", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteContainer", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ContainerWrite AllowWriteContainer operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",

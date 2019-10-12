@@ -21,9 +21,7 @@ namespace Kvpbase {
         private Node CurrentNode;
         private UserManager Users;
         private UrlLockManager LockManager;
-        private MaintenanceManager Maintenance;
         private EncryptionModule EncryptionManager;
-        private LoggerManager Logger;
 
         #endregion
 
@@ -35,9 +33,7 @@ namespace Kvpbase {
             Node node,
             UserManager users,
             UrlLockManager locks,
-            MaintenanceManager maintenance,
-            EncryptionModule encryption,
-            LoggerManager logger) {
+            EncryptionModule encryption) {
             if(settings == null)
                 throw new ArgumentNullException(nameof(settings));
             if(node == null)
@@ -46,21 +42,15 @@ namespace Kvpbase {
                 throw new ArgumentNullException(nameof(users));
             if(locks == null)
                 throw new ArgumentNullException(nameof(locks));
-            if(maintenance == null)
-                throw new ArgumentNullException(nameof(maintenance));
             if(encryption == null)
                 throw new ArgumentNullException(nameof(encryption));
-            if(logger == null)
-                throw new ArgumentNullException(nameof(logger));
 
             CurrentSettings = settings;
             CurrentTopology = topology;
             CurrentNode = node;
             Users = users;
             LockManager = locks;
-            Maintenance = maintenance;
             EncryptionManager = encryption;
-            Logger = logger;
         }
 
         #endregion
@@ -125,25 +115,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.DeleteObject)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.DeleteObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteObject", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteObject", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("DeleteObject", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteObject", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "DeleteObject", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectDelete AllowDeleteObject operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -160,25 +150,25 @@ namespace Kvpbase {
 
                     currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
                     if(currObjectPropertiesFile != null) {
-                        if(currObjectPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.DeleteObject)) {
-                                    #region Process-Logging
+                        //if(currObjectPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currObjectPropertiesFile.Logging.DeleteObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectDelete", null));
+                        //            Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectDelete", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currObjectPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ObjectPermission.GetPermission("ObjectDelete", md, currObjectPropertiesFile)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectDelete", "denied"));
-                                }
+                                //if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectDelete", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectDelete AllowDeleteObject operation not authorized per object permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -408,25 +398,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadObject)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("ReadObject", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectHead AllowReadObject operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -443,25 +433,25 @@ namespace Kvpbase {
 
                     currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
                     if(currObjectPropertiesFile != null) {
-                        if(currObjectPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.ReadObject)) {
-                                    #region Process-Logging
+                        //if(currObjectPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currObjectPropertiesFile.Logging.ReadObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectHead", null));
+                        //            Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectHead", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currObjectPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ObjectPermission.GetPermission("ReadObject", md, currObjectPropertiesFile)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectHead", "denied"));
-                                }
+                                //if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectHead", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectHead AllowReadObject operation not authorized per object permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -505,12 +495,12 @@ namespace Kvpbase {
                         case "proxy":
                             #region proxy
 
-                            if(Maintenance.IsEnabled()) {
-                                urls = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                            }
-                            else {
-                                urls = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                            }
+                            //if(Maintenance.IsEnabled()) {
+                            //    urls = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                            //}
+                            //else {
+                            //    urls = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                            //}
 
                             if(urls == null || urls.Count < 1) {
                                 ConsoleLogger.Warn("ObjectHead unable to build replica URL list (null response)");
@@ -644,25 +634,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.CreateObject)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.CreateObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Move", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Move", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("WriteObject", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Move", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Move", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectMove AllowWriteObject operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -679,25 +669,25 @@ namespace Kvpbase {
 
                     currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
                     if(currObjectPropertiesFile != null) {
-                        if(currObjectPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.CreateObject)) {
-                                    #region Process-Logging
+                        //if(currObjectPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currObjectPropertiesFile.Logging.CreateObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectMove", null));
+                        //            Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectMove", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currObjectPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ObjectPermission.GetPermission("WriteObject", md, currObjectPropertiesFile)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectMove", "denied"));
-                                }
+                                //if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectMove", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectMove AllowWriteObject operation not authorized per object permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -1161,25 +1151,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadObject)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("ReadObject", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "ReadObject", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectRead AllowReadObject operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -1196,25 +1186,25 @@ namespace Kvpbase {
 
                     currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
                     if(currObjectPropertiesFile != null) {
-                        if(currObjectPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.ReadObject)) {
-                                    #region Process-Logging
+                        //if(currObjectPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currObjectPropertiesFile.Logging.ReadObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRead", null));
+                        //            Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRead", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currObjectPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ObjectPermission.GetPermission("ReadObject", md, currObjectPropertiesFile)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRead", "denied"));
-                                }
+                                //if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRead", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectRead AllowReadObject operation not authorized per object permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -1296,8 +1286,6 @@ namespace Kvpbase {
                     #region Decrypt
 
                     if(Common.IsTrue(md.CurrentObj.IsEncrypted)) {
-                        if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                            ConsoleLogger.Warn("ObjectRead before decryption: " + Common.BytesToBase64(md.CurrentObj.Value));
 
                         if(String.IsNullOrEmpty(md.CurrentObj.EncryptionKsn)) {
                             md.CurrentObj.Value = EncryptionManager.LocalDecrypt(md.CurrentObj.Value);
@@ -1312,8 +1300,6 @@ namespace Kvpbase {
                             md.CurrentObj.Value = clear;
                         }
 
-                        if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                            ConsoleLogger.Warn("ObjectRead after decryption: " + Common.BytesToBase64(md.CurrentObj.Value));
                     }
 
                     #endregion
@@ -1321,11 +1307,7 @@ namespace Kvpbase {
                     #region Decompress
 
                     if(Common.IsTrue(md.CurrentObj.IsCompressed)) {
-                        if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                            ConsoleLogger.Warn("ObjectRead before decompression: " + Common.BytesToBase64(md.CurrentObj.Value));
                         md.CurrentObj.Value = Common.GzipDecompress(md.CurrentObj.Value);
-                        if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                            ConsoleLogger.Warn("ObjectRead after decompression: " + Common.BytesToBase64(md.CurrentObj.Value));
                     }
 
                     #endregion
@@ -1427,12 +1409,12 @@ namespace Kvpbase {
                         case "proxy":
                             #region proxy
 
-                            if(Maintenance.IsEnabled()) {
-                                urls = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                            }
-                            else {
-                                urls = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
-                            }
+                            //if(Maintenance.IsEnabled()) {
+                            //    urls = Obj.BuildMaintReadUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                            //}
+                            //else {
+                            //    urls = Obj.BuildReplicaUrls(true, md.CurrentHttpRequest, md.CurrentObj, CurrentTopology);
+                            //}
 
                             if(urls == null || urls.Count < 1) {
                                 ConsoleLogger.Warn("ObjectRead unable to build replica URL list (null response)");
@@ -1566,25 +1548,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.CreateObject)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.CreateObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Rename", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Rename", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("WriteObject", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Rename", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject-Rename", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectRename AllowWriteObject operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -1601,25 +1583,25 @@ namespace Kvpbase {
 
                     currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
                     if(currObjectPropertiesFile != null) {
-                        if(currObjectPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.CreateObject)) {
-                                    #region Process-Logging
+                        //if(currObjectPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currObjectPropertiesFile.Logging.CreateObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRename", null));
+                        //            Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRename", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currObjectPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ObjectPermission.GetPermission("WriteObject", md, currObjectPropertiesFile)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRename", "denied"));
-                                }
+                                //if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectRename", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectRename AllowWriteObject operation not authorized per object permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -2293,25 +2275,25 @@ namespace Kvpbase {
 
                     currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
                     if(currContainerPropertiesFile != null) {
-                        if(currContainerPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.CreateObject)) {
-                                    #region Process-Logging
+                        //if(currContainerPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currContainerPropertiesFile.Logging.CreateObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject", null));
+                        //            Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currContainerPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ContainerPermission.GetPermission("WriteObject", md, currContainerPropertiesFile)) {
-                                if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject", "denied"));
-                                }
+                                //if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "WriteObject", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectWrite AllowWriteObject operation not authorized per container permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -2328,25 +2310,25 @@ namespace Kvpbase {
 
                     currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
                     if(currObjectPropertiesFile != null) {
-                        if(currObjectPropertiesFile.Logging != null) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.CreateObject)) {
-                                    #region Process-Logging
+                        //if(currObjectPropertiesFile.Logging != null) {
+                        //    if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                        //        if(Common.IsTrue(currObjectPropertiesFile.Logging.CreateObject)) {
+                        //            #region Process-Logging
 
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectWrite", null));
+                        //            Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectWrite", null));
 
-                                    #endregion
-                                }
-                            }
-                        }
+                        //            #endregion
+                        //        }
+                        //    }
+                        //}
 
                         if(currObjectPropertiesFile.Permissions != null) {
                             #region Evaluate-Permissions
 
                             if(!ObjectPermission.GetPermission("WriteObject", md, currObjectPropertiesFile)) {
-                                if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                                    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectWrite", "denied"));
-                                }
+                                //if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                                //    Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "ObjectWrite", "denied"));
+                                //}
 
                                 ConsoleLogger.Warn("ObjectWrite AllowWriteObject operation not authorized per object permissions");
                                 return new HttpResponse(md.CurrentHttpRequest, false, 401, null, "application/json",
@@ -2476,8 +2458,6 @@ namespace Kvpbase {
                         #region Decrypt
 
                         if(Common.IsTrue(md.CurrentObj.IsEncrypted)) {
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                                ConsoleLogger.Warn("ObjectWrite before decryption: " + Common.BytesToBase64(md.CurrentObj.Value));
 
                             if(String.IsNullOrEmpty(md.CurrentObj.EncryptionKsn)) {
                                 md.CurrentObj.Value = EncryptionManager.LocalDecrypt(md.CurrentObj.Value);
@@ -2492,8 +2472,6 @@ namespace Kvpbase {
                                 md.CurrentObj.Value = clear;
                             }
 
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                                ConsoleLogger.Warn("ObjectWrite after decryption: " + Common.BytesToBase64(md.CurrentObj.Value));
                         }
 
                         #endregion
@@ -2501,11 +2479,7 @@ namespace Kvpbase {
                         #region Decompress
 
                         if(Common.IsTrue(md.CurrentObj.IsCompressed)) {
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                                ConsoleLogger.Warn("ObjectWrite before decompression: " + Common.BytesToBase64(md.CurrentObj.Value));
                             md.CurrentObj.Value = Common.GzipDecompress(md.CurrentObj.Value);
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                                ConsoleLogger.Warn("ObjectWrite after decompression: " + Common.BytesToBase64(md.CurrentObj.Value));
                         }
 
                         #endregion
@@ -2609,11 +2583,7 @@ namespace Kvpbase {
 
                     if(!Common.IsTrue(md.CurrentObj.GatewayMode)) {
                         if(Common.IsTrue(md.CurrentObj.IsCompressed)) {
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                                ConsoleLogger.Warn("ObjectWrite before compression: " + Common.BytesToBase64(md.CurrentObj.Value));
                             md.CurrentObj.Value = Common.GzipCompress(md.CurrentObj.Value);
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                                ConsoleLogger.Warn("ObjectWrite after compression: " + Common.BytesToBase64(md.CurrentObj.Value));
                         }
                     }
                     else {
@@ -2626,8 +2596,6 @@ namespace Kvpbase {
 
                     if(!Common.IsTrue(md.CurrentObj.GatewayMode)) {
                         if(Common.IsTrue(md.CurrentObj.IsEncrypted)) {
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                                ConsoleLogger.Warn("ObjectWrite before encryption: " + Common.BytesToBase64(md.CurrentObj.Value));
 
                             switch(CurrentSettings.Encryption.Mode) {
                                 case "local":
@@ -2663,8 +2631,6 @@ namespace Kvpbase {
                                     #endregion
                             }
 
-                            if(Common.IsTrue(CurrentSettings.Debug.DebugEncryption))
-                                ConsoleLogger.Warn("ObjectWrite after encryption: " + Common.BytesToBase64(md.CurrentObj.Value));
                         }
                     }
                     else {
@@ -2810,7 +2776,7 @@ namespace Kvpbase {
                     ((ioeOuter.HResult & 0xFFFF) == 0x27)
                     || ((ioeOuter.HResult & 0xFFFF) == 0x70)
                    ) {
-                    ConsoleLogger.Warn( "ObjectWrite disk full detected during write operation for " + md.CurrentUserMaster.Guid + " " + md.CurrentObj.Key);
+                    ConsoleLogger.Warn("ObjectWrite disk full detected during write operation for " + md.CurrentUserMaster.Guid + " " + md.CurrentObj.Key);
                     return new HttpResponse(md.CurrentHttpRequest, false, 500, null, "application/json",
                         new ErrorResponse(1, 500, "Disk is full.", null).ToJson(), true);
                 }

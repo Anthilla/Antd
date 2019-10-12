@@ -67,6 +67,29 @@ namespace Kvpbase {
             return ret;
         }
 
+        public static List<ApiKeyPermission> Default() {
+            return new List<ApiKeyPermission>() {
+                new ApiKeyPermission(){
+                    ApiKeyPermissionId = 1,
+                    UserMasterId = 1,
+                    ApiKeyId = 1,
+                    Notes = "Created by setup script",
+                    AllowReadObject = 1,
+                    AllowReadContainer = 1,
+                    AllowWriteObject = 1,
+                    AllowWriteContainer = 1,
+                    AllowDeleteObject = 1,
+                    AllowDeleteContainer = 1,
+                    AllowSearch = 1,
+                    Guid = System.Guid.NewGuid().ToString(),
+                    Active = 1,
+                    Created = DateTime.Now,
+                    LastUpdate = DateTime.Now,
+                    Expiration = DateTime.Now.AddDays(30)
+                }
+            };
+        }
+
         public static ApiKeyPermission DefaultPermit(UserMaster curr) {
             if(curr == null)
                 throw new ArgumentNullException(nameof(curr));

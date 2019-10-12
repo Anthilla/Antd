@@ -6,7 +6,7 @@ namespace Kvpbase {
     public partial class StorageServer {
         public static HttpResponse PutHandler(RequestMetadata md) {
             if(Common.IsTrue(md.CurrentObj.IsContainer)) {
-                ContainerHandler ch = new ContainerHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, Maintenance, Logger);
+                ContainerHandler ch = new ContainerHandler(CurrentSettings, CurrentTopology, CurrentNode, Users);
                 return ch.ContainerWrite(md);
             }
             else {
@@ -16,7 +16,7 @@ namespace Kvpbase {
                         new ErrorResponse(2, 400, "Unable to find object key in URL.", null).ToJson(), true);
                 }
 
-                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, Maintenance, EncryptionManager, Logger);
+                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, EncryptionManager);
                 return oh.ObjectWrite(md);
             }
         }

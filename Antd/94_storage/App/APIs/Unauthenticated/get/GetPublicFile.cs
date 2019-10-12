@@ -147,39 +147,39 @@ namespace Kvpbase {
 
                 #region Check-Container-Permissions-and-Logging
 
-                currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
-                if(currContainerPropertiesFile != null) {
-                    if(currContainerPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadObject)) {
-                                #region Process-Logging
+                //currContainerPropertiesFile = ContainerPropertiesFile.FromObject(md.CurrentObj, out containerLogFile, out containerPropertiesFile);
+                //if(currContainerPropertiesFile != null) {
+                //    if(currContainerPropertiesFile.Logging != null) {
+                //        if(Common.IsTrue(currContainerPropertiesFile.Logging.Enabled)) {
+                //            if(Common.IsTrue(currContainerPropertiesFile.Logging.ReadObject)) {
+                //                #region Process-Logging
 
-                                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "GetPublicFile", null));
+                //                Logger.Add(containerLogFile, LoggerManager.BuildMessage(md, "GetPublicFile", null));
 
-                                #endregion
-                            }
-                        }
-                    }
-                }
+                //                #endregion
+                //            }
+                //        }
+                //    }
+                //}
 
                 #endregion
 
                 #region Check-Object-Permissions-and-Logging
 
-                currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
-                if(currObjectPropertiesFile != null) {
-                    if(currObjectPropertiesFile.Logging != null) {
-                        if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
-                            if(Common.IsTrue(currObjectPropertiesFile.Logging.ReadObject)) {
-                                #region Process-Logging
+                //currObjectPropertiesFile = ObjectPropertiesFile.FromObject(md.CurrentObj, out objectLogFile, out objectPropertiesFile);
+                //if(currObjectPropertiesFile != null) {
+                //    if(currObjectPropertiesFile.Logging != null) {
+                //        if(Common.IsTrue(currObjectPropertiesFile.Logging.Enabled)) {
+                //            if(Common.IsTrue(currObjectPropertiesFile.Logging.ReadObject)) {
+                //                #region Process-Logging
 
-                                Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "GetPublicFile", null));
+                //                Logger.Add(objectLogFile, LoggerManager.BuildMessage(md, "GetPublicFile", null));
 
-                                #endregion
-                            }
-                        }
-                    }
-                }
+                //                #endregion
+                //            }
+                //        }
+                //    }
+                //}
 
                 #endregion
 
@@ -215,11 +215,7 @@ namespace Kvpbase {
                 #region Decompress
 
                 if(Common.IsTrue(md.CurrentObj.IsCompressed)) {
-                    if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                        ConsoleLogger.Warn("GetPublicFile before decompression: " + Common.BytesToBase64(md.CurrentObj.Value));
                     md.CurrentObj.Value = Common.GzipDecompress(md.CurrentObj.Value);
-                    if(Common.IsTrue(CurrentSettings.Debug.DebugCompression))
-                        ConsoleLogger.Warn("GetPublicFile after decompression: " + Common.BytesToBase64(md.CurrentObj.Value));
                 }
 
                 #endregion

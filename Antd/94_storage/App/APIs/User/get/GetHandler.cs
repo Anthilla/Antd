@@ -6,11 +6,11 @@ namespace Kvpbase {
             #region Process-by-Operation-Type
 
             if(Common.IsTrue(md.CurrentObj.IsContainer)) {
-                ContainerHandler ch = new ContainerHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, Maintenance, Logger);
+                ContainerHandler ch = new ContainerHandler(CurrentSettings, CurrentTopology, CurrentNode, Users);
                 return ch.ContainerRead(md);
             }
             else {
-                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, Maintenance, EncryptionManager, Logger);
+                ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, EncryptionManager);
                 return oh.ObjectRead(md);
             }
 

@@ -13,9 +13,6 @@ namespace Kvpbase {
         public static ConnectionManager ConnManager;
         public static EncryptionModule EncryptionManager;
         public static UrlLockManager LockManager;
-        public static LoggerManager Logger;
-        public static MaintenanceManager Maintenance;
-        public static ConsoleManager CurrentConsole;
         public static ConcurrentQueue<Dictionary<string, object>> FailedRequests;
     }
 }

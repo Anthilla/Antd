@@ -156,6 +156,31 @@ namespace Kvpbase {
             return ret;
         }
 
+        public static List<UserMaster> Default() {
+            return new List<UserMaster>() {
+                new UserMaster() {
+                    UserMasterId = 1,
+                    NodeId = 0,
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    CompanyName = "Default Company",
+                    Email = "default@default.com",
+                    Password = "default",
+                    Cellphone = "",
+                    Address1 = "",
+                    City = "",
+                    State = "",
+                    PostalCode = "",
+                    Country = "",
+                    IsAdmin = 1,
+                    Guid = System.Guid.NewGuid().ToString(),
+                    Active = 1,
+                    Created = DateTime.Now,
+                    LastUpdate = DateTime.Now,
+                    Expiration = DateTime.Now.AddDays(30)
+                }
+            };
+        }
         #endregion
 
         #region Public-Methods

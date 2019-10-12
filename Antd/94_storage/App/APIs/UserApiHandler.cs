@@ -45,7 +45,7 @@ namespace Kvpbase {
                     #region post
 
                     if(WatsonCommon.UrlEqual(md.CurrentHttpRequest.RawUrlWithoutQuery, "/" + md.CurrentUserMaster.Guid + "/search", false)) {
-                        ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, Maintenance, EncryptionManager, Logger);
+                        ObjectHandler oh = new ObjectHandler(CurrentSettings, CurrentTopology, CurrentNode, Users, LockManager, EncryptionManager);
                         return oh.ObjectSearch(md);
                     }
 
