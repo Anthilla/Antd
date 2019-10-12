@@ -71,7 +71,7 @@ namespace Antd {
             OverlayWatcher();
 
             CurrentConfiguration = ConfigRepo.Read();
-            if(CurrentConfiguration == null) {
+            if (CurrentConfiguration == null) {
                 CurrentConfiguration = new MachineConfig();
                 CurrentConfiguration.Host.MachineUid = Guid.NewGuid();
                 CurrentConfiguration.Host.SerialNumber = Guid.NewGuid();
@@ -102,12 +102,12 @@ namespace Antd {
 
                 ConfigRepo.Save();
             }
-            if(RunningConfiguration == null) {
+            if (RunningConfiguration == null) {
                 ConsoleLogger.Log("[conf] get running");
                 //RunningConfiguration = ConfigRepo.GetRunning();
                 RunningConfiguration = new MachineStatus();
             }
-            if(Checklist == null) {
+            if (Checklist == null) {
                 Checklist = new MachineStatusChecklistModel();
             }
 
@@ -155,7 +155,7 @@ namespace Antd {
 
             #region [    Working    ]
             PrepareGuiService();
-            StartRssdp();
+            //StartRssdp();
             LaunchJobs();
             //ConnectToCloudViaMqttAsync().GetAwaiter().GetResult();
             StartCloudUpdateJob();
@@ -178,8 +178,8 @@ namespace Antd {
 
         private static void RemoveLimits() {
             const string limitsFile = "/etc/security/limits.conf";
-            if(File.Exists(limitsFile)) {
-                if(!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
+            if (File.Exists(limitsFile)) {
+                if (!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
                     File.AppendAllLines(limitsFile, new[] { "root - nofile 1024000" });
                 }
             }
@@ -197,7 +197,7 @@ namespace Antd {
             Directory.CreateDirectory(Const.AntdCfgVfs);
             Directory.CreateDirectory(Const.AntdCfgLog);
             Directory.CreateDirectory(Const.AntdCfgSetup);
-            if(!File.Exists($"{Const.AntdCfgSetup}/setup.conf")) {
+            if (!File.Exists($"{Const.AntdCfgSetup}/setup.conf")) {
                 File.WriteAllText($"{Const.AntdCfgSetup}/setup.conf", "echo Hello World!");
             }
         }
@@ -226,32 +226,32 @@ namespace Antd {
         }
 
         private static void CheckUnitsLocation() {
-            if(!Directory.Exists(Const.AnthillaUnits)) { return; }
-            if(!Directory.Exists(Const.AntdUnits)) { return; }
+            if (!Directory.Exists(Const.AnthillaUnits)) { return; }
+            if (!Directory.Exists(Const.AntdUnits)) { return; }
             var anthillaUnits = Directory.EnumerateFiles(Const.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
-            if(!anthillaUnits.Any()) {
+            if (!anthillaUnits.Any()) {
                 var antdUnits = Directory.EnumerateFiles(Const.AntdUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in antdUnits) {
+                foreach (var unit in antdUnits) {
                     var trueUnit = unit.Replace(Const.AntdUnits, Const.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
+                    if (!File.Exists(trueUnit)) {
                         File.Copy(unit, trueUnit);
                     }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
                 var kernelUnits = Directory.EnumerateFiles(Const.KernelUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in kernelUnits) {
+                foreach (var unit in kernelUnits) {
                     var trueUnit = unit.Replace(Const.KernelUnits, Const.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
+                    if (!File.Exists(trueUnit)) {
                         File.Copy(unit, trueUnit);
                     }
                     File.Delete(unit);
                     Bash.Execute($"ln -s {trueUnit} {unit}");
                 }
                 var applicativeUnits = Directory.EnumerateFiles(Const.ApplicativeUnits, "*.*", SearchOption.TopDirectoryOnly);
-                foreach(var unit in applicativeUnits) {
+                foreach (var unit in applicativeUnits) {
                     var trueUnit = unit.Replace(Const.ApplicativeUnits, Const.AnthillaUnits);
-                    if(!File.Exists(trueUnit)) {
+                    if (!File.Exists(trueUnit)) {
                         File.Copy(unit, trueUnit);
                     }
                     File.Delete(unit);
@@ -259,8 +259,8 @@ namespace Antd {
                 }
             }
             //anthillaUnits = Directory.EnumerateFiles(Const.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly).ToList();
-            if(!anthillaUnits.Any()) {
-                foreach(var unit in anthillaUnits) {
+            if (!anthillaUnits.Any()) {
+                foreach (var unit in anthillaUnits) {
                     Bash.Execute($"chown root:wheel {unit}");
                     Bash.Execute($"chmod 644 {unit}");
                 }
@@ -274,10 +274,10 @@ namespace Antd {
         }
 
         private static void GenerateSecret() {
-            if(!File.Exists(Const.AntdCfgSecret)) {
+            if (!File.Exists(Const.AntdCfgSecret)) {
                 File.WriteAllText(Const.AntdCfgSecret, Secret.Gen());
             }
-            if(string.IsNullOrEmpty(File.ReadAllText(Const.AntdCfgSecret))) {
+            if (string.IsNullOrEmpty(File.ReadAllText(Const.AntdCfgSecret))) {
                 File.WriteAllText(Const.AntdCfgSecret, Secret.Gen());
             }
         }
@@ -347,19 +347,19 @@ namespace Antd {
         }
 
         private static void Firewall() {
-            if(CurrentConfiguration.Services.Firewall != null && CurrentConfiguration.Services.Firewall.Active) {
+            if (CurrentConfiguration.Services.Firewall != null && CurrentConfiguration.Services.Firewall.Active) {
                 cmds.Firewall.Apply();
             }
         }
 
         private static void Dhcpd() {
-            if(CurrentConfiguration.Services.Dhcpd.Active) {
+            if (CurrentConfiguration.Services.Dhcpd.Active) {
                 cmds.Dhcpd.Apply();
             }
         }
 
         private static void Bind() {
-            if(CurrentConfiguration.Services.Bind.Active) {
+            if (CurrentConfiguration.Services.Bind.Active) {
                 cmds.Bind.Apply();
             }
         }
@@ -369,16 +369,16 @@ namespace Antd {
         }
 
         private static void Nginx() {
-            if(CurrentConfiguration.Services.Nginx.Active) {
+            if (CurrentConfiguration.Services.Nginx.Active) {
                 cmds.Nginx.Apply();
             }
         }
 
         private static void ManageSsh() {
-            if(RunningConfiguration.Services.Sshd.Active) {
+            if (RunningConfiguration.Services.Sshd.Active) {
                 Sshd.Set();
             }
-            if(string.IsNullOrEmpty(RunningConfiguration.Services.Ssh.PublicKey)) {
+            if (string.IsNullOrEmpty(RunningConfiguration.Services.Ssh.PublicKey)) {
                 Ssh.CreateRootKeys();
             }
             CurrentConfiguration.Services.Ssh.PublicKey = Ssh.GetRootPublicKey();
@@ -389,32 +389,39 @@ namespace Antd {
         }
 
         private static void Samba() {
-            if(CurrentConfiguration.Services.Samba.Active) {
+            if (CurrentConfiguration.Services.Samba.Active) {
                 cmds.Samba.Apply();
             }
         }
 
         private static void Syslog() {
-            if(CurrentConfiguration.Services.SyslogNg.Active) {
+            if (CurrentConfiguration.Services.SyslogNg.Active) {
                 SyslogNg.Apply();
             }
         }
 
         private static void StorageZfs() {
+            ConsoleLogger.Log("[zpool] start");
             var pools = Zpool.GetImportPools();
-            for(var i = 0; i < pools.Length; i++) {
+            if(pools.Length == 0) {
+                ConsoleLogger.Log("[zpool] no pools to import");
+            }
+            for (var i = 0; i < pools.Length; i++) {
                 var currentPool = pools[i];
+                ConsoleLogger.Log($"[zpool] pool {currentPool} importing");
                 Zpool.Import(currentPool);
                 ConsoleLogger.Log($"[zpool] pool {currentPool} imported");
             }
-            if(RunningConfiguration.Storage.Zpools.Length > 1 && RunningConfiguration.Storage.ZfsSnapshots.Length > 1) {
+            RunningConfiguration.Storage.Zpools = Zpool.GetPools();
+            if (RunningConfiguration.Storage.Zpools.Length > 1) {
+                ConsoleLogger.Log("[zpool] launch zpool scheduled jobs");
                 Scheduler.ExecuteJob<ZfsSnapshotLaunchJob>();
-                Scheduler.ExecuteJob<ZfsSnapshotCleanupJob>();
+                //Scheduler.ExecuteJob<ZfsSnapshotCleanupJob>();
             }
         }
 
         private static void Ca() {
-            if(CurrentConfiguration.Services.Ca.Active) {
+            if (CurrentConfiguration.Services.Ca.Active) {
                 cmds.Ca.Apply();
             }
         }
@@ -426,20 +433,20 @@ namespace Antd {
         }
 
         private static void Rsync() {
-            if(CurrentConfiguration.Services.Rsync.Active) {
+            if (CurrentConfiguration.Services.Rsync.Active) {
                 RsyncWatcher.Start();
             }
         }
 
         private static void Tor() {
-            if(CurrentConfiguration.Services.Tor.Active) {
+            if (CurrentConfiguration.Services.Tor.Active) {
                 cmds.Tor.Apply();
             }
         }
 
         private static void ManageVirsh() {
             Virsh.PrepareDirectory();
-            if(CurrentConfiguration.Services.Virsh.Active) {
+            if (CurrentConfiguration.Services.Virsh.Active) {
                 Virsh.StartAll();
             }
         }
@@ -450,7 +457,7 @@ namespace Antd {
         public const int MQTT_DEFAULT_PORT = 31883;
 
         //private static async Task ManageMQTT() {
-            //await MqttHandler.MqttServerSetupForCluster();
+        //await MqttHandler.MqttServerSetupForCluster();
         //}
 
         public static ClusterWatcher CLUSTER_WATCHER = null;
@@ -458,15 +465,15 @@ namespace Antd {
         public static FileManagerServer STORAGESERVER = null;
 
         private static void ManageCluster() {
-            if(CurrentConfiguration.Cluster.Active) {
+            if (CurrentConfiguration.Cluster.Active) {
                 ClusterSetup.ApplyNetwork();
                 ClusterSetup.ApplyServices();
                 ClusterSetup.ApplyFs();
 
-                if(File.Exists("/cfg/antd/vfs/system.json")) {
-                    var settings = Kvpbase.Settings.FromFile("/cfg/antd/vfs/system.json");
-                    var ss = new Kvpbase.StorageServer(settings);
-                    ss.Start();
+                if (File.Exists("/cfg/antd/vfs/system.json")) {
+                    var ss = new Kvpbase.StorageServer(Const.AntdCfgVfs);
+                    var topology = Kvpbase.Topology.Import(CurrentConfiguration.Cluster.Nodes);
+                    ss.Start(topology);
                 }
 
                 ConsoleLogger.Log("[cluster] ready");
@@ -494,7 +501,7 @@ namespace Antd {
 
         private static void StartRssdp() {
             RunningConfiguration.Network.Routing = Route.Get();
-            if(RunningConfiguration.Network.Routing.Any()) {
+            if (RunningConfiguration.Network.Routing.Any()) {
                 cmds.Rssdp.PublishThisDevice();
                 ConsoleLogger.Log("[rssdp] published device");
             }
@@ -513,7 +520,7 @@ namespace Antd {
         }
 
         private static async Task ConnectToCloudViaMqttAsync() {
-            if(Const.IsUnix == false) {
+            if (Const.IsUnix == false) {
                 return;
             }
             var factory = new MqttFactory();
@@ -554,10 +561,10 @@ namespace Antd {
         }
 
         private static void StartCloudUpdateJob() {
-            if(Const.IsUnix == false) {
+            if (Const.IsUnix == false) {
                 return;
             }
-            if(_connected_to_cloud) {
+            if (_connected_to_cloud) {
                 Scheduler.ExecuteJob<SendInfoToCloudJob>();
             }
         }

@@ -177,7 +177,6 @@
     <Compile Include="94_storage\Classes\ConcurrentList.cs" />
     <Compile Include="94_storage\Classes\Connection.cs" />
     <Compile Include="94_storage\Classes\ConnectionManager.cs" />
-    <Compile Include="94_storage\Classes\ConsoleManager.cs" />
     <Compile Include="94_storage\Classes\ContainerLogging.cs" />
     <Compile Include="94_storage\Classes\ContainerPermission.cs" />
     <Compile Include="94_storage\Classes\ContainerPropertiesFile.cs" />
@@ -187,12 +186,9 @@
     <Compile Include="94_storage\Classes\EncryptedMessage.cs" />
     <Compile Include="94_storage\Classes\EncryptionModule.cs" />
     <Compile Include="94_storage\Classes\ErrorResponse.cs" />
-    <Compile Include="94_storage\Classes\Events.cs" />
     <Compile Include="94_storage\Classes\Find.cs" />
     <Compile Include="94_storage\Classes\FirstResponder.cs" />
     <Compile Include="94_storage\Classes\Heartbeat.cs" />
-    <Compile Include="94_storage\Classes\LoggerManager.cs" />
-    <Compile Include="94_storage\Classes\MaintenanceManager.cs" />
     <Compile Include="94_storage\Classes\Message.cs" />
     <Compile Include="94_storage\Classes\MimeTypes.cs" />
     <Compile Include="94_storage\Classes\MoveRequest.cs" />
@@ -207,7 +203,6 @@
     <Compile Include="94_storage\Classes\RequestMetadata.cs" />
     <Compile Include="94_storage\Classes\SearchFilter.cs" />
     <Compile Include="94_storage\Classes\Settings.cs" />
-    <Compile Include="94_storage\Classes\Setup.cs" />
     <Compile Include="94_storage\Classes\TaskObject.cs" />
     <Compile Include="94_storage\Classes\Token.cs" />
     <Compile Include="94_storage\Classes\Topology.cs" />

@@ -17,14 +17,14 @@ namespace Antd.cmds {
 
         public static ZfsDatasetModel[] GetDatasets() {
             var result = CommonProcess.Execute(zfsFileLocation, "list").ToArray();
-            if(result.Length < 1) {
+            if (result.Length < 1) {
                 return new ZfsDatasetModel[0];
             }
-            if(result[0].Contains(zfsEmptyMessage)) {
+            if (result[0].Contains(zfsEmptyMessage)) {
                 return new ZfsDatasetModel[0];
             }
             var dataset = new ZfsDatasetModel[result.Length];
-            for(var i = 0; i < dataset.Length; i++) {
+            for (var i = 0; i < dataset.Length; i++) {
                 var currentData = result[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 dataset[i] = new ZfsDatasetModel {
                     Name = currentData[0],
@@ -39,14 +39,14 @@ namespace Antd.cmds {
 
         public static ZfsSnapshotModel[] GetSnapshots() {
             var result = CommonProcess.Execute(zfsFileLocation, "list -t snap").ToArray();
-            if(result.Length < 1) {
+            if (result.Length < 1) {
                 return new ZfsSnapshotModel[0];
             }
-            if(result[0].Contains(zfsEmptyMessage)) {
+            if (result[0].Contains(zfsEmptyMessage)) {
                 return new ZfsSnapshotModel[0];
             }
             var snap = new ZfsSnapshotModel[result.Length];
-            for(var i = 0; i < snap.Length; i++) {
+            for (var i = 0; i < snap.Length; i++) {
                 var currentData = result[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 snap[i] = new ZfsSnapshotModel {
                     Name = currentData[0],
@@ -74,19 +74,25 @@ namespace Antd.cmds {
             private const string snapshotLaunchArgs = "snap -r ";
 
             /// <summary>
-            /// Lancia il comando per creare uno snapshot in base a un timer
+            /// Lancia il comando per creare uno snapshot
             /// </summary>
             public static void Launch() {
                 var result = Application.RunningConfiguration.Storage.Zpools;
-                if(result.Length < 1) {
+                if (result.Length < 1) {
                     return;
                 }
                 var dateArgument = DateTime.Now.ToString("yyyyMMdd-HHmmss");
-                for(var i = 0; i < result.Length; i++) {
+                for (var i = 0; i < result.Length; i++) {
                     var currentPool = result[i];
                     CommonProcess.Do(zfsFileLocation, CommonString.Append(snapshotLaunchArgs, currentPool.Name, "@", dateArgument));
                     ConsoleLogger.Log($"[zfs] snapshot create for '{currentPool.Name}'");
                 }
+            }
+
+            public static void Launch(string pool) {
+                var dateArgument = DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                CommonProcess.Do(zfsFileLocation, CommonString.Append(snapshotLaunchArgs, pool, "@", dateArgument));
+                ConsoleLogger.Log($"[zfs] snapshot create for '{pool}'");
             }
 
             /// <summary>
@@ -96,9 +102,9 @@ namespace Antd.cmds {
             public static HashSet<string> GetRemovableZfsSnapshotModels() {
                 var result = CommonProcess.Execute(zfsFileLocation, snapshotCleanupArgs).Skip(1).ToArray();
                 var snapshots = new List<Model>();
-                foreach(var line in result) {
+                foreach (var line in result) {
                     var attr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                    if(attr.Length < 1) {
+                    if (attr.Length < 1) {
                         continue;
                     }
                     var snap = new Model();
@@ -111,9 +117,9 @@ namespace Antd.cmds {
 
                 var list = new HashSet<string>();
                 var snapshotGroups = snapshots.GroupBy(_ => _.PoolName);
-                foreach(var snpgrp in snapshotGroups) {
+                foreach (var snpgrp in snapshotGroups) {
                     var filter = Filter(snpgrp);
-                    foreach(var snp in filter) {
+                    foreach (var snp in filter) {
                         list.Add(snp.Name);
                     }
                 }
@@ -132,14 +138,14 @@ namespace Antd.cmds {
             /// </summary>
             public static void Cleanup() {
                 var removableZfsSnapshotModels = GetRemovableZfsSnapshotModels().ToList();
-                if(!removableZfsSnapshotModels.Any()) {
+                if (!removableZfsSnapshotModels.Any()) {
                     return;
                 }
                 //divido in liste più piccole e più facili da gestire
                 var chunks = ChunkList(removableZfsSnapshotModels, 25);
-                foreach(var chunk in chunks) {
+                foreach (var chunk in chunks) {
                     var s = Stopwatch.StartNew();
-                    foreach(var snapshot in chunk) {
+                    foreach (var snapshot in chunk) {
                         DestroyZfsSnapshotModel(snapshot);
                     }
                     Thread.Sleep(1000 * 60 * 5 - Convert.ToInt32(s.ElapsedMilliseconds));
@@ -168,10 +174,10 @@ namespace Antd.cmds {
                 var partitions = new List<T>[totalChunks];
                 var maxSize = (int)Math.Ceiling(elements.Count / (double)totalChunks);
                 var k = 0;
-                for(var i = 0; i < partitions.Length; i++) {
+                for (var i = 0; i < partitions.Length; i++) {
                     partitions[i] = new List<T>();
-                    for(var j = k; j < k + maxSize; j++) {
-                        if(j >= elements.Count)
+                    for (var j = k; j < k + maxSize; j++) {
+                        if (j >= elements.Count)
                             break;
                         partitions[i].Add(elements[j]);
                     }
@@ -182,7 +188,7 @@ namespace Antd.cmds {
 
             private static List<List<T>> ChunkList<T>(List<T> elements, int chunkSize = 30) {
                 var list = new List<List<T>>();
-                for(var i = 0; i < elements.Count; i += chunkSize) {
+                for (var i = 0; i < elements.Count; i += chunkSize) {
                     list.Add(elements.GetRange(i, Math.Min(chunkSize, elements.Count - i)));
                 }
                 return list;
@@ -235,14 +241,14 @@ namespace Antd.cmds {
                 //questi oggetti saranno quelli da TENERE
                 var indexes = new HashSet<int>();
                 var snpList = snapshots.Where(snapshot => snapshot.Dimension > RangeDim);
-                foreach(var snapshot in snpList) {
+                foreach (var snapshot in snpList) {
                     indexes.Add(snapshot.Index);
                     var prevIndex = snapshot.Index - 1;
-                    if(prevIndex > 0) {
+                    if (prevIndex > 0) {
                         indexes.Add(prevIndex);
                     }
                     var nextIndex = snapshot.Index + 1;
-                    if(nextIndex < snapshots.Length) {
+                    if (nextIndex < snapshots.Length) {
                         indexes.Add(nextIndex);
                     }
                 }
@@ -267,7 +273,7 @@ namespace Antd.cmds {
 
                 var weeksOfPastMonth = PartitionList(pastMonthZfsSnapshotModels, 4);
 
-                foreach(var elementsOfWeek in weeksOfPastMonth) {
+                foreach (var elementsOfWeek in weeksOfPastMonth) {
                     var keepThis = elementsOfWeek.OrderBy(_ => _.Dimension).LastOrDefault();
                     olderZfsSnapshotModels.Add(keepThis);
                 }
@@ -287,7 +293,7 @@ namespace Antd.cmds {
                 var monthsOfPastYear = PartitionList(olderZfsSnapshotModels.OrderBy(_ => _.Name).ToList(), 4);
                 var keepThese = new List<Model>();
 
-                foreach(var elementsOfMonth in monthsOfPastYear) {
+                foreach (var elementsOfMonth in monthsOfPastYear) {
                     var keepThis = elementsOfMonth.OrderBy(_ => _.Dimension).LastOrDefault();
                     keepThese.Add(keepThis);
                 }
