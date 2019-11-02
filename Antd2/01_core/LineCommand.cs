@@ -2,14 +2,14 @@
 using Antd2.cmds;
 using Antd2.Configuration;
 using Antd2.Init;
+using Antd2.Web;
 using anthilla.core;
-using SharpInit.Ipc;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using static Antd.Help;
 using Bash = Antd2.cmds.Bash;
@@ -153,11 +153,13 @@ namespace Antd {
                 Console.WriteLine($"{proc.Pid} {proc.Name} {proc.CommandLine}");
             }
         }
+
         private static void OpenFilesFunc(string[] args) {
             foreach (var file in new Antd.ProcFs.Process(1).OpenFiles) {
                 Console.WriteLine(file);
             }
         }
+
         private static void NetstatFunc(string[] args) {
             foreach (var svc in Antd.ProcFs.ProcFs.Net.Services.Unix().Where(svc => svc.State == Antd.ProcFs.NetServiceState.Established)) {
                 Console.WriteLine(svc);
@@ -693,6 +695,8 @@ namespace Antd {
 
             LaunchJobs();
 
+            StartWebserver();
+
             ConsoleLogger.Log($"antd started in: {STOPWATCH.ElapsedMilliseconds} ms");
         }
 
@@ -915,6 +919,16 @@ namespace Antd {
 
         private static void LaunchJobs() {
             Scheduler.ExecuteJob<ModulesRemoverJob>();
+        }
+
+        private static void StartWebserver() {
+            //var host = new WebHostBuilder()
+            //   .UseContentRoot(Directory.GetCurrentDirectory())
+            //   .UseKestrel()
+            //   .UseStartup<Startup>()
+            //   .UseUrls("http://192.168.111.118:8084")
+            //   .Build();
+            //host.Run();
         }
     }
 
