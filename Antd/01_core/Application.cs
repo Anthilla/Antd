@@ -403,7 +403,7 @@ namespace Antd {
         private static void StorageZfs() {
             ConsoleLogger.Log("[zpool] start");
             var pools = Zpool.GetImportPools();
-            if(pools.Length == 0) {
+            if (pools.Length == 0) {
                 ConsoleLogger.Log("[zpool] no pools to import");
             }
             for (var i = 0; i < pools.Length; i++) {

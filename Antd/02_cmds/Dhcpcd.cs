@@ -4,7 +4,6 @@ namespace Antd.cmds {
     public class Dhcpcd {
 
         private const string dhcpcdFileLocation = "/sbin/dhcpcd";
-        private const string killallFileLocation = "/usr/bin/killall";
         private const string processName = "dhcpcd";
 
         public static bool Start(string networkAdapter) {
