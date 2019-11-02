@@ -4,7 +4,7 @@
         private const string aptgetCommand = "apt-get";
 
         public static void Install(string package) {
-            Bash.Execute($"{aptgetCommand} install {package}");
+            Bash.Execute($"{aptgetCommand} --yes --force-yes install {package}");
         }
     }
 }

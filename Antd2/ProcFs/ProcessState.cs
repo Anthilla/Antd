@@ -1,7 +1,5 @@
-﻿namespace ProcFsCore
-{
-    public enum ProcessState
-    {
+﻿namespace Antd.ProcFs {
+    public enum ProcessState {
         /// <summary>
         /// R: Running
         /// </summary>

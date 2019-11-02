@@ -3,30 +3,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace ProcFsCore
-{
-    public static partial class ProcFs
-    {
+namespace Antd.ProcFs {
+    public static partial class ProcFs {
         internal const string RootPath = "/proc";
         private const string StatPath = RootPath + "/stat";
-        
+
         public static readonly int TicksPerSecond = Native.SystemConfig(Native.SystemConfigName.TicksPerSecond);
 
         private static readonly TimeSpan BootTimeCacheInterval = TimeSpan.FromSeconds(0.5);
         private static DateTime? _bootTimeUtc;
         private static readonly Stopwatch BootTimeCacheTimer = new Stopwatch();
         private static readonly ReadOnlyMemory<byte> BtimeStr = "btime ".ToUtf8();
-        public static DateTime BootTimeUtc
-        {
-            get
-            {
-                lock (BootTimeCacheTimer)
-                {
-                    if (_bootTimeUtc == null || BootTimeCacheTimer.Elapsed > BootTimeCacheInterval)
-                    {
+        public static DateTime BootTimeUtc {
+            get {
+                lock (BootTimeCacheTimer) {
+                    if (_bootTimeUtc == null || BootTimeCacheTimer.Elapsed > BootTimeCacheInterval) {
                         var statReader = new Utf8FileReader<X4096>(StatPath);
-                        try
-                        {
+                        try {
                             statReader.SkipFragment(BtimeStr.Span, true);
                             if (statReader.EndOfStream)
                                 throw new NotSupportedException();
@@ -35,8 +28,7 @@ namespace ProcFsCore
                             _bootTimeUtc = DateTime.UnixEpoch + TimeSpan.FromSeconds(bootTimeSeconds);
                             BootTimeCacheTimer.Restart();
                         }
-                        finally
-                        {
+                        finally {
                             statReader.Dispose();
                         }
                     }
@@ -46,10 +38,8 @@ namespace ProcFsCore
             }
         }
 
-        public static IEnumerable<Process> Processes()
-        {
-            foreach (var pidPath in Directory.EnumerateDirectories(RootPath))
-            {
+        public static IEnumerable<Process> Processes() {
+            foreach (var pidPath in Directory.EnumerateDirectories(RootPath)) {
                 var pidDir = Path.GetFileName(pidPath);
                 if (Int32.TryParse(pidDir, out var pid))
                     yield return new Process(pid);

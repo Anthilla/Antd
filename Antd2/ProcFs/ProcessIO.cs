@@ -1,24 +1,19 @@
 using System;
 
-namespace ProcFsCore
-{
-    public struct ProcessIO
-    {
+namespace Antd.ProcFs {
+    public struct ProcessIO {
         public readonly Direction Read;
         public readonly Direction Write;
-        
-        private ProcessIO(in Direction read, in Direction write)
-        {
+
+        private ProcessIO(in Direction read, in Direction write) {
             Read = read;
             Write = write;
         }
 
         private static readonly ReadOnlyMemory<byte> StatNameSeparators = ": ".ToUtf8();
-        public static ProcessIO Get(int pid)
-        {
+        public static ProcessIO Get(int pid) {
             var statReader = new Utf8FileReader<X256>($"{ProcFs.RootPath}/{pid}/io");
-            try
-            {
+            try {
                 statReader.SkipFragment(StatNameSeparators.Span);
                 var readCharacters = statReader.ReadInt64();
                 statReader.SkipFragment(StatNameSeparators.Span);
@@ -31,24 +26,21 @@ namespace ProcFsCore
                 var readBytes = statReader.ReadInt64();
                 statReader.SkipFragment(StatNameSeparators.Span);
                 var writeBytes = statReader.ReadInt64();
-                
+
                 return new ProcessIO(new Direction(readCharacters, readBytes, readSysCalls),
                     new Direction(writeCharacters, writeBytes, writeSysCalls));
             }
-            finally
-            {
+            finally {
                 statReader.Dispose();
             }
         }
-        
-        public struct  Direction
-        {
+
+        public struct Direction {
             public long Characters { get; }
             public long Bytes { get; }
             public long SysCalls { get; }
 
-            public Direction(long characters, long bytes, long sysCalls)
-            {
+            public Direction(long characters, long bytes, long sysCalls) {
                 Characters = characters;
                 Bytes = bytes;
                 SysCalls = sysCalls;

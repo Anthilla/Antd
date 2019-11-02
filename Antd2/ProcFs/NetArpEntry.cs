@@ -1,18 +1,15 @@
 using System.Collections.Generic;
 
-namespace ProcFsCore
-{
-    public struct NetArpEntry
-    {
+namespace Antd.ProcFs {
+    public struct NetArpEntry {
         private const string NetArpPath = ProcFs.RootPath + "/net/arp";
-        
+
         public NetAddress Address { get; }
         public NetHardwareAddress HardwareAddress { get; }
         public string Mask { get; }
         public string Device { get; }
 
-        public NetArpEntry(in NetAddress address, in NetHardwareAddress hardwareAddress, string mask, string device)
-        {
+        public NetArpEntry(in NetAddress address, in NetHardwareAddress hardwareAddress, string mask, string device) {
             Address = address;
             HardwareAddress = hardwareAddress;
             Mask = mask;
@@ -22,15 +19,12 @@ namespace ProcFsCore
         public override string ToString() => $"{Address.ToString()} {HardwareAddress.ToString()} {Mask} {Device}";
 
         internal static IEnumerable<NetArpEntry> Get() => Get(NetArpPath);
-        
-        internal static IEnumerable<NetArpEntry> Get(string netArpPath)
-        {
+
+        internal static IEnumerable<NetArpEntry> Get(string netArpPath) {
             var statReader = new Utf8FileReader<X1024>(netArpPath);
-            try
-            {
+            try {
                 statReader.SkipLine();
-                while (!statReader.EndOfStream)
-                {
+                while (!statReader.EndOfStream) {
                     statReader.SkipWhiteSpaces();
                     var address = NetAddress.Parse(statReader.ReadWord(), NetAddressFormat.Human);
                     statReader.SkipWord();
@@ -42,8 +36,7 @@ namespace ProcFsCore
                     yield return new NetArpEntry(address, hardwareAddress, mask, device);
                 }
             }
-            finally
-            {
+            finally {
                 statReader.Dispose();
             }
         }

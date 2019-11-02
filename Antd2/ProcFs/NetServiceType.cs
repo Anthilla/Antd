@@ -1,7 +1,5 @@
-namespace ProcFsCore
-{
-    public enum NetServiceType
-    {
+namespace Antd.ProcFs {
+    public enum NetServiceType {
         Tcp,
         Udp,
         Raw,

@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace ProcFsCore
-{
-    public struct DiskStatistics
-    {
+namespace Antd.ProcFs {
+    public struct DiskStatistics {
         private const string DiskStatsPath = ProcFs.RootPath + "/diskstats";
-        private const long SectorSize = 512; 
+        private const long SectorSize = 512;
 
         public string DeviceName { get; }
 
@@ -16,8 +14,7 @@ namespace ProcFsCore
         public double TotalTime { get; }
         public double TotalWeightedTime { get; }
 
-        private DiskStatistics(string deviceName, in Operation reads, in Operation writes, double totalTime, double totalWeightedTime)
-        {
+        private DiskStatistics(string deviceName, in Operation reads, in Operation writes, double totalTime, double totalWeightedTime) {
             DeviceName = deviceName;
             Reads = reads;
             Writes = writes;
@@ -26,24 +23,20 @@ namespace ProcFsCore
         }
 
         private static readonly ReadOnlyMemory<byte> LoopDeviceStart = "loop".ToUtf8();
-        internal static IEnumerable<DiskStatistics> GetAll()
-        {
+        internal static IEnumerable<DiskStatistics> GetAll() {
             // http://man7.org/linux/man-pages/man5/proc.5.html
             // https://www.kernel.org/doc/Documentation/iostats.txt
             var statReader = new Utf8FileReader<X1024>(DiskStatsPath);
-            try
-            {
-                while (!statReader.EndOfStream)
-                {
+            try {
+                while (!statReader.EndOfStream) {
                     statReader.SkipWhiteSpaces();
                     statReader.SkipWord();
                     statReader.SkipWord();
 
                     var deviceName = statReader.ReadWord();
-                    if (deviceName.StartsWith(LoopDeviceStart.Span))
-                    {
+                    if (deviceName.StartsWith(LoopDeviceStart.Span)) {
                         statReader.SkipLine();
-                        continue;                        
+                        continue;
                     }
 
                     var deviceNameStr = deviceName.ToUtf8String();
@@ -58,21 +51,18 @@ namespace ProcFsCore
                     yield return new DiskStatistics(deviceNameStr, reads, writes, totalTime, totalWeightedTime);
                 }
             }
-            finally
-            {
+            finally {
                 statReader.Dispose();
             }
         }
 
-        public struct Operation
-        {
+        public struct Operation {
             public long Count { get; }
             public long Merged { get; }
             public long Bytes { get; }
             public double Time { get; }
 
-            private Operation(long count, long merged, long bytes, double time)
-            {
+            private Operation(long count, long merged, long bytes, double time) {
                 Count = count;
                 Merged = merged;
                 Bytes = bytes;
@@ -80,8 +70,7 @@ namespace ProcFsCore
             }
 
             internal static Operation Parse<TReader>(ref TReader reader)
-                where TReader : struct, IUtf8Reader
-            {
+                where TReader : struct, IUtf8Reader {
                 var count = reader.ReadInt64();
                 var merged = reader.ReadInt64();
                 var sectors = reader.ReadInt64();

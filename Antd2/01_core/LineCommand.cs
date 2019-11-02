@@ -27,6 +27,9 @@ namespace Antd {
             { "user", UserFunc },
             { "sysctl", SysctlFunc },
             { "nsswitch", NsswitchFunc },
+            { "proc", ProcFunc },
+            { "fd", OpenFilesFunc },
+            { "netstat", NetstatFunc },
         };
 
         private static void HelpFunc(string[] args) {
@@ -137,6 +140,22 @@ namespace Antd {
             }
             else {
                 ConsoleLogger.Log("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void ProcFunc(string[] args) {
+            foreach (var proc in Antd.ProcFs.ProcFs.Processes()) {
+                Console.WriteLine($"{proc.Pid} {proc.Name} {proc.CommandLine}");
+            }
+        }
+        private static void OpenFilesFunc(string[] args) {
+            foreach (var file in new Antd.ProcFs.Process(1).OpenFiles) {
+                Console.WriteLine(file);
+            }
+        }
+        private static void NetstatFunc(string[] args) {
+            foreach (var svc in Antd.ProcFs.ProcFs.Net.Services.Unix().Where(svc => svc.State == Antd.ProcFs.NetServiceState.Established)) {
+                Console.WriteLine(svc);
             }
         }
     }

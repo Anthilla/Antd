@@ -1,7 +1,5 @@
-namespace ProcFsCore
-{
-    public enum NetServiceState
-    {
+namespace Antd.ProcFs {
+    public enum NetServiceState {
         Unknown,
         Established,
         SynSent,

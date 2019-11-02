@@ -1,10 +1,8 @@
 using System;
 
-namespace ProcFsCore
-{
+namespace Antd.ProcFs {
     public struct Utf8FileReader<TFixed> : IUtf8Reader
-        where TFixed : unmanaged, IFixedBuffer
-    {
+        where TFixed : unmanaged, IFixedBuffer {
         internal static readonly ReadOnlyMemory<byte> DefaultWhiteSpaces = " \n \t\v\f\r\x0085".ToUtf8();
         internal static readonly ReadOnlyMemory<byte> DefaultLineSeparators = "\n\r".ToUtf8();
 
@@ -23,8 +21,7 @@ namespace ProcFsCore
 
         public bool EndOfStream => _endOfStream && _bufferedStart == _bufferedEnd;
 
-        public Utf8FileReader(string fileName, int? initialBufferSize = null, ReadOnlyMemory<byte>? whiteSpaces = null, ReadOnlyMemory<byte>? lineSeparators = null)
-        {
+        public Utf8FileReader(string fileName, int? initialBufferSize = null, ReadOnlyMemory<byte>? whiteSpaces = null, ReadOnlyMemory<byte>? lineSeparators = null) {
             _stream = LightFileStream.OpenRead(fileName);
             _whiteSpaces = whiteSpaces ?? DefaultWhiteSpaces;
             _lineSeparators = lineSeparators ?? DefaultLineSeparators;
@@ -36,28 +33,24 @@ namespace ProcFsCore
             _endOfStream = false;
         }
 
-        public void Dispose()
-        {
+        public void Dispose() {
             _buffer.Dispose();
             _stream.Dispose();
         }
 
-        private void ReadToBuffer()
-        {
+        private void ReadToBuffer() {
             if (_endOfStream)
                 return;
 
             var bufferSpan = _buffer.Span;
-            if (_bufferedEnd < _buffer.Length)
-            {
+            if (_bufferedEnd < _buffer.Length) {
                 var bytesRead = _stream.Read(bufferSpan.Slice(_bufferedEnd));
                 _bufferedEnd += bytesRead;
                 _endOfStream = bytesRead == 0;
                 return;
             }
 
-            if (_bufferedStart > 0 && _lockedStart == -1 || _lockedStart > 0)
-            {
+            if (_bufferedStart > 0 && _lockedStart == -1 || _lockedStart > 0) {
                 var start = _lockedStart == -1 ? _bufferedStart : _lockedStart;
                 bufferSpan.Slice(start).CopyTo(bufferSpan);
                 _bufferedEnd -= start;
@@ -67,64 +60,54 @@ namespace ProcFsCore
                 ReadToBuffer();
                 return;
             }
-            
+
             _buffer.Resize(_buffer.Length * 2);
             ReadToBuffer();
         }
 
-        private void EnsureReadToBuffer()
-        {
+        private void EnsureReadToBuffer() {
             if (_bufferedStart == _bufferedEnd)
                 ReadToBuffer();
         }
 
-        private void LockBuffer()
-        {
+        private void LockBuffer() {
             _lockedStart = _bufferedStart;
         }
 
-        private void UnlockBuffer()
-        {
+        private void UnlockBuffer() {
             _lockedStart = -1;
             if (_bufferedStart == _bufferedEnd && _bufferedStart != 0)
                 _bufferedStart = _bufferedEnd = 0;
         }
 
-        private void ConsumeBuffer(int count)
-        {
+        private void ConsumeBuffer(int count) {
             _bufferedStart += count;
-            if (_bufferedStart == _bufferedEnd && _lockedStart == -1)
-            {
+            if (_bufferedStart == _bufferedEnd && _lockedStart == -1) {
                 _bufferedStart = 0;
                 _bufferedEnd = 0;
             }
         }
-        
-        public void SkipSeparators(ReadOnlySpan<byte> separators)
-        {
+
+        public void SkipSeparators(ReadOnlySpan<byte> separators) {
             EnsureReadToBuffer();
-            while (!EndOfStream && separators.IndexOf(_buffer.Span[_bufferedStart]) >= 0)
-            {
+            while (!EndOfStream && separators.IndexOf(_buffer.Span[_bufferedStart]) >= 0) {
                 ConsumeBuffer(1);
                 EnsureReadToBuffer();
             }
         }
-        
-        public void SkipFragment(ReadOnlySpan<byte> separators, bool isSingleString = false)
-        {
+
+        public void SkipFragment(ReadOnlySpan<byte> separators, bool isSingleString = false) {
             if (EndOfStream)
                 return;
 
             EnsureReadToBuffer();
 
-            while (!_endOfStream)
-            {
+            while (!_endOfStream) {
 
                 var separatorPos = isSingleString
                     ? _buffer.Span.Slice(_bufferedStart, _bufferedEnd - _bufferedStart).IndexOf(separators)
                     : _buffer.Span.Slice(_bufferedStart, _bufferedEnd - _bufferedStart).IndexOfAny(separators);
-                if (separatorPos >= 0)
-                {
+                if (separatorPos >= 0) {
                     ConsumeBuffer(separatorPos);
                     break;
                 }
@@ -136,25 +119,22 @@ namespace ProcFsCore
             if (!EndOfStream)
                 SkipSeparators(separators);
         }
-        
-        public ReadOnlySpan<byte> ReadFragment(ReadOnlySpan<byte> separators)
-        {
+
+        public ReadOnlySpan<byte> ReadFragment(ReadOnlySpan<byte> separators) {
             if (EndOfStream)
                 return default;
 
             EnsureReadToBuffer();
 
             var separatorPos = -1;
-            while (!_endOfStream)
-            {
+            while (!_endOfStream) {
                 separatorPos = _buffer.Span.Slice(_bufferedStart, _bufferedEnd - _bufferedStart).IndexOfAny(separators);
                 if (separatorPos >= 0)
                     break;
                 ReadToBuffer();
             }
 
-            if (separatorPos < 0)
-            {
+            if (separatorPos < 0) {
                 var resultLength = _bufferedEnd - _bufferedStart;
                 LockBuffer();
                 ConsumeBuffer(_bufferedEnd - _bufferedStart);
@@ -162,8 +142,7 @@ namespace ProcFsCore
                 UnlockBuffer();
                 return result;
             }
-            else
-            {
+            else {
                 LockBuffer();
                 ConsumeBuffer(separatorPos + 1);
                 SkipSeparators(separators);
@@ -172,9 +151,8 @@ namespace ProcFsCore
                 return result;
             }
         }
-        
-        public ReadOnlySpan<byte> ReadToEnd()
-        {
+
+        public ReadOnlySpan<byte> ReadToEnd() {
             while (!_endOfStream)
                 ReadToBuffer();
             var result = _buffer.Span.Slice(_bufferedStart, _bufferedEnd);

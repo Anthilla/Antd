@@ -3,7 +3,7 @@ using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace ProcFsCore {
+namespace Antd.ProcFs {
     public struct Buffer<T, TFixed> : IDisposable
         where T : unmanaged
         where TFixed : unmanaged, IFixedBuffer {

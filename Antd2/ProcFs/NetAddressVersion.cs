@@ -1,7 +1,5 @@
-namespace ProcFsCore
-{
-    public enum NetAddressVersion
-    {
+namespace Antd.ProcFs {
+    public enum NetAddressVersion {
         // ReSharper disable InconsistentNaming
         IPv4 = 4,
         IPv6 = 6

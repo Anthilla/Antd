@@ -2,161 +2,129 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ProcFsCore
-{
-    public struct Process
-    {
+namespace Antd.ProcFs {
+    public struct Process {
         private static readonly int CurrentPid = Native.GetPid();
 
         private bool _initialized;
-        
+
         public int Pid { get; }
 
         private string _name;
-        public string Name
-        {
-            get
-            {
+        public string Name {
+            get {
                 EnsureInitialized();
                 return _name;
             }
         }
 
         private ProcessState _state;
-        public ProcessState State
-        {
-            get
-            {
+        public ProcessState State {
+            get {
                 EnsureInitialized();
                 return _state;
             }
         }
 
         private int _parentPid;
-        public int ParentPid
-        {
-            get
-            {
+        public int ParentPid {
+            get {
                 EnsureInitialized();
                 return _parentPid;
             }
         }
 
         private int _groupId;
-        public int GroupId
-        {
-            get
-            {
+        public int GroupId {
+            get {
                 EnsureInitialized();
                 return _groupId;
             }
         }
 
         private int _sessionId;
-        public int SessionId
-        {
-            get
-            {
+        public int SessionId {
+            get {
                 EnsureInitialized();
                 return _sessionId;
             }
         }
 
         private long _minorFaults;
-        public long MinorFaults
-        {
-            get
-            {
+        public long MinorFaults {
+            get {
                 EnsureInitialized();
                 return _minorFaults;
             }
         }
 
         private long _majorFaults;
-        public long MajorFaults
-        {
-            get
-            {
+        public long MajorFaults {
+            get {
                 EnsureInitialized();
                 return _majorFaults;
             }
         }
 
         private double _userProcessorTime;
-        public double UserProcessorTime
-        {
-            get
-            {
+        public double UserProcessorTime {
+            get {
                 EnsureInitialized();
                 return _userProcessorTime;
             }
         }
 
         private double _kernelProcessorTime;
-        public double KernelProcessorTime
-        {
-            get
-            {
+        public double KernelProcessorTime {
+            get {
                 EnsureInitialized();
                 return _kernelProcessorTime;
             }
         }
 
         private short _priority;
-        public short Priority
-        {
-            get
-            {
+        public short Priority {
+            get {
                 EnsureInitialized();
                 return _priority;
             }
         }
 
         private short _nice;
-        public short Nice
-        {
-            get
-            {
+        public short Nice {
+            get {
                 EnsureInitialized();
                 return _nice;
             }
         }
 
         private int _threadCount;
-        public int ThreadCount
-        {
-            get
-            {
+        public int ThreadCount {
+            get {
                 EnsureInitialized();
                 return _threadCount;
             }
         }
 
         private long _startTimeTicks;
-        public long StartTimeTicks
-        {
-            get
-            {
+        public long StartTimeTicks {
+            get {
                 EnsureInitialized();
                 return _startTimeTicks;
             }
         }
 
         private long _virtualMemorySize;
-        public long VirtualMemorySize
-        {
-            get
-            {
+        public long VirtualMemorySize {
+            get {
                 EnsureInitialized();
                 return _virtualMemorySize;
             }
         }
 
         private long _residentSetSize;
-        public long ResidentSetSize
-        {
-            get
-            {
+        public long ResidentSetSize {
+            get {
                 EnsureInitialized();
                 return _residentSetSize;
             }
@@ -164,22 +132,16 @@ namespace ProcFsCore
 
         private static readonly Func<char, bool> ZeroPredicate = ch => ch == '\0';
         private string _commandLine;
-        public string CommandLine
-        {
-            get
-            {
-                if (_commandLine == null)
-                {
-                    try
-                    {
-                        using (var cmdLineBuffer = Buffer<byte, X256>.FromFile($"{ProcFs.RootPath}/{Pid}/cmdline"))
-                        {
+        public string CommandLine {
+            get {
+                if (_commandLine == null) {
+                    try {
+                        using (var cmdLineBuffer = Buffer<byte, X256>.FromFile($"{ProcFs.RootPath}/{Pid}/cmdline")) {
                             var cmdLineSpan = cmdLineBuffer.Span.Trim(ZeroPredicate);
                             _commandLine = cmdLineSpan.IsEmpty ? "" : cmdLineSpan.ToUtf8String();
                         }
                     }
-                    catch (IOException)
-                    {
+                    catch (IOException) {
                         _commandLine = "";
                     }
                 }
@@ -187,22 +149,18 @@ namespace ProcFsCore
                 return _commandLine;
             }
         }
-        
+
         private DateTime? _startTimeUtc;
-        public DateTime StartTimeUtc
-        {
-            get
-            {
+        public DateTime StartTimeUtc {
+            get {
                 if (_startTimeUtc == null)
                     _startTimeUtc = ProcFs.BootTimeUtc + TimeSpan.FromSeconds(StartTimeTicks / (double)ProcFs.TicksPerSecond);
                 return _startTimeUtc.Value;
             }
         }
 
-        public IEnumerable<Link> OpenFiles
-        {
-            get
-            {
+        public IEnumerable<Link> OpenFiles {
+            get {
                 foreach (var linkFile in Directory.EnumerateFiles($"{ProcFs.RootPath}/{Pid}/fd"))
                     yield return Link.Read(linkFile);
             }
@@ -211,27 +169,23 @@ namespace ProcFsCore
         public ProcessIO IO => ProcessIO.Get(Pid);
 
         public static Process Current => new Process(CurrentPid);
-        
+
         public Process(int pid)
-            : this()
-        {
+            : this() {
             Pid = pid;
         }
 
-        private void EnsureInitialized()
-        {
-            if (!_initialized) 
+        private void EnsureInitialized() {
+            if (!_initialized)
                 Refresh();
         }
-        
-        public void Refresh()
-        {
+
+        public void Refresh() {
             _initialized = false;
             _commandLine = null;
             _startTimeUtc = null;
             var statReader = new Utf8FileReader<X512>($"{ProcFs.RootPath}/{Pid}/stat");
-            try
-            {
+            try {
                 // See http://man7.org/linux/man-pages/man5/proc.5.html /proc/[pid]/stat section
 
                 // (1) pid
@@ -242,7 +196,7 @@ namespace ProcFsCore
                 _name = name.Slice(1, name.Length - 2).ToUtf8String();
 
                 // (3) state
-                _state = GetProcessState((char) statReader.ReadWord()[0]);
+                _state = GetProcessState((char)statReader.ReadWord()[0]);
 
                 // (4) ppid
                 _parentPid = statReader.ReadInt32();
@@ -275,10 +229,10 @@ namespace ProcFsCore
                 statReader.SkipWord();
 
                 // (14) utime
-                _userProcessorTime = statReader.ReadInt64() / (double) ProcFs.TicksPerSecond;
+                _userProcessorTime = statReader.ReadInt64() / (double)ProcFs.TicksPerSecond;
 
                 // (15) stime
-                _kernelProcessorTime = statReader.ReadInt64() / (double) ProcFs.TicksPerSecond;
+                _kernelProcessorTime = statReader.ReadInt64() / (double)ProcFs.TicksPerSecond;
 
                 // (16) cutime
                 statReader.SkipWord();
@@ -307,18 +261,15 @@ namespace ProcFsCore
                 // (24) rss
                 _residentSetSize = statReader.ReadInt64() * Environment.SystemPageSize;
             }
-            finally
-            {
+            finally {
                 statReader.Dispose();
             }
 
             _initialized = true;
         }
 
-        private static ProcessState GetProcessState(char state)
-        {
-            switch (state)
-            {
+        private static ProcessState GetProcessState(char state) {
+            switch (state) {
                 case 'R':
                     return ProcessState.Running;
                 case 'S':
