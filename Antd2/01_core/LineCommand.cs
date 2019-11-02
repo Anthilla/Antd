@@ -1,12 +1,15 @@
 ﻿using Antd.Jobs;
 using Antd2.cmds;
 using Antd2.Configuration;
+using Antd2.Init;
 using anthilla.core;
+using SharpInit.Ipc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using static Antd.Help;
 using Bash = Antd2.cmds.Bash;
@@ -30,6 +33,8 @@ namespace Antd {
             { "proc", ProcFunc },
             { "fd", OpenFilesFunc },
             { "netstat", NetstatFunc },
+            { "init", InitFunc },
+            { "unit", UnitFunc },
         };
 
         private static void HelpFunc(string[] args) {
@@ -156,6 +161,26 @@ namespace Antd {
         private static void NetstatFunc(string[] args) {
             foreach (var svc in Antd.ProcFs.ProcFs.Net.Services.Unix().Where(svc => svc.State == Antd.ProcFs.NetServiceState.Established)) {
                 Console.WriteLine(svc);
+            }
+        }
+
+        private static void InitFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (InitCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void UnitFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (UnitCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                ConsoleLogger.Log("Command '" + line[0] + "' not found");
             }
         }
     }
@@ -625,6 +650,7 @@ namespace Antd {
         public static JobManager Scheduler;
         public static Stopwatch STOPWATCH;
         public static MachineConfiguration CONF;
+        public static ServiceInit ServiceInit;
 
         public static void Start(string[] args) {
             STOPWATCH = new Stopwatch();
@@ -640,6 +666,7 @@ namespace Antd {
                 return;
             }
 
+            Init();
             OsReadAndWrite();
             RemoveLimits();
             CreateWorkingDirectories();
@@ -669,6 +696,12 @@ namespace Antd {
             ConsoleLogger.Log($"antd started in: {STOPWATCH.ElapsedMilliseconds} ms");
         }
 
+        private static void Init() {
+            if (ServiceInit == null) {
+                ServiceInit = new ServiceInit();
+            }
+            ServiceInit.Start();
+        }
 
         private static void OsReadAndWrite() {
             Bash.Do("mount -o remount,rw,noatime /");
@@ -882,6 +915,75 @@ namespace Antd {
 
         private static void LaunchJobs() {
             Scheduler.ExecuteJob<ModulesRemoverJob>();
+        }
+    }
+
+    public class InitCommand {
+        public static readonly Dictionary<string, Action<string[]>> Options =
+            new Dictionary<string, Action<string[]>> {
+                { "start", StartFunc },
+                { "stop", StopFunc },
+            };
+
+        private static ServiceInit ServiceInit = null;
+
+        public static void StartFunc(string[] args) {
+            if (ServiceInit == null) {
+                ServiceInit = new ServiceInit();
+            }
+            ServiceInit.Start();
+        }
+
+        public static void StopFunc(string[] args) {
+            if (ServiceInit == null) {
+                ServiceInit.Stop();
+            }
+        }
+    }
+
+    public class UnitCommand {
+        public static readonly Dictionary<string, Action<string[]>> Options =
+            new Dictionary<string, Action<string[]>> {
+                {"start", StartUnits },
+                {"stop", StopUnits },
+                {"restart", RestartUnits },
+                {"reload", ReloadUnits },
+                {"list", ListUnits },
+                {"daemon-reload", RescanUnits },
+                {"status", GetUnitStatus },
+                {"describe-deps", DescribeDependenciesFunc }
+            };
+
+        static void DescribeDependenciesFunc(string[] args) {
+            InitController.Instance.DescribeDependenciesFunc(args);
+        }
+
+        static void RescanUnits(string[] args) {
+            InitController.Instance.RescanUnits(args);
+        }
+
+        static void GetUnitStatus(string[] args) {
+            InitController.Instance.GetUnitStatus(args);
+        }
+
+        static void StartUnits(string[] args) {
+            InitController.Instance.StartUnits(args);
+        }
+
+        static void StopUnits(string[] args) {
+            InitController.Instance.StopUnits(args);
+        }
+
+        static void RestartUnits(string[] args) {
+            InitController.Instance.RestartUnits(args);
+        }
+
+        static void ReloadUnits(string[] args) {
+            InitController.Instance.ReloadUnits(args);
+        }
+
+        static void ListUnits(string[] args) {
+            InitController.Instance.ListUnits(args);
         }
     }
 }

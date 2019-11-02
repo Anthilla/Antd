@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj" />
     <ProjectReference Include="..\antdlib.common\03_antdlib.common.csproj" />
+    <ProjectReference Include="..\SharpInit\SharpInit.csproj" />
   </ItemGroup>
 
 </Project>
