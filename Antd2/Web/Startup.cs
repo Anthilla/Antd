@@ -9,16 +9,17 @@ namespace Antd2.Web {
 
         public Startup(IWebHostEnvironment env) {
             var builder = new ConfigurationBuilder()
-                              .SetBasePath(env.ContentRootPath);
+                .SetBasePath(env.ContentRootPath);
 
             config = builder.Build();
         }
 
         public void Configure(IApplicationBuilder app) {
-            var appConfig = new AppConfiguration();
-            ConfigurationBinder.Bind(config, appConfig);
+            //var appConfig = new AppConfiguration();
+            //ConfigurationBinder.Bind(config, appConfig);
+            //app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new AntdBootstrapper(appConfig)));
 
-            app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new Bootstrapper(appConfig)));
+            app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new AntdBootstrapper()));
         }
     }
 }
