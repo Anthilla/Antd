@@ -1,24 +1,27 @@
-﻿using Antd.cmds;
-using Nancy;
-using Newtonsoft.Json;
+﻿using Nancy;
 
 namespace Antd2.Modules {
     public class RouteModule : NancyModule {
 
         public RouteModule() : base("/route") {
 
-            Post["/apply"] = x => {
-                Route.Set();
-                return HttpStatusCode.OK;
-            };
+            Post("/save", x => ApiPostSave());
 
-            Post["/set"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<NetRoute[]>(data);
-                Application.CurrentConfiguration.Network.Routing = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+            Post("/apply", x => ApiPostApply());
+
+        }
+
+        private dynamic ApiPostSave() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<NetRoute[]>(data);
+            //Application.CurrentConfiguration.Network.Routing = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostApply() {
+            //Route.Set();
+            return HttpStatusCode.OK;
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 
-namespace Antd {
+namespace Antd2 {
     public class StartCommand {
 
         private const string ConfFile = "/cfg/antd/antd.toml";

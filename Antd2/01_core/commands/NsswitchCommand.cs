@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Antd {
+namespace Antd2 {
     public class NsswitchCommand {
         public static readonly Dictionary<string, Action<string[]>> Options =
             new Dictionary<string, Action<string[]>> {

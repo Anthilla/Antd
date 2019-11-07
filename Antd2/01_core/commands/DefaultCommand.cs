@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Antd {
+namespace Antd2 {
     public class DefaultCommand {
         public static readonly Dictionary<string, Action<string[]>> Options =
             new Dictionary<string, Action<string[]>> {

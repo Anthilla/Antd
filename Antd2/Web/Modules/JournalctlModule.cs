@@ -1,4 +1,4 @@
-﻿using Antd.cmds;
+﻿using Antd2.cmds;
 using Nancy;
 using Newtonsoft.Json;
 
@@ -7,25 +7,18 @@ namespace Antd2.Modules {
 
         public JournalctlModule() : base("/journalctl") {
 
-            Get["/"] = x => {
-                return JsonConvert.SerializeObject(Journalctl.GetLog());
-            };
+            Get("/", x => ApiGet());
 
-            Get["/unit/{unitname}"] = x => {
-                return JsonConvert.SerializeObject(Journalctl.GetUnitLog((string)x.unitname));
-            };
+            Get("/unit/{unitname}", x => ApiGetUnitName(x));
 
-            Get["/unit/antd"] = x => {
-                return JsonConvert.SerializeObject(Journalctl.GetAntdLog());
-            };
+        }
 
-            Get["/unit/antdui"] = x => {
-                return JsonConvert.SerializeObject(Journalctl.GetAntdUiLog());
-            };
+        private dynamic ApiGet() {
+            return Response.AsJson((object)Journalctl.GetLog());
+        }
 
-            Get["/last/{hours}"] = x => {
-                return JsonConvert.SerializeObject(Journalctl.GetLastHours((int)x.hours));
-            };
+        private dynamic ApiGetUnitName(dynamic x) {
+            return JsonConvert.SerializeObject(Journalctl.GetUnitLog((string)x.unitname));
         }
     }
 }

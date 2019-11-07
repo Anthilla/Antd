@@ -8,23 +8,30 @@ namespace Antd2.Modules {
 
         public DhcpdModule() : base("/dhcpd") {
 
-            Post["/apply"] = x => {
-                Dhcpd.Apply();
-                return HttpStatusCode.OK;
-            };
+            Post("/save", x => ApiPostSave());
 
-            Post["/start"] = x => {
-                Dhcpd.Start();
-                return HttpStatusCode.OK;
-            };
+            Post("/start", x => ApiPostStart());
 
-            Post["/set"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<DhcpdModel>(data);
-                Application.CurrentConfiguration.Services.Dhcpd = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+            Post("/apply", x => ApiPostApply());
+
+        }
+
+        private dynamic ApiPostSave() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<DhcpdModel>(data);
+            //Application.CurrentConfiguration.Services.Dhcpd = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostApply() {
+            //Dhcpd.Apply();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostStart() {
+            //Dhcpd.Start();
+            return HttpStatusCode.OK;
         }
     }
 }

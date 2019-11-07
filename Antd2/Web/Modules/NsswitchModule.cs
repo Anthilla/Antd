@@ -1,24 +1,27 @@
-﻿using Antd.cmds;
-using Nancy;
-using Newtonsoft.Json;
+﻿using Nancy;
 
 namespace Antd2.Modules {
     public class NsswitchModule : NancyModule {
 
         public NsswitchModule() : base("/nsswitch") {
 
-            Post["/apply"] = x => {
-                NS.Switch.Set();
-                return HttpStatusCode.OK;
-            };
+            Post("/save", x => ApiPostSave());
 
-            Post["/set"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<NsSwitch>(data);
-                Application.CurrentConfiguration.NsSwitch = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+            Post("/apply", x => ApiPostApply());
+
+        }
+
+        private dynamic ApiPostSave() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<NsSwitch>(data);
+            //Application.CurrentConfiguration.NsSwitch = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostApply() {
+            //NS.Switch.Set();
+            return HttpStatusCode.OK;
         }
     }
 }

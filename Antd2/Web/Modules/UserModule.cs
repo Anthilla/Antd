@@ -1,80 +1,60 @@
-﻿using Antd.cmds;
-using Antd.models;
-using Nancy;
-using Newtonsoft.Json;
+﻿using Nancy;
 
 namespace Antd2.Modules {
     public class UserModule : NancyModule {
 
         public UserModule() : base("/user") {
 
-            Get["/get/system"] = x => {
-                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.SystemUsers);
-            };
+            Get("/get/system", x => ApiGetSystem());
 
-            Get["/get/group"] = x => {
-                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.SystemGroups);
-            };
+            Get("/get/group", x => ApiGetGroup());
 
-            Get["/get/group/running"] = x => {
-                return JsonConvert.SerializeObject(Application.RunningConfiguration.Users.SystemGroups);
-            };
+            Get("/get/group/running", x => ApiGetGroupRunning());
 
-            Get["/get/applicative"] = x => {
-                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.ApplicativeUsers);
-            };
+            Post("/apply/system", x => ApiPostApplySystem());
 
-            Post["/apply/system"] = x => {
-                Passwd.Set();
-                return HttpStatusCode.OK;
-            };
+            Post("/apply/group", x => ApiPostApplyGroup());
 
-            Post["/apply/group"] = x => {
-                Group.Set();
-                return HttpStatusCode.OK;
-            };
+            Post("/save/system", x => ApiPostSaveSystem());
 
-            Post["/save/system"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<SystemUser[]>(data);
-                Application.CurrentConfiguration.Users.SystemUsers = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+            Post("/save/group", x => ApiPostSaveGroup());
+        }
 
-            Post["/save/group"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<SystemGroup[]>(data);
-                Application.CurrentConfiguration.Users.SystemGroups = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+        private dynamic ApiGetSystem() {
+            return Response.AsJson((object)Application.CurrentConfiguration.Users.SystemUsers);
+        }
 
-            Post["/save/applicative"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<ApplicativeUser[]>(data);
-                Application.CurrentConfiguration.Users.ApplicativeUsers = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+        private dynamic ApiGetGroup() {
+            return Response.AsJson((object)Application.CurrentConfiguration.Users.SystemGroups);
+        }
 
-            Get["/get/password"] = x => {
-                string data = Request.Form.Data;
-                var pwd = Passwd.HashPasswd(data);
-                return Response.AsText(pwd);
-            };
+        private dynamic ApiGetGroupRunning() {
+            return Response.AsJson((object)Application.RunningConfiguration.Users.SystemGroups);
+        }
+        private dynamic ApiPostApplySystem() {
+            //Passwd.Set();
+            return HttpStatusCode.OK;
+        }
 
-            #region [    Authentication   ]
-            Post["/authenticate"] = x => {
-                string data = Request.Form.Data;
-                var model = JsonConvert.DeserializeObject<AuthenticationDataModel>(data);
-                return Login.Authenticate(model.Id, model.Claims);
-            };
+        private dynamic ApiPostApplyGroup() {
+            //Group.Set();
+            return HttpStatusCode.OK;
+        }
 
-            Get["/get/applicative"] = x => {
-                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Users.ApplicativeUsers);
-            };
-            #endregion
+        private dynamic ApiPostSaveSystem() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<SystemUser[]>(data);
+            //Application.CurrentConfiguration.Users.SystemUsers = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostSaveGroup() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<SystemGroup[]>(data);
+            //Application.CurrentConfiguration.Users.SystemGroups = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
         }
     }
 }

@@ -1,21 +1,25 @@
-﻿using Antd.cmds;
+﻿using Antd2.cmds;
 using Nancy;
-using Newtonsoft.Json;
 
 namespace Antd2.Modules {
     public class AppModule : NancyModule {
 
         public AppModule() : base("/app") {
 
-            Get["/"] = x => {
-                return JsonConvert.SerializeObject(App.GetLocal());
-            };
+            Get("/", x => ApiGet());
 
-            Post["/restart"] = x => {
-                string data = Request.Form.Data;
-                Systemctl.Restart(data);
-                return HttpStatusCode.OK;
-            };
+            Post("/restart", x => ApiPostRestart());
+
+        }
+
+        private dynamic ApiGet() {
+            return Response.AsJson((object)null);
+        }
+
+        private dynamic ApiPostRestart() {
+            string data = Request.Form.Data;
+            Systemctl.Restart(data);
+            return HttpStatusCode.OK;
         }
     }
 }

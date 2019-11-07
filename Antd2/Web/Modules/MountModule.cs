@@ -6,17 +6,22 @@ namespace Antd2.Modules {
 
         public MountModule() : base("/mount") {
 
-            Post["/apply"] = x => {
-                Mount.Set();
-                return HttpStatusCode.OK;
-            };
+            Post("/bind", x => ApiPostBind());
 
-            Post["/bind"] = x => {
-                string source = Request.Form.Source;
-                string destination = Request.Form.Destination;
-                Mount.MountWithBind(source, destination);
-                return HttpStatusCode.OK;
-            };
+            Post("/apply", x => ApiPostApply());
+
+        }
+
+        private dynamic ApiPostBind() {
+            //string source = Request.Form.Source;
+            //string destination = Request.Form.Destination;
+            //Mount.MountWithBind(source, destination);
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostApply() {
+            //Mount.Set();
+            return HttpStatusCode.OK;
         }
     }
 }

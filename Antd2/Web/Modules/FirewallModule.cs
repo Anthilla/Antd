@@ -1,34 +1,38 @@
-﻿using Antd.cmds;
-using Antd.models;
-using Nancy;
-using Newtonsoft.Json;
+﻿using Nancy;
 
 namespace Antd2.Modules {
     public class FirewallModule : NancyModule {
 
         public FirewallModule() : base("/firewall") {
 
-            Get["/"] = x => {
-                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Services.Firewall);
-            };
+            Get("/", x => ApiGet());
 
-            Post["/save"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<FirewallModel>(data);
-                Application.CurrentConfiguration.Services.Firewall = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+            Post("/save", x => ApiPostSave());
 
-            Post["/apply"] = x => {
-                Firewall.Apply();
-                return HttpStatusCode.OK;
-            };
+            Post("/apply", x => ApiPostApply());
 
-            Post["/start"] = x => {
-                Firewall.Start();
-                return HttpStatusCode.OK;
-            };
+            Post("/start", x => ApiPostStart());
+        }
+
+        private dynamic ApiGet() {
+            return Response.AsJson((object)Application.CurrentConfiguration.Services.Firewall);
+        }
+
+        private dynamic ApiPostSave() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<FirewallModel>(data);
+            //Application.CurrentConfiguration.Services.Firewall = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostApply() {
+            //Firewall.Apply();
+            return HttpStatusCode.OK;
+        }
+        private dynamic ApiPostStart() {
+            //Firewall.Start();
+            return HttpStatusCode.OK;
         }
     }
 }

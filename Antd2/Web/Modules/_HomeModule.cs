@@ -1,6 +1,5 @@
 ﻿using anthilla.core;
 using Nancy;
-using Newtonsoft.Json;
 
 namespace Antd2.Modules {
     public class HomeModule : NancyModule {
@@ -10,7 +9,7 @@ namespace Antd2.Modules {
             Get("/agent", x => ApiGetAgent());
 
             Get("/conf", x => ApiGetConf());
-            
+
             Get("/running", x => ApiGetRunning());
 
         }

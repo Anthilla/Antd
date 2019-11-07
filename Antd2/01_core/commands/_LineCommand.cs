@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using static Antd.Help;
 
-namespace Antd {
+namespace Antd2 {
 
     public class LineCommand {
 

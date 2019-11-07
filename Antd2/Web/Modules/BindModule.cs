@@ -1,29 +1,33 @@
-﻿using Antd.cmds;
-using Antd.models;
-using Nancy;
-using Newtonsoft.Json;
+﻿using Nancy;
 
 namespace Antd2.Modules {
     public class BindModule : NancyModule {
 
         public BindModule() : base("/bind") {
 
-            Get["/"] = x => {
-                return JsonConvert.SerializeObject(Application.CurrentConfiguration.Services.Bind);
-            };
+            Get("/", x => ApiGet());
 
-            Post["/apply"] = x => {
-                Bind.Apply();
-                return HttpStatusCode.OK;
-            };
+            Post("/save", x => ApiPostSave());
 
-            Post["/save"] = x => {
-                string data = Request.Form.Data;
-                var objects = JsonConvert.DeserializeObject<BindModel>(data);
-                Application.CurrentConfiguration.Services.Bind = objects;
-                ConfigRepo.Save();
-                return HttpStatusCode.OK;
-            };
+            Post("/apply", x => ApiPostApply());
+
+        }
+
+        private dynamic ApiGet() {
+            return Response.AsJson((object)Application.CurrentConfiguration.Services.Bind);
+        }
+
+        private dynamic ApiPostSave() {
+            //string data = Request.Form.Data;
+            //var objects = JsonConvert.DeserializeObject<BindModel>(data);
+            //Application.CurrentConfiguration.Services.Bind = objects;
+            //ConfigRepo.Save();
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostApply() {
+            //Bind.Apply();
+            return HttpStatusCode.OK;
         }
     }
 }
