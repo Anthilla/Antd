@@ -57,6 +57,9 @@ namespace Antd2 {
             SetNetwork();
 
             ManageSsh();
+
+            SetDnsServer();
+
             StorageZfs();
             Apps();
             ApplySetupCommands();
@@ -277,6 +280,11 @@ namespace Antd2 {
         private static void ManageSsh() {
             if (Application.IsUnix == false) { return; }
             //ConsoleLogger.Log("[ssh] ready");
+        }
+       
+        private static void SetDnsServer() {
+            ADNS.Start();
+            ConsoleLogger.Log("[adns] ready");
         }
 
         private static void StorageZfs() {
