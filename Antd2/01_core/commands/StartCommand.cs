@@ -9,6 +9,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 
@@ -70,6 +71,9 @@ namespace Antd {
         private static void Init() {
             if (ServiceInit == null) {
                 ServiceInit = new ServiceInit();
+            }
+            if (File.Exists("/var/run/sharpinit/sharpinit.sock")) {
+                File.Delete("/var/run/sharpinit/sharpinit.sock");
             }
             ServiceInit.Start();
         }
@@ -306,13 +310,15 @@ namespace Antd {
         }
 
         private static void StartWebserver() {
-            var host = new WebHostBuilder()
-               .UseContentRoot(Directory.GetCurrentDirectory())
-               .UseKestrel()
-               .UseStartup<Startup>()
-               .UseUrls("http://localhost:8084")
-               .Build();
-            host.Run();
+            Task.Factory.StartNew(() => {
+                var host = new WebHostBuilder()
+                  .UseContentRoot(Directory.GetCurrentDirectory())
+                  .UseKestrel()
+                  .UseStartup<Startup>()
+                  .UseUrls("http://0.0.0.0:8085")
+                  .Build();
+                host.Run();
+            });
         }
     }
 }
