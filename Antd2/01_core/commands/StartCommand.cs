@@ -2,6 +2,7 @@
 using Antd2.cmds;
 using Antd2.Configuration;
 using Antd2.Init;
+using Antd2.Web;
 using anthilla.core;
 using Microsoft.AspNetCore.Hosting;
 using System;
@@ -74,11 +75,13 @@ namespace Antd {
         }
 
         private static void OsReadAndWrite() {
+            if (Application.IsUnix == false) { return; }
             Bash.Do("mount -o remount,rw,noatime /");
             Bash.Do("mount -o remount,rw,discard,noatime /mnt/cdrom");
         }
 
         private static void RemoveLimits() {
+            if (Application.IsUnix == false) { return; }
             const string limitsFile = "/etc/security/limits.conf";
             if (File.Exists(limitsFile)) {
                 if (!File.ReadAllText(limitsFile).Contains("root - nofile 1024000")) {
@@ -105,10 +108,12 @@ namespace Antd {
         }
 
         private static void MountWorkingDirectories() {
+            if (Application.IsUnix == false) { return; }
             Mount.WorkingDirectories();
         }
 
         private static void Time() {
+            if (Application.IsUnix == false) { return; }
             //Scheduler.ExecuteJob<SyncLocalClockJob>();
             if (CONF.Time.EnableNtpSync && !string.IsNullOrEmpty(CONF.Time.NtpServer)) {
                 Ntpdate.SyncFromRemoteServer(CONF.Time.NtpServer);
@@ -120,11 +125,13 @@ namespace Antd {
         }
 
         private static void Mounts() {
+            if (Application.IsUnix == false) { return; }
             Mount.Set();
             ConsoleLogger.Log("[mnt] ready");
         }
 
         private static void CheckUnitsLocation() {
+            if (Application.IsUnix == false) { return; }
             if (!Directory.Exists(Const.AnthillaUnits)) { return; }
             if (!Directory.Exists(Const.AntdUnits)) { return; }
             var anthillaUnits = Directory.EnumerateFiles(Const.AnthillaUnits, "*.*", SearchOption.TopDirectoryOnly);
@@ -168,6 +175,7 @@ namespace Antd {
         }
 
         private static void Hostname() {
+            if (Application.IsUnix == false) { return; }
             if (!string.IsNullOrEmpty(CONF.Host.Name)) {
                 Hostnamectl.SetHostname(CONF.Host.Name);
             }
@@ -184,6 +192,7 @@ namespace Antd {
         }
 
         private static void GenerateSecret() {
+            if (Application.IsUnix == false) { return; }
             if (!File.Exists(Const.AntdCfgSecret)) {
                 File.WriteAllText(Const.AntdCfgSecret, Secret.Gen());
             }
@@ -193,12 +202,14 @@ namespace Antd {
         }
 
         private static void SetParameters() {
+            if (Application.IsUnix == false) { return; }
             foreach (var sysctl in CONF.Boot.Sysctl) {
                 Sysctl.Set(sysctl);
             }
         }
 
         private static void SetServices() {
+            if (Application.IsUnix == false) { return; }
             foreach (var service in CONF.Boot.ActiveServices) {
                 Systemctl.Enable(service);
                 Systemctl.Start(service);
@@ -210,6 +221,7 @@ namespace Antd {
         }
 
         private static void SetModules() {
+            if (Application.IsUnix == false) { return; }
             foreach (var module in CONF.Boot.ActiveModules) {
                 Mod.Add(module);
             }
@@ -219,6 +231,7 @@ namespace Antd {
         }
 
         private static void Users() {
+            if (Application.IsUnix == false) { return; }
             foreach (var user in CONF.Users) {
                 Getent.AddUser(user.Name);
                 Getent.AddGroup(user.Group);
@@ -228,6 +241,7 @@ namespace Antd {
         }
 
         private static void SetNetwork() {
+            if (Application.IsUnix == false) { return; }
             Dns.SetResolv(CONF.Network.Dns);
             foreach (var i in CONF.Network.Interfaces) {
                 ConsoleLogger.Log($"[net] configuring {i.Name} {i.Ip}/{i.Range}");
@@ -248,6 +262,7 @@ namespace Antd {
         }
 
         private static void ApplySetupCommands() {
+            if (Application.IsUnix == false) { return; }
             foreach (var command in CONF.Commands.Run) {
                 ConsoleLogger.Log($"[cmd] {command}");
                 Bash.Do(command);
@@ -256,10 +271,12 @@ namespace Antd {
         }
 
         private static void ManageSsh() {
+            if (Application.IsUnix == false) { return; }
             //ConsoleLogger.Log("[ssh] ready");
         }
 
         private static void StorageZfs() {
+            if (Application.IsUnix == false) { return; }
             ConsoleLogger.Log("[zpl] start");
             var pools = Zpool.GetImportPools();
             if (pools.Length == 0) {
@@ -278,6 +295,7 @@ namespace Antd {
         }
 
         private static void Apps() {
+            if (Application.IsUnix == false) { return; }
             Applicative.Setup();
             Applicative.Start();
             ConsoleLogger.Log("[app] ready");
@@ -288,13 +306,13 @@ namespace Antd {
         }
 
         private static void StartWebserver() {
-            //var host = new WebHostBuilder()
-            //   .UseContentRoot(Directory.GetCurrentDirectory())
-            //   .UseKestrel()
-            //   .UseStartup<Startup>()
-            //   .UseUrls("http://192.168.111.118:8084")
-            //   .Build();
-            //host.Run();
+            var host = new WebHostBuilder()
+               .UseContentRoot(Directory.GetCurrentDirectory())
+               .UseKestrel()
+               .UseStartup<Startup>()
+               .UseUrls("http://localhost:8084")
+               .Build();
+            host.Run();
         }
     }
 }

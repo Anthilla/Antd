@@ -7,6 +7,8 @@ namespace Antd {
 
     internal partial class Application {
 
+        public static bool IsUnix => Environment.OSVersion.Platform == PlatformID.Unix;
+
         private static void Main(string[] args) {
             PrepareConsole();
             if (args.Length > 0) {
