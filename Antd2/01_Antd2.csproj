@@ -44,8 +44,4 @@
     <ProjectReference Include="..\SharpInit\SharpInit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="LibC\" />
-  </ItemGroup>
-
 </Project>
