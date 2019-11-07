@@ -15,7 +15,7 @@ namespace Antd {
         }
         public static string[] ReadLine() {
             Console.Write("> ");
-            return Console.ReadLine().Split();
+            return Console.ReadLine()?.Split() ?? Array.Empty<string>();
         }
     }
 }
