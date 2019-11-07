@@ -27,19 +27,19 @@ namespace Antd2.Web {
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {
             base.RequestStartup(requestContainer, pipelines, context);
 
-            pipelines.BeforeRequest += ctx => {
-                Console.WriteLine(ctx);
-                return null;
-            };
+            //pipelines.BeforeRequest += ctx => {
+            //    Console.WriteLine(ctx);
+            //    return null;
+            //};
 
-            pipelines.AfterRequest += (ctx) => {
-                Console.WriteLine(ctx);
-            };
+            //pipelines.AfterRequest += (ctx) => {
+            //    Console.WriteLine(ctx);
+            //};
 
-            pipelines.OnError += (ctx, ex) => {
-                Console.WriteLine(ex);
-                return null;
-            };
+            //pipelines.OnError += (ctx, ex) => {
+            //    Console.WriteLine(ex);
+            //    return null;
+            //};
         }
     }
 }

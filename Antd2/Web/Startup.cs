@@ -7,7 +7,13 @@ namespace Antd2.Web {
     public class Startup {
         private readonly IConfiguration config;
 
-        public Startup(IWebHostEnvironment env) {
+        /// <summary>
+        /// Verificare se aggiornando a .netcore 3 e utilizzando IHostingEnvironment
+        /// invece che IWebHostEnvironment, come suggerito, 
+        /// funziona correttamente
+        /// </summary>
+        /// <param name="env"></param>
+        public Startup(IHostingEnvironment env) {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath);
 
