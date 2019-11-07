@@ -15,7 +15,7 @@ namespace Antd2.Modules {
 
         }
 
-        private dynamic ApiPostSave() {
+        private dynamic ApiPostApply() {
             //Dns.Set();
             return HttpStatusCode.OK;
         }
