@@ -7,6 +7,3 @@ Application.cs				Entry point dell'applicazione
 							RunningConfiguration	→ configurazione in running, questo parametro viene aggiornato periodicamente
 							All'avvio applica tutte le diff di configurazione tra Current e Running
 
-Bootstrapper.cs				Configurazione del web service
-
-NancyExtensions.cs			Configurazione del web service

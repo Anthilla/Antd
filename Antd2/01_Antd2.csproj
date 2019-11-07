@@ -18,6 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="01_Antd2.csproj.DotSettings" />
+    <None Remove="Antd.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Owin" Version="3.0.0" />
