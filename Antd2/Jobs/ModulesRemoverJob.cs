@@ -1,6 +1,6 @@
 ﻿using Antd2.cmds;
 
-namespace Antd.Jobs {
+namespace Antd2.Jobs {
     public class ModulesRemoverJob : Job {
 
         private int _repetitionIntervalTime = 1000 * 60 * 5;

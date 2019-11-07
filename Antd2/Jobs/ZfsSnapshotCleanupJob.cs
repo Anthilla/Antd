@@ -1,6 +1,6 @@
 ﻿using Antd2.cmds;
 
-namespace Antd.Jobs {
+namespace Antd2.Jobs {
     public class ZfsSnapshotCleanupJob : Job {
 
         #region [    Core Parameter    ]

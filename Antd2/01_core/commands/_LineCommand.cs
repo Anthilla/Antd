@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using static Antd.Help;
+using static Antd2.Help;
 
 namespace Antd2 {
 

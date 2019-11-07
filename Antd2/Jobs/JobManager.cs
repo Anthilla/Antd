@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Threading;
 
-namespace Antd.Jobs {
+namespace Antd2.Jobs {
 
     public class JobManager {
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Antd.Jobs {
+namespace Antd2.Jobs {
 
     public abstract class Job {
 

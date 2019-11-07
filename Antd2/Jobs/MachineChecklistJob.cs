@@ -2,7 +2,7 @@
 using System;
 using System.Net.NetworkInformation;
 
-namespace Antd.Jobs {
+namespace Antd2.Jobs {
     public class MachineChecklistJob : Job {
 
         #region [    Core Parameter    ]
