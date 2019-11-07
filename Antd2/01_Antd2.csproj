@@ -33,7 +33,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="Nancy.Owin" Version="2.0.0" />
-    <PackageReference Include="Nancy.Serialization.JsonNet" Version="1.4.1" />
     <PackageReference Include="Nett" Version="0.13.0" />
     <PackageReference Include="Tmds.LibC" Version="0.3.0" />
   </ItemGroup>

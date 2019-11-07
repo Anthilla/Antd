@@ -43,7 +43,7 @@ namespace Antd2.cmds {
 
         public static void SetResolv(DnsClientConfiguration conf) {
             if (File.Exists(etcResolv)) {
-                File.Copy(etcResolv, etcResolvBackup, true);
+                File.Move(etcResolv, etcResolvBackup, true);
             }
             var nameserverLines = new string[conf.Nameserver.Length];
             for (var i = 0; i < conf.Nameserver.Length; i++) {
