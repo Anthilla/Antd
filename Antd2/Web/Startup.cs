@@ -11,6 +11,8 @@ namespace Antd2.Web {
         /// Verificare se aggiornando a .netcore 3 e utilizzando IHostingEnvironment
         /// invece che IWebHostEnvironment, come suggerito, 
         /// funziona correttamente
+        /// Microsoft.AspNetCore.Owin pacchetto tenere a versione 2.2.0 e non aggiornare a 3.0.0 
+        /// finchè i problemi di Nancy non verranno risolti
         /// </summary>
         /// <param name="env"></param>
         public Startup(IHostingEnvironment env) {
