@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace Antd {
+namespace Antd2 {
     public class Help {
         public static string CaptureGroup(string sourceText, string pattern) {
             if (string.IsNullOrEmpty(sourceText)) {
