@@ -68,13 +68,13 @@ namespace Antd2 {
         }
 
         private static void ExitFunc(string[] args) {
-            ConsoleLogger.Log("Exiting antd2.");
+            Console.WriteLine("Exiting antd2.");
             Thread.Sleep(500);
             Environment.Exit(0);
         }
 
         private static void StartFunc(string[] args) {
-            ConsoleLogger.Log("Start antd2.");
+            Console.WriteLine("Start antd2.");
             StartCommand.Start(args);
         }
 
@@ -84,7 +84,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -104,7 +104,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -114,7 +114,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -124,7 +124,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -134,7 +134,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -162,7 +162,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
 
@@ -172,7 +172,7 @@ namespace Antd2 {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
-                ConsoleLogger.Log("Command '" + line[0] + "' not found");
+                Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
     }

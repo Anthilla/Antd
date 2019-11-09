@@ -12,7 +12,7 @@ namespace Antd2.cmds {
         public static void Setup() {
             if (IsTargetActive())
                 return;
-            ConsoleLogger.Log($"[{applicativeTarget}] setup");
+            Console.WriteLine($"[{applicativeTarget}] setup");
             if (!Directory.Exists("/usr/lib64/systemd/system/")) { return; }
             Directory.CreateDirectory("/etc/systemd/system/");
             Directory.CreateDirectory("/etc/systemd/system/applicative.target.wants");

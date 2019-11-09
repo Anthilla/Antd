@@ -122,21 +122,21 @@ namespace Antd2.cmds {
         public static bool Start(string unit) {
             var args = CommonString.Append(startArg, " ", unit);
             Bash.Do($"{systemctlCommand} {args}");
-            ConsoleLogger.Log($"[systemctl] start {unit}");
+            Console.WriteLine($"[systemctl] start {unit}");
             return true;
         }
 
         public static bool Stop(string unit) {
             var args = CommonString.Append(stopArg, " ", unit);
             Bash.Do($"{systemctlCommand} {args}");
-            ConsoleLogger.Log($"[systemctl] stop {unit}");
+            Console.WriteLine($"[systemctl] stop {unit}");
             return true;
         }
 
         public static bool Restart(string unit) {
             var args = CommonString.Append(restartArg, " ", unit);
             Bash.Do($"{systemctlCommand} {args}");
-            ConsoleLogger.Log($"[systemctl] restart {unit}");
+            Console.WriteLine($"[systemctl] restart {unit}");
             return true;
         }
 
@@ -178,21 +178,21 @@ namespace Antd2.cmds {
         public static bool Enable(string unit) {
             var args = CommonString.Append(enableArg, " ", unit);
             Bash.Do($"{systemctlCommand} {args}");
-            ConsoleLogger.Log($"[systemctl] enable {unit}");
+            Console.WriteLine($"[systemctl] enable {unit}");
             return true;
         }
 
         public static bool Disable(string unit) {
             var args = CommonString.Append(disableArg, " ", unit);
             Bash.Do($"{systemctlCommand} {args}");
-            ConsoleLogger.Log($"[systemctl] disable {unit}");
+            Console.WriteLine($"[systemctl] disable {unit}");
             return true;
         }
 
         public static bool Mask(string unit) {
             var args = CommonString.Append(maskArg, " ", unit);
             Bash.Do($"{systemctlCommand} {args}");
-            ConsoleLogger.Log($"[systemctl] mask {unit}");
+            Console.WriteLine($"[systemctl] mask {unit}");
             return true;
         }
 

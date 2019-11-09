@@ -33,19 +33,19 @@ namespace Antd2.cmds {
         //    var current = Application.CurrentConfiguration.Host;
         //    var running = Application.RunningConfiguration.Host;
         //    if(CommonString.AreEquals(current.HostName, running.HostName) == false) {
-        //        ConsoleLogger.Log($"[host] name: {current.HostName}");
+        //        Console.WriteLine($"[host] name: {current.HostName}");
         //        SetHostname(current.HostName);
         //    }
         //    if(CommonString.AreEquals(current.HostDeployment, running.HostDeployment) == false) {
-        //        ConsoleLogger.Log($"[host] deployment: {current.HostDeployment}");
+        //        Console.WriteLine($"[host] deployment: {current.HostDeployment}");
         //        SetDeployment(current.HostDeployment);
         //    }
         //    if(CommonString.AreEquals(current.HostChassis, running.HostChassis) == false) {
-        //        ConsoleLogger.Log($"[host] chassis: {current.HostChassis}");
+        //        Console.WriteLine($"[host] chassis: {current.HostChassis}");
         //        SetChassis(current.HostChassis);
         //    }
         //    if(CommonString.AreEquals(current.HostLocation, running.HostLocation) == false) {
-        //        ConsoleLogger.Log($"[host] location: {current.HostLocation}");
+        //        Console.WriteLine($"[host] location: {current.HostLocation}");
         //        SetLocation(current.HostLocation);
         //    }
         //    return true;

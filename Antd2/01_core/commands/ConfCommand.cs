@@ -22,16 +22,16 @@ namespace Antd2 {
         private static void TestFunc_PrintOk(string msg) {
             Console.Write(msg);
             Console.ForegroundColor = ConsoleColor.Green;
-            ConsoleLogger.Log("  ok");
+            Console.WriteLine("  ok");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void TestFunc_PrintKo(string msg, string exception) {
             Console.Write(msg);
             Console.ForegroundColor = ConsoleColor.Red;
-            ConsoleLogger.Log("  ko");
+            Console.WriteLine("  ko");
             Console.ForegroundColor = ConsoleColor.White;
-            ConsoleLogger.Log(exception);
+            Console.WriteLine(exception);
         }
 
         private static void WriteFunc(string[] args) {

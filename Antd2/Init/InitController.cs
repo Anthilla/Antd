@@ -16,7 +16,7 @@ namespace Antd2.Init {
         private static ClientIpcContext Context { get; set; }
 
         private InitController() {
-            ConsoleLogger.Log("Setup unit controller");
+            Console.WriteLine("Setup unit controller");
             Connection = new IpcConnection();
             Connection.Connect();
             Context = new ClientIpcContext(Connection, "sharpinitctl");

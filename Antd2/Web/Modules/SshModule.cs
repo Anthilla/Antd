@@ -38,7 +38,7 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiPostRegen() {
-            //ConsoleLogger.Log("[ssh] regen key");
+            //Console.WriteLine("[ssh] regen key");
             //Ssh.RegenRootKeys();
             //if (Application.CurrentConfiguration.Cluster.Active) {
             //    ClusterSetup.HandshakeCheck();

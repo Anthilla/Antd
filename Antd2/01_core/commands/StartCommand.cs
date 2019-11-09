@@ -31,7 +31,7 @@ namespace Antd2 {
             CONF = Nett.Toml.ReadFile<MachineConfiguration>(confFile);
             if (CONF == null) {
                 Console.ForegroundColor = ConsoleColor.Red;
-                ConsoleLogger.Log("  missing file configuration!");
+                Console.WriteLine("  missing file configuration!");
                 Console.ForegroundColor = ConsoleColor.White;
                 return;
             }
@@ -68,7 +68,7 @@ namespace Antd2 {
 
             StartWebserver();
 
-            ConsoleLogger.Log($"antd started in: {STOPWATCH.ElapsedMilliseconds} ms");
+            Console.WriteLine($"antd started in: {STOPWATCH.ElapsedMilliseconds} ms");
         }
 
         private static void Init() {
@@ -128,13 +128,13 @@ namespace Antd2 {
             if (!string.IsNullOrEmpty(CONF.Time.Timezone)) {
                 Timedatectl.SetTimezone(CONF.Time.Timezone);
             }
-            ConsoleLogger.Log("[time] ready");
+            Console.WriteLine("[time] ready");
         }
 
         private static void Mounts() {
             if (Application.IsUnix == false) { return; }
             Mount.Set();
-            ConsoleLogger.Log("[mnt] ready");
+            Console.WriteLine("[mnt] ready");
         }
 
         private static void CheckUnitsLocation() {
@@ -178,7 +178,7 @@ namespace Antd2 {
                     Bash.Do($"chmod 644 {unit}");
                 }
             }
-            ConsoleLogger.Log("[check] units integrity");
+            Console.WriteLine("[check] units integrity");
         }
 
         private static void Hostname() {
@@ -195,7 +195,7 @@ namespace Antd2 {
             if (!string.IsNullOrEmpty(CONF.Host.Location)) {
                 Hostnamectl.SetLocation(CONF.Host.Location);
             }
-            ConsoleLogger.Log("[hostname] ready");
+            Console.WriteLine("[hostname] ready");
         }
 
         private static void GenerateSecret() {
@@ -244,64 +244,72 @@ namespace Antd2 {
                 Getent.AddGroup(user.Group);
                 Getent.AssignGroup(user.Name, user.Group);
             }
-            ConsoleLogger.Log("[usr] ready");
+            Console.WriteLine("[usr] ready");
         }
 
         private static void SetNetwork() {
             if (Application.IsUnix == false) { return; }
             Dns.SetResolv(CONF.Network.Dns);
             foreach (var i in CONF.Network.Interfaces) {
-                ConsoleLogger.Log($"[net] configuring {i.Name} {i.Ip}/{i.Range}");
+                Console.WriteLine($"[net] configuring {i.Name} {i.Ip}/{i.Range}");
                 Ip.EnableNetworkAdapter(i.Name);
                 if (!string.IsNullOrEmpty(i.Ip) && !string.IsNullOrEmpty(i.Range)) {
                     Ip.AddAddress(i.Name, i.Ip, i.Range);
                 }
                 foreach (var cmd in i.Conf) {
-                    ConsoleLogger.Log($"[net] {i.Name} - {cmd}");
+                    Console.WriteLine($"[net] {i.Name} - {cmd}");
                     Bash.Do(cmd);
                 }
             }
             foreach (var r in CONF.Network.Routing) {
-                ConsoleLogger.Log($"[net] routing {r.Gateway} {r.Destination} {r.Device}");
+                Console.WriteLine($"[net] routing {r.Gateway} {r.Destination} {r.Device}");
                 Ip.AddRoute(r.Device, r.Gateway, r.Destination);
             }
-            ConsoleLogger.Log("[net] ready");
+            Console.WriteLine("[net] ready");
         }
 
         private static void ApplySetupCommands() {
             if (Application.IsUnix == false) { return; }
             foreach (var command in CONF.Commands.Run) {
-                ConsoleLogger.Log($"[cmd] {command}");
+                Console.WriteLine($"[cmd] {command}");
                 Bash.Do(command);
             }
-            ConsoleLogger.Log("[cmd] ready");
+            Console.WriteLine("[cmd] ready");
         }
 
         private static void ManageSsh() {
             if (Application.IsUnix == false) { return; }
-            //ConsoleLogger.Log("[ssh] ready");
+            var service = "sshd";
+            if(Systemctl.IsEnabled(service) == false) {
+                Systemctl.Enable(service);
+                Console.WriteLine("[ssh] enable sshd");
+            }
+            if (Systemctl.IsActive(service) == false) {
+                Systemctl.Start(service);
+                Console.WriteLine("[ssh] start sshd");
+            }
         }
        
         private static void SetDnsServer() {
             ADNS.Start();
-            ConsoleLogger.Log("[adns] ready");
+            Console.WriteLine("[adns] ready");
         }
 
         private static void StorageZfs() {
             if (Application.IsUnix == false) { return; }
-            ConsoleLogger.Log("[zpl] start");
+            Console.WriteLine("[zpl] start");
             var pools = Zpool.GetImportPools();
             if (pools.Length == 0) {
-                ConsoleLogger.Log("[zpl] no pools to import");
+                Console.WriteLine("[zpl] no pools to import");
             }
             for (var i = 0; i < pools.Length; i++) {
                 var currentPool = pools[i];
-                ConsoleLogger.Log($"[zpl] pool {currentPool} importing");
+                Console.WriteLine($"[zpl] pool {currentPool} importing");
                 Zpool.Import(currentPool);
-                ConsoleLogger.Log($"[zpl] pool {currentPool} imported");
+                Console.WriteLine($"[zpl] pool {currentPool} imported");
             }
             if (Zpool.GetPools().Length > 1) {
-                ConsoleLogger.Log("[zpl] launch zpool scheduled jobs");
+                Console.WriteLine("[zpl] launch zpool scheduled jobs");
                 Scheduler.ExecuteJob<ZfsSnapshotLaunchJob>();
             }
         }
@@ -310,7 +318,7 @@ namespace Antd2 {
             if (Application.IsUnix == false) { return; }
             Applicative.Setup();
             Applicative.Start();
-            ConsoleLogger.Log("[app] ready");
+            Console.WriteLine("[app] ready");
         }
 
         private static void LaunchJobs() {
@@ -318,15 +326,15 @@ namespace Antd2 {
         }
 
         private static void StartWebserver() {
-            Task.Factory.StartNew(() => {
-                var host = new WebHostBuilder()
-                  .UseContentRoot(Directory.GetCurrentDirectory())
-                  .UseKestrel()
-                  .UseStartup<Startup>()
-                  .UseUrls("http://0.0.0.0:8085")
-                  .Build();
-                host.Run();
-            });
+            //Task.Factory.StartNew(() => {
+            //    var host = new WebHostBuilder()
+            //      .UseContentRoot(Directory.GetCurrentDirectory())
+            //      .UseKestrel()
+            //      .UseStartup<Startup>()
+            //      .UseUrls("http://0.0.0.0:8085")
+            //      .Build();
+            //    host.Run();
+            //});
         }
     }
 }

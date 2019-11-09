@@ -24,8 +24,8 @@ namespace Antd2 {
         };
 
         public static void CheckFunc(string[] args) {
-            ConsoleLogger.Log("  Check groups");
-            ConsoleLogger.Log("--------------");
+            Console.WriteLine("  Check groups");
+            Console.WriteLine("--------------");
             var existingGroups = Getent.GetGroups();
             foreach (var group in RequiredGroups) {
                 var isInstalled = existingGroups.Contains(group);
@@ -36,9 +36,9 @@ namespace Antd2 {
                     CheckFunc_PrintNotInstalled(group);
                 }
             }
-            ConsoleLogger.Log("");
-            ConsoleLogger.Log("  Check users");
-            ConsoleLogger.Log("-------------");
+            Console.WriteLine("");
+            Console.WriteLine("  Check users");
+            Console.WriteLine("-------------");
             var existingUsers = Getent.GetUsers();
             foreach (var user in RequiredUsers) {
                 var isInstalled = existingUsers.Contains(user);
@@ -54,32 +54,32 @@ namespace Antd2 {
         private static void CheckFunc_PrintInstalled(string package) {
             Console.Write($"  {package}: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            ConsoleLogger.Log("exists");
+            Console.WriteLine("exists");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void CheckFunc_PrintNotInstalled(string package) {
             Console.Write($"  {package}: ");
             Console.ForegroundColor = ConsoleColor.Red;
-            ConsoleLogger.Log("does not exist");
+            Console.WriteLine("does not exist");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void AddFunc(string[] args) {
-            ConsoleLogger.Log("  Create groups");
-            ConsoleLogger.Log("---------------");
+            Console.WriteLine("  Create groups");
+            Console.WriteLine("---------------");
             foreach (var group in RequiredGroups) {
-                ConsoleLogger.Log($"  add group {group}");
+                Console.WriteLine($"  add group {group}");
                 Getent.AddGroup(group);
             }
-            ConsoleLogger.Log("");
-            ConsoleLogger.Log("  Create users");
-            ConsoleLogger.Log("--------------");
+            Console.WriteLine("");
+            Console.WriteLine("  Create users");
+            Console.WriteLine("--------------");
             foreach (var user in RequiredUsers) {
-                ConsoleLogger.Log($"  add user {user}");
+                Console.WriteLine($"  add user {user}");
                 Getent.AddUser(user);
                 foreach (var group in RequiredGroups) {
-                    ConsoleLogger.Log($"    assign group {group} to user {user}");
+                    Console.WriteLine($"    assign group {group} to user {user}");
                     Getent.AssignGroup(user, group);
                 }
             }

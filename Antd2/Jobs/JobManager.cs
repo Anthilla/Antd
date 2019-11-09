@@ -19,7 +19,7 @@ namespace Antd2.Jobs {
                     instanceJob = (Job)Activator.CreateInstance(jobs[i]);
                     thread = new Thread(new ThreadStart(instanceJob.ExecuteJob));
                     thread.Start();
-                    ConsoleLogger.Log($"[scheduler] {instanceJob.Name} job started");
+                    Console.WriteLine($"[scheduler] {instanceJob.Name} job started");
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace Antd2.Jobs {
                 instanceJob = (Job)Activator.CreateInstance(type);
                 thread = new Thread(new ThreadStart(instanceJob.ExecuteJob));
                 thread.Start();
-                ConsoleLogger.Log($"[scheduler] {instanceJob.Name} job started");
+                Console.WriteLine($"[scheduler] {instanceJob.Name} job started");
             }
         }
 

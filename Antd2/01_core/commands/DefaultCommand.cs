@@ -10,7 +10,7 @@ namespace Antd2 {
             };
 
         private static void ApplyFunc(string[] args) {
-            ConsoleLogger.Log("  Apply global default settings!");
+            Console.WriteLine("  Apply global default settings!");
             UserCommand.AddFunc(args);
             UserCommand.CheckFunc(args);
             SysctlCommand.SetFunc(args);

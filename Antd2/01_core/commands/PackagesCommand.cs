@@ -74,20 +74,20 @@ namespace Antd2 {
         private static void CheckFunc_PrintInstalled(string package) {
             Console.Write($"  {package}: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            ConsoleLogger.Log("installed");
+            Console.WriteLine("installed");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void CheckFunc_PrintNotInstalled(string package) {
             Console.Write($"  {package}: ");
             Console.ForegroundColor = ConsoleColor.Red;
-            ConsoleLogger.Log("not installed");
+            Console.WriteLine("not installed");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void InstallFunc(string[] args) {
             foreach (var package in args) {
-                ConsoleLogger.Log($"  installing {package}");
+                Console.WriteLine($"  installing {package}");
                 AptGet.Install(package);
             }
         }

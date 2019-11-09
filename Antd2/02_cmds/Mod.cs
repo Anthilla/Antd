@@ -52,13 +52,13 @@ namespace Antd2.cmds {
 
         public static bool Add(string module) {
             Bash.Do($"{modprobeCommand} {module}");
-            ConsoleLogger.Log($"[mod] add module '{module}'");
+            Console.WriteLine($"[mod] add module '{module}'");
             return true;
         }
 
         public static bool Remove(string module) {
             Bash.Do($"{rmmodCommand} {module}");
-            ConsoleLogger.Log($"[mod] remove module '{module}'");
+            Console.WriteLine($"[mod] remove module '{module}'");
             return true;
         }
 
@@ -73,7 +73,7 @@ namespace Antd2.cmds {
             }
             File.AppendAllLines(blacklistFileLocation, new[] { blacklistLine });
             Bash.Do($"{rmmodCommand} {module}");
-            ConsoleLogger.Log($"[mod] blacklist module '{module}'");
+            Console.WriteLine($"[mod] blacklist module '{module}'");
             return true;
         }
 

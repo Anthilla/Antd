@@ -19,7 +19,7 @@ namespace Antd2.cmds {
             //sw.Start();
             if (!System.IO.File.Exists(bashLocation)) { return Array.Empty<string>(); }
             var result = CommonProcess.Execute(bashLocation, $"-c \"{command}\"");
-            //ConsoleLogger.Log($"{command} executed in {sw.ElapsedMilliseconds}");
+            //Console.WriteLine($"{command} executed in {sw.ElapsedMilliseconds}");
             return result;
         }
         public static IEnumerable<string> Execute(string command, string dir) {
@@ -27,7 +27,7 @@ namespace Antd2.cmds {
             //sw.Start();
             if (!System.IO.File.Exists(bashLocation)) { return Array.Empty<string>(); }
             var result = CommonProcess.Execute(bashLocation, $"-c \"{command}\"", dir);
-            //ConsoleLogger.Log($"{command} executed in {sw.ElapsedMilliseconds}");
+            //Console.WriteLine($"{command} executed in {sw.ElapsedMilliseconds}");
             return result;
         }
 
@@ -36,7 +36,7 @@ namespace Antd2.cmds {
             //sw.Start();
             if (!System.IO.File.Exists(bashLocation)) { return; }
             CommonProcess.Do(bashLocation, $"-c \"{command}\"");
-            //ConsoleLogger.Log($"{command} executed in {sw.ElapsedMilliseconds}");
+            //Console.WriteLine($"{command} executed in {sw.ElapsedMilliseconds}");
         }
 
         public static void Do(string command, string dir) {
@@ -44,7 +44,7 @@ namespace Antd2.cmds {
             //sw.Start();
             if (!System.IO.File.Exists(bashLocation)) { return; }
             CommonProcess.Do(bashLocation, $"-c \"{command}\"", dir);
-            //ConsoleLogger.Log($"{command} executed in {sw.ElapsedMilliseconds}");
+            //Console.WriteLine($"{command} executed in {sw.ElapsedMilliseconds}");
         }
     }
 }

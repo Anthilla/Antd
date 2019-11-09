@@ -13,45 +13,45 @@ namespace Antd2.Init {
         private IpcListener IpcListener { get;  set; }
 
         public void Start() {
-            ConsoleLogger.Log("SharpInit starting");
+            Console.WriteLine("SharpInit starting");
 
             PlatformUtilities.RegisterImplementations();
             PlatformUtilities.GetImplementation<IPlatformInitialization>().Initialize();
 
-            ConsoleLogger.Log("Platform initialization complete");
+            Console.WriteLine("Platform initialization complete");
 
             UnitRegistry.InitializeTypes();
             UnitRegistry.ScanDefaultDirectories();
 
-            ConsoleLogger.Log($"Loaded {UnitRegistry.Units.Count} units");
+            Console.WriteLine($"Loaded {UnitRegistry.Units.Count} units");
 
             UnitRegistry.UnitStateChange += StateChangeHandler;
 
-            ConsoleLogger.Log("Registering IPC context...");
+            Console.WriteLine("Registering IPC context...");
 
             var context = new SharpInit.ServerIpcContext();
             IpcFunctionRegistry.AddFunction(DynamicIpcFunction.FromContext(context));
 
-            ConsoleLogger.Log("Starting IPC listener...");
+            Console.WriteLine("Starting IPC listener...");
 
             IpcListener = new IpcListener();
             IpcListener.StartListening();
 
-            ConsoleLogger.Log($"Listening on {IpcListener.SocketEndPoint}");
+            Console.WriteLine($"Listening on {IpcListener.SocketEndPoint}");
 
             if (UnitRegistry.GetUnit("default.target") != null) {
-                ConsoleLogger.Log("Activating default.target...");
+                Console.WriteLine("Activating default.target...");
                 var result = UnitRegistry.CreateActivationTransaction("default.target").Execute();
 
                 if (result.Type == SharpInit.Tasks.ResultType.Success)
-                    ConsoleLogger.Log("Successfully activated default.target.");
+                    Console.WriteLine("Successfully activated default.target.");
                 else
-                    ConsoleLogger.Log($"Error while activating default.target: {result.Type}, {result.Message}");
+                    Console.WriteLine($"Error while activating default.target: {result.Type}, {result.Message}");
             }
         }
 
         private static void StateChangeHandler(Unit source, SharpInit.Units.UnitState next_state) {
-            ConsoleLogger.Log($"Unit {source.UnitName} is transitioning from {source.CurrentState} to {next_state}");
+            Console.WriteLine($"Unit {source.UnitName} is transitioning from {source.CurrentState} to {next_state}");
         }
 
         public void Stop() {

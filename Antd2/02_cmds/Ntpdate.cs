@@ -6,7 +6,7 @@ namespace Antd2.cmds {
         private const string ntpdateCommand = "ntpdate";
 
         public static void SyncFromRemoteServer(string remoteServer) {
-            ConsoleLogger.Log($"[ntpdate] sync time with {remoteServer}");
+            Console.WriteLine($"[ntpdate] sync time with {remoteServer}");
             CommonProcess.Execute($"{ntpdateCommand} {remoteServer}");
         }
     }

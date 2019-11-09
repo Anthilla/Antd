@@ -49,7 +49,7 @@ namespace Antd {
         private static int _umount1Retry;
         public static void Umount(string directory) {
             if(IsAlreadyMounted(directory) && _umount1Retry < 5) {
-                ConsoleLogger.Log($"umount, retry #{_umount1Retry}");
+                Console.WriteLine($"umount, retry #{_umount1Retry}");
                 Bash.Execute($"umount {directory}", false);
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
@@ -60,7 +60,7 @@ namespace Antd {
         private static int _umount2Retry;
         public static void Umount(string source, string destination) {
             if(IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
-                ConsoleLogger.Log($"umount, retry #{_umount2Retry}");
+                Console.WriteLine($"umount, retry #{_umount2Retry}");
                 Bash.Execute($"umount {source}", false);
                 Bash.Execute($"umount {destination}", false);
                 _umount2Retry = _umount2Retry + 1;

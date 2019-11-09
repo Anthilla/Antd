@@ -30,7 +30,7 @@ namespace Antd2.cmds {
         //    if(current.Active == false) {
         //        return;
         //    }
-        //    ConsoleLogger.Log($"[wifi] connecting '{current.Interface}' to '{current.Ssid}' ");
+        //    Console.WriteLine($"[wifi] connecting '{current.Interface}' to '{current.Ssid}' ");
         //    WriteFile(current);
         //    Start();
         //}

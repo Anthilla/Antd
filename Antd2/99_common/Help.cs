@@ -17,5 +17,9 @@ namespace Antd2 {
             Console.Write("> ");
             return Console.ReadLine()?.Split() ?? Array.Empty<string>();
         }
+
+        public static string RemoveWhiteSpace(string a) {
+            return Regex.Replace(a, @"\s+", "");
+        }
     }
 }

@@ -85,14 +85,14 @@ namespace Antd2.cmds {
                 for (var i = 0; i < result.Length; i++) {
                     var currentPool = result[i];
                     Bash.Do($"{zfsCommand} {CommonString.Append(snapshotLaunchArgs, currentPool.Name, "@", dateArgument)}");
-                    ConsoleLogger.Log($"[zfs] snapshot create for '{currentPool.Name}'");
+                    Console.WriteLine($"[zfs] snapshot create for '{currentPool.Name}'");
                 }
             }
 
             public static void Launch(string pool) {
                 var dateArgument = DateTime.Now.ToString("yyyyMMdd-HHmmss");
                 Bash.Do($"{zfsCommand} {CommonString.Append(snapshotLaunchArgs, pool, "@", dateArgument)}");
-                ConsoleLogger.Log($"[zfs] snapshot create for '{pool}'");
+                Console.WriteLine($"[zfs] snapshot create for '{pool}'");
             }
 
             /// <summary>
@@ -150,7 +150,7 @@ namespace Antd2.cmds {
                     }
                     Thread.Sleep(1000 * 60 * 5 - Convert.ToInt32(s.ElapsedMilliseconds));
                 }
-                ConsoleLogger.Log($"{DateTime.Now:yyyyMMdd} - snapshot cleanup done");
+                Console.WriteLine($"{DateTime.Now:yyyyMMdd} - snapshot cleanup done");
             }
 
             private static bool DestroyZfsSnapshotModel(string snapshotName) {

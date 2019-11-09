@@ -46,19 +46,19 @@ namespace Antd2 {
         private static void CheckFunc_PrintInstalled(string param) {
             Console.Write($"  {param}: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            ConsoleLogger.Log("configured");
+            Console.WriteLine("configured");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void CheckFunc_PrintNotInstalled(string param) {
             Console.Write($"  {param}: ");
             Console.ForegroundColor = ConsoleColor.Red;
-            ConsoleLogger.Log("not configured");
+            Console.WriteLine("not configured");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void ApplyFunc(string[] args) {
-            ConsoleLogger.Log("  Write nsswitch file");
+            Console.WriteLine("  Write nsswitch file");
             Nsswitch.Write(RequiredSysctl);
         }
     }

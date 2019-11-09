@@ -52,7 +52,7 @@ namespace Antd2.cmds {
                 var targetDirectory = MountHelper.ConvertDirectoryDirsPathToTarget(directories[i]);
                 if (MountHelper.IsAlreadyMounted(targetDirectory) == false) {
                     if (Directory.Exists(directories[i])) {
-                        ConsoleLogger.Log($"[mount] {directories[i]} -> {targetDirectory}");
+                        Console.WriteLine($"[mount] {directories[i]} -> {targetDirectory}");
                         Directory.CreateDirectory(targetDirectory);
                         MountWithBind(directories[i], targetDirectory);
                     }
@@ -62,7 +62,7 @@ namespace Antd2.cmds {
             for (var i = 0; i < files.Length; i++) {
                 var targetFile = MountHelper.ConvertFileDirsPathToTarget(files[i]);
                 if (MountHelper.IsAlreadyMounted(targetFile) == false) {
-                    ConsoleLogger.Log($"[mount] {files[i]} -> {targetFile}");
+                    Console.WriteLine($"[mount] {files[i]} -> {targetFile}");
                     if (!File.Exists(targetFile)) {
                         File.WriteAllBytes(targetFile, new byte[] { 0 });
                     }
@@ -133,7 +133,7 @@ namespace Antd2.cmds {
                 Directory.CreateDirectory(mntDir);
                 if (MountHelper.IsAlreadyMounted(dir))
                     continue;
-                ConsoleLogger.Log($"[mount] {mntDir} -> {dir}");
+                Console.WriteLine($"[mount] {mntDir} -> {dir}");
                 MountWithBind(mntDir, dir);
             }
             foreach (var kvp in DefaultWorkingDirectoriesWithOptions) {
