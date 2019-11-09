@@ -53,8 +53,8 @@ namespace Antd2 {
         public static void CheckFunc(string[] args) {
             foreach (var sysctl in RequiredSysctl) {
                 var running = Sysctl.Get(sysctl.Key);
-                Console.WriteLine($"running value: {Help.RemoveWhiteSpace(running.Value)}");
-                Console.WriteLine($"configd value: {Help.RemoveWhiteSpace(sysctl.Value)}");
+                Console.WriteLine($"  {sysctl.Key} running value {running.Value}");
+                Console.WriteLine($"  {sysctl.Key} configd value {sysctl.Value}");
                 var isConfigured = Help.RemoveWhiteSpace(running.Value) == Help.RemoveWhiteSpace(sysctl.Value);
                 if (isConfigured) {
                     CheckFunc_PrintInstalled(sysctl.Key);
