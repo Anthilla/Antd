@@ -42,7 +42,7 @@ namespace Antd2 {
             ("net.ipv4.tcp_mtu_probing", "1"),
             ("net.ipv4.tcp_rmem", "4096 87380 134217728"),
             ("net.ipv4.tcp_slow_start_after_idle", "1"),
-            ("net.ipv4.tcp_tw_recycle", "0"),
+            ("net.ipv4.tcp_sack", "0"),
             ("net.ipv4.tcp_tw_reuse", "1"),
             ("net.ipv4.tcp_window_scaling", "1"),
             ("net.ipv4.tcp_wmem", "4096 65536 134217728"),
@@ -51,10 +51,11 @@ namespace Antd2 {
         };
 
         public static void CheckFunc(string[] args) {
-            var currentSysctl = Sysctl.Get();
             foreach (var sysctl in RequiredSysctl) {
-                var current = currentSysctl.FirstOrDefault(_ => _.Key == sysctl.Key);
-                var isConfigured = current.Value == sysctl.Value;
+                var running = Sysctl.Get(sysctl.Key);
+                Console.WriteLine($"running value: {Help.RemoveWhiteSpace(running.Value)}");
+                Console.WriteLine($"configd value: {Help.RemoveWhiteSpace(sysctl.Value)}");
+                var isConfigured = Help.RemoveWhiteSpace(running.Value) == Help.RemoveWhiteSpace(sysctl.Value);
                 if (isConfigured) {
                     CheckFunc_PrintInstalled(sysctl.Key);
                 }
@@ -67,28 +68,28 @@ namespace Antd2 {
         private static void CheckFunc_PrintInstalled(string param) {
             Console.Write($"  {param}: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            ConsoleLogger.Log("configured");
+            Console.WriteLine("configured");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void CheckFunc_PrintNotInstalled(string param) {
             Console.Write($"  {param}: ");
             Console.ForegroundColor = ConsoleColor.Red;
-            ConsoleLogger.Log("not configured");
+            Console.WriteLine("not configured");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void SetFunc(string[] args) {
             foreach (var param in RequiredSysctl) {
-                ConsoleLogger.Log($"  {param.Key}={param.Value}");
+                Console.WriteLine($"  {param.Key}={param.Value}");
                 Sysctl.Set(param.Key, param.Value);
             }
         }
 
         public static void WriteFunc(string[] args) {
-            ConsoleLogger.Log("  Write sysctl file");
+            Console.WriteLine("  Write sysctl file");
             Sysctl.Write(RequiredSysctl);
-            ConsoleLogger.Log("  Apply sysctl file");
+            Console.WriteLine("  Apply sysctl file");
             Sysctl.Apply();
         }
     }

@@ -25,11 +25,17 @@ namespace Antd2.cmds {
             return (arr.FirstOrDefault().Trim(), arr.LastOrDefault().Trim());
         }
 
+        public static (string Key, string Value) Get(string key) {
+            var result = Bash.Execute($"{sysctlCommand} {key}").FirstOrDefault();
+            return ParseSysctlLine(result);
+        }
+
         public static void Set(string keyValue) {
-            Bash.Do($"{sysctlCommand} {keyValue}");
+            var (Key, Value) = ParseSysctlLine(keyValue);
+            Set(Key, Value);
         }
         public static void Set(string key, string value) {
-            Bash.Do($"{sysctlCommand} {key}={value}");
+            Bash.Do($"{sysctlCommand} {key}=\\\"{value}\\\"");
         }
 
         public static void Write((string Key, string Value)[] param) {
