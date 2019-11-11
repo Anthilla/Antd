@@ -14,7 +14,6 @@ namespace Antd2 {
             UserCommand.AddFunc(args);
             UserCommand.CheckFunc(args);
             SysctlCommand.SetFunc(args);
-            SysctlCommand.WriteFunc(args);
             SysctlCommand.CheckFunc(args);
             NsswitchCommand.ApplyFunc(args);
             NsswitchCommand.CheckFunc(args);
