@@ -100,22 +100,38 @@ namespace Antd2.Configuration {
     public class NetInterface {
 
         /// <summary>
+        /// Indica se l'interfaccia deve essere attivata all'avvio
+        ///     up
+        ///     down
+        /// </summary>
+        public string Auto { get; set; } = "up";
+
+        /// <summary>
         /// Nome dell'interfaccia di rete
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string Iface { get; set; } = string.Empty;
 
-        public string Ip { get; set; } = string.Empty;
+        /// <summary>
+        /// Se c'è "/" splitta il valore e recupera il range da qui
+        /// </summary>
+        public string Address { get; set; } = string.Empty;
 
         /// <summary>
         /// Classe della rete di appartenenza
         /// </summary>
-        public string Range { get; set; } = string.Empty;
+        //public string Netmask { get; set; } = string.Empty;
 
         /// <summary>
         /// Indirizzo IP primario
         ///     deve appartenere alla rete definita da NetworkClass
         /// </summary>
         public string[] Conf { get; set; } = Array.Empty<string>();
+
+        public string[] PreUp { get; set; } = Array.Empty<string>();
+        public string[] PostUp { get; set; } = Array.Empty<string>();
+        public string[] PreDown { get; set; } = Array.Empty<string>();
+        public string[] PostDown { get; set; } = Array.Empty<string>();
+
     }
 
     /// <summary>

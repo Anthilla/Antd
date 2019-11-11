@@ -21,5 +21,13 @@ namespace Antd2 {
         public static string RemoveWhiteSpace(string a) {
             return Regex.Replace(a, @"\s+", "");
         }
+
+        public static (string Address, string Range) SplitAddressAndRange(string a) {
+            var arr = a.Split(new[] { '/' });
+            if (arr.Length >= 2)
+                return (arr[0], arr[1]);
+            else
+                return (arr[0], string.Empty);
+        }
     }
 }

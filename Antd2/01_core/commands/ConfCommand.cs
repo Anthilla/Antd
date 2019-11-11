@@ -104,7 +104,7 @@ namespace Antd2 {
                 };
 
                 conf.Network.Interfaces = new Antd2.Configuration.NetInterface[] {
-                    new Antd2.Configuration.NetInterface() { Name = "eth1", Ip ="123.456.78.9", Range = "24"}
+                    new Antd2.Configuration.NetInterface() { Iface = "eth1", Address ="123.456.78.9/24"}
                 };
                 conf.Network.Routing = new Antd2.Configuration.NetRoute[] {
                     new Antd2.Configuration.NetRoute() { Gateway = "123.456.78.99", Destination = "default", Device = "eth1" }

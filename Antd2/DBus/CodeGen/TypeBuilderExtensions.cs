@@ -58,6 +58,7 @@ namespace Antd.DBus.CodeGen {
             var methodBuilder = typeBuilder.DefineMethod(declMethod.Name, attributes); //, declMethod.ReturnType, defineParameters);
             GenericTypeParameterBuilder[] typeParameters = methodBuilder.DefineGenericParameters(new[] { "T" });
             methodBuilder.SetParameters(defineParameters);
+
             methodBuilder.SetReturnType(s_parameterTaskType.MakeGenericType(new Type[] { typeParameters[0].GetType() }));
 
             typeBuilder.DefineMethodOverride(methodBuilder, declMethod);

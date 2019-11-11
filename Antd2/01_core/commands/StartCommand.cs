@@ -251,13 +251,18 @@ namespace Antd2 {
             if (Application.IsUnix == false) { return; }
             Dns.SetResolv(CONF.Network.Dns);
             foreach (var i in CONF.Network.Interfaces) {
-                Console.WriteLine($"[net] configuring {i.Name} {i.Ip}/{i.Range}");
-                Ip.EnableNetworkAdapter(i.Name);
-                if (!string.IsNullOrEmpty(i.Ip) && !string.IsNullOrEmpty(i.Range)) {
-                    Ip.AddAddress(i.Name, i.Ip, i.Range);
+                Console.WriteLine($"[net] configuring {i.Iface} {i.Address}");
+                Ip.EnableNetworkAdapter(i.Iface);
+                if (!string.IsNullOrEmpty(i.Address)) {
+                    var address = Help.SplitAddressAndRange(i.Address);
+                    if (string.IsNullOrEmpty(address.Range)) {
+                        address.Range = "24";
+                        Console.WriteLine($"[net] missing range definition, assigning 24 by default");
+                    }
+                    Ip.AddAddress(i.Iface, address.Address, address.Range);
                 }
                 foreach (var cmd in i.Conf) {
-                    Console.WriteLine($"[net] {i.Name} - {cmd}");
+                    Console.WriteLine($"[net] {i.Iface} - {cmd}");
                     Bash.Do(cmd);
                 }
             }
@@ -280,7 +285,7 @@ namespace Antd2 {
         private static void ManageSsh() {
             if (Application.IsUnix == false) { return; }
             var service = "sshd";
-            if(Systemctl.IsEnabled(service) == false) {
+            if (Systemctl.IsEnabled(service) == false) {
                 Systemctl.Enable(service);
                 Console.WriteLine("[ssh] enable sshd");
             }
@@ -289,7 +294,7 @@ namespace Antd2 {
                 Console.WriteLine("[ssh] start sshd");
             }
         }
-       
+
         private static void SetDnsServer() {
             ADNS.Start();
             Console.WriteLine("[adns] ready");
@@ -322,6 +327,7 @@ namespace Antd2 {
         }
 
         private static void LaunchJobs() {
+            //todo service check
             Scheduler.ExecuteJob<ModulesRemoverJob>();
         }
 

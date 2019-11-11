@@ -9,6 +9,12 @@ namespace Antd2.cmds {
         private const string ifenslaveFileLocation = "/sbin/ifenslave";
         private const string processName = "haproxy";
 
+        public static bool AddAddress(string networkAdapter, string addressAndRange) {
+            var args = CommonString.Append("addr add ", addressAndRange, " dev ", networkAdapter);
+            Bash.Do($"{ipCommand} {args}");
+            return true;
+        }
+
         public static bool AddAddress(string networkAdapter, string address, string range) {
             var args = CommonString.Append("addr add ", address, "/", range, " dev ", networkAdapter);
             Bash.Do($"{ipCommand} {args}");
