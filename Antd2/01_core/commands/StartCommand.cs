@@ -122,8 +122,8 @@ namespace Antd2 {
         private static void Time() {
             if (Application.IsUnix == false) { return; }
             //Scheduler.ExecuteJob<SyncLocalClockJob>();
-            if (CONF.Time.EnableNtpSync && !string.IsNullOrEmpty(CONF.Time.NtpServer)) {
-                Ntpdate.SyncFromRemoteServer(CONF.Time.NtpServer);
+            if (CONF.Time.EnableNtpSync && CONF.Time.NtpServer.Length > 0 && !string.IsNullOrEmpty(CONF.Time.NtpServer[0])) {
+                Ntpdate.SyncFromRemoteServer(CONF.Time.NtpServer[0]);
             }
             if (!string.IsNullOrEmpty(CONF.Time.Timezone)) {
                 Timedatectl.SetTimezone(CONF.Time.Timezone);
@@ -218,12 +218,27 @@ namespace Antd2 {
         private static void SetServices() {
             if (Application.IsUnix == false) { return; }
             foreach (var service in CONF.Boot.ActiveServices) {
-                Systemctl.Enable(service);
-                Systemctl.Start(service);
+                if (Systemctl.IsEnabled(service) == false)
+                    Systemctl.Enable(service);
+                if (Systemctl.IsActive(service) == false)
+                    Systemctl.Start(service);
             }
             foreach (var service in CONF.Boot.InactiveServices) {
-                Systemctl.Stop(service);
-                Systemctl.Disable(service);
+                if (Systemctl.IsActive(service))
+                    Systemctl.Stop(service);
+            }
+            foreach (var service in CONF.Boot.DisabledServices) {
+                if (Systemctl.IsActive(service))
+                    Systemctl.Stop(service);
+                if (Systemctl.IsEnabled(service))
+                    Systemctl.Disable(service);
+            }
+            foreach (var service in CONF.Boot.BlockedServices) {
+                if (Systemctl.IsActive(service))
+                    Systemctl.Stop(service);
+                if (Systemctl.IsEnabled(service))
+                    Systemctl.Disable(service);
+                Systemctl.Mask(service);
             }
         }
 
@@ -232,8 +247,11 @@ namespace Antd2 {
             foreach (var module in CONF.Boot.ActiveModules) {
                 Mod.Add(module);
             }
+            var loadedModules = Mod.Get();
             foreach (var module in CONF.Boot.InactiveModules) {
-                Mod.Remove(module);
+                if (loadedModules.Any(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant())) {
+                    Mod.Remove(loadedModules.FirstOrDefault(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant()));
+                }
             }
         }
 
@@ -327,8 +345,8 @@ namespace Antd2 {
         }
 
         private static void LaunchJobs() {
-            //todo service check
-            Scheduler.ExecuteJob<ModulesRemoverJob>();
+            Scheduler.ExecuteJob<ModulesControllerJob>();
+            Scheduler.ExecuteJob<ServicesControllerJob>();
         }
 
         private static void StartWebserver() {

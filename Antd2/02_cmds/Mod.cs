@@ -2,14 +2,10 @@
 using System;
 using System.IO;
 using System.Linq;
+using SSO = System.StringSplitOptions;
 
 namespace Antd2.cmds {
     public class Mod {
-
-        public class Status {
-            public string Module { get; set; }
-            public string[] UsedBy { get; set; }
-        }
 
         private const string lsmodCommand = "lsmod";
         private const string modprobeCommand = "modprobe";
@@ -18,38 +14,21 @@ namespace Antd2.cmds {
         private const string modulesDirectory = "/lib/modules";
         private const string moduleExtension = ".ko.xz";
 
-        //public static Status[] Get() {
-        //    var result = CommonProcess.Execute(lsmodFileLocation).Skip(1).ToArray();
-        //    var status = new Status[result.Length];
-        //    for(var i = 0; i < result.Length; i++) {
-        //        var currentLine = result[i];
-        //        status[i] = new Status() {
-        //            Module = Help.CaptureGroup(currentLine, "([a-zA-Z_0-9]+)[\\s]*[0-9]+[0-9][\\s]+[0-9]+\\s"),
-        //            UsedBy = Help.CaptureGroup(currentLine, "[a-zA-Z_0-9]+[\\s]*[0-9]+[0-9][\\s]+[0-9]+\\s([a-zA-Z_0-9, ]*)").Split(',')
-        //        };
-        //    }
-        //    return status;
-        //}
+        public static (string Module, string[] UsedBy)[] Get() {
+            var result = Bash.Execute(lsmodCommand)
+                .Skip(1)
+                .Select(_ => ParseLsmodLine(_))
+                .ToArray();
+            return result;
+        }
 
-        //public static bool Set() {
-        //    var current = Application.CurrentConfiguration.Boot.Modules;
-        //    for(var i = 0; i < current.Length; i++) {
-        //        var currentModule = current[i];
-        //        if(currentModule.Blacklist) {
-        //            Blacklist(currentModule.Module);
-        //            continue;
-        //        }
-        //        if(currentModule.Remove) {
-        //            Remove(currentModule.Module);
-        //            continue;
-        //        }
-        //        if(currentModule.Active) {
-        //            var moduleToLoad = CommonString.Append(currentModule.Module, " ", currentModule.Arguments);
-        //            Add(moduleToLoad.Trim());
-        //        }
-        //    }
-        //    return true;
-        //}
+        private static (string Module, string[] UsedBy) ParseLsmodLine(string line) {
+            var arr = line.Split(new[] { ' ' }, SSO.RemoveEmptyEntries);
+            if (arr.Length != 2) {
+                return (string.Empty, Array.Empty<string>());
+            }
+            return (arr.FirstOrDefault().Trim(), arr.LastOrDefault().Trim().Split(new[] { ',' }, SSO.RemoveEmptyEntries).ToArray());
+        }
 
         public static bool Add(string module) {
             Bash.Do($"{modprobeCommand} {module}");
@@ -60,6 +39,14 @@ namespace Antd2.cmds {
         public static bool Remove(string module) {
             Bash.Do($"{rmmodCommand} {module}");
             Console.WriteLine($"[mod] remove module '{module}'");
+            return true;
+        }
+
+        public static bool Remove((string Module, string[] UsedBy) module) {
+            foreach(var usingModule in module.UsedBy) {
+                Remove(module);
+            }
+            Bash.Do($"{rmmodCommand} {module.Module}");
             return true;
         }
 

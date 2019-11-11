@@ -1,9 +1,10 @@
 ﻿using Antd2.cmds;
+using System.Linq;
 
 namespace Antd2.Jobs {
-    public class ModulesRemoverJob : Job {
+    public class ModulesControllerJob : Job {
 
-        private int _repetitionIntervalTime = 1000 * 60 * 5;
+        private readonly int _repetitionIntervalTime = 1000 * 60 * 5;
 
         #region [    Core Parameter    ]
         private bool _isRepeatable = true;
@@ -39,8 +40,14 @@ namespace Antd2.Jobs {
         #endregion
 
         public override void DoJob() {
+            var loadedModules = Mod.Get();
             foreach (var module in StartCommand.CONF.Boot.InactiveModules) {
-                Mod.Remove(module);
+                if (loadedModules.Any(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant())) {
+                    Mod.Remove(loadedModules.FirstOrDefault(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant()));
+                }
+            }
+            foreach (var module in StartCommand.CONF.Boot.ActiveModules) {
+                Mod.Add(module);
             }
         }
     }
