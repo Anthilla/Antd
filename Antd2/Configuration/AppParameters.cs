@@ -11,5 +11,11 @@
         /// Default "8085"
         /// </summary>
         public string HttpPort { get; set; } = "8085";
+
+        /// <summary>
+        /// Cartella root
+        /// Default /cfg/antd
+        /// </summary>
+        public string Root { get; set; } = "/cfg/antd";
     }
 }
