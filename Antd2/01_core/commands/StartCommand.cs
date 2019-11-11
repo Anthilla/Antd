@@ -244,14 +244,27 @@ namespace Antd2 {
 
         private static void SetModules() {
             if (Application.IsUnix == false) { return; }
-            foreach (var module in CONF.Boot.ActiveModules) {
-                Mod.Add(module);
-            }
             var loadedModules = Mod.Get();
             foreach (var module in CONF.Boot.InactiveModules) {
-                if (loadedModules.Any(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant())) {
-                    Mod.Remove(loadedModules.FirstOrDefault(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant()));
+                var loadedModule = loadedModules.FirstOrDefault(_ => _.Module == module);
+                if (string.IsNullOrEmpty(loadedModule.Module)) {
+                    continue;
                 }
+
+                Console.Write($"[mod] removing module '{module}'");
+                if (loadedModule.UsedBy.Length > 0)
+                    Console.WriteLine($" and its {loadedModule.UsedBy.Length} dependecies");
+                else
+                    Console.WriteLine();
+
+                Mod.Remove(loadedModule);
+            }
+            foreach (var module in CONF.Boot.ActiveModules) {
+                var (Module, UsedBy) = loadedModules.FirstOrDefault(_ => _.Module == module);
+                if (!string.IsNullOrEmpty(Module)) {
+                    continue;
+                }
+                Mod.Add(module);
             }
         }
 
@@ -270,18 +283,36 @@ namespace Antd2 {
             Dns.SetResolv(CONF.Network.Dns);
             foreach (var i in CONF.Network.Interfaces) {
                 Console.WriteLine($"[net] configuring {i.Iface} {i.Address}");
-                Ip.EnableNetworkAdapter(i.Iface);
-                if (!string.IsNullOrEmpty(i.Address)) {
-                    var address = Help.SplitAddressAndRange(i.Address);
-                    if (string.IsNullOrEmpty(address.Range)) {
-                        address.Range = "24";
-                        Console.WriteLine($"[net] missing range definition, assigning 24 by default");
+
+                if (i.Auto == "up") {
+                    foreach (var cmd in i.PreUp) {
+                        Console.WriteLine($"[net] {i.Iface} - {cmd}");
+                        Bash.Do(cmd);
                     }
-                    Ip.AddAddress(i.Iface, address.Address, address.Range);
+                    Ip.EnableNetworkAdapter(i.Iface);
+                    if (!string.IsNullOrEmpty(i.Address)) {
+                        var address = Help.SplitAddressAndRange(i.Address);
+                        if (string.IsNullOrEmpty(address.Range)) {
+                            address.Range = "24";
+                            Console.WriteLine($"[net] missing range definition, assigning 24 by default");
+                        }
+                        Ip.AddAddress(i.Iface, address.Address, address.Range);
+                    }
+                    foreach (var cmd in i.PostUp) {
+                        Console.WriteLine($"[net] {i.Iface} - {cmd}");
+                        Bash.Do(cmd);
+                    }
                 }
-                foreach (var cmd in i.Conf) {
-                    Console.WriteLine($"[net] {i.Iface} - {cmd}");
-                    Bash.Do(cmd);
+                else if (i.Auto == "down") {
+                    foreach (var cmd in i.PreDown) {
+                        Console.WriteLine($"[net] {i.Iface} - {cmd}");
+                        Bash.Do(cmd);
+                    }
+                    Ip.DisableNetworkAdapter(i.Iface);
+                    foreach (var cmd in i.PostDown) {
+                        Console.WriteLine($"[net] {i.Iface} - {cmd}");
+                        Bash.Do(cmd);
+                    }
                 }
             }
             foreach (var r in CONF.Network.Routing) {
@@ -314,7 +345,7 @@ namespace Antd2 {
         }
 
         private static void SetDnsServer() {
-            ADNS.Start();
+            //ADNS.Start();
             Console.WriteLine("[adns] ready");
         }
 

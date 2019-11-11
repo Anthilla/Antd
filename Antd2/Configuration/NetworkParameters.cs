@@ -125,7 +125,7 @@ namespace Antd2.Configuration {
         /// Indirizzo IP primario
         ///     deve appartenere alla rete definita da NetworkClass
         /// </summary>
-        public string[] Conf { get; set; } = Array.Empty<string>();
+        //public string[] Conf { get; set; } = Array.Empty<string>();
 
         public string[] PreUp { get; set; } = Array.Empty<string>();
         public string[] PostUp { get; set; } = Array.Empty<string>();

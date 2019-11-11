@@ -1,4 +1,5 @@
 ﻿using Antd2.cmds;
+using System;
 using System.Linq;
 
 namespace Antd2.Jobs {
@@ -42,11 +43,24 @@ namespace Antd2.Jobs {
         public override void DoJob() {
             var loadedModules = Mod.Get();
             foreach (var module in StartCommand.CONF.Boot.InactiveModules) {
-                if (loadedModules.Any(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant())) {
-                    Mod.Remove(loadedModules.FirstOrDefault(_ => _.Module.Trim().ToUpperInvariant() == module.Trim().ToUpperInvariant()));
+                var loadedModule = loadedModules.FirstOrDefault(_ => _.Module == module);
+                if (string.IsNullOrEmpty(loadedModule.Module)) {
+                    continue;
                 }
+
+                Console.Write($"[mod] removing module '{module}'");
+                if (loadedModule.UsedBy.Length > 0)
+                    Console.WriteLine($" and its {loadedModule.UsedBy.Length} dependecies");
+                else
+                    Console.WriteLine();
+
+                Mod.Remove(loadedModule);
             }
             foreach (var module in StartCommand.CONF.Boot.ActiveModules) {
+                var (Module, UsedBy) = loadedModules.FirstOrDefault(_ => _.Module == module);
+                if (!string.IsNullOrEmpty(Module)) {
+                    continue;
+                }
                 Mod.Add(module);
             }
         }

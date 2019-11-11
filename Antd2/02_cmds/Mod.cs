@@ -24,30 +24,24 @@ namespace Antd2.cmds {
 
         private static (string Module, string[] UsedBy) ParseLsmodLine(string line) {
             var arr = line.Split(new[] { ' ' }, SSO.RemoveEmptyEntries);
-            if (arr.Length != 2) {
-                return (string.Empty, Array.Empty<string>());
-            }
             return (arr.FirstOrDefault().Trim(), arr.LastOrDefault().Trim().Split(new[] { ',' }, SSO.RemoveEmptyEntries).ToArray());
         }
 
-        public static bool Add(string module) {
-            Bash.Do($"{modprobeCommand} {module}");
+        public static void Add(string module) {
             Console.WriteLine($"[mod] add module '{module}'");
-            return true;
+            Bash.Do($"{modprobeCommand} {module}");
         }
 
-        public static bool Remove(string module) {
-            Bash.Do($"{rmmodCommand} {module}");
+        public static void Remove(string module) {
             Console.WriteLine($"[mod] remove module '{module}'");
-            return true;
+            Bash.Do($"{rmmodCommand} {module}");
         }
 
-        public static bool Remove((string Module, string[] UsedBy) module) {
+        public static void Remove((string Module, string[] UsedBy) module) {
             foreach(var usingModule in module.UsedBy) {
-                Remove(module);
+                Remove(module.Module);
             }
             Bash.Do($"{rmmodCommand} {module.Module}");
-            return true;
         }
 
         public static bool Blacklist(string module) {
