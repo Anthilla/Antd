@@ -19,9 +19,13 @@ namespace Antd2.Configuration {
         /// <summary>
         /// Servizi di systemctl
         /// Quelli attivi vengono abilitati e avviati
-        /// Quelli inattivi vengono fermati e disabilitati
+        /// Quelli inattivi vengono fermati
+        /// Quelli disabilitati vengono fermati e disabilitati
+        /// Quelli bloccati vengono fermati e disabilitati e mascherati
         /// </summary>
         public string[] ActiveServices { get; set; } = new string[0];
         public string[] InactiveServices { get; set; } = new string[0];
+        public string[] DisabledServices { get; set; } = new string[0];
+        public string[] BlockedServices { get; set; } = new string[0];
     }
 }

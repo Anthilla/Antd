@@ -80,16 +80,16 @@ namespace Antd2 {
                     "net.ipv6.conf.all.disable_ipv6=1",
                     "vm.swappiness=0"
                 };
-                conf.Boot.ActiveServices = new string[] {
+                conf.Boot.ActiveServices = new[] {
                     "systemd-journald.service"
                 };
-                conf.Boot.InactiveServices = new string[] {
+                conf.Boot.InactiveServices = new[] {
                     "systemd-networkd.service"
                 };
 
                 conf.Time.Timezone = "Europe/Rome";
                 conf.Time.EnableNtpSync = true;
-                conf.Time.NtpServer = "ntp1.ien.it";
+                conf.Time.NtpServer = new[] { "ntp1.ien.it" };
 
                 conf.Host.Name = "box01";
                 conf.Host.Chassis = "server";
@@ -98,7 +98,7 @@ namespace Antd2 {
 
                 conf.Network.Dns.Domain = "domain";
                 conf.Network.Dns.Search = "search";
-                conf.Network.Dns.Nameserver = new string[] {
+                conf.Network.Dns.Nameserver = new[] {
                     "8.8.8.8",
                     "8.8.4.4",
                 };

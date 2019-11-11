@@ -16,6 +16,6 @@
         /// Server remoto da cui ottenere l'orario
         ///     SyncFromRemoteServer deve essere active
         /// </summary>
-        public string NtpServer { get; set; } = string.Empty;
+        public string[] NtpServer { get; set; } = System.Array.Empty<string>();
     }
 }
