@@ -8,7 +8,7 @@ using System.Linq;
 namespace Antd2.Modules {
     public class NetworkModule : NancyModule {
 
-        public NetworkModule() : base("/network") {
+        public NetworkModule() : base("/network/config") {
 
             Get("/", x => Response.AsJson((object)ConfigManager.Config.Saved.Network));
 
