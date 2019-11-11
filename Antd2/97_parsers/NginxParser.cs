@@ -38,7 +38,7 @@ namespace Antd.parsing {
             var list = new List<NginxUpstreamModel>();
             var regex = new Regex("(upstream[\\s]+[\\w\\d]+ {[\\s]+[\\w\\s\\d.:=]+;[\\s]+})");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var name = CaptureGroup(match.ToString(), "upstream[\\s]+([\\w\\d]+) {");
                 var server = CaptureGroup(match.ToString(), "upstream[\\s]+[\\w\\d]+[\\s]+{[\\s]+server[\\s]+([\\d.:]+)");
                 var acl = new NginxUpstreamModel {
@@ -99,7 +99,7 @@ namespace Antd.parsing {
             var list = new List<NginxServerModel>();
             var regex = new Regex("(server[\\s]+{[\\s]+[\\w\\s\\d;.\\/:$#]+location[\\s]+[\\w\\/][\\s]+{[\\s]+[\\w\\s\\d:\\/;$\\-\".]+[\\s]+[}]*[\\s]+[location]*[\\/\\s\\w]*[\\s]*[{]*[\\s]*[\\w\\s\\d:\\/;$\\-\".]*)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var listen = CaptureGroup(match.ToString(), "listen[\\s]+([\\w\\d\\s]+);");
                 var serverName = CaptureGroup(match.ToString(), "server_name[\\s]+([\\w\\d.]+);");
                 var serverTokens = CaptureGroup(match.ToString(), "server_tokens[\\s]+([\\w\\d.]+);");
@@ -131,7 +131,7 @@ namespace Antd.parsing {
             var list = new List<NginxLocationModel>();
             var regex = new Regex("(location[\\s]+[\\/\\w]+[\\s]+{[\\s]+[\\w\\s_\\/:;$\\-\".]+[\\s]+})");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var path = CaptureGroup(match.ToString(), "location[\\s]+[\\/\\w\\d]+[\\s]+{");
                 var autoindex = CaptureGroup(match.ToString(), "autoindex[\\s]+([\\w\\d]+);");
                 var root = CaptureGroup(match.ToString(), "root[\\s]+([\\w\\d\\/._-]+);");

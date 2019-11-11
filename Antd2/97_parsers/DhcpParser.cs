@@ -17,7 +17,7 @@ namespace Antd.parsing {
             var list = new List<string>();
             var regex = new Regex("(allow[\\s]+[\\w\\-]+;)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var file = CaptureGroup(match.ToString(), "allow[\\s]+([\\w\\-]+);");
                 list.Add(file);
             }
@@ -61,7 +61,7 @@ namespace Antd.parsing {
             var list = new List<DhcpdReservationModel>();
             var regex = new Regex("([^#]host[\\s]+[\\w\\d]+ { hard[\\w\\d\\s:;\\-.]+[\\s]*})");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var hostName = CaptureGroup(match.ToString(), "host[\\s]+([\\w\\d]+) {");
                 var macAddress = CaptureGroup(match.ToString(), "hardware ethernet[\\s]+([\\w\\d:]+);");
                 var ipAddress = CaptureGroup(match.ToString(), "fixed-address[\\s]+([\\d.]+);");
@@ -80,7 +80,7 @@ namespace Antd.parsing {
             var list = new List<DhcpdClassModel>();
             var regex = new Regex("(class \"[\\w\\d]+\" {[\\s\\w\\-\\d(),\":=]+;)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var name = CaptureGroup(match.ToString(), "class (\"[\\w\\d]+\") {");
                 var vendorMacAddress = CaptureGroup(match.ToString(), "[\\s]*=[\\s]+\"([\\w\\d:]+)\";");
                 var reservation = new DhcpdClassModel {
@@ -97,7 +97,7 @@ namespace Antd.parsing {
             var list = new List<DhcpdSubnetModel>();
             var regex = new Regex("(subnet[\\s]+[\\d.]+[\\s]+netmask[\\s]+[\\d.]+[\\s]+{[\\s]+option[\\s\\w\\d\\-.;{}]+[\\s]+pool\\b[\\s]+{[\\s\\w\";\\d.}{]+\\-bootp[\\s.\\d]+;)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var subnetIpFamily = CaptureGroup(match.ToString(), "subnet[\\s]+([\\d.]+)");
                 var subnetIpMask = CaptureGroup(match.ToString(), "subnet[\\s]+[\\d.]+[\\s]+netmask[\\s]+[\\d.]+");
                 var subnetOptionRouters = CaptureGroup(match.ToString(), "option routers[\\s]+([\\d-.]+);");
@@ -136,7 +136,7 @@ namespace Antd.parsing {
             var list = new List<DhcpdPoolModel>();
             var regex = new Regex("(pool[\\s]+{[\\s]+allow[\\s\\w\"\\d;.]+})");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var className = CaptureGroup(match.ToString(), "allow members of \"([\\d\\w]+)\";");
                 var poolRangeStart = CaptureGroup(match.ToString(), "range ([\\d.]+)");
                 var poolRangeEnd = CaptureGroup(match.ToString(), "range [\\d.]+[\\s]+([\\d.]+);");

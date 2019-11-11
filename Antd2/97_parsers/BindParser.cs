@@ -91,7 +91,7 @@ namespace Antd.parsing {
             var list = new List<BindAclModel>();
             var regex = new Regex("(acl [\\w\\d]+ {[\\s]*[\\w\\d\\/.;]+[\\s]*};)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var aclName = CaptureGroup(match.ToString(), "acl ([\\w\\d]+) {");
                 var aclInterfaces = CaptureGroup(match.ToString(), "acl [\\w\\d]+ {([\\s]*[\\w\\d\\/.;]+)[\\s]*};").Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Select(_ => _.Trim()).Where(_ => !string.IsNullOrWhiteSpace(_)).ToArray();
                 var acl = new BindAclModel {
@@ -108,7 +108,7 @@ namespace Antd.parsing {
             var list = new List<BindZoneModel>();
             var regex = new Regex("(zone[\\s]*\"[\\w\\d\\-.]+\"[\\s]*{[\\s]*[\\w ;\"\\/.]*};)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var name = CaptureGroup(match.ToString(), "zone[\\s]+\"([\\s\\d\\w\\-.]+)\"");
                 var type = CaptureGroup(match.ToString(), "type ([\\w]+)");
                 var filePath = CaptureGroup(match.ToString(), "file \"([\\w\\d\\/.]+)\"");
@@ -127,7 +127,7 @@ namespace Antd.parsing {
             var list = new List<BindZoneModel>();
             var regex = new Regex("(zone \"[\\s\\w\\d.\\-]+\" { type[\\w\\s]+;[\\s]+file \"[\\w\\d\\/\\-.]+\";\\s[\\s]*serial-update[\\-\\w ]+;[\\s]+allow-update { [\\w ;]+};[\\s]+allow-query { [\\w ;]+};[\\s]+allow-transfer { [\\w ;]+};[\\s]+)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var name = CaptureGroup(match.ToString(), "zone[\\s]+\"([\\s\\d\\w\\-.]+)\"");
                 var type = CaptureGroup(match.ToString(), "type ([\\w]+)");
                 var filePath = CaptureGroup(match.ToString(), "file \"([\\w\\d\\/.]+)\"");
@@ -154,7 +154,7 @@ namespace Antd.parsing {
             var list = new List<string>();
             var regex = new Regex("(include \"[\\d\\w\\/\\-.]+\";)");
             var matches = regex.Matches(text);
-            foreach(var match in matches) {
+            foreach (var match in matches) {
                 var file = CaptureGroup(match.ToString(), "\"([\\d\\w\\/\\-.]+)\"");
                 list.Add(file);
             }
