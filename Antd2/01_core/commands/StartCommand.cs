@@ -54,6 +54,7 @@ namespace Antd2 {
             SetParameters();
 
             Users();
+            SetRoutingTables();
             SetNetwork();
 
             ManageSsh();
@@ -278,6 +279,14 @@ namespace Antd2 {
             Console.WriteLine("[usr] ready");
         }
 
+        private static void SetRoutingTables() {
+            if (Application.IsUnix == false) { return; }
+            if (CONF.Network.RoutingTables.Length > 0) {
+                RoutingTables.Write(CONF.Network.RoutingTables.Select(_ => (_.Id, _.Name)));
+            }
+            Console.WriteLine("[rt] tables ready");
+        }
+
         private static void SetNetwork() {
             if (Application.IsUnix == false) { return; }
             Dns.SetResolv(CONF.Network.Dns);
@@ -320,6 +329,18 @@ namespace Antd2 {
                 Ip.AddRoute(r.Device, r.Gateway, r.Destination);
             }
             Console.WriteLine("[net] ready");
+        }
+
+        private static void SetRoutingRules() {
+            if (Application.IsUnix == false) { return; }
+            if (CONF.Network.RoutingTables.Length > 0) {
+                foreach (var rt in CONF.Network.RoutingTables) {
+                    foreach (var rule in rt.Rules) {
+                        Bash.Do(rule);
+                    }
+                }
+            }
+            Console.WriteLine("[rt] rules ready");
         }
 
         private static void ApplySetupCommands() {

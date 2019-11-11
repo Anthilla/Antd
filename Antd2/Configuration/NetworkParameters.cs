@@ -22,16 +22,17 @@ namespace Antd2.Configuration {
 
         public NetBond[] Bonds { get; set; } = new NetBond[0];
 
-        /// <summary>
-        /// Configurazione delle interfacce di rete
-        ///     i valori di default verranno popolati all'avvio dopo aver importato i dati esistenti
-        /// </summary>
-        public NetInterface[] Interfaces { get; set; } = new NetInterface[0];
 
         /// <summary>
         /// Configurazione delle tabelle di routing
         /// </summary>
         public NetRoutingTable[] RoutingTables { get; set; } = new NetRoutingTable[0];
+
+        /// <summary>
+        /// Configurazione delle interfacce di rete
+        ///     i valori di default verranno popolati all'avvio dopo aver importato i dati esistenti
+        /// </summary>
+        public NetInterface[] Interfaces { get; set; } = new NetInterface[0];
 
         /// <summary>
         /// Configurazione delle rotte
@@ -125,8 +126,6 @@ namespace Antd2.Configuration {
         /// Indirizzo IP primario
         ///     deve appartenere alla rete definita da NetworkClass
         /// </summary>
-        //public string[] Conf { get; set; } = Array.Empty<string>();
-
         public string[] PreUp { get; set; } = Array.Empty<string>();
         public string[] PostUp { get; set; } = Array.Empty<string>();
         public string[] PreDown { get; set; } = Array.Empty<string>();
@@ -146,7 +145,13 @@ namespace Antd2.Configuration {
         /// <summary>
         /// Nome della tabella
         /// </summary>
-        public string Alias { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Regole da applicare
+        ///     ip rule add xyz
+        /// </summary>
+        public string[] Rules { get; set; } = Array.Empty<string>();
     }
 
     /// <summary>
