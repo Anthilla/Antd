@@ -31,6 +31,12 @@ namespace Antd2.Configuration {
             }
         }
 
+        public void Dump() {
+            if (loaded == true) {
+                Nett.Toml.WriteFile<MachineConfiguration>(Saved, TomlPath);
+            }
+        }
+
         #region Do not modify!
 
         /// <summary>
