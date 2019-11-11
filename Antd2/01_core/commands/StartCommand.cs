@@ -2,7 +2,9 @@
 using Antd2.Configuration;
 using Antd2.Init;
 using Antd2.Jobs;
+using Antd2.Web;
 using anthilla.core;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -398,16 +400,16 @@ namespace Antd2 {
         }
 
         private static void StartWebserver() {
-            //Task.Factory.StartNew(() => {
-            //    var url = $"http://{ConfigManager.Config.Saved.App.Address}:{ConfigManager.Config.Saved.App.HttpPort}";
-            //    var host = new WebHostBuilder()
-            //      .UseContentRoot(Directory.GetCurrentDirectory())
-            //      .UseKestrel()
-            //      .UseStartup<Startup>()
-            //      .UseUrls(url)
-            //      .Build();
-            //    host.Run();
-            //});
+            System.Threading.Tasks.Task.Factory.StartNew(() => {
+                var url = $"http://{ConfigManager.Config.Saved.App.Address}:{ConfigManager.Config.Saved.App.HttpPort}";
+                var host = new WebHostBuilder()
+                  .UseContentRoot(Directory.GetCurrentDirectory())
+                  .UseKestrel()
+                  .UseStartup<Startup>()
+                  .UseUrls(url)
+                  .Build();
+                host.Run();
+            });
         }
     }
 }
