@@ -2,14 +2,11 @@
 using Antd2.Configuration;
 using Antd2.Init;
 using Antd2.Jobs;
-using Antd2.Web;
 using anthilla.core;
-using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 
@@ -19,7 +16,6 @@ namespace Antd2 {
         private const string ConfFile = "/cfg/antd/antd.toml";
         public static JobManager Scheduler;
         public static Stopwatch STOPWATCH;
-        public static MachineConfiguration CONF;
         public static ServiceInit ServiceInit;
 
         public static void Start(string[] args) {
@@ -27,9 +23,10 @@ namespace Antd2 {
             STOPWATCH.Start();
             Scheduler = new JobManager();
 
-            var confFile = args.Length > 0 ? !string.IsNullOrEmpty(args[0]) ? args[0] : ConfFile : ConfFile;
-            CONF = Nett.Toml.ReadFile<MachineConfiguration>(confFile);
-            if (CONF == null) {
+            ConfigManager.Config.TomlPath = args.Length > 0 ? !string.IsNullOrEmpty(args[0]) ? args[0] : ConfFile : ConfFile;
+            ConfigManager.Config.Load();
+
+            if (ConfigManager.Config.Saved == null) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("  missing file configuration!");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -56,6 +53,7 @@ namespace Antd2 {
             Users();
             SetRoutingTables();
             SetNetwork();
+            SetRoutingRules();
 
             ManageSsh();
 
@@ -123,11 +121,14 @@ namespace Antd2 {
         private static void Time() {
             if (Application.IsUnix == false) { return; }
             //Scheduler.ExecuteJob<SyncLocalClockJob>();
-            if (CONF.Time.EnableNtpSync && CONF.Time.NtpServer.Length > 0 && !string.IsNullOrEmpty(CONF.Time.NtpServer[0])) {
-                Ntpdate.SyncFromRemoteServer(CONF.Time.NtpServer[0]);
+            if (ConfigManager.Config.Saved.Time.EnableNtpSync &&
+                ConfigManager.Config.Saved.Time.NtpServer.Length > 0 &&
+                !string.IsNullOrEmpty(ConfigManager.Config.Saved.Time.NtpServer[0])) {
+
+                Ntpdate.SyncFromRemoteServer(ConfigManager.Config.Saved.Time.NtpServer[0]);
             }
-            if (!string.IsNullOrEmpty(CONF.Time.Timezone)) {
-                Timedatectl.SetTimezone(CONF.Time.Timezone);
+            if (!string.IsNullOrEmpty(ConfigManager.Config.Saved.Time.Timezone)) {
+                Timedatectl.SetTimezone(ConfigManager.Config.Saved.Time.Timezone);
             }
             Console.WriteLine("[time] ready");
         }
@@ -184,17 +185,17 @@ namespace Antd2 {
 
         private static void Hostname() {
             if (Application.IsUnix == false) { return; }
-            if (!string.IsNullOrEmpty(CONF.Host.Name)) {
-                Hostnamectl.SetHostname(CONF.Host.Name);
+            if (!string.IsNullOrEmpty(ConfigManager.Config.Saved.Host.Name)) {
+                Hostnamectl.SetHostname(ConfigManager.Config.Saved.Host.Name);
             }
-            if (!string.IsNullOrEmpty(CONF.Host.Chassis)) {
-                Hostnamectl.SetChassis(CONF.Host.Chassis);
+            if (!string.IsNullOrEmpty(ConfigManager.Config.Saved.Host.Chassis)) {
+                Hostnamectl.SetChassis(ConfigManager.Config.Saved.Host.Chassis);
             }
-            if (!string.IsNullOrEmpty(CONF.Host.Deployment)) {
-                Hostnamectl.SetDeployment(CONF.Host.Deployment);
+            if (!string.IsNullOrEmpty(ConfigManager.Config.Saved.Host.Deployment)) {
+                Hostnamectl.SetDeployment(ConfigManager.Config.Saved.Host.Deployment);
             }
-            if (!string.IsNullOrEmpty(CONF.Host.Location)) {
-                Hostnamectl.SetLocation(CONF.Host.Location);
+            if (!string.IsNullOrEmpty(ConfigManager.Config.Saved.Host.Location)) {
+                Hostnamectl.SetLocation(ConfigManager.Config.Saved.Host.Location);
             }
             Console.WriteLine("[hostname] ready");
         }
@@ -211,30 +212,30 @@ namespace Antd2 {
 
         private static void SetParameters() {
             if (Application.IsUnix == false) { return; }
-            foreach (var sysctl in CONF.Boot.Sysctl) {
+            foreach (var sysctl in ConfigManager.Config.Saved.Boot.Sysctl) {
                 Sysctl.Set(sysctl);
             }
         }
 
         private static void SetServices() {
             if (Application.IsUnix == false) { return; }
-            foreach (var service in CONF.Boot.ActiveServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.ActiveServices) {
                 if (Systemctl.IsEnabled(service) == false)
                     Systemctl.Enable(service);
                 if (Systemctl.IsActive(service) == false)
                     Systemctl.Start(service);
             }
-            foreach (var service in CONF.Boot.InactiveServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.InactiveServices) {
                 if (Systemctl.IsActive(service))
                     Systemctl.Stop(service);
             }
-            foreach (var service in CONF.Boot.DisabledServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.DisabledServices) {
                 if (Systemctl.IsActive(service))
                     Systemctl.Stop(service);
                 if (Systemctl.IsEnabled(service))
                     Systemctl.Disable(service);
             }
-            foreach (var service in CONF.Boot.BlockedServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.BlockedServices) {
                 if (Systemctl.IsActive(service))
                     Systemctl.Stop(service);
                 if (Systemctl.IsEnabled(service))
@@ -246,7 +247,7 @@ namespace Antd2 {
         private static void SetModules() {
             if (Application.IsUnix == false) { return; }
             var loadedModules = Mod.Get();
-            foreach (var module in CONF.Boot.InactiveModules) {
+            foreach (var module in ConfigManager.Config.Saved.Boot.InactiveModules) {
                 var loadedModule = loadedModules.FirstOrDefault(_ => _.Module == module);
                 if (string.IsNullOrEmpty(loadedModule.Module)) {
                     continue;
@@ -260,7 +261,7 @@ namespace Antd2 {
 
                 Mod.Remove(loadedModule);
             }
-            foreach (var module in CONF.Boot.ActiveModules) {
+            foreach (var module in ConfigManager.Config.Saved.Boot.ActiveModules) {
                 var (Module, UsedBy) = loadedModules.FirstOrDefault(_ => _.Module == module);
                 if (!string.IsNullOrEmpty(Module)) {
                     continue;
@@ -271,7 +272,7 @@ namespace Antd2 {
 
         private static void Users() {
             if (Application.IsUnix == false) { return; }
-            foreach (var user in CONF.Users) {
+            foreach (var user in ConfigManager.Config.Saved.Users) {
                 Getent.AddUser(user.Name);
                 Getent.AddGroup(user.Group);
                 Getent.AssignGroup(user.Name, user.Group);
@@ -281,18 +282,17 @@ namespace Antd2 {
 
         private static void SetRoutingTables() {
             if (Application.IsUnix == false) { return; }
-            if (CONF.Network.RoutingTables.Length > 0) {
-                RoutingTables.Write(CONF.Network.RoutingTables.Select(_ => (_.Id, _.Name)));
+            if (ConfigManager.Config.Saved.Network.RoutingTables.Length > 0) {
+                RoutingTables.Write(ConfigManager.Config.Saved.Network.RoutingTables.Select(_ => (_.Id, _.Name)));
             }
             Console.WriteLine("[rt] tables ready");
         }
 
         private static void SetNetwork() {
             if (Application.IsUnix == false) { return; }
-            Dns.SetResolv(CONF.Network.Dns);
-            foreach (var i in CONF.Network.Interfaces) {
+            Dns.SetResolv(ConfigManager.Config.Saved.Network.Dns);
+            foreach (var i in ConfigManager.Config.Saved.Network.Interfaces) {
                 Console.WriteLine($"[net] configuring {i.Iface} {i.Address}");
-
                 if (i.Auto == "up") {
                     foreach (var cmd in i.PreUp) {
                         Console.WriteLine($"[net] {i.Iface} - {cmd}");
@@ -324,7 +324,7 @@ namespace Antd2 {
                     }
                 }
             }
-            foreach (var r in CONF.Network.Routing) {
+            foreach (var r in ConfigManager.Config.Saved.Network.Routing) {
                 Console.WriteLine($"[net] routing {r.Gateway} {r.Destination} {r.Device}");
                 Ip.AddRoute(r.Device, r.Gateway, r.Destination);
             }
@@ -333,8 +333,8 @@ namespace Antd2 {
 
         private static void SetRoutingRules() {
             if (Application.IsUnix == false) { return; }
-            if (CONF.Network.RoutingTables.Length > 0) {
-                foreach (var rt in CONF.Network.RoutingTables) {
+            if (ConfigManager.Config.Saved.Network.RoutingTables.Length > 0) {
+                foreach (var rt in ConfigManager.Config.Saved.Network.RoutingTables) {
                     foreach (var rule in rt.Rules) {
                         Bash.Do(rule);
                     }
@@ -345,7 +345,7 @@ namespace Antd2 {
 
         private static void ApplySetupCommands() {
             if (Application.IsUnix == false) { return; }
-            foreach (var command in CONF.Commands.Run) {
+            foreach (var command in ConfigManager.Config.Saved.Commands.Run) {
                 Console.WriteLine($"[cmd] {command}");
                 Bash.Do(command);
             }

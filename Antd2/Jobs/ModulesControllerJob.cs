@@ -1,4 +1,5 @@
 ﻿using Antd2.cmds;
+using Antd2.Configuration;
 using System;
 using System.Linq;
 
@@ -42,7 +43,7 @@ namespace Antd2.Jobs {
 
         public override void DoJob() {
             var loadedModules = Mod.Get();
-            foreach (var module in StartCommand.CONF.Boot.InactiveModules) {
+            foreach (var module in ConfigManager.Config.Saved.Boot.InactiveModules) {
                 var loadedModule = loadedModules.FirstOrDefault(_ => _.Module == module);
                 if (string.IsNullOrEmpty(loadedModule.Module)) {
                     continue;
@@ -56,7 +57,7 @@ namespace Antd2.Jobs {
 
                 Mod.Remove(loadedModule);
             }
-            foreach (var module in StartCommand.CONF.Boot.ActiveModules) {
+            foreach (var module in ConfigManager.Config.Saved.Boot.ActiveModules) {
                 var (Module, UsedBy) = loadedModules.FirstOrDefault(_ => _.Module == module);
                 if (!string.IsNullOrEmpty(Module)) {
                     continue;

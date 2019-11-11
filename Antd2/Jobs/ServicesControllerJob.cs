@@ -1,4 +1,5 @@
 ﻿using Antd2.cmds;
+using Antd2.Configuration;
 using System.Linq;
 
 namespace Antd2.Jobs {
@@ -40,23 +41,23 @@ namespace Antd2.Jobs {
         #endregion
 
         public override void DoJob() {
-            foreach (var service in StartCommand.CONF.Boot.ActiveServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.ActiveServices) {
                 if (Systemctl.IsEnabled(service) == false)
                     Systemctl.Enable(service);
                 if (Systemctl.IsActive(service) == false)
                     Systemctl.Start(service);
             }
-            foreach (var service in StartCommand.CONF.Boot.InactiveServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.InactiveServices) {
                 if (Systemctl.IsActive(service))
                     Systemctl.Stop(service);
             }
-            foreach (var service in StartCommand.CONF.Boot.DisabledServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.DisabledServices) {
                 if (Systemctl.IsActive(service))
                     Systemctl.Stop(service);
                 if (Systemctl.IsEnabled(service))
                     Systemctl.Disable(service);
             }
-            foreach (var service in StartCommand.CONF.Boot.BlockedServices) {
+            foreach (var service in ConfigManager.Config.Saved.Boot.BlockedServices) {
                 if (Systemctl.IsActive(service))
                     Systemctl.Stop(service);
                 if (Systemctl.IsEnabled(service))
