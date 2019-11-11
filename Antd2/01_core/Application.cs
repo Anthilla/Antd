@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Antd2.Configuration;
+using System;
 using System.Linq;
 
 namespace Antd2 {
@@ -16,8 +17,17 @@ namespace Antd2 {
 
         public static bool IsUnix => Environment.OSVersion.Platform == PlatformID.Unix;
 
+        private const string ConfFile = "/cfg/antd/antd.toml";
+
         private static void Main(string[] args) {
             PrepareConsole();
+
+            var file = GetFileArgument(args);
+            ConfigManager.Config.TomlPath = string.IsNullOrEmpty(file) ? ConfFile : file;
+            ConfigManager.Config.Load();
+
+            args = RemovedUsedArgument(args);
+
             if (args.Length > 0) {
                 if (LineCommand.Options.TryGetValue(args[0], out Action<string[]> functionToExecute)) {
                     functionToExecute?.Invoke(args.Skip(1).ToArray());
@@ -35,6 +45,19 @@ namespace Antd2 {
 
         private static void PrepareConsole() {
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        private static string GetFileArgument(string[] args) {
+            var index = Array.IndexOf(args, "-f");
+            return index > -1 ? args[index + 1] : string.Empty;
+        }
+
+        private static string[] RemovedUsedArgument(string[] args) {
+            var index = Array.IndexOf(args, "-f");
+            if (index < 0) {
+                return args;
+            }
+            return args.Where((_, i) => i != index && i != index + 1).ToArray();
         }
     }
 }

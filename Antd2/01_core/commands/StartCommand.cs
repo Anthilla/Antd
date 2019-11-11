@@ -13,7 +13,6 @@ using Systemctl = Antd2.cmds.Systemctl;
 namespace Antd2 {
     public class StartCommand {
 
-        private const string ConfFile = "/cfg/antd/antd.toml";
         public static JobManager Scheduler;
         public static Stopwatch STOPWATCH;
         public static ServiceInit ServiceInit;
@@ -23,12 +22,9 @@ namespace Antd2 {
             STOPWATCH.Start();
             Scheduler = new JobManager();
 
-            ConfigManager.Config.TomlPath = args.Length > 0 ? !string.IsNullOrEmpty(args[0]) ? args[0] : ConfFile : ConfFile;
-            ConfigManager.Config.Load();
-
             if (ConfigManager.Config.Saved == null) {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("  missing file configuration!");
+                Console.WriteLine($"  missing file configuration at {ConfigManager.Config.TomlPath}!");
                 Console.ForegroundColor = ConsoleColor.White;
                 return;
             }
