@@ -5,21 +5,12 @@ using Nancy.TinyIoc;
 namespace Antd2.Web {
 
     public class AntdBootstrapper : DefaultNancyBootstrapper {
-        private readonly IAppConfiguration appConfig;
 
         public AntdBootstrapper() {
         }
 
-        public AntdBootstrapper(IAppConfiguration appConfig) {
-            this.appConfig = appConfig;
-        }
-
         protected override void ConfigureApplicationContainer(TinyIoCContainer container) {
             base.ConfigureApplicationContainer(container);
-
-            if (appConfig != null) {
-                container.Register<IAppConfiguration>(appConfig);
-            }
         }
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {

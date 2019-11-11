@@ -19,8 +19,8 @@ namespace Antd2.Modules {
             Get("/routingtables/apply", x => ApiPostApplyRoutingTables());
             Get("/interfaces/apply", x => ApiPostApplyInterfaces());
             Get("/routing/apply", x => ApiPostApplyRouting());
-
         }
+
         private dynamic ApiPostSaveRoutingTables() {
             var model = this.Bind<NetRoutingTable[]>();
             ConfigManager.Config.Saved.Network.RoutingTables = model;
