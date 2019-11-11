@@ -21,6 +21,13 @@ namespace Antd2.Configuration {
         public HostParameters Host { get; set; } = new HostParameters();
         public NetworkParameters Network { get; set; } = new NetworkParameters();
 
+
+        /// <summary>
+        /// Parametri applicativi
+        /// </summary>
+        public AppParameters App { get; set; } = new AppParameters();
+
+
         /// <summary>
         /// Comandi "custom" da lanciare all'avvio
         /// La configurazione di default la carico una volta all'avvio di antd
