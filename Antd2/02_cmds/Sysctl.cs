@@ -17,7 +17,7 @@ namespace Antd2.cmds {
                 .Where(_ => !string.IsNullOrEmpty(_.Key));
         }
 
-        private static (string Key, string Value) ParseSysctlLine(string line) {
+        public static (string Key, string Value) ParseSysctlLine(string line) {
             var arr = line.Split(new[] { '=' }, SSO.RemoveEmptyEntries);
             if (arr.Length != 2) {
                 return (string.Empty, string.Empty);

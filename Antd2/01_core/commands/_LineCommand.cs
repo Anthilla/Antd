@@ -56,7 +56,6 @@ namespace Antd2 {
 
             PrintHelp("sysctl check", new[] { "Verifica se i parametri di sysctl corrispondono a quelli di default" });
             PrintHelp("sysctl set", new[] { "Applica i parametri di sysctl di default" });
-            PrintHelp("sysctl write", new[] { "Scrive su /etc/sysctl.conf i parametri di default" });
             Console.WriteLine();
         }
 
