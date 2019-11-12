@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "outputFileName": "Views/home.min.html",
+    "inputFiles": [
+      "Views/home.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/login.min.html",
+    "inputFiles": [
+      "Views/login.html"
+    ]
+  }
+]

@@ -7,7 +7,7 @@ namespace AntdUi2.Modules {
         public MainModule() {
             this.RequiresAuthentication();
 
-            Get("/", x => View["home"]);
+            Get("/", x => View["home.min.html"]);
         }
     }
 }

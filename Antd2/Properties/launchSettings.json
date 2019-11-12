@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "01_Antd2": {
+      "commandName": "Project",
+      "commandLineArgs": "start"
+    }
+  }
+}

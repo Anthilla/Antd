@@ -13,16 +13,18 @@ namespace AntdUi2 {
         public const string SessionCookieKey = "session-antd";
         public const string SessionRequestCookieKey = "session-antd-req";
 
-        public string ServerUrl { get; set; }
+        public static string ServerUrl { get; set; }
         public static RestConsumer RestConsumer { get; set; }
 
         public static void Main(string[] args) {
+            PrepareConsole();
             var resetEvent = new AutoResetEvent(false);
             Console.CancelKeyPress += (s, e) => { e.Cancel = true; resetEvent.Set(); };
 
-            RestConsumer = new RestConsumer("http://localhost:8085", SessionCookieKey, "Antd");
+            ServerUrl = "http://localhost:8085";
+            RestConsumer = new RestConsumer(ServerUrl, SessionCookieKey, "Antd");
 
-            var url = $"http://localhost:8006";
+            var url = $"http://localhost:8086";
             var host = new WebHostBuilder()
               .UseContentRoot(Directory.GetCurrentDirectory())
               .UseKestrel()
@@ -34,6 +36,10 @@ namespace AntdUi2 {
             resetEvent.WaitOne();
             host.Dispose();
             resetEvent.Dispose();
+        }
+
+        private static void PrepareConsole() {
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

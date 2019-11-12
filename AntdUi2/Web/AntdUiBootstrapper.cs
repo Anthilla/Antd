@@ -1,4 +1,5 @@
 ﻿using Nancy;
+using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
 using Nancy.TinyIoc;
@@ -29,7 +30,6 @@ namespace AntdUi2.Web {
             conv.StaticContentsConventions.AddDirectory("novnc", @"/novnc");
         }
 
-
         protected override void ConfigureApplicationContainer(TinyIoCContainer container) {
             base.ConfigureApplicationContainer(container);
 
@@ -37,6 +37,11 @@ namespace AntdUi2.Web {
 
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context) {
             base.RequestStartup(requestContainer, pipelines, context);
+
+            FormsAuthentication.Enable(pipelines, new FormsAuthenticationConfiguration {
+                RedirectUrl = "/login",
+                UserMapper = requestContainer.Resolve<IUserMapper>()
+            });
         }
     }
 }

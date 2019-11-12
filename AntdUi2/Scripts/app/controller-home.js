@@ -1,5 +1,3 @@
-"use strict";
-
 var app = angular.module("templateApp", [
     "ngSanitize",
     "pascalprecht.translate",
@@ -7,9 +5,7 @@ var app = angular.module("templateApp", [
     "selectize",
     "jlareau.pnotify",
     "ui.calendar",
-    "trumbowyg-ng",
     "ngclipboard",
-    "chart.js",
     "NgSwitchery"
 ]);
 

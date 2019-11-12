@@ -55,7 +55,7 @@ namespace Kvpbase {
         //    }
 
         //    CurrentTopology.PopulateReplicas(CurrentNode);
-        //    ConsoleLogger.Log("Populated " + CurrentTopology.Replicas.Count + " replica nodes in topology");
+        //    Console.WriteLine("Populated " + CurrentTopology.Replicas.Count + " replica nodes in topology");
         //    #endregion
 
         //    #region Check-for-HTTP-Listener
@@ -111,7 +111,7 @@ namespace Kvpbase {
             }
 
             CurrentTopology.PopulateReplicas(CurrentNode);
-            ConsoleLogger.Log("Populated " + CurrentTopology.Replicas.Count + " replica nodes in topology");
+            Console.WriteLine("Populated " + CurrentTopology.Replicas.Count + " replica nodes in topology");
             #endregion
 
             #region Check-for-HTTP-Listener
@@ -189,7 +189,7 @@ namespace Kvpbase {
                 }
 
                 if(req.RawUrlEntries == null || req.RawUrlEntries.Count == 0) {
-                    ConsoleLogger.Log("RequestReceived null raw URL list detected, redirecting to documentation page");
+                    Console.WriteLine("RequestReceived null raw URL list detected, redirecting to documentation page");
                     return new HttpResponse(req, true, 301,
                         Common.AddToDictionary("location", CurrentSettings.DocumentationUrl, null),
                         "text/plain",
