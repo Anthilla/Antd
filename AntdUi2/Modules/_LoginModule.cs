@@ -40,7 +40,6 @@ namespace AntdUi2.Modules {
             if (string.IsNullOrEmpty(username + password)) {
                 return Context.GetRedirect("/login");
             }
-            Console.WriteLine($"login attempt from {username}");
             var expiration = DateTime.Now.AddHours(4);
             var cookies = Request.Cookies;
             while (cookies.Any()) {
