@@ -10,6 +10,7 @@ namespace Antd2 {
                 {"show", Show },
                 {"create", Create },
                 {"delete", Delete },
+                {"label", AddLabel },
             };
 
         private static void Show(string[] args) {
@@ -52,5 +53,17 @@ namespace Antd2 {
             Console.WriteLine($"  delete partition {disk}{number}");
             Fdisk.DeletePartition(disk, number);
         }
+
+        private static void AddLabel(string[] args) {
+            if (args.Length < 2) {
+                Console.WriteLine("  not enough arguments");
+                return;
+            }
+            var partition = args[0];
+            var label = args[1];
+            Console.WriteLine($"  partition {partition} LABEL={label}");
+            Mkfs.Ext4.AddLabel(partition, label);
+        }
+        
     }
 }
