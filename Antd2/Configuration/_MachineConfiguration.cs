@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Antd2.Configuration {
+﻿namespace Antd2.Configuration {
 
     public class MachineConfiguration {
 

@@ -25,6 +25,7 @@ namespace Antd2 {
             { "netstat", NetstatFunc },
             { "init", InitFunc },
             { "unit", UnitFunc },
+            { "disk", DiskFunc },
         };
 
         private static void HelpFunc(string[] args) {
@@ -168,6 +169,16 @@ namespace Antd2 {
         private static void UnitFunc(string[] args) {
             var line = args.Length > 0 ? args : ReadLine();
             if (UnitCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void DiskFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (DiskCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {
