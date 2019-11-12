@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Antd2.cmds {
+
+    /// <summary>
+    /// https://linux.die.net/man/8/lsblk
+    /// </summary>
     public class Lsblk {
 
         private const string lsblkCommand = "lsblk";
