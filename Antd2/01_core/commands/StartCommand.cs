@@ -31,6 +31,8 @@ namespace Antd2 {
                 return;
             }
 
+            Console.WriteLine($"[uid] {ConfigManager.Config.Saved.Host.Uid}");
+
             Init();
             OsReadAndWrite();
             RemoveLimits();

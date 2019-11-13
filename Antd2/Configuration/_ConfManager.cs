@@ -21,7 +21,7 @@ namespace Antd2.Configuration {
                     }
                 }
             }
-
+            Saved.Host.Uid = Antd2.cmds.DeviceId.LocalId;
             loaded = Saved != null;
         }
 
