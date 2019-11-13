@@ -12,12 +12,6 @@
     ]
   },
   {
-    "outputFileName": "Views/pages/dashboard.min.html",
-    "inputFiles": [
-      "Views/pages/dashboard.html"
-    ]
-  },
-  {
     "outputFileName": "Views/pages/time.min.html",
     "inputFiles": [
       "Views/pages/time.html"
@@ -54,12 +48,6 @@
     ]
   },
   {
-    "outputFileName": "Views/pages/dns_client.min.html",
-    "inputFiles": [
-      "Views/pages/dns_client.html"
-    ]
-  },
-  {
     "outputFileName": "Views/pages/interfaces.min.html",
     "inputFiles": [
       "Views/pages/interfaces.html"
@@ -75,6 +63,12 @@
     "outputFileName": "Views/pages/routing_tables.min.html",
     "inputFiles": [
       "Views/pages/routing_tables.html"
+    ]
+  },
+  {
+    "outputFileName": "Style/template-custom.min.css",
+    "inputFiles": [
+      "Style/template-custom.css"
     ]
   }
 ]

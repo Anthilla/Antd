@@ -32,6 +32,7 @@
   <ItemGroup>
     <PackageReference Include="ARSoft.Tools.Net" Version="2.2.9" />
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
+    <PackageReference Include="DeviceId" Version="4.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Owin" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />

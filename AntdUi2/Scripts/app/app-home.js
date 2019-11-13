@@ -153,22 +153,24 @@ app.controller("SidebarController", ["$scope", "$http", SidebarController]);
 
 function SidebarController($scope, $http) {
 
+    var activeClass = "text-underline";
+
     $scope.Menu = [{
         Elements: [
-            //{ Name: 'Home', Icon: 'fa-square fg-info', Destination: 'home' },
-            { Name: 'Host', Icon: 'fa-square fg-info', Destination: 'host' },
-            { Name: 'Time and Date', Icon: 'fa-square fg-info', Destination: 'time' },
+            //{ Name: 'Home', Icon: 'fa-square fg-info', Destination: 'home', Active: activeClass },
+            { Name: 'Host', Icon: 'fa-square fg-info', Destination: 'host', Active: activeClass },
+            { Name: 'Time and Date', Icon: 'fa-square fg-info', Destination: 'time', Active: '' },
 
-            { Name: 'Sysctl', Icon: 'fa-square fg-success', Destination: 'sysctl' },
-            { Name: 'Modules', Icon: 'fa-square fg-success', Destination: 'modules' },
-            { Name: 'Services', Icon: 'fa-square fg-success', Destination: 'services' },
+            { Name: 'Sysctl', Icon: 'fa-square fg-success', Destination: 'sysctl', Active: '' },
+            { Name: 'Modules', Icon: 'fa-square fg-success', Destination: 'modules', Active: '' },
+            { Name: 'Services', Icon: 'fa-square fg-success', Destination: 'services', Active: '' },
 
-            { Name: 'DNS Client', Icon: 'fa-square fg-warning', Destination: 'dns_client' },
-            { Name: 'Interfaces', Icon: 'fa-square fg-warning', Destination: 'interfaces' },
-            { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables' },
-            { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing' },
+            //{ Name: 'DNS Client', Icon: 'fa-square fg-warning', Destination: 'dns_client', Active: '' },
+            { Name: 'Interfaces', Icon: 'fa-square fg-warning', Destination: 'interfaces', Active: '' },
+            { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables', Active: '' },
+            { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing', Active: '' },
 
-            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands' }
+            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' }
         ]
     }];
 
@@ -322,9 +324,9 @@ function SidebarController($scope, $http) {
 
     $scope.itemClicked = function (index, elements) {
         for (var i = 0; i < elements.length; i++) {
-            elements[i].ActiveClass = '';
+            elements[i].Active = '';
         }
-        elements[index] = "active";
+        elements[index] = activeClass;
     };
 }
 

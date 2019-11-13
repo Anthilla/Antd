@@ -5077,3 +5077,7 @@ ul.notifications {
     width: 500px;
     position: relative;
 }
+
+.text-underline{
+    text-decoration: underline !important;
+}

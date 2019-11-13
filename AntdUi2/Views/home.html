@@ -64,13 +64,11 @@
             <div class="col-md-3 left_col menu_fixed">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a ui-sref="home_dashboard" class="site_title">
-                            <img src="/img/antdicon.png" alt="Home" width="50">
-                            <span>antd</span>
-                        </a>
+                        <p class="site_title">
+                            <span>ANTD</span>
+                        </p>
                     </div>
                     <div class="clearfix"></div>
-                    <br />
                     <!-- sidebar menu -->
                     <div ng-controller="SidebarController" ng-cloak id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                         <div ng-repeat="section in Menu" class="menu_section">
@@ -108,7 +106,6 @@
                             </li>
                             <li id="UserMenu" class="">
                                 <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="/img/antdicon.png" alt="">
                                     <span>{{ User.Name }}</span>
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
