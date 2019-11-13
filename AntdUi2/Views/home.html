@@ -77,12 +77,10 @@
                             <h3>{{ section.Name }}</h3>
                             <ul class="nav side-menu">
                                 <li ng-repeat="element in section.Elements">
-                                    <a><i class="fa {{ element.Icon }}"></i> {{ element.Name }} <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li ng-repeat="link in element.Links">
-                                            <a ui-sref="{{ link.Destination }}">{{ link.Name }}</a>
-                                        </li>
-                                    </ul>
+                                    <a ui-sref="{{ element.Destination }}">
+                                        <i class="fa {{ element.Icon }}"></i>
+                                        {{ element.Name }}
+                                    </a>
                                 </li>
                             </ul>
                         </div>

@@ -10,5 +10,71 @@
     "inputFiles": [
       "Views/login.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/dashboard.min.html",
+    "inputFiles": [
+      "Views/pages/dashboard.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/time.min.html",
+    "inputFiles": [
+      "Views/pages/time.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/host.min.html",
+    "inputFiles": [
+      "Views/pages/host.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/sysctl.min.html",
+    "inputFiles": [
+      "Views/pages/sysctl.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/services.min.html",
+    "inputFiles": [
+      "Views/pages/services.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/modules.min.html",
+    "inputFiles": [
+      "Views/pages/modules.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/commands.min.html",
+    "inputFiles": [
+      "Views/pages/commands.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/dns_client.min.html",
+    "inputFiles": [
+      "Views/pages/dns_client.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/interfaces.min.html",
+    "inputFiles": [
+      "Views/pages/interfaces.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/routing.min.html",
+    "inputFiles": [
+      "Views/pages/routing.html"
+    ]
+  },
+  {
+    "outputFileName": "Views/pages/routing_tables.min.html",
+    "inputFiles": [
+      "Views/pages/routing_tables.html"
+    ]
   }
 ]

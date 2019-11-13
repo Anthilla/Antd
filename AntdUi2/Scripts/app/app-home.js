@@ -46,269 +46,44 @@ app.config(function ($provide) {
 
 //route config
 app.config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/host");
 
     $stateProvider
-        .state("home_dashboard", {
-            cache: false,
-            url: "^/",
-            views: {
-                'content': { templateUrl: "pg/home/dashboard.html?v=" + new Date() }
-            }
+        .state("home", {
+            cache: false, url: "^/", views: { 'content': { templateUrl: "pg/dashboard.min.html?v=" + new Date() } }
+        })
+        .state("host", {
+            cache: false, url: "^/host", views: { 'content': { templateUrl: "pg/host.min.html?v=" + new Date() } }
+        })
+        .state("time", {
+            cache: false, url: "^/time", views: { 'content': { templateUrl: "pg/time.min.html?v=" + new Date() } }
         })
 
-        .state("host_info", {
-            cache: false,
-            url: "^/host/info",
-            views: {
-                'content': { templateUrl: "pg/host/info.html?v=" + new Date() }
-            }
+        .state("sysctl", {
+            cache: false, url: "^/sysctl", views: { 'content': { templateUrl: "pg/sysctl.min.html?v=" + new Date() } }
         })
-        .state("host_timedate", {
-            cache: false,
-            url: "^/host/timedate",
-            views: {
-                'content': { templateUrl: "pg/host/timedate.html?v=" + new Date() }
-            }
+        .state("modules", {
+            cache: false, url: "^/modules", views: { 'content': { templateUrl: "pg/modules.min.html?v=" + new Date() } }
         })
-        .state("host_webservice", {
-            cache: false,
-            url: "^/host/webservice",
-            views: {
-                'content': { templateUrl: "pg/host/webservice.html?v=" + new Date() }
-            }
+        .state("services", {
+            cache: false, url: "^/services", views: { 'content': { templateUrl: "pg/services.min.html?v=" + new Date() } }
         })
 
-        .state("boot_parameters", {
-            cache: false,
-            url: "^/boot/parameters",
-            views: {
-                'content': { templateUrl: "pg/boot/parameters.html?v=" + new Date() }
-            }
+        .state("dns_client", {
+            cache: false, url: "^/dns/client", views: { 'content': { templateUrl: "pg/dns_client.min.html?v=" + new Date() } }
         })
-        .state("boot_modules", {
-            cache: false,
-            url: "^/boot/modules",
-            views: {
-                'content': { templateUrl: "pg/boot/modules.html?v=" + new Date() }
-            }
+        .state("interfaces", {
+            cache: false, url: "^/interfaces", views: { 'content': { templateUrl: "pg/interfaces.min.html?v=" + new Date() } }
         })
-        .state("boot_services", {
-            cache: false,
-            url: "^/boot/services",
-            views: {
-                'content': { templateUrl: "pg/boot/services.html?v=" + new Date() }
-            }
+        .state("routing_tables", {
+            cache: false, url: "^/routing/tables", views: { 'content': { templateUrl: "pg/routing_tables.min.html?v=" + new Date() } }
         })
-        .state("boot_commands", {
-            cache: false,
-            url: "^/boot/commands",
-            views: {
-                'content': { templateUrl: "pg/boot/commands.html?v=" + new Date() }
-            }
+        .state("routing", {
+            cache: false, url: "^/routing", views: { 'content': { templateUrl: "pg/routing.min.html?v=" + new Date() } }
         })
 
-        .state("log_view", {
-            cache: false,
-            url: "^/log/view",
-            views: {
-                'content': { templateUrl: "pg/log/view.html?v=" + new Date() }
-            }
-        })
-
-        .state("network_internalnetwork", {
-            cache: false, url: "^/network/internalnetwork",
-            views: {
-                'content': { templateUrl: "pg/network/internalnetwork.html?v=" + new Date() }
-            }
-        })
-        .state("network_externalnetwork", {
-            cache: false, url: "^/network/externalnetwork",
-            views: {
-                'content': { templateUrl: "pg/network/externalnetwork.html?v=" + new Date() }
-            }
-        })
-        .state("network_interfaces", {
-            cache: false, url: "^/network/interfaces",
-            views: {
-                'content': { templateUrl: "pg/network/interfaces.html?v=" + new Date() }
-            }
-        })
-        .state("network_dnsclient", {
-            cache: false, url: "^/network/dnsclient",
-            views: {
-                'content': { templateUrl: "pg/network/dnsclient.html?v=" + new Date() }
-            }
-        })
-        .state("network_knownhosts", {
-            cache: false, url: "^/network/knownhosts",
-            views: {
-                'content': { templateUrl: "pg/network/knownhosts.html?v=" + new Date() }
-            }
-        })
-        .state("network_knownnetworks", {
-            cache: false, url: "^/network/knownnetworks",
-            views: {
-                'content': { templateUrl: "pg/network/knownnetworks.html?v=" + new Date() }
-            }
-        })
-        .state("network_bridge", {
-            cache: false, url: "^/network/bridge",
-            views: {
-                'content': { templateUrl: "pg/network/bridge.html?v=" + new Date() }
-            }
-        })
-        .state("network_bond", {
-            cache: false, url: "^/network/bond",
-            views: {
-                'content': { templateUrl: "pg/network/bond.html?v=" + new Date() }
-            }
-        })
-        .state("network_tun", {
-            cache: false, url: "^/network/tun",
-            views: {
-                'content': { templateUrl: "pg/network/tun.html?v=" + new Date() }
-            }
-        })
-        .state("network_tap", {
-            cache: false, url: "^/network/tap",
-            views: {
-                'content': { templateUrl: "pg/network/tap.html?v=" + new Date() }
-            }
-        })
-        .state("network_gateways", {
-            cache: false, url: "^/network/gateways",
-            views: {
-                'content': { templateUrl: "pg/network/gateways.html?v=" + new Date() }
-            }
-        })
-        .state("network_routing", {
-            cache: false, url: "^/network/routing",
-            views: {
-                'content': { templateUrl: "pg/network/routing.html?v=" + new Date() }
-            }
-        })
-        .state("network_routingtable", {
-            cache: false, url: "^/network/routingtable",
-            views: {
-                'content': { templateUrl: "pg/network/routingtable.html?v=" + new Date() }
-            }
-        })
-        .state("network_wifi", {
-            cache: false, url: "^/network/wifi",
-            views: {
-                'content': { templateUrl: "pg/network/wifi.html?v=" + new Date() }
-            }
-        })
-
-        .state("ssh_publickey", {
-            cache: false, url: "^/ssh/publickey",
-            views: {
-                'content': { templateUrl: "pg/ssh/publickey.html?v=" + new Date() }
-            }
-        })
-        .state("ssh_authorizedkeys", {
-            cache: false, url: "^/ssh/authorizedkeys",
-            views: {
-                'content': { templateUrl: "pg/ssh/authorizedkeys.html?v=" + new Date() }
-            }
-        })
-
-        .state("user_group", {
-            cache: false, url: "^/user/group",
-            views: {
-                'content': { templateUrl: "pg/user/group.html?v=" + new Date() }
-            }
-        })
-        .state("user_system", {
-            cache: false, url: "^/user/system",
-            views: {
-                'content': { templateUrl: "pg/user/system.html?v=" + new Date() }
-            }
-        })
-        .state("user_applicative", {
-            cache: false, url: "^/user/applicative",
-            views: {
-                'content': { templateUrl: "pg/user/applicative.html?v=" + new Date() }
-            }
-        })
-
-        .state("bind_configuration", {
-            cache: false, url: "^/bind/configuration",
-            views: {
-                'content': { templateUrl: "pg/bind/configuration.html?v=" + new Date() }
-            }
-        })
-        .state("bind_zones", {
-            cache: false, url: "^/bind/zones",
-            views: {
-                'content': { templateUrl: "pg/bind/zones.html?v=" + new Date() }
-            }
-        })
-
-        .state("virsh_configuration", {
-            cache: false, url: "^/virsh/configuration",
-            views: {
-                'content': { templateUrl: "pg/virsh/configuration.html?v=" + new Date() }
-            }
-        })
-
-        .state("firewall_configuration", {
-            cache: false, url: "^/firewall/configuration",
-            views: {
-                'content': { templateUrl: "pg/firewall/configuration.html?v=" + new Date() }
-            }
-        })
-
-        .state("syslogng_configuration", {
-            cache: false, url: "^/syslogng/configuration",
-            views: {
-                'content': { templateUrl: "pg/syslogng/configuration.html?v=" + new Date() }
-            }
-        })
-
-        .state("app_local", {
-            cache: false, url: "^/app/local",
-            views: {
-                'content': { templateUrl: "pg/app/local.html?v=" + new Date() }
-            }
-        })
-
-        .state("cluster_status", {
-            cache: false, url: "^/cluster/status",
-            views: {
-                'content': { templateUrl: "pg/cluster/status.html?v=" + new Date() }
-            }
-        })
-        .state("cluster_neighborhood", {
-            cache: false, url: "^/cluster/neighborhood",
-            views: {
-                'content': { templateUrl: "pg/cluster/neighborhood.html?v=" + new Date() }
-            }
-        })
-        .state("cluster_configuration", {
-            cache: false, url: "^/cluster/configuration",
-            views: {
-                'content': { templateUrl: "pg/cluster/configuration.html?v=" + new Date() }
-            }
-        })
-        .state("cluster_sharednetwork", {
-            cache: false, url: "^/cluster/sharednetwork",
-            views: {
-                'content': { templateUrl: "pg/cluster/sharednetwork.html?v=" + new Date() }
-            }
-        })
-        .state("cluster_sharedservices", {
-            cache: false, url: "^/cluster/sharedservices",
-            views: {
-                'content': { templateUrl: "pg/cluster/sharedservices.html?v=" + new Date() }
-            }
-        })
-        .state("cluster_sharedfs", {
-            cache: false, url: "^/cluster/sharedfs",
-            views: {
-                'content': { templateUrl: "pg/cluster/sharedfs.html?v=" + new Date() }
-            }
+        .state("commands", {
+            cache: false, url: "^/commands", views: { 'content': { templateUrl: "pg/commands.min.html?v=" + new Date() } }
         })
         ;
 });
@@ -378,7 +153,26 @@ app.controller("SidebarController", ["$scope", "$http", SidebarController]);
 
 function SidebarController($scope, $http) {
 
-    $scope.Menu = [
+    $scope.Menu = [{
+        Elements: [
+            //{ Name: 'Home', Icon: 'fa-square fg-info', Destination: 'home' },
+            { Name: 'Host', Icon: 'fa-square fg-info', Destination: 'host' },
+            { Name: 'Time and Date', Icon: 'fa-square fg-info', Destination: 'time' },
+
+            { Name: 'Sysctl', Icon: 'fa-square fg-success', Destination: 'sysctl' },
+            { Name: 'Modules', Icon: 'fa-square fg-success', Destination: 'modules' },
+            { Name: 'Services', Icon: 'fa-square fg-success', Destination: 'services' },
+
+            { Name: 'DNS Client', Icon: 'fa-square fg-warning', Destination: 'dns_client' },
+            { Name: 'Interfaces', Icon: 'fa-square fg-warning', Destination: 'interfaces' },
+            { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables' },
+            { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing' },
+
+            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands' }
+        ]
+    }];
+
+    $scope.MenuOLD = [
         {
             Name: 'Status',
             Elements: [
@@ -531,6 +325,6 @@ function SidebarController($scope, $http) {
             elements[i].ActiveClass = '';
         }
         elements[index] = "active";
-    }
+    };
 }
 
