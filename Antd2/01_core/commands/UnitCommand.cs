@@ -1,6 +1,9 @@
-﻿using Antd2.Init;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+#if NETCOREAPP
+using Antd2.Init;
+#endif
 
 namespace Antd2 {
     public class UnitCommand {
@@ -16,6 +19,7 @@ namespace Antd2 {
                 {"describe-deps", DescribeDependenciesFunc }
             };
 
+#if NETCOREAPP
         static void DescribeDependenciesFunc(string[] args) {
             InitController.Instance.DescribeDependenciesFunc(args);
         }
@@ -47,5 +51,40 @@ namespace Antd2 {
         static void ListUnits(string[] args) {
             InitController.Instance.ListUnits(args);
         }
+#endif
+
+#if NETFRAMEWORK
+        static void DescribeDependenciesFunc(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void RescanUnits(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void GetUnitStatus(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void StartUnits(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void StopUnits(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void RestartUnits(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void ReloadUnits(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        static void ListUnits(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+#endif
     }
 }

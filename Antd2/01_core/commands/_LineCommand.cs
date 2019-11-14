@@ -139,21 +139,21 @@ namespace Antd2 {
         }
 
         private static void ProcFunc(string[] args) {
-            foreach (var proc in Antd.ProcFs.ProcFs.Processes()) {
-                Console.WriteLine($"{proc.Pid} {proc.Name} {proc.CommandLine}");
-            }
+            //foreach (var proc in Antd.ProcFs.ProcFs.Processes()) {
+                //Console.WriteLine($"{proc.Pid} {proc.Name} {proc.CommandLine}");
+            //}
         }
 
         private static void OpenFilesFunc(string[] args) {
-            foreach (var file in new Antd.ProcFs.Process(1).OpenFiles) {
-                Console.WriteLine(file);
-            }
+            //foreach (var file in new Antd.ProcFs.Process(1).OpenFiles) {
+            //    Console.WriteLine(file);
+            //}
         }
 
         private static void NetstatFunc(string[] args) {
-            foreach (var svc in Antd.ProcFs.ProcFs.Net.Services.Unix().Where(svc => svc.State == Antd.ProcFs.NetServiceState.Established)) {
-                Console.WriteLine(svc);
-            }
+            //foreach (var svc in Antd.ProcFs.ProcFs.Net.Services.Unix().Where(svc => svc.State == Antd.ProcFs.NetServiceState.Established)) {
+                //Console.WriteLine(svc);
+            //}
         }
 
         private static void InitFunc(string[] args) {
@@ -179,6 +179,16 @@ namespace Antd2 {
         private static void DiskFunc(string[] args) {
             var line = args.Length > 0 ? args : ReadLine();
             if (DiskCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void CheckFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (CheckCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {

@@ -1,4 +1,6 @@
-﻿using anthilla.core;
+﻿#if NETCOREAPP
+
+using anthilla.core;
 using Newtonsoft.Json;
 using SharpInit.Ipc;
 using System;
@@ -210,3 +212,4 @@ namespace Antd2.Init {
         #endregion
     }
 }
+#endif

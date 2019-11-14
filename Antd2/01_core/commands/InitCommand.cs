@@ -1,6 +1,9 @@
-﻿using Antd2.Init;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+#if NETCOREAPP
+using Antd2.Init;
+#endif
 
 namespace Antd2 {
     public class InitCommand {
@@ -10,6 +13,7 @@ namespace Antd2 {
                 { "stop", StopFunc },
             };
 
+#if NETCOREAPP
         private static ServiceInit ServiceInit = null;
 
         public static void StartFunc(string[] args) {
@@ -24,5 +28,18 @@ namespace Antd2 {
                 ServiceInit.Stop();
             }
         }
+#endif
+
+#if NETFRAMEWORK
+
+        public static void StartFunc(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+
+        public static void StopFunc(string[] args) {
+            Console.WriteLine("  not supported by .net framework");
+        }
+#endif
+
     }
 }

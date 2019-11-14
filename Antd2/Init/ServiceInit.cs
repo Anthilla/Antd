@@ -1,4 +1,5 @@
-﻿using anthilla.core;
+﻿#if NETCOREAPP
+using anthilla.core;
 using SharpInit.Ipc;
 using SharpInit.Platform;
 using SharpInit.Units;
@@ -10,7 +11,7 @@ using System.Threading;
 namespace Antd2.Init {
     public class ServiceInit {
 
-        private IpcListener IpcListener { get;  set; }
+        private IpcListener IpcListener { get; set; }
 
         public void Start() {
             Console.WriteLine("SharpInit starting");
@@ -61,3 +62,4 @@ namespace Antd2.Init {
         }
     }
 }
+#endif

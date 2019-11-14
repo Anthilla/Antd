@@ -1,6 +1,5 @@
 ﻿using Antd2.cmds;
 using Antd2.Configuration;
-using Antd2.Init;
 using Antd2.Jobs;
 using Antd2.Web;
 using anthilla.core;
@@ -12,13 +11,18 @@ using System.Linq;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 
+#if NETCOREAPP
+using Antd2.Init;
+#endif
+
 namespace Antd2 {
     public class StartCommand {
 
         public static JobManager Scheduler;
         public static Stopwatch STOPWATCH;
+#if NETCOREAPP
         public static ServiceInit ServiceInit;
-
+#endif
         public static void Start(string[] args) {
             STOPWATCH = new Stopwatch();
             STOPWATCH.Start();
@@ -70,6 +74,7 @@ namespace Antd2 {
             Console.WriteLine($"antd started in: {STOPWATCH.ElapsedMilliseconds} ms");
         }
 
+#if NETCOREAPP
         private static void Init() {
             if (ServiceInit == null) {
                 ServiceInit = new ServiceInit();
@@ -79,6 +84,12 @@ namespace Antd2 {
             }
             ServiceInit.Start();
         }
+#endif
+#if NETFRAMEWORK
+        private static void Init() {
+            Console.WriteLine("Init not supported by .net framework");
+        }
+#endif
 
         private static void OsReadAndWrite() {
             if (Application.IsUnix == false) { return; }
