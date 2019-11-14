@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <RootNamespace>Antd2</RootNamespace>
     <AssemblyName>antd</AssemblyName>
     <StartupObject>Antd2.Application</StartupObject>
@@ -48,6 +48,12 @@
     <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj" />
     <ProjectReference Include="..\antdlib.common\03_antdlib.common.csproj" />
     <ProjectReference Include="..\SharpInit\SharpInit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\dotnet_install.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
