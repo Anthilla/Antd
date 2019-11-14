@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
     <RootNamespace>Antd2</RootNamespace>
     <AssemblyName>antd</AssemblyName>
     <StartupObject>Antd2.Application</StartupObject>
@@ -26,7 +26,12 @@
 
   <ItemGroup>
     <None Remove="01_Antd2.csproj.DotSettings" />
+    <None Remove="01_models\_01_info.txt" />
     <None Remove="Antd.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="01_models\_01_info.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,11 +47,15 @@
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="Nancy.Owin" Version="2.0.0" />
     <PackageReference Include="Nett" Version="0.13.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj" />
-    <ProjectReference Include="..\antdlib.common\03_antdlib.common.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <ProjectReference Include="..\..\_shared\anthilla.core\anthilla.core.csproj" />
     <ProjectReference Include="..\SharpInit\SharpInit.csproj" />
   </ItemGroup>
 
