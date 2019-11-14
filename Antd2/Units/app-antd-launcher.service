@@ -1,0 +1,10 @@
+﻿[Unit]
+Description=Antd Launcher Service
+
+[Service]
+ExecStart=/usr/bin/dotnet /Data/USB/netcoreapp3.0/antd.dll start
+SuccessExitStatus=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
