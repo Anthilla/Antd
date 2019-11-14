@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Antd2.models;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Antd.models;
 
 namespace Antd.parsing {
     public class DhcpdParser {

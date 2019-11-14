@@ -1,4 +1,4 @@
-﻿using Antd;
+﻿using Antd2.Configuration;
 using anthilla.core;
 using System.IO;
 
@@ -36,7 +36,7 @@ namespace Antd2.cmds {
         //}
 
         public static void WriteFile(WpaSupplicant conf) {
-            if(!Directory.Exists(wpasupplicantEtcFolder)) {
+            if (!Directory.Exists(wpasupplicantEtcFolder)) {
                 return;
             }
             var lines = new string[] {

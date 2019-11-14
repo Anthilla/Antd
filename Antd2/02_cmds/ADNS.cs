@@ -6,10 +6,12 @@ namespace Antd2.cmds {
     public class ADNS {
 
         public static void Start() {
-            using DnsServer server = new DnsServer(10, 10);
-            server.QueryReceived += OnQueryReceived;
-            server.Start();
-            System.Console.ReadLine();
+            using (DnsServer server = new DnsServer(10, 10)) {
+                server.QueryReceived += OnQueryReceived;
+                server.Start();
+                System.Console.ReadLine();
+            }
+            //using DnsServer server = new DnsServer(10, 10);
         }
 
         static async Task OnQueryReceived(object sender, QueryReceivedEventArgs e) {

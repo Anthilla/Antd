@@ -1,7 +1,6 @@
-﻿using Antd.models;
+﻿using Antd2.models;
 using anthilla.core;
 using System;
-using System.IO;
 using System.Linq;
 
 namespace Antd2.cmds {
@@ -24,11 +23,11 @@ namespace Antd2.cmds {
 
         public static VirshDomainModel[] GetDomains() {
             var result = CommonProcess.Execute(virshFileLocation, listArg).Skip(2).ToArray();
-            if(result.Length - 1 <= 0) {
+            if (result.Length - 1 <= 0) {
                 return new VirshDomainModel[0];
             }
             var list = new VirshDomainModel[result.Length - 1];
-            for(var i = 0; i < result.Length - 1; i++) {
+            for (var i = 0; i < result.Length - 1; i++) {
                 var currentLineData = result[i].Split(new[] { ' ', '\t' }, 3, StringSplitOptions.RemoveEmptyEntries);
                 list[i] = new VirshDomainModel() {
                     Id = currentLineData[0],

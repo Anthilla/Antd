@@ -1,6 +1,4 @@
-﻿using Antd.models;
-
-namespace Antd2.Configuration {
+﻿namespace Antd2.Configuration {
     /// <summary>
     /// Raccoglie alcuni valori che devono essere applicati in fase di avvio di antd
     /// </summary>
