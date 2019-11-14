@@ -26,7 +26,8 @@ namespace Antd2 {
             { "init", InitFunc },
             { "unit", UnitFunc },
             { "disk", DiskFunc },
-        };
+            { "check", CheckFunc },
+        }; 
 
         private static void HelpFunc(string[] args) {
             Console.WriteLine("  TOML:");
