@@ -13,6 +13,7 @@ namespace Antd2 {
 
         private static readonly string[] RequiredPackages = new string[] {
             "apt-get",
+            "acl", //getfacl setfacl
             "brctl",
             "date",
             "dhclient",

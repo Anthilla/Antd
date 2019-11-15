@@ -34,6 +34,7 @@ namespace Antd2 {
             { "service", ServiceFunc },
             { "svc", ServiceFunc },
             { "webdav", WebdavFunc },
+            { "acl", AclFunc },
         };
 
         private static void HelpFunc(string[] args) {
@@ -273,6 +274,15 @@ namespace Antd2 {
                 Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
-        
+
+        private static void AclFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (AclCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
     }
 }
