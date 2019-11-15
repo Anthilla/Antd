@@ -41,7 +41,10 @@ ActiveModules = [
   "br_netfilter"
 ]
 InactiveModules = [
-  "ip_tables"
+  "ip_tables",
+  "iptables",
+  "eb_tables",
+  "x_tables",
 ]
 ActiveServices = [
   "systemd-journald.service"

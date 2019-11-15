@@ -33,6 +33,18 @@ namespace Antd2.Configuration {
             }
         }
 
+        public void Reload() {
+            if (!string.IsNullOrEmpty(TomlPath)) {
+                if (File.Exists(TomlPath)) {
+                    Saved = Nett.Toml.ReadFile<MachineConfiguration>(TomlPath);
+                }
+            }
+            if (Saved != null) {
+                Saved.Host.Uid = Antd2.cmds.Device.LocalId;
+            }
+            loaded = Saved != null;
+        }
+
         public void Dump() {
             if (loaded == true) {
                 Nett.Toml.WriteFile<MachineConfiguration>(Saved, TomlPath);
