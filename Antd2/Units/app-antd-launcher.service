@@ -2,9 +2,10 @@
 Description=Antd Launcher Service
 
 [Service]
-ExecStart=/usr/bin/dotnet /Data/USB/netcoreapp3.0/antd.dll start
+ExecStart=/usr/bin/dotnet /mnt/cdrom/Apps/antd/netcoreapp3.0/antd.dll start
 SuccessExitStatus=0
 RemainAfterExit=yes
+Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=antd.target
