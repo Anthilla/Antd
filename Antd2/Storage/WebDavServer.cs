@@ -4,6 +4,7 @@ using NWebDav.Server.HttpListener;
 using NWebDav.Server.Stores;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 
@@ -15,17 +16,31 @@ namespace Antd2.Storage {
         private readonly int WebdavPort;
         private readonly bool UseHttps;
 
+        private readonly string Root;
+        private readonly string User;
+        private readonly string Password;
+
+
         private readonly IDictionary<string, WebDavDispatcher> WEBDAV_DISPATCHERS = new Dictionary<string, WebDavDispatcher>();
 
         private readonly CancellationTokenSource CancellationTokenSource;
         private HttpListener HttpListener;
 
-        public WebDavServer(string realm, string webdavIp, int webdavPort, bool useHttps = false) {
+        public WebDavServer(string realm, string webdavIp, int webdavPort,
+            string root, string user, string password,
+            bool useHttps = false) {
+            if (!Directory.Exists(root)) {
+                throw new DirectoryNotFoundException($"Cannot init Webdav server on this root {root}");
+            }
             Realm = realm;
             WebdavIp = webdavIp;
             WebdavPort = webdavPort;
             UseHttps = useHttps;
             CancellationTokenSource = new CancellationTokenSource();
+
+            Root = root;
+            User = user;
+            Password = password;
         }
 
         public void Start() {
@@ -53,31 +68,6 @@ namespace Antd2.Storage {
             CancellationTokenSource.Dispose();
         }
 
-        private WebdavUser AuthenticateUser(string username, string password) {
-            if (string.IsNullOrEmpty(username)) {
-                throw new ArgumentException("message", nameof(username));
-            }
-
-            if (string.IsNullOrEmpty(password)) {
-                throw new ArgumentException("message", nameof(password));
-            }
-            Console.WriteLine($"[webdav] auth {username}");
-
-            if (username != "visor") {
-                Console.WriteLine($"[webdav] auth {username} failed");
-                return null;
-            }
-            if (password != "AnthillaDev2019!!") {
-                Console.WriteLine($"[webdav] auth {password} failed");
-                return null;
-            }
-
-            return new WebdavUser() {
-                Alias = "visor",
-                Root = "/Data/Data01"
-            };
-        }
-
         private async void DispatchHttpRequestsAsync(System.Net.HttpListener httpListener, CancellationToken cancellationToken) {
             var requestHandlerFactory = new RequestHandlerFactory();
 
@@ -92,15 +82,14 @@ namespace Antd2.Storage {
                 //if (httpListenerContext.Request.IsAuthenticated) {
                 try {
                     var id = httpListenerContext.User.Identity as HttpListenerBasicIdentity;
-                    var webdavUser = AuthenticateUser(id.Name, id.Password);
-                    if (webdavUser != null) {
+                    if (id.Name == User && id.Password == Password) {
                         Console.WriteLine($"[webdav] manage {id.Name}");
                         if (!WEBDAV_DISPATCHERS.ContainsKey(id.Name)) {
-                            Console.WriteLine($"[webdav] init dispatcher for {id.Name} at {webdavUser.Root}");
-                            WEBDAV_DISPATCHERS[id.Name] = new WebDavDispatcher(new DiskStore(webdavUser.Root), requestHandlerFactory);
+                            Console.WriteLine($"[webdav] init dispatcher for {id.Name} at {Root}");
+                            WEBDAV_DISPATCHERS[id.Name] = new WebDavDispatcher(new DiskStore(Root), requestHandlerFactory);
                         }
                         httpContext = new HttpBasicContext(httpListenerContext,
-                           checkIdentity: i => i.Name == id.Name && i.Password == id.Password);
+                           checkIdentity: i => i.Name == User && i.Password == Password);
                         webDavDispatcher = WEBDAV_DISPATCHERS[id.Name];
                         //await WEBDAV_DISPATCHERS[webdavUser.UserGuid].DispatchRequestAsync(httpContext).ConfigureAwait(false);
                     }
