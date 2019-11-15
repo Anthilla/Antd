@@ -30,6 +30,8 @@ namespace Antd2 {
             { "parted", PartedFunc },
             { "mount", MountFunc },
             { "rsync", RsyncFunc },
+            { "service", ServiceFunc },
+            { "svc", ServiceFunc },
         };
 
         private static void HelpFunc(string[] args) {
@@ -240,5 +242,14 @@ namespace Antd2 {
             }
         }
 
+        private static void ServiceFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (ServiceCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
     }
 }
