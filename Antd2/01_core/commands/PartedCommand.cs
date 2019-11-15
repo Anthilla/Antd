@@ -14,6 +14,7 @@ namespace Antd2 {
                 {"rm", RemoveFunc },
                 {"resizepart", ResizeFunc },
                 {"flag", FlagFunc },
+                {"mkfs.ext4", MkfsExt4Func },
             };
 
         private static void PrintFunc(string[] args) {
@@ -35,7 +36,7 @@ namespace Antd2 {
             if (Console.ReadLine() != "Y")
                 return;
             var disk = args[0];
-            var label = args[2];
+            var label = args[1];
             Console.Write($"  you are setting '{label}' label on device {disk}, do you confirm this operation? (Y/n)");
             if (Console.ReadLine() != "Y")
                 return;
@@ -132,5 +133,22 @@ namespace Antd2 {
             var value = args[3];
             Parted.SetPartitionFlag(device, partitionNumber, key, value);
         }
+
+        private static void MkfsExt4Func(string[] args) {
+            if (args.Length < 2) {
+                Console.WriteLine("  not enough arguments");
+                return;
+            }
+            Console.Write("  setting a new label may cause loss of data, continue this operation? (Y/n)");
+            if (Console.ReadLine() != "Y")
+                return;
+            var partition = args[0];
+            var label = args[1];
+            Console.Write($"  you are setting partition label '{label}' on partition {partition}, do you confirm this operation? (Y/n)");
+            if (Console.ReadLine() != "Y")
+                return;
+            Mkfs.Ext4.AddLabel(partition, label);
+        }
+
     }
 }
