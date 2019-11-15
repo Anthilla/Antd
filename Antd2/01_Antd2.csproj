@@ -75,6 +75,12 @@
     <None Update="Scripts\dotnet_install.sh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Targets\applicative.target">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Targets\antd.target">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Units\app-antd-launcher.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

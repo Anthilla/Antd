@@ -27,6 +27,8 @@ namespace Antd2 {
             { "unit", UnitFunc },
             { "disk", DiskFunc },
             { "check", CheckFunc },
+            { "install", InstallFunc },
+            { "parted", PartedFunc },
         }; 
 
         private static void HelpFunc(string[] args) {
@@ -190,6 +192,26 @@ namespace Antd2 {
         private static void CheckFunc(string[] args) {
             var line = args.Length > 0 ? args : ReadLine();
             if (CheckCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void InstallFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (InstallCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void PartedFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (PartedCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {

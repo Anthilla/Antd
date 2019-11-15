@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Antd2.cmds {
 
@@ -13,62 +12,83 @@ namespace Antd2.cmds {
         private const string partedCommand = "parted";
         private const string flagOn = "on";
         private const string flagOff = "off";
-        private const char eCR = '\n';      //corrisponde a 'Invio' - conferma il comando/opzione
 
-        public static IEnumerable<string> GetPartitionTable() {
-            var lines = Bash.Execute($"echo -e print | {partedCommand}");
-            return lines;
-        }
-
-        public static IEnumerable<string> GetPartitionTable(string device) {
-            var lines = Bash.Execute($"echo -e \\\"select {device}{eCR}print\\\" | {partedCommand}");
+        public static IEnumerable<string> Print(string device) {
+            var cmd = $"{partedCommand} -a optimal -s {device} -- print";
+            Console.WriteLine(cmd);
+            var lines = Bash.Execute(cmd);
             return lines;
         }
 
         /// <summary>
-        /// parted -a optimal -s /dev/sdb -- mklabel gpt mkpart primary NAME ext3 1MiB 78MiB
+        /// parted -a optimal -s /dev/sdb -- mklabel gpt
         /// </summary>
         /// <param name="device"></param>
         /// <param name="diskLabel"></param>
+        /// 
+        public static void SetDiskLabel(string device, string diskLabel) {
+            var cmd = $"{partedCommand} -a optimal -s {device} -- mklabel {diskLabel}";
+            Console.WriteLine(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
+        }
+
+        /// <summary>
+        /// parted -a optimal -s /dev/sdb -- mkpart primary NAME ext3 1MiB 78MiB
+        /// </summary>
+        /// <param name="device"></param>
         /// <param name="partType"></param>
         /// <param name="partName"></param>
         /// <param name="fsType"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public static void FormatPartition(string device, string diskLabel, string partType, string partName, string fsType, string start, string end) {
-            var cmd = $"{partedCommand} -a optimal -s {device} -- mklabel {diskLabel} mkpart {partType} {partName} {fsType} {start} {end}";
+        public static void SetPartition(string device, string partType, string partName, string fsType, string start, string end) {
+            var cmd = $"{partedCommand} -a optimal -s {device} -- mkpart {partType} {partName} {fsType} {start} {end}";
             Console.WriteLine(cmd);
-            Bash.Do(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
         }
 
-        public static void SetPartitionLabel(string device, string partitionNumber, string label) {
+        public static void SetPartitionName(string device, string partitionNumber, string label) {
             var cmd = $"{partedCommand} -a optimal -s {device} -- name {partitionNumber} '{label}'";
             Console.WriteLine(cmd);
-            Bash.Do(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
         }
 
         public static void RescuePartition(string device, string start, string end) {
             var cmd = $"{partedCommand} -a optimal -s {device} -- rescue {start} {end}";
             Console.WriteLine(cmd);
-            Bash.Do(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
         }
 
         public static void RemovePartition(string device, string partitionNumber) {
             var cmd = $"{partedCommand} -a optimal -s {device} -- rm {partitionNumber}";
             Console.WriteLine(cmd);
-            Bash.Do(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
         }
 
         public static void ResizePartition(string device, string partitionNumber, string end) {
             var cmd = $"{partedCommand} -a optimal -s {device} -- resizepart {partitionNumber} {end}";
             Console.WriteLine(cmd);
-            Bash.Do(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
         }
 
         public static void SetPartitionFlag(string device, string partitionNumber, string key, string value) {
             var cmd = $"{partedCommand} -a optimal -s {device} -- set {partitionNumber} {key} {value}";
             Console.WriteLine(cmd);
-            Bash.Do(cmd);
+            var result = Bash.Execute(cmd);
+            foreach (var l in result)
+                Console.WriteLine(l);
         }
 
 
