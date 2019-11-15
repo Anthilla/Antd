@@ -6,17 +6,17 @@ namespace Antd2 {
     public class PartedCommand {
         public static readonly Dictionary<string, Action<string[]>> Options =
             new Dictionary<string, Action<string[]>> {
-                {"print", Print },
-                {"mklabel", Mklabel },
-                {"mkpart", SetPartition },
-                {"name", SetName },
-                {"rescue", Rescue },
-                {"rm", Remove },
-                {"resizepart", Resize },
-                {"flag", Flag },
+                {"print", PrintFunc },
+                {"mklabel", MklabelFunc },
+                {"mkpart", SetPartitionFunc },
+                {"name", SetNameFunc },
+                {"rescue", RescueFunc },
+                {"rm", RemoveFunc },
+                {"resizepart", ResizeFunc },
+                {"flag", FlagFunc },
             };
 
-        private static void Print(string[] args) {
+        private static void PrintFunc(string[] args) {
             if (args.Length < 1) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -26,7 +26,7 @@ namespace Antd2 {
                 Console.WriteLine(l);
         }
 
-        private static void Mklabel(string[] args) {
+        private static void MklabelFunc(string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -36,7 +36,7 @@ namespace Antd2 {
             Parted.SetDiskLabel(disk, label);
         }
 
-        private static void SetPartition(string[] args) {
+        private static void SetPartitionFunc(string[] args) {
             if (args.Length < 5) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -66,7 +66,7 @@ namespace Antd2 {
             Parted.SetPartition(device, partType, partName, fsType, start, end);
         }
 
-        private static void SetName(string[] args) {
+        private static void SetNameFunc(string[] args) {
             if (args.Length < 3) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -77,7 +77,7 @@ namespace Antd2 {
             Parted.SetPartitionName(device, partitionNumber, label);
         }
 
-        private static void Rescue(string[] args) {
+        private static void RescueFunc(string[] args) {
             if (args.Length < 3) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -88,7 +88,7 @@ namespace Antd2 {
             Parted.RescuePartition(device, start, end);
         }
 
-        private static void Remove(string[] args) {
+        private static void RemoveFunc(string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -98,7 +98,7 @@ namespace Antd2 {
             Parted.RemovePartition(device, partitionNumber);
         }
 
-        private static void Resize(string[] args) {
+        private static void ResizeFunc(string[] args) {
             if (args.Length < 3) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -109,7 +109,7 @@ namespace Antd2 {
             Parted.ResizePartition(device, partitionNumber, end);
         }
 
-        private static void Flag(string[] args) {
+        private static void FlagFunc(string[] args) {
             if (args.Length < 4) {
                 Console.WriteLine("  not enough arguments");
                 return;

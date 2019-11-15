@@ -6,13 +6,13 @@ namespace Antd2 {
     public class DiskCommand {
         public static readonly Dictionary<string, Action<string[]>> Options =
             new Dictionary<string, Action<string[]>> {
-                {"show", Show },
-                {"create", Create },
-                {"delete", Delete },
-                {"label", AddLabel },
+                {"show", ShowFunc },
+                {"create", CreateFunc },
+                {"delete", DeleteFunc },
+                {"label", AddLabelFunc },
             };
 
-        private static void Show(string[] args) {
+        private static void ShowFunc(string[] args) {
             var blkid = Blkid.Get();
             foreach (var disk in blkid) {
                 Console.WriteLine($"  {disk.Partition}\t{disk.Type} {disk.Uuid} {disk.Label}");
@@ -31,7 +31,7 @@ namespace Antd2 {
             }
         }
 
-        private static void Create(string[] args) {
+        private static void CreateFunc(string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -42,7 +42,7 @@ namespace Antd2 {
             Fdisk.CreatePrimaryPartition(disk, size);
         }
 
-        private static void Delete(string[] args) {
+        private static void DeleteFunc(string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine("  not enough arguments");
                 return;
@@ -53,7 +53,7 @@ namespace Antd2 {
             Fdisk.DeletePartition(disk, number);
         }
 
-        private static void AddLabel(string[] args) {
+        private static void AddLabelFunc(string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine("  not enough arguments");
                 return;
