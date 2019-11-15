@@ -1,5 +1,4 @@
-﻿using anthilla.core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -29,7 +28,8 @@ namespace Antd2 {
             { "check", CheckFunc },
             { "install", InstallFunc },
             { "parted", PartedFunc },
-        }; 
+            { "mount", MountFunc },
+        };
 
         private static void HelpFunc(string[] args) {
             Console.WriteLine("  TOML:");
@@ -143,7 +143,7 @@ namespace Antd2 {
 
         private static void ProcFunc(string[] args) {
             //foreach (var proc in Antd.ProcFs.ProcFs.Processes()) {
-                //Console.WriteLine($"{proc.Pid} {proc.Name} {proc.CommandLine}");
+            //Console.WriteLine($"{proc.Pid} {proc.Name} {proc.CommandLine}");
             //}
         }
 
@@ -155,7 +155,7 @@ namespace Antd2 {
 
         private static void NetstatFunc(string[] args) {
             //foreach (var svc in Antd.ProcFs.ProcFs.Net.Services.Unix().Where(svc => svc.State == Antd.ProcFs.NetServiceState.Established)) {
-                //Console.WriteLine(svc);
+            //Console.WriteLine(svc);
             //}
         }
 
@@ -212,6 +212,16 @@ namespace Antd2 {
         private static void PartedFunc(string[] args) {
             var line = args.Length > 0 ? args : ReadLine();
             if (PartedCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
+
+        private static void MountFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (MountCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
                 functionToExecute?.Invoke(line.Skip(1).ToArray());
             }
             else {

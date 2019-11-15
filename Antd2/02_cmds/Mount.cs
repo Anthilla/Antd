@@ -7,6 +7,10 @@ using System.IO;
 using System.Linq;
 
 namespace Antd2.cmds {
+
+    /// <summary>
+    /// https://linux.die.net/man/8/mount
+    /// </summary>
     public static class Mount {
 
         private const string mountCommand = "mount";
