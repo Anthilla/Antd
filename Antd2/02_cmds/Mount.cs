@@ -107,7 +107,7 @@ namespace Antd2.cmds {
             MountWithBind(source, mountPoint);
         }
 
-        private static readonly string[] DefaultWorkingDirectories = { Const.AntdCfg }; //, Const.EtcSsh, Const.Root
+        private static readonly string[] DefaultWorkingDirectories = { Const.AntdCfg }; //, Const.EtcSsh, Const.Root }; // 
 
         private static readonly Dictionary<string, string> DefaultWorkingDirectoriesWithOptions = new Dictionary<string, string> {
             {"/dev/shm", "-o remount,nodev,nosuid,mode=1777"},
@@ -141,6 +141,17 @@ namespace Antd2.cmds {
                 if (MountHelper.IsAlreadyMounted(kvp.Key) == false) {
                     MountSimple(kvp.Value, kvp.Key);
                 }
+            }
+        }
+        public static void WorkingAntdDirectories() {
+            foreach (var dir in DefaultWorkingDirectories) {
+                var mntDir = MountHelper.ConvertDirectoryTargetPathToDirs(dir);
+                Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(mntDir);
+                if (MountHelper.IsAlreadyMounted(dir))
+                    continue;
+                Console.WriteLine($"[mount] {mntDir} -> {dir}");
+                MountWithBind(mntDir, dir);
             }
         }
     }
