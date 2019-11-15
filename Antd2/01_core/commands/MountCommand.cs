@@ -1,6 +1,7 @@
 ﻿using Antd2.cmds;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Antd2 {
     public class MountCommand {
@@ -28,6 +29,7 @@ namespace Antd2 {
             }
             var source = args[0];
             var destination = args[1];
+            Directory.CreateDirectory(destination);
             Mount.MountSimple(source, destination);
         }
 
@@ -38,6 +40,7 @@ namespace Antd2 {
             }
             var source = args[0];
             var destination = args[1];
+            Directory.CreateDirectory(destination);
             Mount.MountWithBind(source, destination);
         }
 
