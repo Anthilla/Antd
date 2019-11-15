@@ -10,7 +10,6 @@ namespace Antd2 {
                 {"create", Create },
                 {"delete", Delete },
                 {"label", AddLabel },
-                {"format", Format },
             };
 
         private static void Show(string[] args) {
@@ -63,37 +62,6 @@ namespace Antd2 {
             var label = args[1];
             Console.WriteLine($"  partition {partition} LABEL={label}");
             Mkfs.Ext4.AddLabel(partition, label);
-        }
-
-        private static void Format(string[] args) {
-            if (args.Length < 6) {
-                Console.WriteLine("  not enough arguments");
-                return;
-            }
-            var device = args[0];
-            var diskLabel = args[1];
-            var partType = args[2];
-
-            string
-                partName,
-                fsType,
-                start,
-                end;
-
-            if (args.Length == 7) {
-                partName = args[3];
-                fsType = args[4];
-                start = args[5];
-                end = args[6];
-            }
-            else {
-                partName = "";
-                fsType = args[3];
-                start = args[4];
-                end = args[5];
-            }
-
-            Parted.FormatPartition(device, diskLabel, partType, partName, fsType, start, end);
         }
     }
 }
