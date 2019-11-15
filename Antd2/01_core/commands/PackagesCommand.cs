@@ -11,7 +11,7 @@ namespace Antd2 {
                 { "install", InstallFunc },
             };
 
-        private static string[] RequiredPackages = new string[] {
+        private static readonly string[] RequiredPackages = new string[] {
             "apt-get",
             "brctl",
             "date",
@@ -21,6 +21,7 @@ namespace Antd2 {
             "df",
             "dmesg",
             "bash",
+            "fdisk",
             "getent",
             "gluster",
             "glusterd",
@@ -37,6 +38,7 @@ namespace Antd2 {
             "modprobe",
             "rmmod",
             "mount",
+            "parted",
             "umount",
             "nsupdate",
             "ntpdate",
