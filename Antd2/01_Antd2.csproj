@@ -91,10 +91,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Webdav\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WebDavServer.HttpListener\WebDavServer.HttpListener.csproj" />
     <ProjectReference Include="..\WebDavServer\WebDavServer.csproj" />
   </ItemGroup>
