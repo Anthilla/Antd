@@ -43,6 +43,8 @@ namespace Antd2 {
             CreateWorkingDirectories();
             MountWorkingDirectories();
 
+            ConfigManager.Config.Reload();
+
             Time();
             CheckUnitsLocation();
             Mounts();
@@ -76,13 +78,14 @@ namespace Antd2 {
 
 #if NETCOREAPP
         private static void Init() {
-            if (ServiceInit == null) {
-                ServiceInit = new ServiceInit();
-            }
-            if (File.Exists("/var/run/sharpinit/sharpinit.sock")) {
-                File.Delete("/var/run/sharpinit/sharpinit.sock");
-            }
-            ServiceInit.Start();
+            //if (ServiceInit == null) {
+            //    ServiceInit = new ServiceInit();
+            //}
+            //Directory.CreateDirectory("/var/run/sharpinit");
+            //if (File.Exists("/var/run/sharpinit/sharpinit.sock")) {
+            //    File.Delete("/var/run/sharpinit/sharpinit.sock");
+            //}
+            //ServiceInit.Start();
         }
 #endif
 #if NETFRAMEWORK
