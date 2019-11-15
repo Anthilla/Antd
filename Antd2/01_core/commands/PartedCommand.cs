@@ -31,8 +31,14 @@ namespace Antd2 {
                 Console.WriteLine("  not enough arguments");
                 return;
             }
+            Console.Write("  resetting the label may cause loss of data, continue this operation? (Y/n)");
+            if (Console.ReadLine() != "Y")
+                return;
             var disk = args[0];
             var label = args[2];
+            Console.Write($"  you are setting '{label}' label on device {disk}, do you confirm this operation? (Y/n)");
+            if (Console.ReadLine() != "Y")
+                return;
             Parted.SetDiskLabel(disk, label);
         }
 
@@ -93,8 +99,14 @@ namespace Antd2 {
                 Console.WriteLine("  not enough arguments");
                 return;
             }
+            Console.Write("  removing this partition may cause loss of data, continue this operation? (Y/n)");
+            if (Console.ReadLine() != "Y")
+                return;
             var device = args[0];
             var partitionNumber = args[1];
+            Console.Write($"  you trying to remove '{device}{partitionNumber}', do you confirm this operation? (Y/n)");
+            if (Console.ReadLine() != "Y")
+                return;
             Parted.RemovePartition(device, partitionNumber);
         }
 
