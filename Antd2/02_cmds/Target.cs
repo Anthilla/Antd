@@ -42,7 +42,7 @@ namespace Antd2.cmds {
             }
 
             var location = result[1].Split(new[] { " " }, System.StringSplitOptions.RemoveEmptyEntries)
-                .FirstOrDefault(_ => _.StartsWith("/lib"));
+                .FirstOrDefault(_ => _.StartsWith("/lib") || _.StartsWith("/usr/lib"));
             if (string.IsNullOrEmpty(location)) {
                 Console.WriteLine("  systemd not found");
                 return string.Empty;
