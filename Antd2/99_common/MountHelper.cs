@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Antd {
     public class MountHelper {
@@ -36,7 +35,7 @@ namespace Antd {
         }
 
         public static bool IsAlreadyMounted(string path) {
-            if(!File.Exists("/proc/mounts")) {
+            if (!File.Exists("/proc/mounts")) {
                 return false;
             }
             var procMounts = File.ReadAllLines("/proc/mounts");
@@ -49,7 +48,7 @@ namespace Antd {
 
         private static int _umount1Retry;
         public static void Umount(string directory) {
-            if(IsAlreadyMounted(directory) && _umount1Retry < 5) {
+            if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
                 Console.WriteLine($"umount, retry #{_umount1Retry}");
                 Bash.Execute($"umount {directory}", false);
                 _umount1Retry = _umount1Retry + 1;
@@ -60,7 +59,7 @@ namespace Antd {
 
         private static int _umount2Retry;
         public static void Umount(string source, string destination) {
-            if(IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
+            if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
                 Console.WriteLine($"umount, retry #{_umount2Retry}");
                 Bash.Execute($"umount {source}", false);
                 Bash.Execute($"umount {destination}", false);
