@@ -28,22 +28,28 @@ namespace Antd2 {
             STOPWATCH.Start();
             Scheduler = new JobManager();
 
+            OsReadAndWrite();
+            RemoveLimits();
+            MountWorkingDirectories();
+            CreateWorkingDirectories();
+
+            Console.WriteLine("[conf] load antd conf");
+            ConfigManager.Config.Reload();
             if (ConfigManager.Config.Saved == null) {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"  missing file configuration at {ConfigManager.Config.TomlPath}!");
+                Console.WriteLine($"[conf] missing file configuration at {ConfigManager.Config.TomlPath}!");
                 Console.ForegroundColor = ConsoleColor.White;
+                Environment.Exit(1);
                 return;
             }
 
             Console.WriteLine($"[uid] {ConfigManager.Config.Saved.Host.Uid}");
 
             Init();
-            OsReadAndWrite();
-            RemoveLimits();
-            CreateWorkingDirectories();
-            MountWorkingDirectories();
 
-            ConfigManager.Config.Reload();
+            CheckDefaultStaticFiles();
+
+            Users();
 
             Time();
             CheckUnitsLocation();
@@ -56,7 +62,6 @@ namespace Antd2 {
             SetModules();
             SetParameters();
 
-            Users();
             SetRoutingTables();
             SetNetwork();
             SetRoutingRules();
@@ -93,6 +98,30 @@ namespace Antd2 {
             Console.WriteLine("Init not supported by .net framework");
         }
 #endif
+
+        private static void CheckDefaultStaticFiles() {
+            if (Application.IsUnix == false) { return; }
+
+            var etcIssueFile = "Templates/TPL_etc_issue";
+            if (File.Exists(etcIssueFile)) {
+                File.Copy(etcIssueFile, "/etc/issue");
+                Bash.Do("dos2unix /etc/issue");
+            }
+
+            var etcMotdFile = "Templates/TPL_etc_motd";
+            if (File.Exists(etcMotdFile)) {
+                File.Copy(etcMotdFile, "/etc/motd");
+                Bash.Do("dos2unix /etc/motd");
+            }
+
+            var etcBashrcFile = "Templates/TPL_etc_bashrc";
+            if (File.Exists(etcBashrcFile)) {
+                File.Copy(etcBashrcFile, "/root/.bashrc");
+                Bash.Do("dos2unix /root/.bashrc");
+                File.Copy(etcBashrcFile, "/home/visor/.bashrc");
+                Bash.Do("dos2unix /home/visor/.bashrc");
+            }
+        }
 
         private static void OsReadAndWrite() {
             if (Application.IsUnix == false) { return; }
@@ -286,6 +315,8 @@ namespace Antd2 {
 
         private static void Users() {
             if (Application.IsUnix == false) { return; }
+            Getent.AddAOSDefaults();
+            Console.WriteLine("[usr] check default");
             foreach (var user in ConfigManager.Config.Saved.Users) {
                 Getent.AddUser(user.Name);
                 Getent.AddGroup(user.Group);
@@ -307,7 +338,7 @@ namespace Antd2 {
             Dns.SetResolv(ConfigManager.Config.Saved.Network.Dns);
             foreach (var i in ConfigManager.Config.Saved.Network.Interfaces) {
                 Console.WriteLine($"[net] configuring {i.Iface} {i.Address}");
-                if (i.Auto == "up") {
+                if (i.Auto == "up" || i.Auto == "on") {
                     foreach (var cmd in i.PreUp) {
                         Console.WriteLine($"[net] {i.Iface} - {cmd}");
                         Bash.Do(cmd);
@@ -326,7 +357,7 @@ namespace Antd2 {
                         Bash.Do(cmd);
                     }
                 }
-                else if (i.Auto == "down") {
+                else if (i.Auto == "down" || i.Auto == "off") {
                     foreach (var cmd in i.PreDown) {
                         Console.WriteLine($"[net] {i.Iface} - {cmd}");
                         Bash.Do(cmd);
