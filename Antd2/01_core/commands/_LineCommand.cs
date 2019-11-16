@@ -35,6 +35,7 @@ namespace Antd2 {
             { "svc", ServiceFunc },
             { "webdav", WebdavFunc },
             { "acl", AclFunc },
+            { "hash", HashFunc },
         };
 
         private static void HelpFunc(string[] args) {
@@ -284,5 +285,16 @@ namespace Antd2 {
                 Console.WriteLine("Command '" + line[0] + "' not found");
             }
         }
+
+        private static void HashFunc(string[] args) {
+            var line = args.Length > 0 ? args : ReadLine();
+            if (HashCommand.Options.TryGetValue(line[0], out Action<string[]> functionToExecute)) {
+                functionToExecute?.Invoke(line.Skip(1).ToArray());
+            }
+            else {
+                Console.WriteLine("Command '" + line[0] + "' not found");
+            }
+        }
+        
     }
 }
