@@ -10,9 +10,24 @@ app.config(function ($translateProvider) {
     $translateProvider.useSanitizeValueStrategy('escape'); //sanitize, sanitizeParameters, escape, escapeParameters 
 });
 
-app.controller("LoginController", ["$scope", LoginController]);
+app.service('HttpService', ['$http', '$window', function ($http, $window) {
+    this.GET = function (url, data) {
+        var config = {
+            params: data,
+            headers: { 'Accept': 'application/json' }
+        };
+        return $http.get(url, config);
+    };
 
-function LoginController($scope) {
+    this.POST = function (url, data) {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        return $http.post(url, data);
+    };
+}]);
+
+app.controller("LoginController", ["$scope", "HttpService", LoginController]);
+
+function LoginController($scope, HttpService) {
 
     $scope.Username = "";
     $scope.Password = "";

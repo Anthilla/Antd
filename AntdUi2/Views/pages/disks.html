@@ -1,0 +1,53 @@
+﻿<div ng-controller="DisksController" class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Disks</h3>
+        </div>
+        <div class="title_right">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table ng-repeat="disk in Disks"
+                   class="table table-condensed table-hover bg-white no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th>Disk Name</th>
+                        <th class="text-right">Size</th>
+                        <th>Partition Table</th>
+                        <th>Model</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <tr>
+                        <td>{{ disk.Name }}</td>
+                        <td class="text-right">{{ disk.Size }}</td>
+                        <td>{{ disk.PartitionTable }}</td>
+                        <td>{{ disk.Bus }} {{ disk.Model }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th style="padding-left: 10px;">Partition Name</th>
+                        <th class="text-right">Start/End</th>
+                        <th>Fs Type</th>
+                        <th>Mountpoint</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr ng-repeat="part in disk.Partitions">
+                        <td style="padding-left: 10px;">{{ part.Name }}</td>
+                        <td class="text-right">{{ part.Start }}/{{ part.End }}</td>
+                        <td>{{ disk.FsType }}</td>
+                        <td>{{ disk.Mountpoint }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

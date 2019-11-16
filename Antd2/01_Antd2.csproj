@@ -101,6 +101,9 @@
     <None Update="Templates\TPL_etc_motd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Units\app-antdui-launcher.service">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Units\app-antd-launcher.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

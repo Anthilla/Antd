@@ -70,5 +70,11 @@
     "inputFiles": [
       "Style/template-custom.css"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/disks.min.html",
+    "inputFiles": [
+      "Views/pages/disks.html"
+    ]
   }
 ]

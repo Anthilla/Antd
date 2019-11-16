@@ -910,6 +910,9 @@
     <None Update="Views\pages\commands.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Views\pages\disks.min.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Views\pages\host.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

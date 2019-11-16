@@ -483,3 +483,34 @@ function InterfacesController($scope, $http, notificationService) {
     };
 }
 
+app.controller("DisksController", ["$scope", "$http", "notificationService", DisksController]);
+
+function DisksController($scope, $http, notificationService) {
+
+    $scope.Disks = [];
+
+    $scope.load = function () {
+        $http.get("/disks").then(function (r) {
+            $scope.Disks = r.data;
+        }).catch(function (r) {
+            notificationService.error('Error!');
+        });
+    };
+    $scope.load();
+
+    $scope.save = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/boot/config/sysctl/save", $.param($scope.BootParameters)).then(function () {
+            $scope.load();
+            notificationService.success('Data saved');
+        }, function (r) { notificationService.error('Error!'); });
+    };
+
+    $scope.apply = function () {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/boot/config/sysctl/apply").then(function () {
+            $scope.load();
+            notificationService.success('Data applied');
+        }, function (r) { notificationService.error('Error!'); });
+    };
+}

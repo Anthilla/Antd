@@ -23,8 +23,8 @@ namespace Antd2 {
                 return;
             }
             var disk = args[0];
-            foreach (var l in Parted.Print(disk))
-                Console.WriteLine(l);
+            //foreach (var l in Parted.Print(disk))
+            //    Console.WriteLine(l);
         }
 
         private static void MklabelFunc(string[] args) {

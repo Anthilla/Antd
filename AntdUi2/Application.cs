@@ -24,7 +24,7 @@ namespace AntdUi2 {
             ServerUrl = "http://localhost:8085";
             RestConsumer = new RestConsumer(ServerUrl, SessionCookieKey, "Antd");
 
-            var url = $"http://localhost:8086";
+            var url = $"http://0.0.0.0:8086";
             var host = new WebHostBuilder()
               .UseContentRoot(Directory.GetCurrentDirectory())
               .UseKestrel()

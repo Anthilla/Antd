@@ -1,18 +1,7 @@
-﻿using Nancy;
-using Nancy.Security;
-
-namespace AntdUi2.Modules {
-    public class MainModule : NancyModule {
+﻿namespace AntdUi2.Modules {
+    public class MainModule : BaseModule {
 
         public MainModule() {
-            Before += ctx => {
-                // (this.Context.CurrentUser == null) ? HttpStatusCode.Unauthorized :
-                if (this.Context.CurrentUser == null) {
-                    return HttpStatusCode.Unauthorized;
-                }
-                return null;
-            };
-
             Get("/", x => View["home.min.html"]);
         }
     }

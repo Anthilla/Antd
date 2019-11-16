@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Antd2.models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Antd2.cmds {
 
@@ -13,10 +15,65 @@ namespace Antd2.cmds {
         private const string flagOn = "on";
         private const string flagOff = "off";
 
-        public static IEnumerable<string> Print(string device) {
-            var cmd = $"{partedCommand} -a optimal -s {device} -- print";
+        //public static IEnumerable<string> Print(string device) {
+        //    var cmd = $"{partedCommand} -a optimal -s {device} -- print";
+        //    Console.WriteLine(cmd);
+        //    var lines = Bash.Execute(cmd);
+        //    return lines;
+        //}
+
+        /// <summary>
+        /// parted -m /dev/sdb print
+        /// 
+        /// /dev/sdb:4001GB:scsi:512:4096:gpt:ATA WDC WD40PURZ-85T:;
+        /// 1:1049kB:4001GB:4001GB:zfs::;
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        public static PartedDiskModel Print(string device) {
+            var cmd = $"{partedCommand} -m {device} -- print";
             Console.WriteLine(cmd);
-            var lines = Bash.Execute(cmd);
+            var lines = Bash.Execute(cmd).Skip(1).ToArray();
+
+            var diskLine = lines[0];
+            var diskInfo = ParsePartedLine_Disk(diskLine);
+
+            var partitionInfo = lines.Skip(1)
+                .Select(_ => ParsePartedLine_Partition(_))
+                .ToArray();
+
+            foreach (var pt in partitionInfo) {
+                pt.Name = diskInfo.Name + pt.Name;
+            }
+
+            diskInfo.Partitions = partitionInfo;
+
+            return diskInfo;
+        }
+
+        // /dev/sdb:4001GB:scsi:512:4096:gpt:ATA WDC WD40PURZ-85T:;
+        // 0        1      2    3   4    5   6                    7
+        private static PartedDiskModel ParsePartedLine_Disk(string line) {
+            var arr = line.Split(new[] { ":" }, StringSplitOptions.None);
+            return new PartedDiskModel(arr[0], arr[1], arr[2], arr[5], arr[6]);
+        }
+
+        // 1:1049kB:4001GB:4001GB:zfs::;
+        // 0 1      2      3      4   56
+        private static PartedPartitionModel ParsePartedLine_Partition(string line) {
+            var arr = line.Split(new[] { ":" }, StringSplitOptions.None);
+            return new PartedPartitionModel(arr[0], arr[1], arr[2], arr[4]);
+        }
+
+        // parted /dev/sdb -m print devices
+        public static IEnumerable<string> GetDisks() {
+            var cmd = $"{partedCommand} -l";
+            Console.WriteLine(cmd);
+            var lines = Bash.Execute(cmd)
+                .Where(_ => _.StartsWith("Disk "))
+                .Where(_ => _.Contains("/dev"))
+                .Select(_ => _.Replace("Disk ", "").Trim().Split(':').FirstOrDefault().Trim())
+                .ToArray();
             return lines;
         }
 
