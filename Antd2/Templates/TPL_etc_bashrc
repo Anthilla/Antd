@@ -1,0 +1,87 @@
+﻿# /etc/bash/bashrc
+#
+if [[ $- != *i* ]] ; then
+        return
+fi
+shopt -s checkwinsize
+shopt -s no_empty_cmd_completion
+shopt -s histappend
+#PROMPT_COMMAND='history -a'
+
+case ${TERM} in
+        [aEkx] term*|rxvt*|gnome*|konsole*|interix)
+                PS1='\[\033]0;\u@\h:\w\007\]'
+                ;;
+        screen*)
+                PS1='\[\033k\u@\h:\w\033\\\]'
+                ;;
+        *)
+                unset PS1
+                ;;
+esac
+use_color = true
+mypty=$(tty | sed -e "s:/dev/::")
+
+if type -P dircolors >/dev/null ; then
+        LS_COLORS =
+        if [[ -f ~/.dir_colors]] ; then
+used_default_dircolors = "no"
+                eval "$(dircolors -b ~/.dir_colors)"
+        elif[[-f / etc / DIR_COLORS]] ; then
+                used_default_dircolors = "maybe"
+                eval "$(dircolors -b /etc/DIR_COLORS)"
+        else
+                used_default_dircolors="yes"
+                eval "$(dircolors -b)"
+        fi
+        if [[ -n ${LS_COLORS:+set} ]] ; then
+                use_color = true
+                case ${used_default_dircolors} in
+                no) ;;
+                yes) unset LS_COLORS;;
+                *)
+                        ls_colors=$(eval "$(dircolors -b)"; echo "${LS_COLORS}")
+                        if [[ ${ls_colors} == "${LS_COLORS}" ]] ; then
+                                unset LS_COLORS
+                        fi
+                        ;;
+                esac
+        fi
+        unset used_default_dircolors
+else
+        case ${TERM} in
+        [aEkx] term*|rxvt*|gnome*|konsole*|screen|cons25|* color) use_color=true;;
+        esac
+fi
+
+if ${use_color} ; then
+        if [[ ${EUID} == 0 ]] ; then
+###PS1='\[\033[30;1m\][\u]--[S/N $SN--[Rev 2.$REVISION]--[\t]-[Cons:$mypty]\n\[\033[37;1m\][ \H ] \w >\[\033[00m\] '
+                PS1 = '\[\033[01;34m\]:\[\033[01;32m\]$mypty\[\033[01;34m\]: \[\033[01;34m\][\[\033[01;32m\]\u\[\033[01;34m\]@\[\033[01;32m\]\h\[\033[01;34m\]] \[\033[01;32m\]\w \[\033[01;31m\]\$\[\033[01;34m\]>\[\033[00m\] '
+        else
+                ###PS1='\[\033[30;1m\][\u]--[S/N $SN--[Rev 2.$REVISION]--[\t]-[Cons:$mypty]\n\[\033[37;1m\][ \H ] \w >\[\033[00m\] '
+                PS1='\[\033[01;34m\]:\[\033[01;32m\]$mypty\[\033[01;34m\]: \[\033[01;34m\][\[\033[01;32m\]\u\[\033[01;34m\]@\[\033[01;32m\]\h\[\033[01;34m\]] \[\033[01;32m\]\w \$\[\033[01;34m\]>\[\033[00m\] '
+        fi
+else
+        if [[ ${EUID} == 0 ]] ; then
+                PS1 = ':$mypty: [ \u@\h ] \w \$> '
+        else
+                PS1=':$mypty: [ \u@\h ] \w \$> '
+        fi
+fi
+if [[ $TERM = "linux" ]]; then
+unicode_start
+fi
+### ALIAS START ###
+alias screen="screen -U"
+alias ll = 'ls --color=auto -la'
+alias latr = 'ls --color=auto -latr'
+alias ls = 'ls --color=auto'
+alias grep = 'grep --colour=auto'
+alias egrep = 'egrep --colour=auto'
+alias fgrep = 'fgrep --colour=auto'
+### ALIAS END ###
+
+for sh in /etc/bash/bashrc.d/* ; do
+        [[ -r ${sh} ]] && source "${sh}"
+done
