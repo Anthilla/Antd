@@ -1,0 +1,1 @@
+﻿/usr/bin/dotnet /mnt/cdrom/Apps/antd/netcoreapp3.0/antd.dll $@
