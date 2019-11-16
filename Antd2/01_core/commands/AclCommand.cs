@@ -20,7 +20,7 @@ namespace Antd2 {
             if (!File.Exists(file)) {
                 Console.WriteLine($"  {file} not found...");
             }
-            var fileInfo = new Antd2.IO.FileInfo(file);
+            var fileInfo = new FileInfo(file);
             Console.WriteLine($"  file:      {fileInfo.Name}");
             Console.WriteLine($"  directory: {fileInfo.DirectoryName}");
             Console.WriteLine();
