@@ -1,8 +1,8 @@
 ﻿[Unit]
-Description=Antd Launcher Service
+Description=AntdUi Launcher Service
 
 [Service]
-ExecStart=/usr/bin/dotnet /Antd/Apps/Anthilla_Antd/antd.dll start
+ExecStart=/usr/bin/dotnet /Antd/Apps/Anthilla_AntdUi/antdui.dll start
 SuccessExitStatus=0
 RemainAfterExit=yes
 Restart=always
