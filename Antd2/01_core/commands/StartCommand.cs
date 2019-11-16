@@ -144,9 +144,8 @@ namespace Antd2 {
         }
 
         private static void CreateWorkingDirectories() {
-            Directory.CreateDirectory(Const.RepoDirs);
-            Directory.CreateDirectory(Const.TimerUnits);
-            Directory.CreateDirectory(Const.AnthillaUnits);
+            Directory.CreateDirectory("/Antd");
+            Directory.CreateDirectory("/Data");
             Directory.CreateDirectory(Const.AntdCfg);
             Directory.CreateDirectory(Const.AntdCfgRestore);
             Directory.CreateDirectory(Const.AntdCfgConf);
