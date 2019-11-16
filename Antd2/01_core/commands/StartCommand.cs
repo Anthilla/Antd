@@ -102,20 +102,26 @@ namespace Antd2 {
         private static void CheckDefaultStaticFiles() {
             if (Application.IsUnix == false) { return; }
 
-            var etcIssueFile = "Templates/TPL_etc_issue";
+            var etcIssueFile = "./Templates/TPL_etc_issue";
+            Console.WriteLine("    " + etcIssueFile);
             if (File.Exists(etcIssueFile)) {
+                Console.WriteLine("copy /etc/issue");
                 File.Copy(etcIssueFile, "/etc/issue");
                 Bash.Do("dos2unix /etc/issue");
             }
 
-            var etcMotdFile = "Templates/TPL_etc_motd";
+            var etcMotdFile = "./Templates/TPL_etc_motd";
+            Console.WriteLine("    " + etcMotdFile);
             if (File.Exists(etcMotdFile)) {
+                Console.WriteLine("copy /etc/motd");
                 File.Copy(etcMotdFile, "/etc/motd");
                 Bash.Do("dos2unix /etc/motd");
             }
 
-            var etcBashrcFile = "Templates/TPL_etc_bashrc";
+            var etcBashrcFile = "./Templates/TPL_etc_bashrc";
+            Console.WriteLine("    " + etcBashrcFile);
             if (File.Exists(etcBashrcFile)) {
+                Console.WriteLine("copy .bashrc");
                 File.Copy(etcBashrcFile, "/root/.bashrc");
                 Bash.Do("dos2unix /root/.bashrc");
                 File.Copy(etcBashrcFile, "/home/visor/.bashrc");
