@@ -8,12 +8,12 @@ namespace Antd {
     public class MountHelper {
 
         public static string ConvertDirectoryTargetPathToDirs(string source) {
-            return $"{Const.RepoDirs}/DIR{source.Replace("_", "__").Replace("/", "_").Replace("\\", "/")}";
+            return $"/Antd/DIRS/DIR{source.Replace("_", "__").Replace("/", "_").Replace("\\", "/")}";
         }
 
         public static string ConvertDirectoryDirsPathToTarget(string source) {
             var result0 = source
-                .Replace(Const.RepoDirs, "")
+                .Replace("/Antd/DIRS", "")
                 .Replace("DIR", "")
                 .Replace("__", "{SP1}")
                 .Replace("_", "/")
@@ -22,12 +22,12 @@ namespace Antd {
         }
 
         public static string ConvertFileTargetPathToDirs(string source) {
-            return $"{Const.RepoDirs}/FILE{source.Replace("_", "__").Replace("/", "_").Replace("\\", "/")}";
+            return $"/Antd/DIRS/FILE{source.Replace("_", "__").Replace("/", "_").Replace("\\", "/")}";
         }
 
         public static string ConvertFileDirsPathToTarget(string source) {
             var result0 = source
-                .Replace(Const.RepoDirs, "")
+                .Replace("/Antd/DIRS", "")
                 .Replace("FILE", "")
                 .Replace("__", "{SP1}")
                 .Replace("_", "/")

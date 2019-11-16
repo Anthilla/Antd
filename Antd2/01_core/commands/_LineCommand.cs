@@ -52,7 +52,7 @@ namespace Antd2 {
             Console.WriteLine();
 
             PrintHelp("start", new[] { "Avvia la procedura di configurazione di Antd utilizzando i parametri configurati",
-                                        "Il path di default del file di configurazione è /cfg/antd/antd.toml"});
+                                        "Il path di default del file di configurazione è /Antd/Config/antd/antd.toml"});
             PrintHelp("start <file>", new[] { "Può accettare come argomento il path del file di configurazione" });
             Console.WriteLine();
 

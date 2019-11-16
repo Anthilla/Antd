@@ -17,7 +17,7 @@ namespace Antd2 {
 
         public static bool IsUnix => Environment.OSVersion.Platform == PlatformID.Unix;
 
-        private const string ConfFile = "/cfg/antd/antd.toml";
+        private const string ConfFile = "/Antd/Config/antd/antd.toml";
 
         private static void Main(string[] args) {
             PrepareConsole();

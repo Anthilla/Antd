@@ -52,7 +52,7 @@ namespace Antd2.cmds {
             //if(running.Length < 1) {
             //    return;
             //}
-            var directories = Directory.EnumerateDirectories(Const.RepoDirs, "DIR*", SearchOption.TopDirectoryOnly).ToArray();
+            var directories = Directory.EnumerateDirectories("/Antd/DIRS", "DIR*", SearchOption.TopDirectoryOnly).ToArray();
             for (var i = 0; i < directories.Length; i++) {
                 var targetDirectory = MountHelper.ConvertDirectoryDirsPathToTarget(directories[i]);
                 if (MountHelper.IsAlreadyMounted(targetDirectory) == false) {
@@ -63,7 +63,7 @@ namespace Antd2.cmds {
                     }
                 }
             }
-            var files = Directory.EnumerateFiles(Const.RepoDirs, "FILE*", SearchOption.TopDirectoryOnly).ToArray();
+            var files = Directory.EnumerateFiles("/Antd/DIRS", "FILE*", SearchOption.TopDirectoryOnly).ToArray();
             for (var i = 0; i < files.Length; i++) {
                 var targetFile = MountHelper.ConvertFileDirsPathToTarget(files[i]);
                 if (MountHelper.IsAlreadyMounted(targetFile) == false) {

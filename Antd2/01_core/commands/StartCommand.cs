@@ -103,7 +103,6 @@ namespace Antd2 {
             if (Application.IsUnix == false) { return; }
 
             var etcIssueFile = "./Templates/TPL_etc_issue";
-            Console.WriteLine("    " + etcIssueFile);
             if (File.Exists(etcIssueFile)) {
                 Console.WriteLine("copy /etc/issue");
                 File.Copy(etcIssueFile, "/etc/issue");
@@ -111,7 +110,6 @@ namespace Antd2 {
             }
 
             var etcMotdFile = "./Templates/TPL_etc_motd";
-            Console.WriteLine("    " + etcMotdFile);
             if (File.Exists(etcMotdFile)) {
                 Console.WriteLine("copy /etc/motd");
                 File.Copy(etcMotdFile, "/etc/motd");
@@ -119,7 +117,6 @@ namespace Antd2 {
             }
 
             var etcBashrcFile = "./Templates/TPL_etc_bashrc";
-            Console.WriteLine("    " + etcBashrcFile);
             if (File.Exists(etcBashrcFile)) {
                 Console.WriteLine("copy .bashrc");
                 File.Copy(etcBashrcFile, "/root/.bashrc");
