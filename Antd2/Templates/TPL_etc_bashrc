@@ -44,5 +44,4 @@ if [ -f /usr/local/etc/bash_completion ]; then
 . /usr/local/etc/bash_completion
 fi
 
-unalias ll
 alias ll="ls -la"
