@@ -213,11 +213,11 @@ function SysctlController($scope, $http, notificationService) {
 app.controller("ModulesController", ["$scope", "$http", "notificationService", ModulesController]);
 
 function ModulesController($scope, $http, notificationService) {
-    $scope.BootModules = [];
+    $scope.BootModules = null;
 
     $scope.load = function() {
         console.log("loadBootModules");
-        $http.get("/boot/config").then(function(r) {
+        $http.get("/boot/config/modules").then(function(r) {
             $scope.BootModules = r.data;
         }).catch(function(r) {
             console.log(r);
@@ -226,10 +226,12 @@ function ModulesController($scope, $http, notificationService) {
     $scope.load();
 
     $scope.save = function() {
+        var data = $.param({
+            Data: angular.toJson($scope.BootModules)
+        });
         console.log("saveBootModules");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/config/modules/save", $.param($scope.BootModules)).then(function() {
-            $scope.load();
+        $http.post("/boot/config/modules/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -238,7 +240,6 @@ function ModulesController($scope, $http, notificationService) {
         console.log("applyBootModules");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/modules/apply").then(function() {
-            $scope.load();
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
     };
@@ -260,10 +261,12 @@ function ServicesController($scope, $http, notificationService) {
     $scope.load();
 
     $scope.save = function() {
+        var data = $.param({
+            Data: angular.toJson($scope.BootServices)
+        });
         console.log("saveBootServices");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/config/services/save", $.param($scope.BootServices)).then(function() {
-            $scope.load();
+        $http.post("/boot/config/services/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -272,7 +275,6 @@ function ServicesController($scope, $http, notificationService) {
         console.log("applyBootServices");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/services/apply").then(function() {
-            $scope.load();
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
     };

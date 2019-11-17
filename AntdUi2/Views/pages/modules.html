@@ -11,70 +11,25 @@
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
             <table class="table table-condensed table-hover bg-white no-border table-fixed">
-                <thead>
-                    <tr>
-                        <th>Module</th>
-                        <th>Load</th>
-                        <th>Remove</th>
-                        <th>Blacklist</th>
-                        <th></th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">
-                            <input ng-model="NewBootModule.Module" class="form-control" type="text">
+                        <th>
+                            <p>Active</p>
                         </th>
+                    </tr>
+                    <tr>
                         <td>
-                            <input ng-model="NewBootModule.Active"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
-                            <input ng-model="NewBootModule.Remove"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
-                            <input ng-model="NewBootModule.Blacklist"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
-                            <button ng-click="addToList(NewBootModule, BootModules)" type="button" class="btn btn-primary">
-                                <span class="fa fa-plus-circle"></span> Add
-                            </button>
+                            <textarea rows="12" ng-model="BootModules.ActiveModulesTxt" class="form-control"></textarea>
                         </td>
                     </tr>
-                    <tr ng-repeat="el in BootModules">
-                        <th scope="row">
-                            {{ el.Module }}
+                    <tr>
+                        <th>
+                            <p>Inactive</p>
                         </th>
+                    </tr>
+                    <tr>
                         <td>
-                            <input ng-model="el.Active"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
-                            <input ng-model="el.Remove"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
-                            <input ng-model="el.Blacklist"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
-                            <button ng-click="removeFromList($index, BootModules)" type="button" class="btn btn-danger">
-                                <span class="fa fa-minus-circle"></span> Remove
-                            </button>
+                            <textarea rows="12" ng-model="BootModules.InactiveModulesTxt" class="form-control"></textarea>
                         </td>
                     </tr>
                 </tbody>

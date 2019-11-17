@@ -12,20 +12,12 @@ namespace AntdUi2.Modules {
             Get("/{context}", x => ApiGet());
 
             Post("/sysctl/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/modules/active/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/modules/inactive/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/active/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/inactive/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/disabled/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/blocked/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/modules/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/services/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
 
             Post("/sysctl/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/modules/active/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/modules/inactive/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/active/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/inactive/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/disabled/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/services/blocked/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/modules/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/services/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
         }
 
         private dynamic ApiGet() {

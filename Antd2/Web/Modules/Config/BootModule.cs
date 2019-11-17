@@ -51,7 +51,7 @@ namespace Antd2.Modules {
         private dynamic ApiGetServices() {
             var a = new ServicesView();
             a.ActiveServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.ActiveServices);
-            a.InactiveServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveModules);
+            a.InactiveServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveServices);
             a.DisabledServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.DisabledServices);
             a.BlockedServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.BlockedServices);
             var jsonString = JsonConvert.SerializeObject(a);
@@ -72,14 +72,20 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiPostSaveModules() {
-            var model = this.Bind<string[]>();
-            ConfigManager.Config.Saved.Boot.ActiveModules = model;
+            string json = Request.Form.Data;
+            var modv = JsonConvert.DeserializeObject<ModulesView>(json);
+            ConfigManager.Config.Saved.Boot.ActiveModules = modv.ActiveModulesTxt.Split('\n');
+            ConfigManager.Config.Saved.Boot.InactiveModules = modv.InactiveModulesTxt.Split('\n');
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }
         private dynamic ApiPostSaveServices() {
-            var model = this.Bind<string[]>();
-            ConfigManager.Config.Saved.Boot.ActiveServices = model;
+            string json = Request.Form.Data;
+            var modv = JsonConvert.DeserializeObject<ServicesView>(json);
+            ConfigManager.Config.Saved.Boot.ActiveServices = modv.ActiveServicesTxt.Split('\n');
+            ConfigManager.Config.Saved.Boot.InactiveServices = modv.InactiveServicesTxt.Split('\n');
+            ConfigManager.Config.Saved.Boot.DisabledServices = modv.DisabledServicesTxt.Split('\n');
+            ConfigManager.Config.Saved.Boot.BlockedServices = modv.BlockedServicesTxt.Split('\n');
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }
