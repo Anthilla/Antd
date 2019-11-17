@@ -12,7 +12,9 @@ namespace Antd2.Modules {
 
         public NetworkModule() : base("/network/config") {
 
+            Get("/routingtables", x => ApiGetRoutingTables());
             Get("/interfaces", x => ApiGetInterfaces());
+            Get("/routing", x => ApiGetRouting());
 
             Post("/routingtables/save", x => ApiPostSaveRoutingTables());
             Post("/interfaces/save", x => ApiPostSaveInterfaces());
@@ -43,8 +45,34 @@ namespace Antd2.Modules {
             };
         }
 
+        private dynamic ApiGetRoutingTables() {
+            var routingtables = ConfigManager.Config.Saved.Network.RoutingTables;
+            foreach (var inf in routingtables) {
+                inf.RulesTxt = string.Join("\n", inf.Rules);
+            }
+            var jsonString = JsonConvert.SerializeObject(routingtables);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
+
+        private dynamic ApiGetRouting() {
+            var routing = ConfigManager.Config.Saved.Network.Routing;
+            var jsonString = JsonConvert.SerializeObject(routing);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
         private dynamic ApiPostSaveRoutingTables() {
-            var model = this.Bind<NetRoutingTable[]>();
+            string json = Request.Form.Data;
+            var model = JsonConvert.DeserializeObject<NetRoutingTable[]>(json);
+            foreach (var inf in model) {
+                inf.Rules = inf.RulesTxt.Split('\n');
+            }
             ConfigManager.Config.Saved.Network.RoutingTables = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
@@ -67,7 +95,8 @@ namespace Antd2.Modules {
             return HttpStatusCode.OK;
         }
         private dynamic ApiPostSaveRouting() {
-            var model = this.Bind<NetRoute[]>();
+            string json = Request.Form.Data;
+            var model = JsonConvert.DeserializeObject<NetRoute[]>(json);
             ConfigManager.Config.Saved.Network.Routing = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;

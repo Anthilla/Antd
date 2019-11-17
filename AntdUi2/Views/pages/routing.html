@@ -11,7 +11,6 @@
             <table class="table table-condensed table-hover bg-white no-border table-fixed">
                 <thead>
                     <tr>
-                        <th>Is Default</th>
                         <th>Destination</th>
                         <th>Gateway</th>
                         <th>Device</th>
@@ -21,23 +20,13 @@
                 <tbody>
                     <tr>
                         <td>
-                            <input ng-model="NewRoute.Default"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
                             <input ng-model="NewRoute.Destination" class="form-control" type="text">
                         </td>
                         <td>
-                            <select ng-model="NewRoute.Gateway" class="form-control">
-                                <option ng-repeat="gw in Gateways" value="{{gw.IpAddress}}">{{gw.Id}}&nbsp;-&nbsp;{{gw.IpAddress}}</option>
-                            </select>
+                            <input ng-model="NewRoute.Gateway" class="form-control" type="text">
                         </td>
                         <td>
-                            <select ng-model="NewRoute.Device" class="form-control">
-                                <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
-                            </select>
+                            <input ng-model="NewRoute.Device" class="form-control" type="text">
                         </td>
                         <td>
                             <button ng-click="addToList(NewRoute, Routes)" type="button" class="btn btn-primary">
@@ -47,23 +36,13 @@
                     </tr>
                     <tr ng-repeat="el in Routes">
                         <td>
-                            <input ng-model="el.Default"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
-                        </td>
-                        <td>
                             <input ng-model="el.Destination" class="form-control" type="text">
                         </td>
                         <td>
-                            <select ng-model="el.Gateway" class="form-control">
-                                <option ng-repeat="gw in Gateways" value="{{gw.IpAddress}}">{{gw.Id}}&nbsp;-&nbsp;{{gw.IpAddress}}</option>
-                            </select>
+                            <input ng-model="el.Gateway" class="form-control" type="text">
                         </td>
                         <td>
-                            <select ng-model="el.Device" class="form-control">
-                                <option ng-repeat="device in NetworkDevices" value="{{device}}">{{device}}</option>
-                            </select>
+                            <input ng-model="el.Device" class="form-control" type="text">
                         </td>
                         <td>
                             <button ng-click="removeFromList($index, Routes)" type="button" class="btn btn-danger">

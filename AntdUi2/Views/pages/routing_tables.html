@@ -22,7 +22,10 @@
                             <input ng-model="NewRoutingTable.Id" class="form-control" type="text">
                         </td>
                         <td>
-                            <input ng-model="NewRoutingTable.Alias" class="form-control" type="text">
+                            <input ng-model="NewRoutingTable.Name" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <textarea rows="3" ng-model="NewRoutingTable.RulesTxt" class="form-control"></textarea>
                         </td>
                         <td>
                             <button ng-click="addToList(NewRoutingTable, RoutingTables)" type="button" class="btn btn-primary">
@@ -31,11 +34,14 @@
                         </td>
                     </tr>
                     <tr ng-repeat="el in RoutingTables">
-                        <th scope="row">
-                            {{ el.Id }}
-                        </th>
                         <td>
-                            <input ng-model="el.Alias" class="form-control" type="text">
+                            <input ng-model="el.Id" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <input ng-model="el.Name" class="form-control" type="text">
+                        </td>
+                        <td>
+                            <textarea rows="3" ng-model="el.RulesTxt" class="form-control"></textarea>
                         </td>
                         <td>
                             <button ng-click="removeFromList($index, RoutingTables)" type="button" class="btn btn-danger">

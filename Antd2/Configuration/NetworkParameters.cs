@@ -155,6 +155,7 @@ namespace Antd2.Configuration {
         ///     ip rule add xyz
         /// </summary>
         public string[] Rules { get; set; } = Array.Empty<string>();
+        public string RulesTxt { get; set; } = string.Empty;
     }
 
     /// <summary>
