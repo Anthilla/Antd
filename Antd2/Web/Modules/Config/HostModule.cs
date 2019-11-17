@@ -2,21 +2,34 @@
 using Antd2.Configuration;
 using Nancy;
 using Nancy.ModelBinding;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Antd2.Modules {
     public class HostModule : NancyModule {
 
         public HostModule() : base("/host/config") {
 
-            Get("/", x => Response.AsJson((object)ConfigManager.Config.Saved.Host));
+            Get("/", x => ApiGet());
 
-            Get("/save", x => ApiPostSave());
+            Post("/save", x => ApiPostSave());
 
-            Get("/apply", x => ApiPostApply());
+            Post("/apply", x => ApiPostApply());
+        }
+
+        private dynamic ApiGet() {
+            var host = ConfigManager.Config.Saved.Host;
+            var jsonString = JsonConvert.SerializeObject(host);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
         }
 
         private dynamic ApiPostSave() {
-            var model = this.Bind<HostParameters>();
+            string json = Request.Form.Data;
+            var model = JsonConvert.DeserializeObject<HostParameters>(json);
             ConfigManager.Config.Saved.Host = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;

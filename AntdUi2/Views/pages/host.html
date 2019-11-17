@@ -15,47 +15,47 @@
                     <tr>
                         <th scope="row">UID</th>
                         <td>
-                            {{ Host.MachineUid }}
+                            {{ Host.Uid }}
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <th scope="row">Host Name</th>
                         <td>
-                            <input ng-model="Host.HostName" class="form-control" type="text">
+                            <input ng-model="Host.Name" class="form-control" type="text">
                         </td>
                         <td>{{ HostRunning.HostName }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Chassis</th>
                         <td>
-                            <select ng-model="Host.HostChassis" class="form-control">
-                                <option value="desktop">Desktop</option>
-                                <option value="laptop">Laptop</option>
-                                <option value="server">Server</option>
-                                <option value="tablet">Tablet</option>
-                                <option value="handset">Handset</option>
-                                <option value="watch">Watch</option>
-                                <option value="embedded">Embedded</option>
-                                <option value="vm">Vm</option>
-                                <option value="container">Container</option>
+                            <select ng-model="Host.Chassis" class="form-control">
+                                <option value="desktop">desktop</option>
+                                <option value="laptop">laptop</option>
+                                <option value="server">server</option>
+                                <option value="tablet">tablet</option>
+                                <option value="handset">handset</option>
+                                <option value="watch">watch</option>
+                                <option value="embedded">embedded</option>
+                                <option value="vm">vm</option>
+                                <option value="container">container</option>
                             </select>
                         </td>
-                        <td>{{ HostRunning.HostChassis }}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th scope="row">Host Deployment</th>
                         <td>
-                            <input ng-model="Host.HostDeployment" class="form-control" type="text">
+                            <input ng-model="Host.Deployment" class="form-control" type="text">
                         </td>
-                        <td>{{ HostRunning.HostDeployment }}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th scope="row">Host Location</th>
                         <td>
-                            <input ng-model="Host.HostLocation" class="form-control" type="text">
+                            <input ng-model="Host.Location" class="form-control" type="text">
                         </td>
-                        <td>{{ HostRunning.HostLocation }}</td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>

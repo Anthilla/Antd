@@ -116,10 +116,12 @@ function HostController($scope, $http, notificationService) {
     $scope.load();
 
     $scope.save = function() {
+        var data = $.param({
+            Data: angular.toJson($scope.Host)
+        });
         console.log("saveHost");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/host/config/save", $.param($scope.Host)).then(function() {
-            $scope.load();
+        $http.post("/host/config/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) {
             console.log(r);
@@ -130,7 +132,6 @@ function HostController($scope, $http, notificationService) {
         console.log("applyHost");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/config/apply").then(function() {
-            $scope.load();
             notificationService.success('Data applied');
         }, function(r) {
             console.log(r);
