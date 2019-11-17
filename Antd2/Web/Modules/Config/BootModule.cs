@@ -2,73 +2,84 @@
 using Antd2.Configuration;
 using Nancy;
 using Nancy.ModelBinding;
-using System;
+using Newtonsoft.Json;
 using System.Linq;
+using System.Text;
 
 namespace Antd2.Modules {
+
     public class BootModule : NancyModule {
 
         public BootModule() : base("/boot/config") {
 
-            Get("/", x => Response.AsJson((object)ConfigManager.Config.Saved.Boot));
+            Get("/sysctl", x => ApiGetSysctl());
+            Get("/modules", x => ApiGetModules());
+            Get("/services", x => ApiGetServices());
 
-            Get("/sysctl/save", x => ApiPostSaveSysctl());
-            Get("/modules/active/save", x => ApiPostSaveActiveModules());
-            Get("/modules/inactive/save", x => ApiPostSaveInactiveModules());
-            Get("/services/active/save", x => ApiPostSaveActiveServices());
-            Get("/services/inactive/save", x => ApiPostSaveInactiveServices());
-            Get("/services/disabled/save", x => ApiPostSaveDisabledServices());
-            Get("/services/blocked/save", x => ApiPostSaveBlockedServices());
+            Post("/sysctl/save", x => ApiPostSaveSysctl());
+            Post("/modules/save", x => ApiPostSaveModules());
+            Post("/services/save", x => ApiPostSaveServices());
 
-            Get("/sysctl/apply", x => ApiPostApplySysctl());
-            Get("/modules/active/apply", x => ApiPostApplyActiveModules());
-            Get("/modules/inactive/apply", x => ApiPostApplyInactiveModules());
-            Get("/services/active/apply", x => ApiPostApplyActiveServices());
-            Get("/services/inactive/apply", x => ApiPostApplyInactiveServices());
-            Get("/services/disabled/apply", x => ApiPostApplyDisabledServices());
-            Get("/services/blocked/apply", x => ApiPostApplyBlockedServices());
+            Post("/sysctl/apply", x => ApiPostApplySysctl());
+            Post("/modules/apply", x => ApiPostApplyModules());
+            Post("/services/apply", x => ApiPostApplyServices());
+        }
+
+        private dynamic ApiGetSysctl() {
+            var sysctl = ConfigManager.Config.Saved.Boot.Sysctl;
+            var sysctlTxt = string.Join("\n", sysctl);
+            var jsonString = JsonConvert.SerializeObject(sysctlTxt);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
+
+        private dynamic ApiGetModules() {
+            var a = new ModulesView();
+            a.ActiveModulesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.ActiveModules);
+            a.InactiveModulesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveModules);
+            var jsonString = JsonConvert.SerializeObject(a);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
+
+        private dynamic ApiGetServices() {
+            var a = new ServicesView();
+            a.ActiveServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.ActiveServices);
+            a.InactiveServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveModules);
+            a.DisabledServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.DisabledServices);
+            a.BlockedServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.BlockedServices);
+            var jsonString = JsonConvert.SerializeObject(a);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
         }
 
         private dynamic ApiPostSaveSysctl() {
-            var model = this.Bind<string[]>();
+            string json = Request.Form.Data;
+            var sysctlTxt = JsonConvert.DeserializeObject<string>(json);
+            var model = sysctlTxt.Split('\n');
             ConfigManager.Config.Saved.Boot.Sysctl = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }
 
-        private dynamic ApiPostSaveActiveModules() {
+        private dynamic ApiPostSaveModules() {
             var model = this.Bind<string[]>();
             ConfigManager.Config.Saved.Boot.ActiveModules = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }
-        private dynamic ApiPostSaveInactiveModules() {
-            var model = this.Bind<string[]>();
-            ConfigManager.Config.Saved.Boot.InactiveModules = model;
-            ConfigManager.Config.Dump();
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostSaveActiveServices() {
+        private dynamic ApiPostSaveServices() {
             var model = this.Bind<string[]>();
             ConfigManager.Config.Saved.Boot.ActiveServices = model;
-            ConfigManager.Config.Dump();
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostSaveInactiveServices() {
-            var model = this.Bind<string[]>();
-            ConfigManager.Config.Saved.Boot.InactiveServices = model;
-            ConfigManager.Config.Dump();
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostSaveDisabledServices() {
-            var model = this.Bind<string[]>();
-            ConfigManager.Config.Saved.Boot.DisabledServices = model;
-            ConfigManager.Config.Dump();
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostSaveBlockedServices() {
-            var model = this.Bind<string[]>();
-            ConfigManager.Config.Saved.Boot.BlockedServices = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }
@@ -79,7 +90,7 @@ namespace Antd2.Modules {
             }
             return HttpStatusCode.OK;
         }
-        private dynamic ApiPostApplyActiveModules() {
+        private dynamic ApiPostApplyModules() {
             var loadedModules = Mod.Get();
             foreach (var module in ConfigManager.Config.Saved.Boot.ActiveModules) {
                 var (Module, UsedBy) = loadedModules.FirstOrDefault(_ => _.Module == module);
@@ -90,25 +101,7 @@ namespace Antd2.Modules {
             }
             return HttpStatusCode.OK;
         }
-        private dynamic ApiPostApplyInactiveModules() {
-            var loadedModules = Mod.Get();
-            foreach (var module in ConfigManager.Config.Saved.Boot.InactiveModules) {
-                var loadedModule = loadedModules.FirstOrDefault(_ => _.Module == module);
-                if (string.IsNullOrEmpty(loadedModule.Module)) {
-                    continue;
-                }
-
-                Console.Write($"[mod] removing module '{module}'");
-                if (loadedModule.UsedBy.Length > 0)
-                    Console.WriteLine($" and its {loadedModule.UsedBy.Length} dependecies");
-                else
-                    Console.WriteLine();
-
-                Mod.Remove(loadedModule);
-            }
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostApplyActiveServices() {
+        private dynamic ApiPostApplyServices() {
             foreach (var service in ConfigManager.Config.Saved.Boot.ActiveServices) {
                 if (Systemctl.IsEnabled(service) == false)
                     Systemctl.Enable(service);
@@ -117,31 +110,18 @@ namespace Antd2.Modules {
             }
             return HttpStatusCode.OK;
         }
-        private dynamic ApiPostApplyInactiveServices() {
-            foreach (var service in ConfigManager.Config.Saved.Boot.InactiveServices) {
-                if (Systemctl.IsActive(service))
-                    Systemctl.Stop(service);
-            }
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostApplyDisabledServices() {
-            foreach (var service in ConfigManager.Config.Saved.Boot.DisabledServices) {
-                if (Systemctl.IsActive(service))
-                    Systemctl.Stop(service);
-                if (Systemctl.IsEnabled(service))
-                    Systemctl.Disable(service);
-            }
-            return HttpStatusCode.OK;
-        }
-        private dynamic ApiPostApplyBlockedServices() {
-            foreach (var service in ConfigManager.Config.Saved.Boot.BlockedServices) {
-                if (Systemctl.IsActive(service))
-                    Systemctl.Stop(service);
-                if (Systemctl.IsEnabled(service))
-                    Systemctl.Disable(service);
-                Systemctl.Mask(service);
-            }
-            return HttpStatusCode.OK;
-        }
+    }
+
+    public class ModulesView {
+        public string ActiveModulesTxt { get; set; }
+        public string InactiveModulesTxt { get; set; }
+    }
+
+    public class ServicesView {
+
+        public string ActiveServicesTxt { get; set; }
+        public string InactiveServicesTxt { get; set; }
+        public string DisabledServicesTxt { get; set; }
+        public string BlockedServicesTxt { get; set; }
     }
 }

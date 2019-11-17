@@ -178,12 +178,12 @@ function TimedateController($scope, $http, notificationService) {
 app.controller("SysctlController", ["$scope", "$http", "notificationService", SysctlController]);
 
 function SysctlController($scope, $http, notificationService) {
-    $scope.BootParameters = null;
+    $scope.SysctlTxt = null;
 
     $scope.load = function() {
         console.log("loadBootParameters");
-        $http.get("/boot/config").then(function(r) {
-            $scope.BootParameters = r.data;
+        $http.get("/boot/config/sysctl").then(function(r) {
+            $scope.SysctlTxt = r.data;
         }).catch(function(r) {
             console.log(r);
         });
@@ -191,10 +191,12 @@ function SysctlController($scope, $http, notificationService) {
     $scope.load();
 
     $scope.save = function() {
+        var data = $.param({
+            Data: angular.toJson($scope.SysctlTxt)
+        });
         console.log("saveBootParameters");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/config/sysctl/save", $.param($scope.BootParameters)).then(function() {
-            $scope.load();
+        $http.post("/boot/config/sysctl/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -203,7 +205,6 @@ function SysctlController($scope, $http, notificationService) {
         console.log("applyBootParameters");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/sysctl/apply").then(function() {
-            $scope.load();
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
     };

@@ -12,12 +12,10 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
             <table class="table table-condensed table-hover bg-white no-border table-fixed">
                 <tbody>
-                    <tr ng-repeat="param in BootParameters">
-                        <th scope="row">{{ param.Key }}</th>
+                    <tr>
                         <td>
-                            <input ng-model="param.Value" class="form-control" type="text">
+                            <textarea rows="30" ng-model="SysctlTxt" class="form-control"></textarea>
                         </td>
-                        <td>{{ param.Running }}</td>
                     </tr>
                 </tbody>
             </table>
