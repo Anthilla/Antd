@@ -156,10 +156,12 @@ function TimedateController($scope, $http, notificationService) {
     $scope.load();
 
     $scope.save = function() {
+        var data = $.param({
+            Data: angular.toJson($scope.TimeDate)
+        });
         console.log("saveTimeDate");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/timedate/config/save", $.param($scope.TimeDate)).then(function() {
-            $scope.load();
+        $http.post("/timedate/config/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -168,7 +170,6 @@ function TimedateController($scope, $http, notificationService) {
         console.log("applyTimeDate");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/timedate/config/apply").then(function() {
-            $scope.load();
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
     };

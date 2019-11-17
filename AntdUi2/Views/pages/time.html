@@ -443,24 +443,21 @@
                                 <option value="UTC">UTC</option>
                             </select>
                         </td>
-                        <td>{{ TimeDateRunning.Timezone }}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th scope="row">Sync From Remote Server</th>
                         <td>
-                            <input ng-model="TimeDate.SyncFromRemoteServer"
-                                   i-check
-                                   checked=""
-                                   type="checkbox">
+                            <input ng-model="TimeDate.EnableNtpSync" type="checkbox">
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <th scope="row">Remote Ntp Server</th>
                         <td>
-                            <input ng-model="TimeDate.RemoteNtpServer" class="form-control" type="text">
+                            <textarea rows="3" ng-model="TimeDate.NtpServerTxt" class="form-control"></textarea>
                         </td>
-                        <td>{{ TimeDateRunning.RemoteNtpServer }}</td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>

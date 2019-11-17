@@ -17,5 +17,8 @@
         ///     SyncFromRemoteServer deve essere active
         /// </summary>
         public string[] NtpServer { get; set; } = System.Array.Empty<string>();
+
+        public string NtpServerTxt { get; set; }
+
     }
 }

@@ -20,8 +20,8 @@ namespace AntdUi2.Modules {
         }
 
         private dynamic ApiGet() {
-            var myJsonString = ApiConsumer.GetString($"{Application.ServerUrl}{Request.Path}");
-            var jsonBytes = Encoding.UTF8.GetBytes(myJsonString);
+            var jsonString = ApiConsumer.GetString($"{Application.ServerUrl}{Request.Path}");
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
                 ContentType = "application/json",
                 Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
