@@ -1,16 +1,27 @@
-﻿using Nancy;
+﻿using anthilla.core;
+using Nancy;
 using System;
+using System.Text;
 
 namespace AntdUi2.Modules {
     public class SetupCommandModule : NancyModule {
 
         public SetupCommandModule() : base("/setupcmd/config") {
 
-            Get("/", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Get("/", x => ApiGet());
 
-            Get("/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
 
-            Get("/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/apply", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+        }
+
+        private dynamic ApiGet() {
+            var jsonString = ApiConsumer.GetString($"{Application.ServerUrl}{Request.Path}");
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
         }
     }
 }

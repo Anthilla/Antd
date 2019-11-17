@@ -2,23 +2,38 @@
 using Antd2.Configuration;
 using Nancy;
 using Nancy.ModelBinding;
+using Newtonsoft.Json;
 using System;
+using System.Text;
 
 namespace Antd2.Modules {
     public class SetupCommandModule : NancyModule {
 
         public SetupCommandModule() : base("/setupcmd/config") {
 
-            Get("/", x => Response.AsJson((object)ConfigManager.Config.Saved.Commands));
+            Get("/", x => ApiGet());
 
-            Get("/save", x => ApiPostSave());
+            Post("/save", x => ApiPostSave());
 
-            Get("/apply", x => ApiPostApply());
+            Post("/apply", x => ApiPostApply());
+        }
+
+        private dynamic ApiGet() {
+            var a = ConfigManager.Config.Saved.Commands.Run;
+            var aTxt = string.Join("\n", a);
+            var jsonString = JsonConvert.SerializeObject(aTxt);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
         }
 
         private dynamic ApiPostSave() {
-            var model = this.Bind<SetupCommandParameters>();
-            ConfigManager.Config.Saved.Commands = model;
+            string json = Request.Form.Data;
+            var aTxt = JsonConvert.DeserializeObject<string>(json);
+            var model = aTxt.Split('\n');
+            ConfigManager.Config.Saved.Commands.Run = model;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }
