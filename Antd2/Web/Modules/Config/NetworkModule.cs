@@ -2,23 +2,45 @@
 using Antd2.Configuration;
 using Nancy;
 using Nancy.ModelBinding;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace Antd2.Modules {
     public class NetworkModule : NancyModule {
 
         public NetworkModule() : base("/network/config") {
 
-            Get("/", x => Response.AsJson((object)ConfigManager.Config.Saved.Network));
+            Get("/interfaces", x => ApiGetInterfaces());
 
-            Get("/routingtables/save", x => ApiPostSaveRoutingTables());
-            Get("/interfaces/save", x => ApiPostSaveInterfaces());
-            Get("/routing/save", x => ApiPostSaveRouting());
+            Post("/routingtables/save", x => ApiPostSaveRoutingTables());
+            Post("/interfaces/save", x => ApiPostSaveInterfaces());
+            Post("/routing/save", x => ApiPostSaveRouting());
 
-            Get("/routingtables/apply", x => ApiPostApplyRoutingTables());
-            Get("/interfaces/apply", x => ApiPostApplyInterfaces());
-            Get("/routing/apply", x => ApiPostApplyRouting());
+            Post("/routingtables/apply", x => ApiPostApplyRoutingTables());
+            Post("/interfaces/apply", x => ApiPostApplyInterfaces());
+            Post("/routing/apply", x => ApiPostApplyRouting());
+        }
+
+        private dynamic ApiGetInterfaces() {
+            var interfaces = ConfigManager.Config.Saved.Network.Interfaces;
+            foreach (var inf in interfaces) {
+                if (inf.Auto == "up" || inf.Auto == "on")
+                    inf.AutoBool = true;
+                if (inf.Auto == "down" || inf.Auto == "off")
+                    inf.AutoBool = false;
+                inf.PreUpTxt = string.Join("\n", inf.PreUp);
+                inf.PostUpTxt = string.Join("\n", inf.PostUp);
+                inf.PreDownTxt = string.Join("\n", inf.PreDown);
+                inf.PostDownTxt = string.Join("\n", inf.PostDown);
+            }
+            var jsonString = JsonConvert.SerializeObject(interfaces);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
         }
 
         private dynamic ApiPostSaveRoutingTables() {
@@ -28,8 +50,19 @@ namespace Antd2.Modules {
             return HttpStatusCode.OK;
         }
         private dynamic ApiPostSaveInterfaces() {
-            var model = this.Bind<NetInterface[]>();
-            ConfigManager.Config.Saved.Network.Interfaces = model;
+            string json = Request.Form.Data;
+            var interfaces = JsonConvert.DeserializeObject<NetInterface[]>(json);
+            foreach (var inf in interfaces) {
+                if (inf.AutoBool == true)
+                    inf.Auto = "up";
+                if (inf.AutoBool == false)
+                    inf.Auto = "down";
+                inf.PreUp = inf.PreUpTxt.Split('\n');
+                inf.PostUp = inf.PostUpTxt.Split('\n');
+                inf.PreDown = inf.PreDownTxt.Split('\n');
+                inf.PostDown = inf.PostDownTxt.Split('\n');
+            }
+            ConfigManager.Config.Saved.Network.Interfaces = interfaces;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }

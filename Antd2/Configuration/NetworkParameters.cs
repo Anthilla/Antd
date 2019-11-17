@@ -128,6 +128,12 @@ namespace Antd2.Configuration {
         public string[] PreDown { get; set; } = Array.Empty<string>();
         public string[] PostDown { get; set; } = Array.Empty<string>();
 
+        public bool AutoBool { get; set; }
+        public string PreUpTxt { get; set; } = string.Empty;
+        public string PostUpTxt { get; set; } = string.Empty;
+        public string PreDownTxt { get; set; } = string.Empty;
+        public string PostDownTxt { get; set; } = string.Empty;
+
     }
 
     /// <summary>

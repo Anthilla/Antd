@@ -31,8 +31,8 @@ namespace Antd2.Modules {
                 }
             }
 
-            var myJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
-            var jsonBytes = Encoding.UTF8.GetBytes(myJsonString);
+            var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
                 ContentType = "application/json",
                 Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
