@@ -283,11 +283,7 @@ function ServicesController($scope, $http, notificationService) {
 app.controller("CommandsController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", CommandsController]);
 
 function CommandsController($scope, $http, $interval, $timeout, $filter, notificationService) {
-    $scope.SetupCommands = [];
-
-    $scope.NewSetupCommand = {
-        BashCommand: ''
-    };
+    $scope.SetupCommandsTxt = null;
 
     $scope.load = function() {
         console.log("loadSetupCommands");
@@ -300,10 +296,12 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
     $scope.load();
 
     $scope.save = function() {
+        var data = $.param({
+            Data: angular.toJson($scope.SetupCommandsTxt)
+        });
         console.log("saveSetupCommands");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/setupcmd/config/save", $.param($scope.SetupCommands)).then(function() {
-            $scope.load();
+        $http.post("/setupcmd/config/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -312,31 +310,8 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
         console.log("applySetupCommands");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/setupcmd/config/apply").then(function() {
-            $scope.load();
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
-    };
-
-    $scope.moveUp = function(index, list) { //-1
-        var from = index;
-        var to = index - 1;
-        var target = list[from];
-        var increment = to < from ? -1 : 1;
-        for (var k = from; k !== to; k += increment) {
-            list[k] = list[k + increment];
-        }
-        list[to] = target;
-    };
-
-    $scope.moveDown = function(index, list) { //+1
-        var from = index;
-        var to = index + 1;
-        var target = list[from];
-        var increment = to < from ? -1 : 1;
-        for (var k = from; k !== to; k += increment) {
-            list[k] = list[k + increment];
-        }
-        list[to] = target;
     };
 }
 
@@ -347,12 +322,13 @@ function RoutingTablesController($scope, $http, notificationService) {
 
     $scope.NewRoutingTable = {
         Id: '',
-        Alias: ''
+        Name: '',
+        RulesTxt: ''
     };
 
     $scope.load = function() {
         console.log("loadRoutingTables");
-        $http.get("/network/routingtables").then(function(r) {
+        $http.get("/network/config/routingtables").then(function(r) {
             $scope.RoutingTables = r.data;
         }).catch(function(r) {
             console.log(r);
@@ -366,8 +342,7 @@ function RoutingTablesController($scope, $http, notificationService) {
             Data: angular.toJson($scope.RoutingTables)
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/save/routingtables", data).then(function() {
-            $scope.load();
+        $http.post("/network/config/routingtables/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -375,8 +350,7 @@ function RoutingTablesController($scope, $http, notificationService) {
     $scope.apply = function() {
         console.log("applyRoutingTables");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/apply/routingtables").then(function() {
-            $scope.load();
+        $http.post("/network/config/routingtables/apply").then(function() {
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
     };
@@ -386,11 +360,8 @@ app.controller("RoutingController", ["$scope", "$http", "notificationService", R
 
 function RoutingController($scope, $http, notificationService) {
     $scope.Routes = [];
-    $scope.NetworkDevices = [];
-    $scope.Gateways = [];
 
     $scope.NewRoute = {
-        Default: false,
         Destination: '',
         Gateway: '',
         Device: ''
@@ -398,17 +369,7 @@ function RoutingController($scope, $http, notificationService) {
 
     $scope.load = function() {
         console.log("loadRouting");
-        $http.get("/network/devices").then(function(r) {
-            $scope.NetworkDevices = r.data;
-        }).catch(function(r) {
-            console.log(r);
-        });
-        $http.get("/gateway").then(function(r) {
-            $scope.Gateways = r.data;
-        }).catch(function(r) {
-            console.log(r);
-        });
-        $http.get("/network/routing").then(function(r) {
+        $http.get("/network/config/routing").then(function(r) {
             $scope.Routes = r.data;
         }).catch(function(r) {
             console.log(r);
@@ -419,11 +380,10 @@ function RoutingController($scope, $http, notificationService) {
     $scope.save = function() {
         console.log("saveRouting");
         var data = $.param({
-            Data: angular.toJson($scope.Routing)
+            Data: angular.toJson($scope.Routes)
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/save/routing", data).then(function() {
-            $scope.load();
+        $http.post("/network/config/routing/save", data).then(function() {
             notificationService.success('Data saved');
         }, function(r) { console.log(r); });
     };
@@ -431,8 +391,7 @@ function RoutingController($scope, $http, notificationService) {
     $scope.apply = function() {
         console.log("applyRouting");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/network/apply/routing").then(function() {
-            $scope.load();
+        $http.post("/network/config/routing/apply").then(function() {
             notificationService.success('Data applied');
         }, function(r) { console.log(r); });
     };
