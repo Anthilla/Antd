@@ -85,6 +85,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("disks", {
             cache: false, url: "^/disks", views: { 'content': { templateUrl: "pg/disks.min.html?v=" + new Date() } }
         })
+        .state("volumes", {
+            cache: false, url: "^/volumes", views: { 'content': { templateUrl: "pg/volumes.min.html?v=" + new Date() } }
+        })
 
         .state("commands", {
             cache: false, url: "^/commands", views: { 'content': { templateUrl: "pg/commands.min.html?v=" + new Date() } }
@@ -175,6 +178,7 @@ function SidebarController($scope, $http) {
             { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing', Active: '' },
 
             { Name: 'Disks', Icon: 'fa-square fg-dark', Destination: 'disks', Active: '' },
+            { Name: 'Volumes', Icon: 'fa-square fg-dark', Destination: 'volumes', Active: '' },
 
             { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' }
         ]
