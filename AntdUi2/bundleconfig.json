@@ -76,5 +76,11 @@
     "inputFiles": [
       "Views/pages/disks.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/volumes.min.html",
+    "inputFiles": [
+      "Views/pages/volumes.html"
+    ]
   }
 ]

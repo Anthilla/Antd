@@ -19,7 +19,7 @@ namespace Antd2.cmds {
             var partition = arr[0];
             var details = arr[1];
             var uuid = Help.CaptureGroup(details, "UUID=\"([a-zA-Z0-9\\-]+)\"").Trim();
-            var type = Help.CaptureGroup(details, "TYPE=\"([a-zA-Z0-9\\-]+)\"").Trim();
+            var type = Help.CaptureGroup(details, "TYPE=\"([a-zA-Z0-9\\-_]+)\"").Trim();
             var label = Help.CaptureGroup(details, "LABEL=\"([a-zA-Z0-9\\-\\/]+)\"").Trim();
             return (partition, uuid, type, label);
         }

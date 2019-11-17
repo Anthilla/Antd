@@ -177,8 +177,8 @@ function SidebarController($scope, $http) {
             { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables', Active: '' },
             { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing', Active: '' },
 
-            { Name: 'Disks', Icon: 'fa-square fg-dark', Destination: 'disks', Active: '' },
-            { Name: 'Volumes', Icon: 'fa-square fg-dark', Destination: 'volumes', Active: '' },
+            { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks', Active: '' },
+            { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes', Active: '' },
 
             { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' }
         ]

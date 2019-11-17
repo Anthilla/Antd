@@ -72,5 +72,10 @@
         public bool IsVolume { get; set; }
         public string Mountpoint { get; set; }
         public string Label { get; set; }
+        public string Size { get; set; }
+        public string Used { get; set; }
+        public bool WebdavRunning { get; set; }
+        public System.Collections.Generic.List<string> SyncableVolumes { get; set; }
+
     }
 }

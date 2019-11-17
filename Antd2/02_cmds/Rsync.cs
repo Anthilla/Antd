@@ -21,12 +21,17 @@ namespace Antd2.cmds {
                 Console.WriteLine(l);
         }
 
-        public static void SyncCustom(string options, string source, string destination) {
+        public static void SyncCustom(string options, string source, string destination, bool print = false) {
             var cmd = $"{rsyncCommand} {options} {source} {destination}";
             Console.WriteLine(cmd);
-            var result = Bash.Execute(cmd);
-            foreach (var l in result)
-                Console.WriteLine(l);
+            if (print) {
+                var result = Bash.Execute(cmd);
+                foreach (var l in result)
+                    Console.WriteLine(l);
+            }
+            else {
+                Bash.Do(cmd);
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Antd2.Modules {
                     var partitionBlk = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name);
                     if (!string.IsNullOrEmpty(partitionBlk.Uuid)) {
                         partition.IsVolume = true;
-                        partition.Mountpoint = disksLsblk.FirstOrDefault(_ => _.Name == partition.Name).Mountpoint;
+                        partition.Mountpoint = disksLsblk.FirstOrDefault(_ => "/dev/" + _.Name == partition.Name).Mountpoint;
                         partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
                         partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
                     }

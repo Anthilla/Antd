@@ -494,7 +494,7 @@ function DisksController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/fs/ext4", data).then(function() {
-            notificationService.success('Partition Created');
+            notificationService.success('Ext4 Created');
         }, function(r) { console.log(r); });
     };
 
@@ -506,17 +506,7 @@ function DisksController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/fs/zfs", data).then(function() {
-            notificationService.success('Partition Created');
-        }, function(r) { console.log(r); });
-    };
-
-
-
-    $scope.apply = function() {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/config/sysctl/apply").then(function() {
-            $scope.load();
-            notificationService.success('Data applied');
+            notificationService.success('Zfs Created');
         }, function(r) { console.log(r); });
     };
 }
@@ -536,62 +526,59 @@ function VolumesController($scope, $http, notificationService) {
     };
     $scope.load();
 
-    $scope.createPartitionTable = function(device, label) {
+    $scope.mountVolume = function(partition, label) {
         var data = $.param({
-            Device: device,
+            Partition: partition,
             Label: label
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/disks/create/partition/table", data).then(function() {
-            notificationService.success('Partition Table Created');
+        $http.post("/volumes/mount", data).then(function() {
+            notificationService.success('Volume mounted');
         }, function(r) { console.log(r); });
     };
 
-    $scope.createPartition = function(device, partType, partName, fsType, start, end) {
+    $scope.umountVolume = function(mountpoint) {
         var data = $.param({
-            Device: device,
-            //PartType: partType,
-            PartName: partName,
-            FsType: fsType,
-            Start: start,
-            End: end
+            Mountpoint: mountpoint
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/disks/create/partition", data).then(function() {
-            notificationService.success('Partition Created');
+        $http.post("/volumes/umount", data).then(function() {
+            notificationService.success('Volume unmounted');
         }, function(r) { console.log(r); });
     };
 
-    $scope.createFsExt4 = function(device, label) {
+    $scope.webdavStart = function(ip, port, mountpoint, user, password) {
         var data = $.param({
-            Device: device,
-            Label: label
+            Ip: ip,
+            Port: port,
+            Mountpoint: mountpoint,
+            User: user,
+            Password: password
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/disks/create/fs/ext4", data).then(function() {
-            notificationService.success('Partition Created');
+        $http.post("/volumes/webdav/start", data).then(function() {
+            notificationService.success('Webdav Started');
         }, function(r) { console.log(r); });
     };
 
-    $scope.createFsZfs = function(device, pool, label) {
+    $scope.webdavStop = function(mountpoint) {
         var data = $.param({
-            Device: device,
-            Pool: pool,
-            Label: label
+            Mountpoint: mountpoint
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/disks/create/fs/zfs", data).then(function() {
-            notificationService.success('Partition Created');
+        $http.post("/volumes/webdav/stop", data).then(function() {
+            notificationService.success('Webdav Stopped');
         }, function(r) { console.log(r); });
     };
 
-
-
-    $scope.apply = function() {
+    $scope.syncVolumes = function(s, d) {
+        var data = $.param({
+            Source: s,
+            Destination: d
+        });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/config/sysctl/apply").then(function() {
-            $scope.load();
-            notificationService.success('Data applied');
+        $http.post("/volumes/sync", data).then(function() {
+            notificationService.success('Volumes sync start');
         }, function(r) { console.log(r); });
     };
 }

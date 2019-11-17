@@ -943,6 +943,9 @@
     <None Update="Views\pages\time.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Views\pages\volumes.min.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Views\pages\_old\bind\configuration.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
