@@ -20,7 +20,6 @@ namespace Antd2.Storage {
         private readonly string User;
         private readonly string Password;
 
-
         private readonly IDictionary<string, WebDavDispatcher> WEBDAV_DISPATCHERS = new Dictionary<string, WebDavDispatcher>();
 
         private readonly CancellationTokenSource CancellationTokenSource;
@@ -57,7 +56,7 @@ namespace Antd2.Storage {
 
                 DispatchHttpRequestsAsync(HttpListener, CancellationTokenSource.Token);
 
-                while (Console.ReadKey().KeyChar != 'x')
+                while (true)
                     ;
             }
             Console.WriteLine($"[webdav] closing");
@@ -66,6 +65,7 @@ namespace Antd2.Storage {
         public void Stop() {
             CancellationTokenSource.Cancel();
             CancellationTokenSource.Dispose();
+            Console.WriteLine($"[webdav] stop listening on http://{WebdavIp}:{WebdavPort}/");
         }
 
         private async void DispatchHttpRequestsAsync(System.Net.HttpListener httpListener, CancellationToken cancellationToken) {
