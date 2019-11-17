@@ -59,6 +59,29 @@ namespace Antd2.cmds {
             return snap;
         }
 
+        /// <summary>
+        /// zpool create -f -o altroot=/Data -o ashift=12 -O casesensitivity=insensitive -O normalization=formD Storage01 /dev/disk/by-id/ata-WDC_WD40PURZ-85TTDY0_WD-WCC7K2CU6EH9-part1
+        /// zfs create Storage01/Migration
+        /// 
+        /// zfs set compression=lz4 Storage01/Migration
+        /// zfs set checksum=fletcher4 Storage01/Migration
+        /// zfs set xattr=on Storage01/Migration
+        /// zfs set acltype=posixacl Storage01/Migration
+        /// zfs set aclinherit=passthrough-x Storage01/Migration
+        /// zfs set atime=off Storage01/Migration
+        /// </summary>
+        public static void CreateFs(string partition, string zpoolLabel, string zfsLabel) {
+            Bash.Do($"zpool create -f -o altroot=/Data -o ashift=12 -O casesensitivity=insensitive -O normalization=formD {zpoolLabel} {partition}");
+            Bash.Do($"zfs create {zpoolLabel}/{zfsLabel}");
+
+            Bash.Do($"zfs set compression=lz4 {zpoolLabel}/{zfsLabel}");
+            Bash.Do($"zfs set checksum=fletcher4 {zpoolLabel}/{zfsLabel}");
+            Bash.Do($"zfs set xattr=on {zpoolLabel}/{zfsLabel}");
+            Bash.Do($"zfs set acltype=posixacl {zpoolLabel}/{zfsLabel}");
+            Bash.Do($"zfs set aclinherit=passthrough-x {zpoolLabel}/{zfsLabel}");
+            Bash.Do($"zfs set atime=off {zpoolLabel}/{zfsLabel}");
+        }
+
         public class Backup {
 
             public class Model {
