@@ -10,6 +10,14 @@ namespace Antd2.Modules {
 
             Get("/", x => ApiGet());
 
+            Post("/create/partition/table", x => ApiPostCreatePartitionTable());
+
+            Post("/create/partition", x => ApiPostCreatePartition());
+
+            Post("/create/fs/ext4", x => ApiPostCreateFsExt4());
+
+            Post("/create/fs/zfs", x => ApiPostCreateFsZfs());
+
         }
 
         private dynamic ApiGet() {
@@ -38,5 +46,39 @@ namespace Antd2.Modules {
                 Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
             };
         }
+
+        private dynamic ApiPostCreatePartitionTable() {
+            string device = Request.Form.Device;
+            string label = Request.Form.Label;
+            Parted.SetDiskLabel(device, label);
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostCreatePartition() {
+            string device = Request.Form.Device;
+            string partType = Request.Form.PartType;
+            string partName = Request.Form.PartName;
+            string fsType = Request.Form.FsType;
+            string start = Request.Form.Start;
+            string end = Request.Form.End;
+            Parted.SetPartition(device, partType, partName, fsType, start, end);
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostCreateFsExt4() {
+            string device = Request.Form.Device;
+            string label = Request.Form.Label;
+            Mkfs.Ext4.AddLabel(device, label);
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostCreateFsZfs() {
+            string device = Request.Form.Device;
+            string pool = Request.Form.Pool;
+            string label = Request.Form.Label;
+            Zfs.CreateFs(device, pool, label);
+            return HttpStatusCode.OK;
+        }
+        
     }
 }

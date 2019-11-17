@@ -288,7 +288,7 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
     $scope.load = function() {
         console.log("loadSetupCommands");
         $http.get("/setupcmd/config").then(function(r) {
-            $scope.SetupCommands = r.data;
+            $scope.SetupCommandsTxt = r.data;
         }).catch(function(r) {
             console.log(r);
         });
@@ -461,13 +461,131 @@ function DisksController($scope, $http, notificationService) {
     };
     $scope.load();
 
-    $scope.save = function() {
+    $scope.createPartitionTable = function(device, label) {
+        var data = $.param({
+            Device: device,
+            Label: label
+        });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/boot/config/sysctl/save", $.param($scope.BootParameters)).then(function() {
-            $scope.load();
-            notificationService.success('Data saved');
+        $http.post("/disks/create/partition/table", data).then(function() {
+            notificationService.success('Partition Table Created');
         }, function(r) { console.log(r); });
     };
+
+    $scope.createPartition = function(device, partType, partName, fsType, start, end) {
+        var data = $.param({
+            Device: device,
+            //PartType: partType,
+            PartName: partName,
+            FsType: fsType,
+            Start: start,
+            End: end
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/partition", data).then(function() {
+            notificationService.success('Partition Created');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.createFsExt4 = function(device, label) {
+        var data = $.param({
+            Device: device,
+            Label: label
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/fs/ext4", data).then(function() {
+            notificationService.success('Partition Created');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.createFsZfs = function(device, pool, label) {
+        var data = $.param({
+            Device: device,
+            Pool: pool,
+            Label: label
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/fs/zfs", data).then(function() {
+            notificationService.success('Partition Created');
+        }, function(r) { console.log(r); });
+    };
+
+
+
+    $scope.apply = function() {
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/boot/config/sysctl/apply").then(function() {
+            $scope.load();
+            notificationService.success('Data applied');
+        }, function(r) { console.log(r); });
+    };
+}
+
+app.controller("VolumesController", ["$scope", "$http", "notificationService", VolumesController]);
+
+function VolumesController($scope, $http, notificationService) {
+
+    $scope.Volumes = [];
+
+    $scope.load = function() {
+        $http.get("/volumes").then(function(r) {
+            $scope.Volumes = r.data;
+        }).catch(function(r) {
+            console.log(r);
+        });
+    };
+    $scope.load();
+
+    $scope.createPartitionTable = function(device, label) {
+        var data = $.param({
+            Device: device,
+            Label: label
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/partition/table", data).then(function() {
+            notificationService.success('Partition Table Created');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.createPartition = function(device, partType, partName, fsType, start, end) {
+        var data = $.param({
+            Device: device,
+            //PartType: partType,
+            PartName: partName,
+            FsType: fsType,
+            Start: start,
+            End: end
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/partition", data).then(function() {
+            notificationService.success('Partition Created');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.createFsExt4 = function(device, label) {
+        var data = $.param({
+            Device: device,
+            Label: label
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/fs/ext4", data).then(function() {
+            notificationService.success('Partition Created');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.createFsZfs = function(device, pool, label) {
+        var data = $.param({
+            Device: device,
+            Pool: pool,
+            Label: label
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/disks/create/fs/zfs", data).then(function() {
+            notificationService.success('Partition Created');
+        }, function(r) { console.log(r); });
+    };
+
+
 
     $scope.apply = function() {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
