@@ -54,17 +54,22 @@ namespace Antd2.Modules {
                         partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
                         partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
 
-                        partition.Size = df.FirstOrDefault(_=>_.FS == partition.Name).Blocks;
-                        partition.Used = df.FirstOrDefault(_=>_.FS == partition.Name).Used;
+                        partition.Size = df.FirstOrDefault(_ => _.FS == partition.Name).Blocks;
+                        partition.Used = df.FirstOrDefault(_ => _.FS == partition.Name).Used;
 
                         if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
                             partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
                         }
 
+                        if (partition.FsType == "zfs_member") {
+                            partition.Mountpoint = "/Data/" + partition.Label;
+                        }
+
                         if (!string.IsNullOrEmpty(partition.FsType) &&
                             partition.Label != "EFI" &&
                             partition.Label != "System01" &&
-                            partition.Label != "BootExt01")
+                            partition.Label != "BootExt01" &&
+                            partition.FsType != "linux_raid_member")
                             volumes.Add(partition);
                     }
                 }
