@@ -17,5 +17,9 @@
         /// Default /cfg/antd
         /// </summary>
         public string Root { get; set; } = "/cfg/antd";
+
+        public string DefaultUser { get; set; } = "master";
+        public string DefaultPassword { get; set; } = "master";
+
     }
 }

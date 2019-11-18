@@ -1,4 +1,5 @@
-﻿using anthilla.core;
+﻿using Antd2.Configuration;
+using anthilla.core;
 using Nancy;
 using Newtonsoft.Json;
 using System;
@@ -30,10 +31,10 @@ namespace Antd2.Modules {
 
             ConsoleLogger.Log($"[pha] login attempt from {username}");
 
-            if (username != "master")
+            if (username != ConfigManager.Config.Saved.App.DefaultUser)
                 return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.InternalServerError, Guid.Empty));
 
-            if (password != $"AnthillaDev{DateTime.Now.Year}!!")
+            if (username != ConfigManager.Config.Saved.App.DefaultPassword)
                 return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.InternalServerError, Guid.Empty));
 
             return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.OK, Guid.NewGuid()));

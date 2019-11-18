@@ -1,4 +1,8 @@
 ﻿namespace Antd2.cmds {
+
+    /// <summary>
+    /// https://linux.die.net/man/1/dd
+    /// </summary>
     public class Dd {
 
         private const string ddCommand = "dd";
