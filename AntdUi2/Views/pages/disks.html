@@ -29,11 +29,13 @@
                         <td>{{ disk.Bus }} {{ disk.Model }}</td>
                         <td colspan="2">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="disk.ShowPTLPanel=!disk.ShowPTLPanel;disk.ShowPTPanel=false" type="button" class="btn btn-danger">
-                                    Set Partition Table Label
+                                <button ng-disabled="disk.Partitions.length>0"
+                                        ng-click="disk.ShowPTLPanel=!disk.ShowPTLPanel;disk.ShowPTPanel=false"
+                                        type="button" class="btn btn-danger">
+                                    Set Partition Table
                                 </button>
                                 <button ng-click="disk.ShowPTPanel=!disk.ShowPTPanel;disk.ShowPTLPanel=false" type="button" class="btn btn-warning">
-                                    Set Partition Table
+                                    Create Partition
                                 </button>
                             </div>
                         </td>
