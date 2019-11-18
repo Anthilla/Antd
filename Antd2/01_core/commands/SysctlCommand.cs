@@ -1,9 +1,7 @@
 ﻿using Antd2.cmds;
 using Antd2.Configuration;
-using anthilla.core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Antd2 {
     public class SysctlCommand {

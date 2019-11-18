@@ -1,9 +1,7 @@
 ﻿using Antd2.cmds;
-using anthilla.core;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Bash = Antd2.cmds.Bash;
 
 namespace Antd2 {

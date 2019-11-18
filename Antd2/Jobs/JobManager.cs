@@ -1,5 +1,4 @@
-﻿using anthilla.core;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 
@@ -9,13 +8,13 @@ namespace Antd2.Jobs {
 
         public void ExecuteAllJobs() {
             var jobs = GetAllTypesImplementingInterface(typeof(Job));
-            if(jobs.Length == 0) {
+            if (jobs.Length == 0) {
                 return;
             }
             Job instanceJob = null;
             Thread thread = null;
-            for(var i = 0; i < jobs.Length; i++) {
-                if(IsRealClass(jobs[i])) {
+            for (var i = 0; i < jobs.Length; i++) {
+                if (IsRealClass(jobs[i])) {
                     instanceJob = (Job)Activator.CreateInstance(jobs[i]);
                     thread = new Thread(new ThreadStart(instanceJob.ExecuteJob));
                     thread.Start();
@@ -24,11 +23,11 @@ namespace Antd2.Jobs {
             }
         }
 
-        public void ExecuteJob<T>() where T :  new() {
+        public void ExecuteJob<T>() where T : new() {
             Job instanceJob = null;
             Thread thread = null;
             var type = typeof(T);
-            if(IsRealClass(type)) {
+            if (IsRealClass(type)) {
                 instanceJob = (Job)Activator.CreateInstance(type);
                 thread = new Thread(new ThreadStart(instanceJob.ExecuteJob));
                 thread.Start();

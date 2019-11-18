@@ -1,4 +1,5 @@
-﻿using anthilla.core;
+﻿using Antd2.cmds;
+using anthilla.core;
 using System;
 using System.IO;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace Antd {
         public static void Umount(string directory) {
             if (IsAlreadyMounted(directory) && _umount1Retry < 5) {
                 Console.WriteLine($"umount, retry #{_umount1Retry}");
-                Bash.Execute($"umount {directory}", false);
+                Bash.Do($"umount {directory}");
                 _umount1Retry = _umount1Retry + 1;
                 Umount(directory);
             }
@@ -61,8 +62,8 @@ namespace Antd {
         public static void Umount(string source, string destination) {
             if (IsAlreadyMounted(source, destination) && _umount1Retry < 5) {
                 Console.WriteLine($"umount, retry #{_umount2Retry}");
-                Bash.Execute($"umount {source}", false);
-                Bash.Execute($"umount {destination}", false);
+                Bash.Do($"umount {source}");
+                Bash.Do($"umount {destination}");
                 _umount2Retry = _umount2Retry + 1;
                 Umount(source, destination);
             }

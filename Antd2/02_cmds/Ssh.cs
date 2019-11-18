@@ -1,8 +1,4 @@
-﻿using anthilla.core;
-using System.IO;
-using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.IO;
 
 namespace Antd2.cmds {
     public class Ssh {

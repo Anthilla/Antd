@@ -1,2 +1,0 @@
-﻿04_modules
-Moduli di Nancy che rende disponibile la gestione della configurazione tramite chiamate http

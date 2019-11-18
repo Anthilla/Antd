@@ -29,7 +29,7 @@ namespace Antd2.Modules {
             string username = Request.Form.Username;
             string password = Request.Form.Password;
 
-            ConsoleLogger.Log($"[pha] login attempt from {username}");
+            Console.WriteLine($"[pha] login attempt from {username}");
 
             if (username != ConfigManager.Config.Saved.App.DefaultUser)
                 return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.InternalServerError, Guid.Empty));

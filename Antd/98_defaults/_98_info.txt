@@ -1,2 +1,0 @@
-﻿98_defaults
-Oggetti con valori di default

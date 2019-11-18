@@ -1,5 +1,5 @@
-﻿using AntdUi2.Modules.Auth;
-using anthilla.core;
+﻿using antd.core;
+using AntdUi2.Modules.Auth;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Cookies;

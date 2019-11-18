@@ -1,5 +1,5 @@
-﻿using Antd2.Configuration;
-using anthilla.core;
+﻿using antd.core;
+using Antd2.Configuration;
 using System.IO;
 
 namespace Antd2.cmds {

@@ -1,6 +1,5 @@
-﻿using Antd;
+﻿using antd.core;
 using Antd2.models;
-using anthilla.core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,8 +1,8 @@
-﻿using anthilla.core;
-using System.IO;
-using System;
-using System.Linq;
+﻿using antd.core;
 using Antd2.Configuration;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace Antd2.cmds {
     public class Dns {

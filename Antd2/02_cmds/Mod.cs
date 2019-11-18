@@ -1,4 +1,4 @@
-﻿using anthilla.core;
+﻿using antd.core;
 using System;
 using System.IO;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Antd2.cmds {
         }
 
         public static void Remove((string Module, string[] UsedBy) module) {
-            foreach(var usingModule in module.UsedBy) {
+            foreach (var usingModule in module.UsedBy) {
                 Remove(module.Module);
             }
             Bash.Do($"{rmmodCommand} {module.Module}");

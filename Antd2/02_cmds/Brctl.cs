@@ -1,5 +1,4 @@
-﻿using Antd;
-using anthilla.core;
+﻿using antd.core;
 using System.Linq;
 
 namespace Antd2.cmds {

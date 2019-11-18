@@ -1,4 +1,4 @@
-﻿using anthilla.core;
+﻿using antd.core;
 using Nancy;
 
 namespace Antd2.Modules {

@@ -1,4 +1,0 @@
-﻿02_cmds
-Gestione della configurazione (import/export)
-NB: In questo contesto NON viene fatta la distinzione tra configurazione Current e Running
-

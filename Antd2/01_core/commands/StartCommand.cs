@@ -2,7 +2,6 @@
 using Antd2.Configuration;
 using Antd2.Jobs;
 using Antd2.Web;
-using anthilla.core;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Diagnostics;
@@ -10,6 +9,7 @@ using System.IO;
 using System.Linq;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
+using antd.core;
 
 #if NETCOREAPP
 using Antd2.Init;

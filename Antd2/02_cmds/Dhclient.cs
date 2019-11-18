@@ -1,4 +1,4 @@
-﻿using anthilla.core;
+﻿using antd.core;
 
 namespace Antd2.cmds {
     public class Dhclient {
