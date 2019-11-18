@@ -11,7 +11,7 @@ namespace Antd2.cmds {
         private const string zpoolEmptyMessage = "no pools available";
         private const string zpoolHistory = "history";
         private const string zpoolImportArgs = "import";
-        private const string zpoolImportPoolArgs = "import -f -o altroot=/Data/";
+        private const string zpoolImportPoolArgs = "import -f -o altroot=/Data";
         private const string zpoolImportFilter = "pool:";
 
         public static ZpoolModel[] GetPools() {
@@ -53,7 +53,7 @@ namespace Antd2.cmds {
         }
 
         public static bool Import(string poolName) {
-            Bash.Do($"{zpoolCommand} {CommonString.Append(zpoolImportPoolArgs, poolName, " ", poolName).Replace("//", "/")}");
+            Bash.Do($"{zpoolCommand} {zpoolImportPoolArgs} {poolName}");
             return true;
         }
 
