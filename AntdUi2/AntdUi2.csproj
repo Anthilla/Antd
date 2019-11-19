@@ -145,7 +145,7 @@
     <None Update="Scripts\app\app-home.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\app\controller-antd_OLD.js">
+    <None Update="Scripts\app\old_controller-antd.js">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Scripts\app\controller-antd.js">
@@ -670,10 +670,10 @@
     <None Update="Views\pages\volumes.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\bind\configuration.html">
+    <None Update="Views\pages\old_html\bind\configuration.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\bind\zones.html">
+    <None Update="Views\pages\old_html\bind\zones.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Views\pages\commands.html">
@@ -685,61 +685,61 @@
     <None Update="Views\pages\sysctl.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\cluster\configuration.html">
+    <None Update="Views\pages\old_html\cluster\configuration.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\cluster\neighborhood.html">
+    <None Update="Views\pages\old_html\cluster\neighborhood.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\cluster\sharedfs.html">
+    <None Update="Views\pages\old_html\cluster\sharedfs.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\cluster\sharednetwork.html">
+    <None Update="Views\pages\old_html\cluster\sharednetwork.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\cluster\sharedservices.html">
+    <None Update="Views\pages\old_html\cluster\sharedservices.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\cluster\status.html">
+    <None Update="Views\pages\old_html\cluster\status.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\firewall\configuration.html">
+    <None Update="Views\pages\old_html\firewall\configuration.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Views\home.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\host\webservice.html">
+    <None Update="Views\pages\old_html\host\webservice.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Views\login.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\log\view.html">
+    <None Update="Views\pages\old_html\log\view.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\bond.html">
+    <None Update="Views\pages\old_html\network\bond.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\bridge.html">
+    <None Update="Views\pages\old_html\network\bridge.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\externalnetwork.html">
+    <None Update="Views\pages\old_html\network\externalnetwork.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\gateways.html">
+    <None Update="Views\pages\old_html\network\gateways.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Views\pages\interfaces.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\internalnetwork.html">
+    <None Update="Views\pages\old_html\network\internalnetwork.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\knownhosts.html">
+    <None Update="Views\pages\old_html\network\knownhosts.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\knownnetworks.html">
+    <None Update="Views\pages\old_html\network\knownnetworks.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Views\pages\routing.html">
@@ -748,31 +748,31 @@
     <None Update="Views\pages\routing_tables.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\tap.html">
+    <None Update="Views\pages\old_html\network\tap.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\tun.html">
+    <None Update="Views\pages\old_html\network\tun.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\network\wifi.html">
+    <None Update="Views\pages\old_html\network\wifi.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\ssh\authorizedkeys.html">
+    <None Update="Views\pages\old_html\ssh\authorizedkeys.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\ssh\publickey.html">
+    <None Update="Views\pages\old_html\ssh\publickey.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\user\applicative.html">
+    <None Update="Views\pages\old_html\user\applicative.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\user\group.html">
+    <None Update="Views\pages\old_html\user\group.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\user\system.html">
+    <None Update="Views\pages\old_html\user\system.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="Views\pages\_old\virsh\configuration.html">
+    <None Update="Views\pages\old_html\virsh\configuration.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>

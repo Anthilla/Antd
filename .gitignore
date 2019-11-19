@@ -159,4 +159,6 @@ $RECYCLE.BIN/
 # Other
 ignorethis*/
 ignorethis*
+old_*/
+old_*
 .vs/
