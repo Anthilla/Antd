@@ -10,47 +10,46 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+            <table class="table table-condensed no-border table-fixed">
                 <tbody>
                     <tr>
                         <th>
                             <p>Active</p>
                         </th>
-                    </tr>
-                    <tr>
                         <td>
-                            <textarea rows="9" ng-model="BootServices.ActiveServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="BootServices.ActiveServicesTxt" class="form-control"></textarea>
+                        </td>
+                        <td></td>
+                        <td class="fg-dark" rowspan="4">
+                            <p ng-repeat="p in BootServices.RunningServices" class="no-margin">{{p}}</p>
                         </td>
                     </tr>
                     <tr>
                         <th>
                             <p>Inactive</p>
                         </th>
-                    </tr>
-                    <tr>
                         <td>
-                            <textarea rows="9" ng-model="BootServices.InactiveServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="BootServices.InactiveServicesTxt" class="form-control"></textarea>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>
                             <p>Disabled</p>
                         </th>
-                    </tr>
-                    <tr>
                         <td>
-                            <textarea rows="9" ng-model="BootServices.DisabledServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="BootServices.DisabledServicesTxt" class="form-control"></textarea>
                         </td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th>
                             <p>Blocked</p>
                         </th>
-                    </tr>
-                    <tr>
                         <td>
-                            <textarea rows="9" ng-model="BootServices.BlockedServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="BootServices.BlockedServicesTxt" class="form-control"></textarea>
                         </td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>

@@ -55,6 +55,7 @@ namespace Antd2.Modules {
             a.InactiveServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveServices);
             a.DisabledServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.DisabledServices);
             a.BlockedServicesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.BlockedServices);
+            a.RunningServices = Systemctl.GetServices().Where(_ => _.Active).Select(_ => _.Service).OrderBy(_ => _).ToArray();
             var jsonString = JsonConvert.SerializeObject(a);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
@@ -133,5 +134,8 @@ namespace Antd2.Modules {
         public string InactiveServicesTxt { get; set; }
         public string DisabledServicesTxt { get; set; }
         public string BlockedServicesTxt { get; set; }
+
+        public string[] RunningServices { get; set; }
+
     }
 }
