@@ -10,7 +10,7 @@
 # default for csharp files.
 # Note: This is only used by command line
 ###############################################################################
-#*.cs     diff=csharp
+*.cs  text   diff=csharp
 
 ###############################################################################
 # Set the merge driver for project and solution files
@@ -62,9 +62,15 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-*/Style/themes/*	linguist-vendored
-*/Style/themes/base/*	linguist-vendored
-*/Style/themes/base/images/*	linguist-vendored
+*/Style/*	linguist-vendored
+*/Fonts/*	linguist-vendored
+*/FontsWeb/*	linguist-vendored
+*/Images/*	linguist-vendored
+*/novnc/*	linguist-vendored
+*/Scripts/*	linguist-vendored
+*/Scripts/app/*	linguist-vendored
+*/Scripts/base/*	linguist-vendored
+
 *metro*	linguist-vendored
 *font-awesome*	linguist-vendored
 *angular*	linguist-vendored
