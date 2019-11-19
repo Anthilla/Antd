@@ -106,7 +106,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\antd.core\antd.core.csproj" />
-    <ProjectReference Include="..\WebDavServer.HttpListener\WebDavServer.HttpListener.csproj" />
     <ProjectReference Include="..\WebDavServer\WebDavServer.csproj" />
   </ItemGroup>
 

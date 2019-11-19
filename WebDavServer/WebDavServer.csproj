@@ -73,6 +73,12 @@
     <Compile Include="Helpers\ResponseHelpers.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
+    <Compile Include="HttpListener\BasicHttpContext.cs" />
+    <Compile Include="HttpListener\HttpBaseContext.cs" />
+    <Compile Include="HttpListener\HttpContext.cs" />
+    <Compile Include="HttpListener\HttpRequest.cs" />
+    <Compile Include="HttpListener\HttpResponse.cs" />
+    <Compile Include="HttpListener\HttpSession.cs" />
     <Compile Include="Http\IHttpContext.cs" />
     <Compile Include="Http\IHttpRequest.cs" />
     <Compile Include="Http\IHttpResponse.cs" />
