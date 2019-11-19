@@ -17,6 +17,7 @@ namespace Antd2.Jobs {
                 if (IsRealClass(jobs[i])) {
                     instanceJob = (Job)Activator.CreateInstance(jobs[i]);
                     thread = new Thread(new ThreadStart(instanceJob.ExecuteJob));
+                    thread.Name = $"_{instanceJob.Name}".Replace(" ", "");
                     thread.Start();
                     Console.WriteLine($"[scheduler] {instanceJob.Name} job started");
                 }
@@ -30,6 +31,7 @@ namespace Antd2.Jobs {
             if (IsRealClass(type)) {
                 instanceJob = (Job)Activator.CreateInstance(type);
                 thread = new Thread(new ThreadStart(instanceJob.ExecuteJob));
+                thread.Name = $"_{instanceJob.Name}".Replace(" ", "");
                 thread.Start();
                 Console.WriteLine($"[scheduler] {instanceJob.Name} job started");
             }
@@ -44,7 +46,7 @@ namespace Antd2.Jobs {
                 .ToArray();
         }
 
-        public static bool IsRealClass(Type testType) {
+        private static bool IsRealClass(Type testType) {
             return testType.IsAbstract == false
                 && testType.IsGenericTypeDefinition == false
                 && testType.IsInterface == false;

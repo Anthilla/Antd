@@ -95,3 +95,18 @@ Run = [
   "touch /Data/Data01/test.txt",
   "echo 3 >> /Data/Data01/test.txt",
 ]
+
+[[Cron]]
+Name = "job00"
+Command = "echo hello job00"
+Time = 9583
+
+[[Cron]]
+Name = "job01"
+Command = "echo hello job01"
+Time = 14785
+
+[[Cron]]
+Name = "job02"
+Command = "echo hello job02"
+Time = 17539

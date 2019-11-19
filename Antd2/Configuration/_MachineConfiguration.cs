@@ -32,7 +32,8 @@
         /// </summary>
         public SetupCommandParameters Commands { get; set; } = new SetupCommandParameters();
 
-        //public ScheduledCommand[] ScheduledCommands { get; set; } = Array.Empty<ScheduledCommand>();
+        public ScheduledCommand[] Cron { get; set; } = System.Array.Empty<ScheduledCommand>();
+
 
     }
 }

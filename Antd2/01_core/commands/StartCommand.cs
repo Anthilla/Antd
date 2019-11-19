@@ -10,6 +10,7 @@ using System.Linq;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 using antd.core;
+using System.Threading;
 
 #if NETCOREAPP
 using Antd2.Init;
@@ -447,6 +448,12 @@ namespace Antd2 {
             Scheduler.ExecuteJob<SyncTimeJob>();
             Scheduler.ExecuteJob<ModulesControllerJob>();
             Scheduler.ExecuteJob<ServicesControllerJob>();
+            LaunchCronJobs();
+        }
+
+        private static void LaunchCronJobs() {
+            foreach (var job in ConfigManager.Config.Saved.Cron)
+                Cron.Jobs.Add(job.Name, job.Command, job.Time);
         }
 
         private static void StartWebserver() {
