@@ -581,4 +581,12 @@ function VolumesController($scope, $http, notificationService) {
             notificationService.success('Volumes sync start');
         }, function(r) { console.log(r); });
     };
+} 
+
+
+app.controller("TerminalController", ["$scope", "$http", "notificationService", TerminalController]);
+
+function TerminalController($scope, $http, notificationService) {
+
+   
 }

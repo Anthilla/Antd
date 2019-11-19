@@ -92,6 +92,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("commands", {
             cache: false, url: "^/commands", views: { 'content': { templateUrl: "pg/commands.min.html?v=" + new Date() } }
         })
+        .state("terminal", {
+            cache: false, url: "^/terminal", views: { 'content': { templateUrl: "pg/terminal.min.html?v=" + new Date() } }
+        })
         ;
 });
 
@@ -180,7 +183,10 @@ function SidebarController($scope, $http) {
             { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks', Active: '' },
             { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes', Active: '' },
 
-            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' }
+            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' },
+
+            { Name: 'Terminal', Icon: 'fa-square fg-dark', Destination: 'terminal', Active: '' },
+
         ]
     }];
 

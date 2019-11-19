@@ -82,5 +82,11 @@
     "inputFiles": [
       "Views/pages/volumes.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/terminal.min.html",
+    "inputFiles": [
+      "Views/pages/terminal.html"
+    ]
   }
 ]
