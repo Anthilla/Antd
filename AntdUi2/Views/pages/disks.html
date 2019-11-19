@@ -101,12 +101,12 @@
                         <td></td>
                         <td>
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-show="part.Mountpoint.length==0"
-                                        ng-click="checkFs(part);ShowCKPanel=true" type="button"
+                                <button ng-click="checkFs(part);ShowCKPanel=true" type="button"
                                         class="btn btn-info">
                                     Check Fs
                                 </button>
-                                <button ng-click="part.ShowEXT4Panel=!part.ShowEXT4Panel;part.ShowZFSPanel=false;part.ShowCKPanel=false" type="button"
+                                <button ng-disabled="part.FsType.length>0"
+                                        ng-click="part.ShowEXT4Panel=!part.ShowEXT4Panel;part.ShowZFSPanel=false;part.ShowCKPanel=false" type="button"
                                         class="btn btn-default">
                                     Set Ext4 Fs
                                 </button>
