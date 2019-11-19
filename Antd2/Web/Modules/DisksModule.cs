@@ -18,6 +18,8 @@ namespace Antd2.Modules {
 
             Post("/create/fs/zfs", x => ApiPostCreateFsZfs());
 
+            Get("/check/fs/{device*}", x => ApiGetCheckFs(x));
+
         }
 
         private dynamic ApiGet() {
@@ -26,6 +28,7 @@ namespace Antd2.Modules {
 
             var disksLsblk = Lsblk.Get();
             var disksBlkid = Blkid.Get();
+            var df = Df.Get();
 
             foreach (var disk in disks) {
                 foreach (var partition in disk.Partitions) {
@@ -35,6 +38,13 @@ namespace Antd2.Modules {
                         partition.Mountpoint = disksLsblk.FirstOrDefault(_ => "/dev/" + _.Name == partition.Name).Mountpoint;
                         partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
                         partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
+
+                        partition.Size = df.FirstOrDefault(_ => _.FS == partition.Name).Blocks;
+                        partition.Used = df.FirstOrDefault(_ => _.FS == partition.Name).Used;
+
+                        if (partition.FsType == "zfs_member") {
+                            partition.Mountpoint = "/Data/" + partition.Label;
+                        }
                     }
                 }
             }
@@ -79,6 +89,16 @@ namespace Antd2.Modules {
             Zfs.CreateFs(device, pool, label);
             return HttpStatusCode.OK;
         }
-        
+
+        private dynamic ApiGetCheckFs(dynamic x) {
+            string partition = x.device;
+            var fsck = E2fsck.CheckPartition(partition);
+            var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(fsck);
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
     }
 }

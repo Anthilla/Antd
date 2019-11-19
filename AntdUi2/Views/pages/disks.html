@@ -101,10 +101,17 @@
                         <td></td>
                         <td>
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="part.ShowEXT4Panel=!part.ShowEXT4Panel;part.ShowZFSPanel=false" type="button" class="btn btn-default">
+                                <button ng-show="part.Mountpoint.length==0"
+                                        ng-click="checkFs(part);ShowCKPanel=true" type="button"
+                                        class="btn btn-info">
+                                    Check Fs
+                                </button>
+                                <button ng-click="part.ShowEXT4Panel=!part.ShowEXT4Panel;part.ShowZFSPanel=false;part.ShowCKPanel=false" type="button"
+                                        class="btn btn-default">
                                     Set Ext4 Fs
                                 </button>
-                                <button ng-click="part.ShowZFSPanel=!part.ShowZFSPanel;part.ShowEXT4Panel=false" type="button" class="btn btn-default">
+                                <button ng-click="part.ShowZFSPanel=!part.ShowZFSPanel;part.ShowEXT4Panel=false;part.ShowCKPanel=false" type="button"
+                                        class="btn btn-default">
                                     Set ZFS
                                 </button>
                             </div>
@@ -145,6 +152,11 @@
                                     Create ZFS file system
                                 </button>
                             </div>
+                        </td>
+                    </tr>
+                    <tr ng-show="part.ShowCKPanel">
+                        <td colspan="6">
+                            <p ng-repeat="l in part.Check">{{ l }}</p>
                         </td>
                     </tr>
                 </tbody>

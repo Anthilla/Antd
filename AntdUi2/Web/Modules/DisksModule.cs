@@ -15,6 +15,7 @@ namespace AntdUi2.Modules {
             Post("/create/fs/ext4", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
             Post("/create/fs/zfs", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
 
+            Get("/check/fs/{device*}", x => ApiGet());
         }
 
         private Response ApiGet() {
