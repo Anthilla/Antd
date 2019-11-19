@@ -2640,11 +2640,16 @@ span.section {
 }
 
 .form-control {
-    padding: 3px 0px 3px 10px !important;
+    padding: 0px 0px 0px 5px !important;
     border-radius: 0;
     width: 100%;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
+    font-size: 13px !important;
+}
+
+input.form-control {
+    height: 22px !important;
 }
 
 .form-horizontal .control-label {
