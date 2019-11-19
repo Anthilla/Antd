@@ -122,6 +122,7 @@ function HostController($scope, $http, notificationService) {
         console.log("saveHost");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/config/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) {
             console.log(r);
@@ -132,6 +133,7 @@ function HostController($scope, $http, notificationService) {
         console.log("applyHost");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/config/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) {
             console.log(r);
@@ -162,6 +164,7 @@ function TimedateController($scope, $http, notificationService) {
         console.log("saveTimeDate");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/timedate/config/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -170,6 +173,7 @@ function TimedateController($scope, $http, notificationService) {
         console.log("applyTimeDate");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/timedate/config/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -197,6 +201,7 @@ function SysctlController($scope, $http, notificationService) {
         console.log("saveBootParameters");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/sysctl/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -205,6 +210,7 @@ function SysctlController($scope, $http, notificationService) {
         console.log("applyBootParameters");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/sysctl/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -232,6 +238,7 @@ function ModulesController($scope, $http, notificationService) {
         console.log("saveBootModules");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/modules/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -240,6 +247,7 @@ function ModulesController($scope, $http, notificationService) {
         console.log("applyBootModules");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/modules/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -267,6 +275,7 @@ function ServicesController($scope, $http, notificationService) {
         console.log("saveBootServices");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/services/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -275,6 +284,7 @@ function ServicesController($scope, $http, notificationService) {
         console.log("applyBootServices");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/services/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -302,6 +312,7 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
         console.log("saveSetupCommands");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/setupcmd/config/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -310,6 +321,7 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
         console.log("applySetupCommands");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/setupcmd/config/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -343,6 +355,7 @@ function RoutingTablesController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routingtables/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -351,6 +364,7 @@ function RoutingTablesController($scope, $http, notificationService) {
         console.log("applyRoutingTables");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routingtables/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -384,6 +398,7 @@ function RoutingController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routing/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
@@ -392,6 +407,7 @@ function RoutingController($scope, $http, notificationService) {
         console.log("applyRouting");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routing/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) { console.log(r); });
     };
@@ -429,6 +445,7 @@ function InterfacesController($scope, $http, notificationService) {
         console.log("saveNetworkInterfaces");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/interfaces/save", data).then(function () {
+            $scope.load();
             notificationService.success('Data saved');
         }, function (r) {
             console.log(r);
@@ -439,6 +456,7 @@ function InterfacesController($scope, $http, notificationService) {
         console.log("applyNetworkInterfaces");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/interfaces/apply").then(function () {
+            $scope.load();
             notificationService.success('Data applied');
         }, function (r) {
             console.log(r);
@@ -468,6 +486,7 @@ function DisksController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/partition/table", data).then(function () {
+            $scope.load();
             notificationService.success('Partition Table Created');
         }, function (r) { console.log(r); });
     };
@@ -483,6 +502,7 @@ function DisksController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/partition", data).then(function () {
+            $scope.load();
             notificationService.success('Partition Created');
         }, function (r) { console.log(r); });
     };
@@ -494,6 +514,7 @@ function DisksController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/fs/ext4", data).then(function () {
+            $scope.load();
             notificationService.success('Ext4 Created');
         }, function (r) { console.log(r); });
     };
@@ -506,6 +527,7 @@ function DisksController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/fs/zfs", data).then(function () {
+            $scope.load();
             notificationService.success('Zfs Created');
         }, function (r) { console.log(r); });
     };
@@ -541,6 +563,7 @@ function VolumesController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/mount", data).then(function () {
+            $scope.load();
             notificationService.success('Volume mounted');
         }, function (r) { console.log(r); });
     };
@@ -551,6 +574,7 @@ function VolumesController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/umount", data).then(function () {
+            $scope.load();
             notificationService.success('Volume unmounted');
         }, function (r) { console.log(r); });
     };
@@ -565,6 +589,7 @@ function VolumesController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/webdav/start", data).then(function () {
+            $scope.load();
             notificationService.success('Webdav Started');
         }, function (r) { console.log(r); });
     };
@@ -575,6 +600,7 @@ function VolumesController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/webdav/stop", data).then(function () {
+            $scope.load();
             notificationService.success('Webdav Stopped');
         }, function (r) { console.log(r); });
     };
@@ -586,6 +612,7 @@ function VolumesController($scope, $http, notificationService) {
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/sync", data).then(function () {
+            $scope.load();
             notificationService.success('Volumes sync start');
         }, function (r) { console.log(r); });
     };
