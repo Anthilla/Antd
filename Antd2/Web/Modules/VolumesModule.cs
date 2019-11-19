@@ -61,7 +61,7 @@ namespace Antd2.Modules {
                             partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
                         }
 
-                        if (partition.FsType == "zfs_member") {
+                        if (partition.FsType == "zfs_member" && partition.Mountpoint.Length > 0) {
                             partition.Mountpoint = "/Data/" + partition.Label;
                         }
 
