@@ -2,7 +2,8 @@ var app = angular.module("templateApp", [
     "ngSanitize",
     "pascalprecht.translate",
     "ui.router",
-    "jlareau.pnotify"
+    "jlareau.pnotify",
+    "vtortola.ng-terminal"
 ]);
 
 //translate config

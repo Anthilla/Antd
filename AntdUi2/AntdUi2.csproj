@@ -502,7 +502,7 @@
     <None Update="Scripts\base\xml2json.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\base\xterm.js">
+    <None Update="Scripts\base\ng-terminal.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Style\angular-json-explorer.css">
@@ -634,7 +634,7 @@
     <None Update="Style\template.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Style\xterm.css">
+    <None Update="Style\ng-terminal.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Views\pages\commands.min.html">
