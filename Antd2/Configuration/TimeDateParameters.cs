@@ -22,6 +22,10 @@ namespace Antd2.Configuration {
 
         [TomlIgnoreAttribute]
         public string NtpServerTxt { get; set; }
+        [TomlIgnoreAttribute]
+        public string RunningDate { get; set; }
+        [TomlIgnoreAttribute]
+        public string RunningTimezone { get; set; }
 
     }
 }

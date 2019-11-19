@@ -10,8 +10,14 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+            <table class="table table-condensed no-border table-fixed">
                 <tbody>
+                    <tr>
+                        <th scope="row">Date</th>
+                        <td></td>
+                        <td></td>
+                        <td class="fg-dark">{{ TimeDate.RunningDate }}</td>
+                    </tr>
                     <tr>
                         <th scope="row">Timezone</th>
                         <td>
@@ -444,19 +450,20 @@
                             </select>
                         </td>
                         <td></td>
+                        <td class="fg-dark">{{ TimeDate.RunningTimezone }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">Sync From Remote Server</th>
-                        <td>
-                            <input ng-model="TimeDate.EnableNtpSync" type="checkbox">
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Remote Ntp Server</th>
+                        <th scope="row">
+                            Remote Ntp Server
+                            <span class="float-right">
+                                Enable
+                                <input ng-model="TimeDate.EnableNtpSync" type="checkbox" style="margin-left: 5px;">
+                            </span>
+                        </th>
                         <td>
                             <textarea rows="3" ng-model="TimeDate.NtpServerTxt" class="form-control"></textarea>
                         </td>
+                        <td></td>
                         <td></td>
                     </tr>
                 </tbody>

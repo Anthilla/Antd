@@ -20,6 +20,8 @@ namespace Antd2.Modules {
         private dynamic ApiGet() {
             var time = ConfigManager.Config.Saved.Time;
             time.NtpServerTxt = string.Join("\n", time.NtpServer);
+            time.RunningDate = Date.Get();
+            time.RunningTimezone = Timedatectl.Get().Timezone;
             var jsonString = JsonConvert.SerializeObject(time);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
