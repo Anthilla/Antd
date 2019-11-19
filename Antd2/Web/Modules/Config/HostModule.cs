@@ -19,6 +19,11 @@ namespace Antd2.Modules {
 
         private dynamic ApiGet() {
             var host = ConfigManager.Config.Saved.Host;
+            var hostnamectl = Hostnamectl.Get();
+            host.RunningName = hostnamectl.HostName;
+            host.RunningChassis = hostnamectl.HostChassis;
+            host.RunningDeployment = hostnamectl.HostDeployment;
+            host.RunningLocation = hostnamectl.HostLocation;
             var jsonString = JsonConvert.SerializeObject(host);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {

@@ -10,13 +10,12 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+            <table class="table table-condensed no-border table-fixed">
                 <tbody>
                     <tr>
                         <th scope="row">UID</th>
-                        <td>
-                            {{ Host.Uid }}
-                        </td>
+                        <td class="fg-dark">{{ Host.Uid }}</td>
+                        <td></td>
                         <td></td>
                     </tr>
                     <tr>
@@ -24,7 +23,8 @@
                         <td>
                             <input ng-model="Host.Name" class="form-control" type="text">
                         </td>
-                        <td>{{ HostRunning.HostName }}</td>
+                        <td></td>
+                        <td class="fg-dark">{{ Host.RunningTimezone }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Chassis</th>
@@ -42,6 +42,7 @@
                             </select>
                         </td>
                         <td></td>
+                        <td class="fg-dark">{{ Host.RunningChassis }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Deployment</th>
@@ -49,6 +50,7 @@
                             <input ng-model="Host.Deployment" class="form-control" type="text">
                         </td>
                         <td></td>
+                        <td class="fg-dark">{{ Host.RunningDeployment }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Location</th>
@@ -56,6 +58,7 @@
                             <input ng-model="Host.Location" class="form-control" type="text">
                         </td>
                         <td></td>
+                        <td class="fg-dark">{{ Host.RunningLocation }}</td>
                     </tr>
                 </tbody>
             </table>

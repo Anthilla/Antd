@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nett;
+using System;
 
 namespace Antd2.Configuration {
     /// <summary>
@@ -14,5 +15,14 @@ namespace Antd2.Configuration {
         public string Chassis { get; set; } = "server";
         public string Deployment { get; set; } = "developement";
         public string Location { get; set; } = "onEarth";
+
+        [TomlIgnoreAttribute]
+        public string RunningName { get; set; }
+        [TomlIgnoreAttribute]
+        public string RunningChassis { get; set; }
+        [TomlIgnoreAttribute]
+        public string RunningDeployment { get; set; }
+        [TomlIgnoreAttribute]
+        public string RunningLocation { get; set; }
     }
 }
