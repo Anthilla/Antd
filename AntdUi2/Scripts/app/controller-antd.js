@@ -50,52 +50,6 @@ function SharedController($scope) {
     $scope.removeFromList = function (index, list) {
         list.splice(index, 1);
     };
-
-    $scope.selectizeSingleConfig = function () {
-        return {
-            valueField: "value",
-            labelField: "value",
-            searchField: ["value"],
-            persist: true,
-            create: function (input) {
-                return {
-                    value: input,
-                    text: input
-                };
-            },
-            maxItems: 1
-        };
-    };
-
-    $scope.selectizeConfig = function (list) {
-        return {
-            valueField: "value",
-            labelField: "value",
-            searchField: ["value"],
-            persist: true,
-            create: function (input) {
-                return {
-                    value: input,
-                    text: input
-                };
-            },
-            onChange: function (values) {
-                list = [];
-                angular.forEach(values, function (value) {
-                    list.push(value);
-                });
-            },
-            delimiter: ","
-        };
-    };
-
-    $scope.selectizeOptions = function (list) {
-        var options = [];
-        angular.forEach(list, function (el) {
-            options.push({ value: el });
-        });
-        return options;
-    };
 }
 
 app.controller("HostController", ["$scope", "$http", "notificationService", HostController]);
