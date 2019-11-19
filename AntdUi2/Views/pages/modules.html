@@ -10,27 +10,28 @@
     <div class="row">
         <!--pannello configurazione-->
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <table class="table table-condensed table-hover bg-white no-border table-fixed">
+            <table class="table table-condensed no-border table-fixed">
                 <tbody>
                     <tr>
                         <th>
-                            <p>Active</p>
+                            Active
                         </th>
-                    </tr>
-                    <tr>
                         <td>
-                            <textarea rows="12" ng-model="BootModules.ActiveModulesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="BootModules.ActiveModulesTxt" class="form-control"></textarea>
+                        </td>
+                        <td></td>
+                        <td class="fg-dark" rowspan="2">
+                            <p ng-repeat="p in BootModules.RunningModules" class="no-margin">{{p}}</p>
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            <p>Inactive</p>
+                            Inactive
                         </th>
-                    </tr>
-                    <tr>
                         <td>
-                            <textarea rows="12" ng-model="BootModules.InactiveModulesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="BootModules.InactiveModulesTxt" class="form-control"></textarea>
                         </td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>

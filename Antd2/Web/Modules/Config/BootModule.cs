@@ -40,6 +40,7 @@ namespace Antd2.Modules {
             var a = new ModulesView();
             a.ActiveModulesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.ActiveModules);
             a.InactiveModulesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveModules);
+            a.RunningModules = Mod.Get().Select(_ => _.Module).OrderBy(_ => _).ToArray();
             var jsonString = JsonConvert.SerializeObject(a);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
@@ -121,6 +122,9 @@ namespace Antd2.Modules {
     public class ModulesView {
         public string ActiveModulesTxt { get; set; }
         public string InactiveModulesTxt { get; set; }
+
+        public string[] RunningModules { get; set; }
+
     }
 
     public class ServicesView {

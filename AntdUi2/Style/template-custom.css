@@ -5081,3 +5081,8 @@ ul.notifications {
 .text-underline{
     text-decoration: underline !important;
 }
+
+textarea.form-control{
+    min-width: 100% !important;
+    max-width: 100% !important;
+}
