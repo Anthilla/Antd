@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nett;
+using System;
 
 namespace Antd2.Configuration {
     /// <summary>
@@ -129,9 +130,14 @@ namespace Antd2.Configuration {
         public string[] PostDown { get; set; } = Array.Empty<string>();
 
         public bool AutoBool { get; set; }
+
+        [TomlIgnoreAttribute]
         public string PreUpTxt { get; set; } = string.Empty;
+        [TomlIgnoreAttribute]
         public string PostUpTxt { get; set; } = string.Empty;
+        [TomlIgnoreAttribute]
         public string PreDownTxt { get; set; } = string.Empty;
+        [TomlIgnoreAttribute]
         public string PostDownTxt { get; set; } = string.Empty;
 
     }

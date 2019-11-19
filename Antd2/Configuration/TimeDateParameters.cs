@@ -1,4 +1,6 @@
-﻿namespace Antd2.Configuration {
+﻿using Nett;
+
+namespace Antd2.Configuration {
     /// <summary>
     /// Raccoglie i parametri che gestiscono la configurazione temporale della macchina
     /// </summary>
@@ -18,6 +20,7 @@
         /// </summary>
         public string[] NtpServer { get; set; } = System.Array.Empty<string>();
 
+        [TomlIgnoreAttribute]
         public string NtpServerTxt { get; set; }
 
     }
