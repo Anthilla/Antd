@@ -26,6 +26,5 @@ namespace Antd2.Configuration {
         public string RunningDate { get; set; }
         [TomlIgnoreAttribute]
         public string RunningTimezone { get; set; }
-
     }
 }

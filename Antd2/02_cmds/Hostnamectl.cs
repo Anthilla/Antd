@@ -13,7 +13,7 @@ namespace Antd2.cmds {
         private const string setLocationArg = "set-location";
 
         public static Host Get() {
-            var result = CommonProcess.Execute(hostnamectlCommand);
+            var result = Bash.Execute(hostnamectlCommand);
             if (result.Count() < 1) {
                 return new Host();
             }
