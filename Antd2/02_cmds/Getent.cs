@@ -1,6 +1,7 @@
 ﻿using antd.core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SSO = System.StringSplitOptions;
 
@@ -94,6 +95,8 @@ namespace Antd2.cmds {
         /// obsi:x:703:
         /// obse:x:704:
         /// visor:x:1000:visor
+        /// 
+        /// %wheel ALL=(ALL) ALL
         /// </summary>
         public static void AddAOSDefaults() {
             foreach (var (User, Uid, Description) in new List<(string User, string Uid, string Description)> {
@@ -121,6 +124,14 @@ namespace Antd2.cmds {
                 foreach (var user in Users)
                     AssignGroup(user, Group);
             }
+
+            var sudoers = "/etc/sudoers";
+            if (File.Exists(sudoers)) {
+                var wheelLine = "%wheel ALL=(ALL) ALL";
+                if (!File.ReadAllLines(sudoers).Where(_ => !_.StartsWith("#")).ToArray().Any(_ => _.Replace(" ", "") == wheelLine.Replace(" ", "")))
+                    File.AppendAllLines(sudoers, new[] { wheelLine });
+            }
+
         }
     }
 }
