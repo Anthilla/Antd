@@ -26,9 +26,11 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiGetSysctl() {
+            var a = new SysctlView();
             var sysctl = ConfigManager.Config.Saved.Boot.Sysctl;
-            var sysctlTxt = string.Join("\n", sysctl);
-            var jsonString = JsonConvert.SerializeObject(sysctlTxt);
+            a.SysctlTxt = string.Join("\n", sysctl);
+            a.RunningSysctl = Sysctl.Get().Select(_ => $"{_.Key}={_.Value}").OrderBy(_ => _).ToArray();
+            var jsonString = JsonConvert.SerializeObject(a);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
                 ContentType = "application/json",
@@ -136,6 +138,14 @@ namespace Antd2.Modules {
         public string BlockedServicesTxt { get; set; }
 
         public string[] RunningServices { get; set; }
+
+    }
+
+    public class SysctlView {
+
+        public string SysctlTxt { get; set; }
+
+        public string[] RunningSysctl { get; set; }
 
     }
 }

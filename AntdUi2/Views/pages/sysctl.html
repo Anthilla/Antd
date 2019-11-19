@@ -13,8 +13,13 @@
             <table class="table table-condensed bg-white no-border table-fixed">
                 <tbody>
                     <tr>
+                        <td></td>
                         <td>
-                            <textarea rows="30" ng-model="SysctlTxt" class="form-control"></textarea>
+                            <textarea rows="30" ng-model="BootSysctl.SysctlTxt" class="form-control"></textarea>
+                        </td>
+                        <td></td>
+                        <td class="fg-dark">
+                            <p ng-repeat="p in BootSysctl.RunningSysctl" class="no-margin">{{p}}</p>
                         </td>
                     </tr>
                 </tbody>

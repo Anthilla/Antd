@@ -178,12 +178,12 @@ function TimedateController($scope, $http, notificationService) {
 app.controller("SysctlController", ["$scope", "$http", "notificationService", SysctlController]);
 
 function SysctlController($scope, $http, notificationService) {
-    $scope.SysctlTxt = null;
+    $scope.BootSysctl = null;
 
     $scope.load = function () {
         console.log("loadBootParameters");
         $http.get("/boot/config/sysctl").then(function (r) {
-            $scope.SysctlTxt = r.data;
+            $scope.BootSysctl = r.data;
         }).catch(function (r) {
             console.log(r);
         });
@@ -192,7 +192,7 @@ function SysctlController($scope, $http, notificationService) {
 
     $scope.save = function () {
         var data = $.param({
-            Data: angular.toJson($scope.SysctlTxt)
+            Data: angular.toJson($scope.BootSysctl.SysctlTxt)
         });
         console.log("saveBootParameters");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
