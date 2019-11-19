@@ -24,6 +24,8 @@ namespace Antd2.Modules {
             host.RunningChassis = hostnamectl.HostChassis;
             host.RunningDeployment = hostnamectl.HostDeployment;
             host.RunningLocation = hostnamectl.HostLocation;
+            host.User = ConfigManager.Config.Saved.App.User;
+            host.Password = ConfigManager.Config.Saved.App.Password;
             var jsonString = JsonConvert.SerializeObject(host);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
@@ -36,6 +38,7 @@ namespace Antd2.Modules {
             string json = Request.Form.Data;
             var model = JsonConvert.DeserializeObject<HostParameters>(json);
             ConfigManager.Config.Saved.Host = model;
+            ConfigManager.Config.Saved.App.Password = model.Password;
             ConfigManager.Config.Dump();
             return HttpStatusCode.OK;
         }

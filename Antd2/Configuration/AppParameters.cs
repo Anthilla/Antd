@@ -18,8 +18,8 @@
         /// </summary>
         public string Root { get; set; } = "/cfg/antd";
 
-        public string DefaultUser { get; set; } = "master";
-        public string DefaultPassword { get; set; } = "master";
+        public string User { get; set; } = "master";
+        public string Password { get; set; } = "master";
 
     }
 }

@@ -24,5 +24,11 @@ namespace Antd2.Configuration {
         public string RunningDeployment { get; set; }
         [TomlIgnoreAttribute]
         public string RunningLocation { get; set; }
+
+
+        [TomlIgnoreAttribute]
+        public string User { get; set; }
+        [TomlIgnoreAttribute]
+        public string Password { get; set; }
     }
 }
