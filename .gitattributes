@@ -69,7 +69,8 @@
 */novnc/*	linguist-vendored
 */Scripts/*	linguist-vendored
 */Scripts/app/*	linguist-vendored
-*/Scripts/base/*	linguist-vendored
+*/Views/*	linguist-vendored
+*/Views/page/*	linguist-vendored
 
 *metro*	linguist-vendored
 *font-awesome*	linguist-vendored
