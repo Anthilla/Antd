@@ -31,10 +31,10 @@ namespace Antd2.Modules {
 
             Console.WriteLine($"[pha] login attempt from {username}");
 
-            if (username != ConfigManager.Config.Saved.App.DefaultUser)
+            if (username != ConfigManager.Config.Saved.App.User)
                 return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.InternalServerError, Guid.Empty));
 
-            if (username != ConfigManager.Config.Saved.App.DefaultPassword)
+            if (password != ConfigManager.Config.Saved.App.Password)
                 return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.InternalServerError, Guid.Empty));
 
             return JsonConvert.SerializeObject(new Tuple<HttpStatusCode, Guid>(HttpStatusCode.OK, Guid.NewGuid()));
