@@ -281,6 +281,50 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
     };
 }
 
+app.controller("SchedulerController", ["$scope", "$http", "notificationService", SchedulerController]);
+
+function SchedulerController($scope, $http, notificationService) {
+    $scope.Scheduler = [];
+
+    $scope.NewScheduler = {
+        Id: '',
+        Name: '',
+        RulesTxt: ''
+    };
+
+    $scope.load = function () {
+        console.log("loadScheduler");
+        $http.get("/scheduler").then(function (r) {
+            $scope.Scheduler = r.data;
+        }).catch(function (r) {
+            console.log(r);
+        });
+    };
+    $scope.load();
+
+    $scope.save = function () {
+        console.log("saveScheduler");
+        var data = $.param({
+            Data: angular.toJson($scope.Scheduler)
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/save", data).then(function () {
+            $scope.load();
+            notificationService.success('Data saved');
+        }, function (r) { console.log(r); });
+    };
+
+    $scope.apply = function () {
+        console.log("applyScheduler");
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/scheduler/apply").then(function () {
+            $scope.load();
+            notificationService.success('Data applied');
+        }, function (r) { console.log(r); });
+    };
+}
+
+
 app.controller("RoutingTablesController", ["$scope", "$http", "notificationService", RoutingTablesController]);
 
 function RoutingTablesController($scope, $http, notificationService) {

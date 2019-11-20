@@ -88,5 +88,11 @@
     "inputFiles": [
       "Views/pages/terminal.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/scheduler.min.html",
+    "inputFiles": [
+      "Views/pages/scheduler.html"
+    ]
   }
 ]

@@ -8,7 +8,7 @@ namespace Antd2.Jobs {
     public class Cron : ICron, IDisposable {
 
         public readonly IDictionary<string, CronJob> RunningJobs = new Dictionary<string, CronJob>();
-
+     
         public void Add(string name, string command, int timeSpan) {
             if (RunningJobs.ContainsKey(name)) {
                 Console.WriteLine($"[cron] a job with name {name} is already running");

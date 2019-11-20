@@ -93,6 +93,10 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("commands", {
             cache: false, url: "^/commands", views: { 'content': { templateUrl: "pg/commands.min.html?v=" + new Date() } }
         })
+        .state("scheduler", {
+            cache: false, url: "^/scheduler", views: { 'content': { templateUrl: "pg/scheduler.min.html?v=" + new Date() } }
+        })
+
         .state("terminal", {
             cache: false, url: "^/terminal", views: { 'content': { templateUrl: "pg/terminal.min.html?v=" + new Date() } }
         })
@@ -185,6 +189,7 @@ function SidebarController($scope, $http) {
             { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes', Active: '' },
 
             { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' },
+            { Name: 'Scheduler', Icon: 'fa-square fg-danger', Destination: 'scheduler', Active: '' },
 
             { Name: 'Terminal', Icon: 'fa-square fg-dark', Destination: 'terminal', Active: '' },
 

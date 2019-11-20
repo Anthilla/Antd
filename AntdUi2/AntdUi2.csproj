@@ -661,6 +661,9 @@
     <None Update="Views\pages\routing_tables.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Views\pages\scheduler.min.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Views\pages\services.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
