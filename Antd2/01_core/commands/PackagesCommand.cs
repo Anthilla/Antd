@@ -40,6 +40,7 @@ namespace Antd2 {
             "mount",
             "parted",
             "umount",
+            "nft",
             "nsupdate",
             "ntpdate",
             "useradd",
@@ -76,14 +77,14 @@ namespace Antd2 {
         private static void CheckFunc_PrintInstalled(string package) {
             Console.Write($"  {package}: ");
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("installed");
+            Console.WriteLine("available");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private static void CheckFunc_PrintNotInstalled(string package) {
             Console.Write($"  {package}: ");
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("not installed");
+            Console.WriteLine("not available");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
