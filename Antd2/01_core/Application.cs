@@ -28,6 +28,8 @@ namespace Antd2 {
 
             args = RemovedUsedArgument(args);
 
+            cmds.Alias.Set("antd-cmd", "/usr/bin/dotnet /Antd/Apps/Anthilla_Antd/antd.dll");
+
             if (args.Length > 0) {
                 if (LineCommand.Options.TryGetValue(args[0], out Action<string[]> functionToExecute)) {
                     functionToExecute?.Invoke(args.Skip(1).ToArray());
