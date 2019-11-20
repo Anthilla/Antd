@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Antd.parsing {
+namespace Antd2.parsing {
     public class NginxParser {
 
         private static string CaptureGroup(string sourceText, string pattern) {

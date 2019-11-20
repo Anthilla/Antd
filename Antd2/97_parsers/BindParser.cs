@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Antd.parsing {
+namespace Antd2.parsing {
     public class BindParser {
 
         private static string CaptureGroup(string sourceText, string pattern) {
