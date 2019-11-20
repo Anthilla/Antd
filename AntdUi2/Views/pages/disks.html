@@ -27,7 +27,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="note-info">
+                    <tr class="note-primary">
                         <td>{{ disk.Name }}</td>
                         <td class="text-right">{{ disk.Size }}</td>
                         <td>{{ disk.PartitionTable }}</td>
@@ -106,7 +106,7 @@
                         <td></td>
                         <td>
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="checkFs(part);ShowCKPanel=true" type="button"
+                                <button ng-click="checkFs(part);part.ShowCKPanel=true" type="button"
                                         class="btn btn-info">
                                     Check Fs
                                 </button>
@@ -159,9 +159,9 @@
                             </div>
                         </td>
                     </tr>
-                    <tr ng-show="part.ShowCKPanel">
-                        <td colspan="6">
-                            <p ng-repeat="l in part.Check">{{ l }}</p>
+                    <tr ng-show="part.ShowCKPanel" class="note-info">
+                        <td colspan="6" style="padding-left: 25px;">
+                            <p ng-repeat="l in part.Check track by $index" class="no-margin">{{ l }}</p>
                         </td>
                     </tr>
                 </tbody>
