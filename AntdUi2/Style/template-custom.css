@@ -2652,6 +2652,10 @@ input.form-control {
     height: 22px !important;
 }
 
+select.form-control {
+    height: 22px !important;
+}
+
 .form-horizontal .control-label {
     padding-top: 8px;
 }
