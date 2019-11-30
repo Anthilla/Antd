@@ -24,64 +24,108 @@
             <table class="table table-condensed no-border table-fixed">
                 <thead>
                     <tr>
-                        <th>Auto</th>
-                        <th>Iface</th>
-                        <th>Address</th>
-                        <th>Conf</th>
-                        <th></th>
+                        <th colspan="5">Auto</th>
+                        <th colspan="20">Iface</th>
+                        <th colspan="20">Address</th>
+                        <th colspan="65">Conf</th>
+                        <th colspan="10"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td colspan="5">
                             <input ng-model="NewNetworkInterface.AutoBool" type="checkbox">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="NewNetworkInterface.Iface" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="NewNetworkInterface.Address" class="form-control" type="text">
                         </td>
-                        <td>
-                            <p>Pre Up</p>
-                            <textarea rows="3" ng-model="NewNetworkInterface.PreUpTxt" class="form-control"></textarea>
-                            <p>Post Up</p>
-                            <textarea rows="3" ng-model="NewNetworkInterface.PostUpTxt" class="form-control"></textarea>
-                            <p>Pre Down</p>
-                            <textarea rows="3" ng-model="NewNetworkInterface.PreDownTxt" class="form-control"></textarea>
-                            <p>Post Down</p>
-                            <textarea rows="3" ng-model="NewNetworkInterface.PostDownTxt" class="form-control"></textarea>
+                        <td colspan="65">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p>Pre Up</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="NewNetworkInterface.PreUpTxt" class="form-control"></textarea>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p>Post Up</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="NewNetworkInterface.PostUpTxt" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p>Pre Down</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="NewNetworkInterface.PreDownTxt" class="form-control"></textarea>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p>Post Down</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="NewNetworkInterface.PostDownTxt" class="form-control"></textarea>
+                                </div>
+                            </div>
                         </td>
-                        <td>
-                            <button ng-click="addToList(NewNetworkInterface, Interfaces)" type="button" class="btn btn-xs btn-success">
-                                Add
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="addToList(NewNetworkInterface, Interfaces)" type="button" class="btn btn-success">
+                                    Add
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr ng-repeat="el in Interfaces">
-                        <td>
+                        <td colspan="5">
                             <input ng-model="el.AutoBool" type="checkbox">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="el.Iface" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="el.Address" class="form-control" type="text">
                         </td>
-                        <td>
-                            <p>Pre Up</p>
-                            <textarea rows="3" ng-model="el.PreUpTxt" class="form-control"></textarea>
-                            <p>Post Up</p>
-                            <textarea rows="3" ng-model="el.PostUpTxt" class="form-control"></textarea>
-                            <p>Pre Down</p>
-                            <textarea rows="3" ng-model="el.PreDownTxt" class="form-control"></textarea>
-                            <p>Post Down</p>
-                            <textarea rows="3" ng-model="el.PostDownTxt" class="form-control"></textarea>
+                        <td colspan="65">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p>Pre Up</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="el.PreUpTxt" class="form-control"></textarea>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p>Post Up</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="el.PostUpTxt" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <p>Pre Down</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="el.PreDownTxt" class="form-control"></textarea>
+                                </div>
+                                <div class="col-lg-2">
+                                    <p>Post Down</p>
+                                </div>
+                                <div class="col-lg-4">
+                                    <textarea rows="3" ng-model="el.PostDownTxt" class="form-control"></textarea>
+                                </div>
+                            </div>
                         </td>
-                        <td>
-                            <button ng-click="removeFromList($index, Interfaces)" type="button" class="btn btn-xs btn-danger">
-                                Remove
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="removeFromList($index, Interfaces)" type="button" class="btn btn-danger">
+                                    Remove
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
