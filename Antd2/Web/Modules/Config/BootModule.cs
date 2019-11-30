@@ -1,8 +1,10 @@
-﻿using Antd2.cmds;
+﻿using antd.core;
+using Antd2.cmds;
 using Antd2.Configuration;
 using Nancy;
 using Nancy.ModelBinding;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -39,10 +41,38 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiGetModules() {
+            //var confAct = ConfigManager.Config.Saved.Boot.ActiveModules;
+            //var confIna = ConfigManager.Config.Saved.Boot.ActiveModules;
+            //var running = Mod.Get();
+
+            //var keysAct = confAct.Select(_ => _).ToArray();
+            //var keysIna = confIna.Select(_ => _).ToArray();
+            //var keysRun = running.Select(_ => _.Module).ToArray();
+
+            //var keys = CommonArray.Merge(keysAct, keysIna, keysRun).ToHashSet()
+            //    .OrderBy(_ => _).ToArray();
+
+            //var mode = new List<ModuleElement>();
+            //foreach (var k in keys) {
+            //    var m = new ModuleElement();
+            //    m.Key = k;
+            //    m.ValueR = running.Any(_ => _.Module == k) ? true : (bool?)null;
+            //    if (confAct.Contains(k)) {
+            //        m.ValueC = true;
+            //    }
+            //    else if (confIna.Contains(k)) {
+            //        m.ValueC = false;
+            //    }
+            //    else {
+            //        m.ValueC = null;
+            //    }
+            //}
+
             var a = new ModulesView();
             a.ActiveModulesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.ActiveModules);
             a.InactiveModulesTxt = string.Join("\n", ConfigManager.Config.Saved.Boot.InactiveModules);
             a.RunningModules = Mod.Get().Select(_ => _.Module).OrderBy(_ => _).ToArray();
+            //a.Modules = mode;
             var jsonString = JsonConvert.SerializeObject(a);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
@@ -128,6 +158,16 @@ namespace Antd2.Modules {
 
         public string[] RunningModules { get; set; }
 
+
+
+        public List<ModuleElement> Modules { get; set; }
+
+    }
+
+    public class ModuleElement {
+        public string Key { get; set; }
+        public bool? ValueC { get; set; }
+        public bool? ValueR { get; set; }
     }
 
     public class ServicesView {

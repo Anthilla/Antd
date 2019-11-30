@@ -94,5 +94,11 @@
     "inputFiles": [
       "Views/pages/scheduler.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/filemanager.min.html",
+    "inputFiles": [
+      "Views/pages/filemanager.html"
+    ]
   }
 ]

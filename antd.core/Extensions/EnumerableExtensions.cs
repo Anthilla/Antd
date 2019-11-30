@@ -43,9 +43,9 @@ namespace antd.core {
             return new string(chars);
         }
 
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> input) {
-            return new HashSet<T>(input);
-        }
+        //public static HashSet<T> ToHashSet<T>(this IEnumerable<T> input) {
+        //    return new HashSet<T>(input);
+        //}
 
         public static IEnumerable<T> Merge<T>(this IEnumerable<IEnumerable<T>> input) {
             var list = new HashSet<T>();

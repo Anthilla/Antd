@@ -22,6 +22,7 @@ namespace Antd2.Modules {
         public VolumesModule() : base("/volumes") {
 
             Get("/", x => ApiGet());
+            Get("/mounted", x => ApiGetMounted());
 
             Post("/mount", x => ApiPostMount());
 
@@ -95,6 +96,71 @@ namespace Antd2.Modules {
                 Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
             };
         }
+
+        private dynamic ApiGetMounted() {
+            var diskList = Parted.GetDisks();
+            var disks = diskList.Select(_ => Parted.Print(_)).ToArray();
+
+            var disksLsblk = Lsblk.Get();
+            var disksBlkid = Blkid.Get();
+            var df = Df.Get();
+
+            var volumes = new List<PartedPartitionModel>();
+
+            foreach (var disk in disks) {
+                foreach (var partition in disk.Partitions) {
+                    var partitionBlk = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name);
+                    if (!string.IsNullOrEmpty(partitionBlk.Uuid)) {
+                        partition.IsVolume = true;
+                        partition.Mountpoint = disksLsblk.FirstOrDefault(_ => "/dev/" + _.Name == partition.Name).Mountpoint;
+                        partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
+                        partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
+
+                        partition.Size = df.FirstOrDefault(_ => _.FS == partition.Name).Blocks;
+                        partition.Used = df.FirstOrDefault(_ => _.FS == partition.Name).Used;
+
+                        if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
+                            partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
+                        }
+
+                        if (partition.FsType == "zfs_member" && partition.Mountpoint.Length > 0) {
+                            partition.Mountpoint = "/Data/" + partition.Label;
+                        }
+
+                        if (!string.IsNullOrEmpty(partition.FsType) &&
+                            partition.Label != "EFI" &&
+                            partition.Label != "System01" &&
+                            partition.Label != "BootExt01" &&
+                            partition.FsType != "linux_raid_member")
+                            volumes.Add(partition);
+                    }
+                }
+            }
+
+            foreach (var a in volumes)
+                a.SyncableVolumes = volumes.Where(_ => !string.IsNullOrEmpty(_.Mountpoint) && _.Name != a.Name).Select(_ => _.Mountpoint).ToList();
+
+            if (WebdavStatus.Count == 0) {
+                Console.WriteLine("no webdav active");
+            }
+            if (WebdavInstances.Count == 0) {
+                Console.WriteLine("no webdav active");
+            }
+            foreach (var a in WebdavStatus) {
+                Console.WriteLine($"[wd] active on {a.Key}");
+            }
+
+            var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(volumes
+                .Where(_ => !string.IsNullOrEmpty(_.Mountpoint))
+                .Where(_ => !_.Name.StartsWith("/dev/sda"))
+                .OrderBy(_ => _.Name).ToArray());
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
+
 
         private dynamic ApiPostMount() {
             string partition = Request.Form.Partition;

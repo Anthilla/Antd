@@ -89,6 +89,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("volumes", {
             cache: false, url: "^/volumes", views: { 'content': { templateUrl: "pg/volumes.min.html?v=" + new Date() } }
         })
+        .state("filemanager", {
+            cache: false, url: "^/filemanager", views: { 'content': { templateUrl: "pg/filemanager.min.html?v=" + new Date() } }
+        })
 
         .state("commands", {
             cache: false, url: "^/commands", views: { 'content': { templateUrl: "pg/commands.min.html?v=" + new Date() } }
@@ -114,6 +117,16 @@ app.directive("convertToNumber", function () {
                 return val !== null ? "" + val : null;
             });
         }
+    };
+});
+
+app.filter('bytes', function() {
+    return function(bytes, precision) {
+        if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+        if (typeof precision === 'undefined') precision = 1;
+        var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+            number = Math.floor(Math.log(bytes) / Math.log(1024));
+        return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
     };
 });
 
@@ -187,12 +200,12 @@ function SidebarController($scope, $http) {
 
             { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks', Active: '' },
             { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes', Active: '' },
+            { Name: 'File Manager', Icon: 'fa-square fg-violet', Destination: 'filemanager', Active: '' },
 
             { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' },
             { Name: 'Scheduler', Icon: 'fa-square fg-danger', Destination: 'scheduler', Active: '' },
 
             { Name: 'Terminal', Icon: 'fa-square fg-dark', Destination: 'terminal', Active: '' },
-
         ]
     }];
 
