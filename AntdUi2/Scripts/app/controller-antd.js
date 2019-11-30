@@ -616,6 +616,71 @@ function VolumesController($scope, $http, notificationService) {
     };
 }
 
+app.controller("WebdavController", ["$scope", "$http", "notificationService", WebdavController]);
+
+function WebdavController($scope, $http, notificationService) {
+
+    $scope.Volumes = [];
+
+    $scope.load = function() {
+        $http.get("/volumes").then(function(r) {
+            $scope.Volumes = r.data;
+        }).catch(function(r) {
+            console.log(r);
+        });
+    };
+    $scope.load();
+
+    $scope.mountVolume = function(partition, label) {
+        var data = $.param({
+            Partition: partition,
+            Label: label
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/volumes/mount", data).then(function() {
+            $scope.load();
+            notificationService.success('Volume mounted');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.umountVolume = function(mountpoint) {
+        var data = $.param({
+            Mountpoint: mountpoint
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/volumes/umount", data).then(function() {
+            $scope.load();
+            notificationService.success('Volume unmounted');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.webdavStart = function(ip, port, mountpoint, user, password) {
+        var data = $.param({
+            Ip: ip,
+            Port: port,
+            Mountpoint: mountpoint,
+            User: user,
+            Password: password
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/volumes/webdav/start", data).then(function() {
+            $scope.load();
+            notificationService.success('Webdav Started');
+        }, function(r) { console.log(r); });
+    };
+
+    $scope.webdavStop = function(mountpoint) {
+        var data = $.param({
+            Mountpoint: mountpoint
+        });
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/volumes/webdav/stop", data).then(function() {
+            $scope.load();
+            notificationService.success('Webdav Stopped');
+        }, function(r) { console.log(r); });
+    };
+}
+
 app.controller("TerminalController", ["$scope", "$http", "notificationService", TerminalController]);
 
 function TerminalController($scope, $http, notificationService) {

@@ -793,6 +793,9 @@
     <None Update="Views\pages\old_html\virsh\configuration.html">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
+    <None Update="Views\pages\webdav.min.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

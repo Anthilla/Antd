@@ -62,22 +62,45 @@ namespace Antd2.Modules {
                             partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
                         }
 
-                        if (partition.FsType == "zfs_member" && partition.Mountpoint.Length > 0) {
-                            partition.Mountpoint = "/Data/" + partition.Label;
-                        }
+                        //if (partition.FsType == "zfs_member") {
+                        //    partition.Mountpoint = "/Data/" + partition.Label;
+                        //}
 
                         if (!string.IsNullOrEmpty(partition.FsType) &&
                             partition.Label != "EFI" &&
                             partition.Label != "System01" &&
                             partition.Label != "BootExt01" &&
-                            partition.FsType != "linux_raid_member")
+                            partition.FsType != "linux_raid_member" &&
+                            partition.FsType != "zfs_member"
+                            )
                             volumes.Add(partition);
                     }
                 }
             }
 
-            foreach (var a in volumes)
+            foreach (var a in volumes) {
                 a.SyncableVolumes = volumes.Where(_ => !string.IsNullOrEmpty(_.Mountpoint) && _.Name != a.Name).Select(_ => _.Mountpoint).ToList();
+                if (string.IsNullOrEmpty(a.Mountpoint))
+                    a.Mountpoint = df.FirstOrDefault(_ => _.FS == a.Label).Mountpoint ?? string.Empty;
+            }
+
+            var zfsParts = df.Where(_ => _.Type == "zfs").ToArray();
+            Console.WriteLine($"zfs: {zfsParts.Length}");
+            foreach (var d in zfsParts) {
+                Console.WriteLine($"zfs: {d.FS}");
+                var partition = new PartedPartitionModel();
+                partition.FsType = d.Type;
+                partition.Label = d.FS;
+                partition.Used = d.Used;
+                partition.Size = d.Avail;
+                partition.Mountpoint = d.Mountpoint;
+                partition.Name = disksBlkid.FirstOrDefault(_ => _.Label.StartsWith(partition.Label)).Partition;
+
+                if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
+                    partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
+                }
+                volumes.Add(partition);
+            }
 
             if (WebdavStatus.Count == 0) {
                 Console.WriteLine("no webdav active");
@@ -123,22 +146,45 @@ namespace Antd2.Modules {
                             partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
                         }
 
-                        if (partition.FsType == "zfs_member" && partition.Mountpoint.Length > 0) {
-                            partition.Mountpoint = "/Data/" + partition.Label;
-                        }
+                        //if (partition.FsType == "zfs_member") {
+                        //    partition.Mountpoint = "/Data/" + partition.Label;
+                        //}
 
                         if (!string.IsNullOrEmpty(partition.FsType) &&
                             partition.Label != "EFI" &&
                             partition.Label != "System01" &&
                             partition.Label != "BootExt01" &&
-                            partition.FsType != "linux_raid_member")
+                            partition.FsType != "linux_raid_member" &&
+                            partition.FsType != "zfs_member"
+                            )
                             volumes.Add(partition);
                     }
                 }
             }
 
-            foreach (var a in volumes)
+            foreach (var a in volumes) {
                 a.SyncableVolumes = volumes.Where(_ => !string.IsNullOrEmpty(_.Mountpoint) && _.Name != a.Name).Select(_ => _.Mountpoint).ToList();
+                if (string.IsNullOrEmpty(a.Mountpoint))
+                    a.Mountpoint = df.FirstOrDefault(_ => _.FS == a.Label).Mountpoint ?? string.Empty;
+            }
+
+            var zfsParts = df.Where(_ => _.Type == "zfs").ToArray();
+            Console.WriteLine($"zfs: {zfsParts.Length}");
+            foreach (var d in zfsParts) {
+                Console.WriteLine($"zfs: {d.FS}");
+                var partition = new PartedPartitionModel();
+                partition.FsType = d.Type;
+                partition.Label = d.FS;
+                partition.Used = d.Used;
+                partition.Size = d.Avail;
+                partition.Mountpoint = d.Mountpoint;
+                partition.Name = "";
+
+                if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
+                    partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
+                }
+                volumes.Add(partition);
+            }
 
             if (WebdavStatus.Count == 0) {
                 Console.WriteLine("no webdav active");

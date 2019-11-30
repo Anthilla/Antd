@@ -89,6 +89,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("volumes", {
             cache: false, url: "^/volumes", views: { 'content': { templateUrl: "pg/volumes.min.html?v=" + new Date() } }
         })
+        .state("webdav", {
+            cache: false, url: "^/webdav", views: { 'content': { templateUrl: "pg/webdav.min.html?v=" + new Date() } }
+        })
         .state("filemanager", {
             cache: false, url: "^/filemanager", views: { 'content': { templateUrl: "pg/filemanager.min.html?v=" + new Date() } }
         })
@@ -200,6 +203,7 @@ function SidebarController($scope, $http) {
 
             { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks', Active: '' },
             { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes', Active: '' },
+            { Name: 'Webdav', Icon: 'fa-square fg-violet', Destination: 'webdav', Active: '' },
             { Name: 'File Manager', Icon: 'fa-square fg-violet', Destination: 'filemanager', Active: '' },
 
             { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' },

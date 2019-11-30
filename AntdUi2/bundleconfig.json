@@ -100,5 +100,11 @@
     "inputFiles": [
       "Views/pages/filemanager.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/webdav.min.html",
+    "inputFiles": [
+      "Views/pages/webdav.html"
+    ]
   }
 ]
