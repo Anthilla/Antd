@@ -24,43 +24,47 @@
             <table class="table table-condensed no-border table-fixed">
                 <thead>
                     <tr>
-                        <th>Destination</th>
-                        <th>Gateway</th>
-                        <th>Device</th>
-                        <th></th>
+                        <th colspan="36">Destination</th>
+                        <th colspan="38">Gateway</th>
+                        <th colspan="36">Device</th>
+                        <th colspan="10"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td colspan="36">
                             <input ng-model="NewRoute.Destination" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="38">
                             <input ng-model="NewRoute.Gateway" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="36">
                             <input ng-model="NewRoute.Device" class="form-control" type="text">
                         </td>
-                        <td>
-                            <button ng-click="addToList(NewRoute, Routes)" type="button" class="btn btn-xs btn-success">
-                                Add
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="addToList(NewRoute, Routes)" type="button" class="btn btn-xs btn-success">
+                                    Add
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr ng-repeat="el in Routes">
-                        <td>
+                        <td colspan="36">
                             <input ng-model="el.Destination" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="38">
                             <input ng-model="el.Gateway" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="36">
                             <input ng-model="el.Device" class="form-control" type="text">
                         </td>
-                        <td>
-                            <button ng-click="removeFromList($index, Routes)" type="button" class="btn btn-xs btn-danger">
-                                Remove
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="removeFromList($index, Routes)" type="button" class="btn btn-xs btn-danger">
+                                    Remove
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

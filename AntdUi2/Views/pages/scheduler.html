@@ -23,43 +23,47 @@
             <table class="table table-condensed no-border table-fixed">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Command</th>
-                        <th>Time (ms)</th>
-                        <th></th>
+                        <th colspan="30">Name</th>
+                        <th colspan="60">Command</th>
+                        <th colspan="20">Time (ms)</th>
+                        <th colspan="10"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td colspan="30">
                             <input ng-model="NewScheduler.Name" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="60">
                             <input ng-model="NewScheduler.Command" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="NewScheduler.Time" class="form-control" min="0" type="number">
                         </td>
-                        <td>
-                            <button ng-click="addToList(NewScheduler, Scheduler)" type="button" class="btn btn-xs btn-success">
-                                Add
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="addToList(NewScheduler, Scheduler)" type="button" class="btn btn-xs btn-success">
+                                    Add
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr ng-repeat="el in Scheduler">
-                        <td>
+                        <td colspan="30">
                             <input ng-model="el.Name" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="60">
                             <input ng-model="el.Command" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="el.Time" class="form-control" min="0" type="number">
                         </td>
-                        <td>
-                            <button ng-click="removeFromList($index, Scheduler)" type="button" class="btn btn-xs btn-danger">
-                                Remove
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="removeFromList($index, Scheduler)" type="button" class="btn btn-xs btn-danger">
+                                    Remove
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

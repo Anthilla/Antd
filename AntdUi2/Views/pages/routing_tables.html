@@ -24,42 +24,47 @@
             <table class="table table-condensed no-border table-fixed">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Alias</th>
-                        <th></th>
+                        <th colspan="10">Id</th>
+                        <th colspan="20">Alias</th>
+                        <th colspan="80">Rules</th>
+                        <th colspan="10"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
+                        <td colspan="10">
                             <input ng-model="NewRoutingTable.Id" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="20">
                             <input ng-model="NewRoutingTable.Name" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="80">
                             <textarea rows="3" ng-model="NewRoutingTable.RulesTxt" class="form-control"></textarea>
                         </td>
-                        <td>
-                            <button ng-click="addToList(NewRoutingTable, RoutingTables)" type="button" class="btn btn-xs btn-success">
-                                Add
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="addToList(NewRoutingTable, RoutingTables)" type="button" class="btn btn-xs btn-success">
+                                    Add
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr ng-repeat="el in RoutingTables">
-                        <td>
+                        <td colspan="10">
                             <input ng-model="el.Id" class="form-control" type="text">
                         </td>
                         <td>
                             <input ng-model="el.Name" class="form-control" type="text">
                         </td>
-                        <td>
+                        <td colspan="80">
                             <textarea rows="3" ng-model="el.RulesTxt" class="form-control"></textarea>
                         </td>
-                        <td>
-                            <button ng-click="removeFromList($index, RoutingTables)" type="button" class="btn btn-xs btn-danger">
-                                Remove
-                            </button>
+                        <td colspan="10">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="removeFromList($index, RoutingTables)" type="button" class="btn btn-xs btn-danger">
+                                    Remove
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
