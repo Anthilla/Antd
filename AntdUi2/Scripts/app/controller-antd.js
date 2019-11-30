@@ -419,7 +419,7 @@ function InterfacesController($scope, $http, notificationService) {
     $scope.NewInterface = {
         AutoBool: true,
         Iface: '',
-        Address: false,
+        Address: '',
         PreUpTxt: '',
         PostUpTxt: '',
         PreDownTxt: '',
