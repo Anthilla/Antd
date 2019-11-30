@@ -129,8 +129,8 @@ namespace Antd2 {
 
         private static void OsReadAndWrite() {
             if (Application.IsUnix == false) { return; }
-            Bash.Do("mount -o remount,rw,noatime /");
-            Bash.Do("mount -o remount,rw,discard,noatime /mnt/cdrom");
+            //Bash.Do("mount -o remount,rw,noatime /");
+            //Bash.Do("mount -o remount,rw,discard,noatime /mnt/cdrom");
         }
 
         private static void RemoveLimits() {
