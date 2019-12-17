@@ -37,14 +37,14 @@ namespace NWebDav.Server.Handlers {
 
             // Obtain the destination
             var destinationUri = request.GetDestinationUri();
-            if(destinationUri == null) {
+            if (destinationUri == null) {
                 // Bad request
                 response.SetStatus(DavStatusCode.BadRequest, "Destination header is missing.");
                 return true;
             }
 
             // Make sure the source and destination are different
-            if(request.Url.AbsoluteUri.Equals(destinationUri.AbsoluteUri, StringComparison.CurrentCultureIgnoreCase)) {
+            if (request.Url.AbsoluteUri.Equals(destinationUri.AbsoluteUri, StringComparison.CurrentCultureIgnoreCase)) {
                 // Forbidden
                 response.SetStatus(DavStatusCode.Forbidden, "Source and destination cannot be the same.");
                 return true;
@@ -58,7 +58,7 @@ namespace NWebDav.Server.Handlers {
 
             // Obtain the destination collection
             var destinationCollection = await store.GetCollectionAsync(destination.CollectionUri, httpContext).ConfigureAwait(false);
-            if(destinationCollection == null) {
+            if (destinationCollection == null) {
                 // Source not found
                 response.SetStatus(DavStatusCode.Conflict, "Destination cannot be found or is not a collection.");
                 return true;
@@ -66,7 +66,7 @@ namespace NWebDav.Server.Handlers {
 
             // Obtain the source item
             var sourceItem = await store.GetItemAsync(request.Url, httpContext).ConfigureAwait(false);
-            if(sourceItem == null) {
+            if (sourceItem == null) {
                 // Source not found
                 response.SetStatus(DavStatusCode.NotFound, "Source cannot be found.");
                 return true;
@@ -82,7 +82,7 @@ namespace NWebDav.Server.Handlers {
             await CopyAsync(sourceItem, destinationCollection, destination.Name, overwrite, depth, httpContext, destination.CollectionUri, errors).ConfigureAwait(false);
 
             // Check if there are any errors
-            if(errors.HasItems) {
+            if (errors.HasItems) {
                 // Obtain the status document
                 var xDocument = new XDocument(errors.GetXmlMultiStatus());
 
@@ -103,19 +103,19 @@ namespace NWebDav.Server.Handlers {
 
             // Copy the item
             var copyResult = await source.CopyAsync(destinationCollection, name, overwrite, httpContext).ConfigureAwait(false);
-            if(copyResult.Result != DavStatusCode.Created && copyResult.Result != DavStatusCode.NoContent) {
+            if (copyResult.Result != DavStatusCode.Created && copyResult.Result != DavStatusCode.NoContent) {
                 errors.AddResult(newBaseUri, copyResult.Result);
                 return;
             }
 
             // Check if the source is a collection and we are requested to copy recursively
             var sourceCollection = source as IStoreCollection;
-            if(sourceCollection != null && depth > 0) {
+            if (sourceCollection != null && depth > 0) {
                 // The result should also contain a collection
                 var newCollection = (IStoreCollection)copyResult.Item;
 
                 // Copy all childs of the source collection
-                foreach(var entry in await sourceCollection.GetItemsAsync(httpContext).ConfigureAwait(false))
+                foreach (var entry in await sourceCollection.GetItemsAsync(httpContext).ConfigureAwait(false))
                     await CopyAsync(entry, newCollection, entry.Name, overwrite, depth - 1, httpContext, newBaseUri, errors).ConfigureAwait(false);
             }
         }

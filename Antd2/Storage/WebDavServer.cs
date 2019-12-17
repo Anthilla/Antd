@@ -49,17 +49,13 @@ namespace Antd2.Storage {
                 Console.WriteLine($"[webdav] listening on {webdavProtocol}://{WebdavIp}:{WebdavPort}/");
                 HttpListener.AuthenticationSchemes = AuthenticationSchemes.Basic;
                 HttpListener.Realm = Realm;
-
                 Console.WriteLine($"[webdav] starting");
                 HttpListener.Start();
                 Console.WriteLine($"[webdav] started");
-
                 DispatchHttpRequestsAsync(HttpListener, CancellationTokenSource.Token);
-
                 while (true)
                     ;
             }
-            Console.WriteLine($"[webdav] closing");
         }
 
         public void Stop() {

@@ -6,6 +6,7 @@
     <RootNamespace>Antd2</RootNamespace>
     <AssemblyName>antd</AssemblyName>
     <StartupObject>Antd2.Application</StartupObject>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -37,6 +38,12 @@
     <Content Include="01_models\_01_info.txt" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <None Include="C:\Windows\Microsoft.NET\Framework\v4.0.30319\netstandard.dll" Link="netstandard.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="ARSoft.Tools.Net" Version="2.2.9" />
     <PackageReference Include="CommandLineParser" Version="2.6.0" />
@@ -54,6 +61,7 @@
     <PackageReference Include="Octodiff" Version="1.2.1" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.6.0" />
     <PackageReference Include="System.Management" Version="4.6.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
