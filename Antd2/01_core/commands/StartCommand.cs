@@ -103,18 +103,12 @@ namespace Antd2 {
         private static void CheckDefaultStaticFiles() {
             if (Application.IsUnix == false) { return; }
 
+#if NETCORE
             var etcIssueFile = "./Templates/TPL_etc_issue";
             if (File.Exists(etcIssueFile)) {
                 Console.WriteLine("copy /etc/issue");
                 File.Copy(etcIssueFile, "/etc/issue");
                 Bash.Do("dos2unix /etc/issue");
-            }
-
-            var etcMotdFile = "./Templates/TPL_etc_motd";
-            if (File.Exists(etcMotdFile)) {
-                Console.WriteLine("copy /etc/motd");
-                File.Copy(etcMotdFile, "/etc/motd");
-                Bash.Do("dos2unix /etc/motd");
             }
 
             var etcBashrcFile = "./Templates/TPL_etc_bashrc";
@@ -125,12 +119,23 @@ namespace Antd2 {
                 File.Copy(etcBashrcFile, "/home/visor/.bashrc");
                 Bash.Do("dos2unix /home/visor/.bashrc");
             }
+
+            var etcMotdFile = "./Templates/TPL_etc_motd";
+            if (File.Exists(etcMotdFile)) {
+                Console.WriteLine("copy /etc/motd");
+                File.Copy(etcMotdFile, "/etc/motd");
+                Bash.Do("dos2unix /etc/motd");
+            }
+#endif
+
         }
 
         private static void OsReadAndWrite() {
             if (Application.IsUnix == false) { return; }
-            //Bash.Do("mount -o remount,rw,noatime /");
-            //Bash.Do("mount -o remount,rw,discard,noatime /mnt/cdrom");
+#if NETFRAMEWORK
+            Bash.Do("mount -o remount,rw,noatime /");
+            Bash.Do("mount -o remount,rw,discard,noatime /mnt/cdrom");
+#endif
         }
 
         private static void RemoveLimits() {
