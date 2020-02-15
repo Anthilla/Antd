@@ -19,6 +19,7 @@
         public HostParameters Host { get; set; } = new HostParameters();
         public NetworkParameters Network { get; set; } = new NetworkParameters();
 
+        public LogRotatorParameters LogRotation { get; set; } = new LogRotatorParameters();
 
         /// <summary>
         /// Parametri applicativi

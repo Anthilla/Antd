@@ -450,9 +450,10 @@ namespace Antd2 {
         }
 
         private static void LaunchJobs() {
-            Scheduler.ExecuteJob<SyncTimeJob>();
-            Scheduler.ExecuteJob<ModulesControllerJob>();
-            Scheduler.ExecuteJob<ServicesControllerJob>();
+            Scheduler.ExecuteJob<LogRotateJob>();
+            //Scheduler.ExecuteJob<SyncTimeJob>();
+            //Scheduler.ExecuteJob<ModulesControllerJob>();
+            //Scheduler.ExecuteJob<ServicesControllerJob>();
             LaunchCronJobs();
         }
 
