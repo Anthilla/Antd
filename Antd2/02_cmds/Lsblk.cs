@@ -26,9 +26,9 @@ namespace Antd2.cmds {
             { "fsuse%",     "fsuseperc" }
         };
 
-
+        // to get also virtual devices add -a option
         public static string GetAsString() {
-            var commandResultLines = Bash.Execute($"{lsblkCommand} -banJO");
+            var commandResultLines = Bash.Execute($"{lsblkCommand} -bnJO");
             return string.Join("", commandResultLines);
         }
 
