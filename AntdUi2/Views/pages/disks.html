@@ -24,17 +24,18 @@
                         <th>Model</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="note-primary">
-                        <td>{{ disk.Name }}</td>
-                        <td class="text-right">{{ disk.Size }}</td>
-                        <td>{{ disk.PartitionTable }}</td>
-                        <td>{{ disk.Bus }} {{ disk.Model }}</td>
-                        <td colspan="2">
+                        <td>{{ disk.name }}</td>
+                        <td class="text-right">{{ disk.size | bytes }}</td>
+                        <td>{{ disk.pttype }}</td>
+                        <td>{{ disk.tran }} {{ disk.model }}</td>
+                        <td colspan="3">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-disabled="disk.Partitions.length>0"
+                                <button ng-disabled="disk.children.length>0"
                                         ng-click="disk.ShowPTLPanel=!disk.ShowPTLPanel;disk.ShowPTPanel=false"
                                         type="button" class="btn btn-danger">
                                     Set Partition Table
@@ -90,21 +91,22 @@
                     </tr>
                     <tr class="bg-page-light">
                         <th style="padding-left: 25px;">Partition Name</th>
-                        <th class="text-right">Start/End</th>
+                        <th class="text-right">Size</th>
                         <th>Fs Type</th>
+                        <th>Label</th>
                         <th>Mountpoint</th>
                         <th></th>
                         <th></th>
                     </tr>
                 </tbody>
-                <tbody ng-repeat="part in disk.Partitions">
+                <tbody ng-repeat="part in disk.children">
                     <tr>
-                        <td style="padding-left: 25px;">{{ part.Name }}</td>
-                        <td class="text-right">{{ part.Start }}/{{ part.End }}</td>
-                        <td>{{ part.FsType }}</td>
-                        <td>{{ part.Mountpoint }}</td>
-                        <td></td>
-                        <td>
+                        <td style="padding-left: 25px;">{{ part.name }}</td>
+                        <td class="text-right">{{ part.size | bytes }}</td>
+                        <td>{{ part.fstype }}</td>
+                        <td>{{ part.label }}</td>
+                        <td>{{ part.mountpoint }}</td>
+                        <td colspan="2">
                             <div class="btn-group btn-group-xs float-right">
                                 <button ng-click="checkFs(part);part.ShowCKPanel=true" type="button"
                                         class="btn btn-info">

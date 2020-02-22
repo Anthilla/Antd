@@ -37,64 +37,47 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiGet() {
-            var diskList = Parted.GetDisks();
-            var disks = diskList.Select(_ => Parted.Print(_)).ToArray();
+            var disks = Lsblk.Get();
 
-            var disksLsblk = Lsblk.Get();
-            var disksBlkid = Blkid.Get();
-            var df = Df.Get();
-
-            var volumes = new List<PartedPartitionModel>();
-
+            var volumes = new List<LsblkBlockdeviceChild>();
             foreach (var disk in disks) {
-                foreach (var partition in disk.Partitions) {
-                    var partitionBlk = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name);
-                    if (!string.IsNullOrEmpty(partitionBlk.Uuid)) {
-                        partition.IsVolume = true;
-                        partition.Mountpoint = disksLsblk.FirstOrDefault(_ => "/dev/" + _.Name == partition.Name).Mountpoint;
-                        partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
-                        partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
+                foreach (var partition in disk.Children) {
 
-                        partition.Size = df.FirstOrDefault(_ => _.FS == partition.Name).Blocks;
-                        partition.Used = df.FirstOrDefault(_ => _.FS == partition.Name).Used;
+                    if (string.IsNullOrEmpty(partition.Mountpoint))
+                        partition.Mountpoint = "";
 
-                        if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
-                            partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
-                        }
+                    if (WebdavStatus.ContainsKey(partition.Mountpoint))
+                        partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
 
-                        //if (partition.FsType == "zfs_member") {
-                        //    partition.Mountpoint = "/Data/" + partition.Label;
-                        //}
 
-                        if (!string.IsNullOrEmpty(partition.FsType) &&
-                            partition.Label != "EFI" &&
-                            partition.Label != "System01" &&
-                            partition.Label != "BootExt01" &&
-                            partition.FsType != "linux_raid_member" &&
-                            partition.FsType != "zfs_member"
-                            )
-                            volumes.Add(partition);
-                    }
+                    if (!string.IsNullOrEmpty(partition.Fstype) &&
+                        partition.Label != "EFI" &&
+                        partition.Label != "System01" &&
+                        partition.Label != "BootExt01" &&
+                        partition.Fstype != "swap" &&
+                        partition.Fstype != "linux_raid_member" &&
+                        partition.Fstype != "zfs_member"
+                        )
+                        volumes.Add(partition);
                 }
             }
 
             foreach (var a in volumes) {
                 a.SyncableVolumes = volumes.Where(_ => !string.IsNullOrEmpty(_.Mountpoint) && _.Name != a.Name).Select(_ => _.Mountpoint).ToList();
-                if (string.IsNullOrEmpty(a.Mountpoint))
-                    a.Mountpoint = df.FirstOrDefault(_ => _.FS == a.Label).Mountpoint ?? string.Empty;
             }
 
+            var df = Df.Get();
             var zfsParts = df.Where(_ => _.Type == "zfs").ToArray();
             Console.WriteLine($"zfs: {zfsParts.Length}");
             foreach (var d in zfsParts) {
                 Console.WriteLine($"zfs: {d.FS}");
-                var partition = new PartedPartitionModel();
-                partition.FsType = d.Type;
+                var partition = new LsblkBlockdeviceChild();
+                partition.Fstype = d.Type;
                 partition.Label = d.FS;
-                partition.Used = d.Used;
-                partition.Size = d.Avail;
+                partition.FsUsePerc = d.Used;
+                partition.Size = int.Parse(d.Avail);
                 partition.Mountpoint = d.Mountpoint;
-                partition.Name = disksBlkid.FirstOrDefault(_ => _.Label.StartsWith(partition.Label)).Partition;
+                //partition.Name = disksBlkid.FirstOrDefault(_ => _.Label.StartsWith(partition.Label)).Partition;
 
                 if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
                     partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
@@ -121,64 +104,46 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiGetMounted() {
-            var diskList = Parted.GetDisks();
-            var disks = diskList.Select(_ => Parted.Print(_)).ToArray();
+            var disks = Lsblk.Get();
 
-            var disksLsblk = Lsblk.Get();
-            var disksBlkid = Blkid.Get();
-            var df = Df.Get();
-
-            var volumes = new List<PartedPartitionModel>();
-
+            var volumes = new List<LsblkBlockdeviceChild>();
             foreach (var disk in disks) {
-                foreach (var partition in disk.Partitions) {
-                    var partitionBlk = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name);
-                    if (!string.IsNullOrEmpty(partitionBlk.Uuid)) {
-                        partition.IsVolume = true;
-                        partition.Mountpoint = disksLsblk.FirstOrDefault(_ => "/dev/" + _.Name == partition.Name).Mountpoint;
-                        partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
-                        partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
+                foreach (var partition in disk.Children) {
 
-                        partition.Size = df.FirstOrDefault(_ => _.FS == partition.Name).Blocks;
-                        partition.Used = df.FirstOrDefault(_ => _.FS == partition.Name).Used;
+                    if (string.IsNullOrEmpty(partition.Mountpoint))
+                        partition.Mountpoint = "";
 
-                        if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
-                            partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
-                        }
+                    if (WebdavStatus.ContainsKey(partition.Mountpoint))
+                        partition.WebdavRunning = WebdavStatus[partition.Mountpoint];
 
-                        //if (partition.FsType == "zfs_member") {
-                        //    partition.Mountpoint = "/Data/" + partition.Label;
-                        //}
-
-                        if (!string.IsNullOrEmpty(partition.FsType) &&
-                            partition.Label != "EFI" &&
-                            partition.Label != "System01" &&
-                            partition.Label != "BootExt01" &&
-                            partition.FsType != "linux_raid_member" &&
-                            partition.FsType != "zfs_member"
-                            )
-                            volumes.Add(partition);
-                    }
+                    if (!string.IsNullOrEmpty(partition.Fstype) &&
+                                partition.Label != "EFI" &&
+                                partition.Label != "System01" &&
+                                partition.Label != "BootExt01" &&
+                                partition.Fstype != "linux_raid_member" &&
+                                partition.Fstype != "swap" &&
+                                partition.Fstype != "zfs_member"
+                                )
+                        volumes.Add(partition);
                 }
             }
 
             foreach (var a in volumes) {
                 a.SyncableVolumes = volumes.Where(_ => !string.IsNullOrEmpty(_.Mountpoint) && _.Name != a.Name).Select(_ => _.Mountpoint).ToList();
-                if (string.IsNullOrEmpty(a.Mountpoint))
-                    a.Mountpoint = df.FirstOrDefault(_ => _.FS == a.Label).Mountpoint ?? string.Empty;
             }
 
+            var df = Df.Get();
             var zfsParts = df.Where(_ => _.Type == "zfs").ToArray();
             Console.WriteLine($"zfs: {zfsParts.Length}");
             foreach (var d in zfsParts) {
                 Console.WriteLine($"zfs: {d.FS}");
-                var partition = new PartedPartitionModel();
-                partition.FsType = d.Type;
+                var partition = new LsblkBlockdeviceChild();
+                partition.Fstype = d.Type;
                 partition.Label = d.FS;
-                partition.Used = d.Used;
-                partition.Size = d.Avail;
+                partition.FsUsePerc = d.Used;
+                partition.Size = int.Parse(d.Avail);
                 partition.Mountpoint = d.Mountpoint;
-                partition.Name = "";
+                //partition.Name = disksBlkid.FirstOrDefault(_ => _.Label.StartsWith(partition.Label)).Partition;
 
                 if (WebdavStatus.ContainsKey(partition.Mountpoint)) {
                     partition.WebdavRunning = WebdavStatus[partition.Mountpoint];

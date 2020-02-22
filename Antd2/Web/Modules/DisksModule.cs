@@ -1,5 +1,6 @@
 ﻿using Antd2.cmds;
 using Nancy;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -23,32 +24,7 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiGet() {
-            var diskList = Parted.GetDisks();
-            var disks = diskList.Select(_ => Parted.Print(_)).ToArray();
-
-            var disksLsblk = Lsblk.Get();
-            var disksBlkid = Blkid.Get();
-            var df = Df.Get();
-
-            foreach (var disk in disks) {
-                foreach (var partition in disk.Partitions) {
-                    var partitionBlk = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name);
-                    if (!string.IsNullOrEmpty(partitionBlk.Uuid)) {
-                        partition.IsVolume = true;
-                        partition.Mountpoint = disksLsblk.FirstOrDefault(_ => "/dev/" + _.Name == partition.Name).Mountpoint;
-                        partition.FsType = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Type;
-                        partition.Label = disksBlkid.FirstOrDefault(_ => _.Partition == partition.Name).Label;
-
-                        partition.Size = df.FirstOrDefault(_ => _.FS == partition.Name).Blocks;
-                        partition.Used = df.FirstOrDefault(_ => _.FS == partition.Name).Used;
-
-                        if (partition.FsType == "zfs_member") {
-                            partition.Mountpoint = "/Data/" + partition.Label;
-                        }
-                    }
-                }
-            }
-
+            var disks = Lsblk.Get();
             var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {

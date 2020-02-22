@@ -531,12 +531,15 @@ function DisksController($scope, $http, notificationService) {
     };
 
     $scope.checkFs = function(partition) {
-        $http.get("/disks/check/fs/" + partition.Name).then(function(r) {
+        $http.get("/disks/check/fs/" + partition.name).then(function(r) {
             partition.Check = r.data;
         }).catch(function(r) {
             console.log(r);
         });
     };
+
+
+
 }
 
 app.controller("VolumesController", ["$scope", "$http", "notificationService", VolumesController]);

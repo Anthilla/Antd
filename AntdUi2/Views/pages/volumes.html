@@ -30,31 +30,31 @@
                 </thead>
                 <tbody ng-repeat="volume in Volumes">
                     <tr>
-                        <td>{{ volume.Name }}</td>
-                        <th>{{ volume.Label }}</th>
-                        <td class="text-right">{{ volume.Size }}</td>
-                        <td class="text-right">{{ volume.Used }}</td>
-                        <td>{{ volume.FsType }}</td>
-                        <td style="overflow: visible !important;">{{ volume.Mountpoint }}</td>
+                        <td>{{ volume.name }}</td>
+                        <th>{{ volume.label }}</th>
+                        <td class="text-right">{{ volume.size | bytes }}</td>
+                        <td class="text-right">{{ volume.fsuseperc }}</td>
+                        <td>{{ volume.fstype }}</td>
+                        <td style="overflow: visible !important;">{{ volume.mountpoint }}</td>
                         <td colspan="3">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-show="volume.Mountpoint.length==0"
-                                        ng-click="mountVolume(volume.Name, volume.Label)" type="button" class="btn btn-success">
+                                <button ng-show="volume.mountpoint.length==0"
+                                        ng-click="mountVolume(volume.name, volume.label)" type="button" class="btn btn-success">
                                     Mount Volume
                                 </button>
-                                <button ng-show="volume.Mountpoint.length>0&&volume.WebdavRunning==false"
-                                        ng-click="umountVolume(volume.Mountpoint)" type="button" class="btn btn-default">
+                                <button ng-show="volume.mountpoint.length>0&&volume.WebdavRunning==false"
+                                        ng-click="umountVolume(volume.mountpoint)" type="button" class="btn btn-default">
                                     Umount Volume
                                 </button>
-                                <button ng-show="volume.Mountpoint.length>0&&volume.WebdavRunning==false"
+                                <button ng-show="volume.mountpoint.length>0&&volume.WebdavRunning==false"
                                         ng-click="volume.ShowWDPanel=!volume.ShowWDPanel;ShowSncPanel=false" type="button" class="btn btn-primary">
                                     Show Webdav Config.
                                 </button>
-                                <button ng-show="volume.Mountpoint.length>0&&volume.WebdavRunning==true"
-                                        ng-click="webdavStop(volume.Mountpoint)" type="button" class="btn btn-warning">
+                                <button ng-show="volume.mountpoint.length>0&&volume.WebdavRunning==true"
+                                        ng-click="webdavStop(volume.mountpoint)" type="button" class="btn btn-warning">
                                     Stop Webdav
                                 </button>
-                                <button ng-show="volume.Mountpoint.length>0"
+                                <button ng-show="volume.mountpoint.length>0"
                                         ng-click="volume.ShowSncPanel=!volume.ShowSncPanel;ShowWDPanel=false" type="button" class="btn btn-info">
                                     Sync Config.
                                 </button>
@@ -79,7 +79,7 @@
                         </td>
                         <td colspan="4">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="webdavStart(volume.wdIp, volume.wdPort, volume.Mountpoint, volume.wdUser, volume.wdPassword)"
+                                <button ng-click="webdavStart(volume.wdIp, volume.wdPort, volume.mountpoint, volume.wdUser, volume.wdPassword)"
                                         type="button"
                                         class="btn btn-success">
                                     Start Webdav Server
@@ -100,7 +100,7 @@
                         </td>
                         <td colspan="5">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="syncVolumes(volume.Mountpoint, volume.SyncTarget)"
+                                <button ng-click="syncVolumes(volume.mountpoint, volume.SyncTarget)"
                                         type="button"
                                         class="btn btn-success">
                                     Start Sync selected Volume
