@@ -50,6 +50,15 @@
                     },
 
                     /* ============== NOTIFICATION METHODS ==============*/
+                    newDisk: function (content, stack) {
+                        var hash = initHash(stack);
+                        hash.type = 'info';
+                        hash.text = content;
+                        hash.delay = 4000;
+                        hash.hide = false;
+                        return this.notify(hash);
+                    },
+
                     notice: function (content, stack) {
                         var hash = initHash(stack);
                         hash.type = 'notice';

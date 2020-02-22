@@ -7,7 +7,7 @@ function SharedController($scope, $http, $interval, notificationService) {
     function checkNewDisk() {
         $http.get("/disks/new").then(function (r) {
             for (var i = 0; i < r.data.length; i++)
-                notificationService.info('New disk detected: ' + r.data[i]);
+                notificationService.newDisk('New disk detected: ' + r.data[i]);
 
         }).catch(function (r) {
             console.log(r);
