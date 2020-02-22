@@ -22,6 +22,7 @@ namespace Antd2.Modules {
         public VolumesModule() : base("/volumes") {
 
             Get("/", x => ApiGet());
+
             Get("/mounted", x => ApiGetMounted());
 
             Post("/mount", x => ApiPostMount());

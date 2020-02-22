@@ -451,6 +451,7 @@ namespace Antd2 {
 
         private static void LaunchJobs() {
             Scheduler.ExecuteJob<LogRotateJob>();
+            Scheduler.ExecuteJob<CheckNewDiskJob>();
             //Scheduler.ExecuteJob<SyncTimeJob>();
             //Scheduler.ExecuteJob<ModulesControllerJob>();
             //Scheduler.ExecuteJob<ServicesControllerJob>();

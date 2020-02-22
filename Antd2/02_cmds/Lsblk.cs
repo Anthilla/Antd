@@ -1,6 +1,7 @@
 ﻿using Antd2.models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Antd2.cmds {
 
@@ -51,6 +52,15 @@ namespace Antd2.cmds {
             }
 
             return disks.Blockdevices;
+        }
+
+        public static List<string> GetDisks() {
+            var lines = Bash.Execute($"{lsblkCommand} -dn");
+            return lines
+                .Select(_ => _.Split(new[] { " " }, System.StringSplitOptions.RemoveEmptyEntries).FirstOrDefault().Trim())
+                .Select(_ => $"/dev/{_}")
+                .ToList()
+                ;
         }
 
     }

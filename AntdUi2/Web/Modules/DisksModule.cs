@@ -9,6 +9,7 @@ namespace AntdUi2.Modules {
         public DisksModule() : base("/disks") {
 
             Get("/", x => ApiGet());
+            Get("/new", x => ApiGet());
 
             Post("/create/partition/table", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
             Post("/create/partition", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
