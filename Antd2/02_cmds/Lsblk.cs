@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Antd2.models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Antd2.cmds {
 
@@ -11,16 +11,47 @@ namespace Antd2.cmds {
 
         private const string lsblkCommand = "lsblk";
 
-        public static IEnumerable<(string Name, string MajMin, string Rm, string Size, string Ro, string Type, string Mountpoint)> Get() {
-            var lines = Bash.Execute($"{lsblkCommand} -banl")
-                .Select(_ => ParseLsblkLine(_));
-            return lines;
+        private static readonly IDictionary<string, string> Substitutions = new Dictionary<string, string>() {
+            { "maj:min",    "majmin" },
+            { "min-io",     "minio" },
+            { "opt-io",     "optio" },
+            { "phy-sec",    "physec" },
+            { "log-sec",    "logsec" },
+            { "rq-size",    "rqsize" },
+            { "disc-aln",   "discaln" },
+            { "disc-gran",  "discgran" },
+            { "disc-max",   "discmax" },
+            { "disc-zero",  "disczero" },
+            { "fsuse%",     "fsuseperc" }
+        };
+
+        public static List<LsblkBlockdevice> Get() {
+            var commandResultLines = Bash.Execute($"{lsblkCommand} -banJO");
+            var commandResult = string.Join("", commandResultLines);
+            var js = new JsonSerializerSettings {
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore
+            };
+
+            foreach (var kvp in Substitutions) {
+                commandResult = commandResult.Replace(kvp.Key, kvp.Value);
+            }
+
+            var disks = JsonConvert.DeserializeObject<LsblkModel>(commandResult, js);
+
+            foreach (var disk in disks.Blockdevices) {
+                disk.Name = "/dev/" + disk.Name;
+                foreach (var partition in disk.Children) {
+                    partition.Name = "/dev/" + partition.Name;
+                    partition.IsVolume = true;
+                    if (partition.Fstype == "zfs_member") {
+                        partition.Mountpoint = "/Data/" + partition.Label;
+                    }
+                }
+            }
+
+            return disks.Blockdevices;
         }
 
-        private static (string Name, string MajMin, string Rm, string Size, string Ro, string Type, string Mountpoint) ParseLsblkLine(string line) {
-            var arr = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            var mp = arr.Length < 7 ? string.Empty : arr[6];
-            return (arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], mp);
-        }
     }
 }

@@ -28,6 +28,8 @@ namespace Antd2 {
             var lsblk = Lsblk.Get();
             foreach (var disk in lsblk) {
                 Console.WriteLine($"  {disk.Name}\t{disk.Size} at {disk.Mountpoint}");
+                foreach (var l in disk.Children)
+                    Console.WriteLine($"  {l.Name}\t{l.Size} at {l.Mountpoint}");
             }
         }
 
