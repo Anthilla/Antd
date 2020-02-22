@@ -137,7 +137,7 @@ namespace Antd2.Modules {
             var zfsParts = df.Where(_ => _.Type == "zfs").ToArray();
             Console.WriteLine($"zfs: {zfsParts.Length}");
             foreach (var d in zfsParts) {
-                Console.WriteLine($"zfs: {d.FS}");
+                //Console.WriteLine($"zfs: {d.FS}");
                 var partition = new LsblkBlockdeviceChild();
                 partition.Fstype = d.Type;
                 partition.Label = d.FS;
@@ -152,19 +152,18 @@ namespace Antd2.Modules {
                 volumes.Add(partition);
             }
 
-            if (WebdavStatus.Count == 0) {
-                Console.WriteLine("no webdav active");
-            }
-            if (WebdavInstances.Count == 0) {
-                Console.WriteLine("no webdav active");
-            }
+            //if (WebdavStatus.Count == 0) {
+            //    Console.WriteLine("no webdav active");
+            //}
+            //if (WebdavInstances.Count == 0) {
+            //    Console.WriteLine("no webdav active");
+            //}
             foreach (var a in WebdavStatus) {
                 Console.WriteLine($"[wd] active on {a.Key}");
             }
 
             var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(volumes
                 .Where(_ => !string.IsNullOrEmpty(_.Mountpoint))
-                .Where(_ => !_.Name.StartsWith("/dev/sda"))
                 .OrderBy(_ => _.Name).ToArray());
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {
@@ -176,18 +175,18 @@ namespace Antd2.Modules {
 
         private dynamic ApiPostMount() {
             string partition = Request.Form.Partition;
-            string label = Request.Form.Label;
+            //string /*label*/ = Request.Form.Label;
 
             var blkid = Blkid.Get();
             var p = blkid.FirstOrDefault(_ => _.Partition == partition);
             if (string.IsNullOrEmpty(p.Uuid))
                 return HttpStatusCode.InternalServerError;
 
-            var destination = "/Data/" + p.Uuid;
+            var destination = "/Data/" + p.Partuuid;
             Directory.CreateDirectory(destination);
-            Console.WriteLine($"mount LABEL={label} {destination}");
+            Console.WriteLine($"mount PARTUUID={p.Partuuid} {destination}");
             Bash.Do($"mkdir -p {destination}");
-            Bash.Do($"mount LABEL={label} {destination}");
+            Bash.Do($"mount PARTUUID={p.Partuuid} {destination}");
             return HttpStatusCode.OK;
         }
 
