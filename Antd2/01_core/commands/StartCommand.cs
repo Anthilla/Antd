@@ -10,11 +10,8 @@ using System.Linq;
 using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 using antd.core;
-using System.Threading;
 using System.Collections.Generic;
 using Antd2.Storage;
-using System.Security.Principal;
-using System.Security.Permissions;
 
 #if NETCOREAPP
 using Antd2.Init;
@@ -33,22 +30,10 @@ namespace Antd2 {
         public static readonly IDictionary<string, bool> WebdavStatus = new Dictionary<string, bool>();
 
 
-        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static void Start(string[] args) {
             STOPWATCH = new Stopwatch();
             STOPWATCH.Start();
             Scheduler = new JobManager();
-
-
-            Console.WriteLine("Before impersonation: " + WindowsIdentity.GetCurrent().Name);
-
-            // Impersonate a user
-            using (WindowsIdentity newId = new WindowsIdentity("Your user name"))
-            using (WindowsImpersonationContext impersonatedUser = newId.Impersonate()) {
-                // Check the identity.
-                Console.WriteLine("After impersonation: " + WindowsIdentity.GetCurrent().Name);
-            }
-
 
             OsReadAndWrite();
             RemoveLimits();
