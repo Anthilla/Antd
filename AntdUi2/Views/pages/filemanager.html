@@ -16,18 +16,27 @@
     <div class="row">
         <!--colonna SX-->
         <div class="col-lg-6">
-            <div>
-                <p class="float-left">Select a source mountpoint:&nbsp;&nbsp;</p>
-                <select ng-change="loadSrcDirectory(SelectedSrcVolume)" ng-model="SelectedSrcVolume" class="float-left" style="border: 0px; width: 250px;">
-                    <option ng-repeat="vol in Volumes"
-                            value="{{vol.mountpoint}}">
-                        {{ vol.mountpoint }} {{ vol.label }}
-                    </option>
-                </select>
-            </div>
-
             <table class="table table-condensed table-striped table-hover no-border table-fixed" style="font-size: 0.8em;">
                 <tbody>
+                    <tr>
+                        <td colspan="40">
+                            Select a source mountpoint:
+                        </td>
+                        <td colspan="80">
+                            <select ng-change="loadSrcDirectory(SelectedSrcVolume)" ng-model="SelectedSrcVolume"
+                                    style="border: 0px; width: 100%;">
+                                <option ng-repeat="vol in Volumes"
+                                        value="{{vol.mountpoint}}">
+                                    {{ vol.label }} {{ vol.mountpoint }}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="120">
+                        </td>
+                    </tr>
+
                     <tr>
                         <th colspan="50" class="fg-dark">
                             {{ SrcDirectory.Path }}
@@ -35,7 +44,7 @@
                         <td colspan="39">
                             Elements in this directory: <b>{{ (SrcDirectory.Folders.length + SrcDirectory.Files.length) }}</b>
                         </td>
-                        <td colspan="24">
+                        <td colspan="31">
                             <div class="btn-group btn-group-xs float-right">
                                 <button ng-disabled="SelectedSrcVolume==undefined||SelectedDstVolume==undefined"
                                         ng-click="syncFolder(SrcDirectory.Path, DstDirectory.Path)"
@@ -58,10 +67,10 @@
                         <td colspan="18">
                             Created
                         </td>
-                        <td colspan="10">
+                        <td colspan="31" class="text-right">
                             Dimension
                         </td>
-                        <td colspan="24">
+                        <td colspan="10">
                         </td>
                     </tr>
                 </tbody>
@@ -99,7 +108,7 @@
 
                 <tbody>
                     <tr ng-repeat="file in SrcDirectory.Files">
-                        <td colspan="10">
+                        <td colspan="3">
                             <i class="fa fa-file-o"></i>
                         </td>
                         <td colspan="40">
@@ -111,18 +120,10 @@
                         <td colspan="18">
                             {{ file.Created | date:'dd/MM/yyyy HH:mm' }}
                         </td>
-                        <td colspan="10" class="text-right">
+                        <td colspan="31" class="text-right">
                             {{ file.Dimension | bytes }}
                         </td>
-                        <td colspan="24">
-                            <div class="btn-group btn-group-xs float-right">
-                                <button ng-disabled="SelectedDstVolume==undefined"
-                                        ng-click="syncFolder(file.Path, DstDirectory.Path)"
-                                        type="button" class="btn btn-default">
-                                    <i class="fa fa-arrow-right fg-success"></i>
-                                    Sync
-                                </button>
-                            </div>
+                        <td colspan="10">
                         </td>
                     </tr>
                 </tbody>
@@ -130,18 +131,27 @@
         </div>
         <!--colonna DX-->
         <div class="col-lg-6">
-            <div>
-                <p class="float-left">Select a destination mountpoint:&nbsp;&nbsp;</p>
-                <select ng-change="loadDstDirectory(SelectedDstVolume)" ng-model="SelectedDstVolume" class="float-left" style="border: 0px; width: 250px;">
-                    <option ng-repeat="vol in Volumes"
-                            value="{{vol.mountpoint}}">
-                        {{ vol.mountpoint }} {{ vol.label }}
-                    </option>
-                </select>
-            </div>
-
             <table class="table table-condensed table-striped table-hover no-border table-fixed" style="font-size: 0.8em;">
                 <tbody>
+                    <tr>
+                        <td colspan="40">
+                            Select a destination mountpoint:
+                        </td>
+                        <td colspan="80">
+                            <select ng-change="loadDstDirectory(SelectedDstVolume)" ng-model="SelectedDstVolume"
+                                    style="border: 0px; width: 100%;">
+                                <option ng-repeat="vol in Volumes"
+                                        value="{{vol.mountpoint}}">
+                                    {{ vol.label }} {{ vol.mountpoint }}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="120">
+                        </td>
+                    </tr>
+
                     <tr>
                         <th colspan="50" class="fg-dark">
                             {{ DstDirectory.Path }}
@@ -162,10 +172,10 @@
                         <td colspan="18">
                             Created
                         </td>
-                        <td colspan="10">
+                        <td colspan="31" class="text-right">
                             Dimension
                         </td>
-                        <td colspan="24">
+                        <td colspan="10">
                         </td>
                     </tr>
                 </tbody>
@@ -203,7 +213,7 @@
 
                 <tbody>
                     <tr ng-repeat="file in DstDirectory.Files">
-                        <td colspan="10">
+                        <td colspan="3">
                             <i class="fa fa-file-o"></i>
                         </td>
                         <td colspan="40">
@@ -215,10 +225,10 @@
                         <td colspan="18">
                             {{ file.Created | date:'dd/MM/yyyy HH:mm' }}
                         </td>
-                        <td colspan="10" class="text-right">
+                        <td colspan="31" class="text-right">
                             {{ file.Dimension | bytes }}
                         </td>
-                        <td colspan="24">
+                        <td colspan="10">
                         </td>
                     </tr>
                 </tbody>
