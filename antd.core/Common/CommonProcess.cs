@@ -127,6 +127,7 @@ namespace antd.core {
                 p.StartInfo = new ProcessStartInfo {
                     FileName = command,
                     Arguments = args,
+                    WorkingDirectory = dir,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false

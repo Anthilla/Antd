@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Antd2 {
 
-    internal partial class Application {
+    internal class Application {
 
         /// <summary>
         /// todo 

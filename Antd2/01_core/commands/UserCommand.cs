@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Antd2 {
     public class UserCommand {
+
         public static readonly Dictionary<string, Action<string[]>> Options =
             new Dictionary<string, Action<string[]>> {
                 { "check", CheckFunc },
