@@ -28,8 +28,11 @@ namespace Antd2.Modules {
         private dynamic ApiGet() {
             var disks = Lsblk.Get();
 
-            foreach (var kvp in Jobs.CheckNewDiskJob.NewDiskNotify)
-                Jobs.CheckNewDiskJob.NewDiskNotify[kvp.Key] = false;
+            try {
+                foreach (var kvp in Jobs.CheckNewDiskJob.NewDiskNotify)
+                    Jobs.CheckNewDiskJob.NewDiskNotify[kvp.Key] = false;
+            }
+            catch (Exception) { }
 
             var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);

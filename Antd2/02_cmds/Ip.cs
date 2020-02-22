@@ -1,6 +1,7 @@
 ﻿using antd.core;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Antd2.cmds {
     public class Ip {
@@ -8,6 +9,23 @@ namespace Antd2.cmds {
         private const string ipCommand = "ip";
         private const string ifenslaveFileLocation = "/sbin/ifenslave";
         private const string processName = "haproxy";
+
+
+        public static List<string> GetIpAddressList() {
+            var ipLines = Bash.Execute($"{ipCommand} a");
+            var ipList = new List<string>();
+
+            //([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
+            var ipRx = new Regex(@"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})");
+
+            foreach (var l in ipLines) {
+                var match = ipRx.Match(l);
+                if (match.Success)
+                    ipList.Add(match.Groups[0].Value);
+            }
+
+            return ipList;
+        }
 
         public static bool AddAddress(string networkAdapter, string addressAndRange) {
             var args = CommonString.Append("addr add ", addressAndRange, " dev ", networkAdapter);

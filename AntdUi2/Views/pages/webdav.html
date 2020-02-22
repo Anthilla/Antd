@@ -5,57 +5,107 @@
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
+                <button ng-click="save()" class="btn btn-default">
+                    <i class="fa fa-save"></i>&nbsp;Save
+                </button>
                 <button ng-click="load()" class="btn btn-default">
-                    <i class="fa fa-refresh"></i> Reload
+                    <i class="fa fa-refresh"></i>&nbsp;Reload
                 </button>
             </div>
         </div>
     </div>
     <div class="clearfix"></div>
     <div class="row">
-        <div ng-if="Volumes.length==0">
-            <h5 style="padding-left: 15px;">
-                There are no mounted volumes yet
-            </h5>
-        </div>
-
-        <div ng-if="Volumes.length>0" class="col-md-12 col-sm-12 col-xs-12">
-            <table class="table table-condensed table-striped no-border table-fixed">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table class="table table-condensed no-border table-fixed">
                 <thead>
-                    <tr class="bg-page-light">
-                        <th>Label</th>
-                        <th>Mountpoint</th>
-                        <th colspan="5"></th>
+                    <tr>
+                        <th colspan="25">Target</th>
+                        <th colspan="15">Address</th>
+                        <th colspan="10">Port</th>
+                        <th colspan="50">Users</th>
+                        <th colspan="20"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="volume in Volumes"
-                        ng-if="volume.name!='/dev/sda2'&&volume.name!='/dev/sda4'">
-                        <td style="overflow: visible !important;">{{ volume.name }}</td>
-                        <td style="overflow: visible !important;">{{ volume.mountpoint }}</td>
-                        <td>
-                            <input ng-disabled="volume.WebdavRunning==true" placeholder="Ip Address" ng-model="volume.wdIp" class="form-control" type="text">
+                    <tr>
+                        <td colspan="25">
+                            <select ng-model="NewWebdav.Target" class="form-control">
+                                <option ng-repeat="target in Targets track by $index"
+                                        value="{{target}}">
+                                    {{target}}
+                                </option>
+                            </select>
                         </td>
-                        <td>
-                            <input ng-disabled="volume.WebdavRunning==true" placeholder="Port" ng-model="volume.wdPort" min="0" class="form-control" type="number">
+                        <td colspan="15">
+                            <select ng-model="NewWebdav.Address" class="form-control">
+                                <option ng-repeat="address in IpAddressList track by $index"
+                                        value="{{address}}">
+                                    {{address}}
+                                </option>
+                            </select>
                         </td>
-                        <td>
-                            <input ng-disabled="volume.WebdavRunning==true" placeholder="User" ng-model="volume.wdUser" class="form-control" type="text">
+                        <td colspan="10">
+                            <input ng-model="NewWebdav.Port" class="form-control" min="0" type="number" />
                         </td>
-                        <td>
-                            <input ng-disabled="volume.WebdavRunning==true" placeholder="Password" ng-model="volume.wdPassword" class="form-control" type="password">
+                        <td colspan="50">
+
+                            <ul class="no-padding no-margin" style="list-style: none;">
+                                <li ng-repeat="mu in NewWebdav.MappedUsers"
+                                    class="float-left"
+                                    style="width: 25%;">
+                                    <input ng-model="mu.IsSelected" step="vertical-align: middle;" type="checkbox" />&nbsp;{{ mu.Name }}
+                                </li>
+                            </ul>
+
                         </td>
-                        <td>
+                        <td colspan="20">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-show="volume.WebdavRunning==false"
-                                        ng-click="webdavStart(volume.wdIp, volume.wdPort, volume.Mountpoint, volume.wdUser, volume.wdPassword)"
-                                        type="button"
-                                        class="btn btn-success">
-                                    Start Webdav
+                                <button ng-click="addToList(NewWebdav, Webdav)" type="button" class="btn btn-success">
+                                    Add
                                 </button>
-                                <button ng-show="volume.Mountpoint.length>0&&volume.WebdavRunning==true"
-                                        ng-click="webdavStop(volume.Mountpoint)" type="button" class="btn btn-warning">
-                                    Stop Webdav
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in Webdav track by $index">
+                        <td colspan="25">
+                            <select ng-model="el.Target" class="form-control">
+                                <option ng-repeat="target in Targets track by $index"
+                                        value="{{target}}">
+                                    {{target}}
+                                </option>
+                            </select>
+                        </td>
+                        <td colspan="15">
+                            <select ng-model="el.Address" class="form-control">
+                                <option ng-repeat="address in IpAddressList track by $index"
+                                        value="{{address}}">
+                                    {{address}}
+                                </option>
+                            </select>
+                        </td>
+                        <td colspan="10">
+                            <input ng-model="el.Port" class="form-control" min="0" type="number" />
+                        </td>
+                        <td colspan="50">
+
+                            <ul class="no-padding no-margin" style="list-style: none;">
+                                <li ng-repeat="mu in el.MappedUsers"
+                                    class="float-left"
+                                    style="width: 25%;">
+                                    <input ng-model="mu.IsSelected" step="vertical-align: middle;" type="checkbox" />&nbsp;{{ mu.Name }}
+                                </li>
+                            </ul>
+
+                        </td>
+                        <td colspan="20">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-if="el.IsActive==false" ng-click="webdavStart(el.Target)" type="button" class="btn btn-success">
+                                    Start
+                                </button>
+                                <button ng-if="el.IsActive" ng-click="webdavStop(el.Target)" type="button" class="btn btn-warning">
+                                    Stop
                                 </button>
                             </div>
                         </td>

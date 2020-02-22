@@ -21,6 +21,9 @@
 
         public LogRotatorParameters LogRotation { get; set; } = new LogRotatorParameters();
 
+        public WebdavParameters[] Webdav { get; set; } = System.Array.Empty<WebdavParameters>();
+
+
         /// <summary>
         /// Parametri applicativi
         /// </summary>

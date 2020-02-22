@@ -696,12 +696,25 @@ function WebdavController($scope, $http, notificationService) {
     $scope.Webdav = [];
     $scope.Targets = [];
     $scope.Users = [];
+    $scope.IpAddressList = [];
+
+    $scope.NewWebdav = {
+        Target: '',
+        Address: '',
+        Port: 0,
+        Users: [],
+        MappedUsers: []
+    };
 
     $scope.load = function () {
         $http.get("/webdav").then(function (r) {
             $scope.Webdav = r.data.Webdav;
             $scope.Targets = r.data.Targets;
             $scope.Users = r.data.Users;
+            $scope.IpAddressList = r.data.IpAddressList;
+
+            $scope.NewWebdav.MappedUsers = angular.copy($scope.Users);
+
         }).catch(function (r) {
             console.log(r);
         });
@@ -709,10 +722,17 @@ function WebdavController($scope, $http, notificationService) {
     $scope.load();
 
     $scope.save = function () {
+        for (var i = 0; i < $scope.Webdav.length; i++) {
+            $scope.Webdav[i].Users = [];
+            for (var u = 0; u < $scope.Webdav[i].MappedUsers.length; u++) {
+                if ($scope.Webdav[i].MappedUsers[u].IsSelected) {
+                    $scope.Webdav[i].Users.push($scope.Webdav[i].MappedUsers[u].Name);
+                }
+            }
+        }
         var data = $.param({
             Data: angular.toJson($scope.Webdav)
         });
-        console.log("saveBootServices");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/webdav/save", data).then(function () {
             $scope.load();

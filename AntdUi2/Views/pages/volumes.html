@@ -52,43 +52,9 @@
                                         ng-click="umountVolume(volume.mountpoint)" type="button" class="btn btn-default">
                                     Umount Volume
                                 </button>
-                                <button ng-show="volume.mountpoint.length>0&&volume.WebdavRunning==false"
-                                        ng-click="volume.ShowWDPanel=!volume.ShowWDPanel;ShowSncPanel=false" type="button" class="btn btn-primary">
-                                    Show Webdav Config.
-                                </button>
-                                <button ng-show="volume.mountpoint.length>0&&volume.WebdavRunning==true"
-                                        ng-click="webdavStop(volume.mountpoint)" type="button" class="btn btn-warning">
-                                    Stop Webdav
-                                </button>
                                 <button ng-show="volume.mountpoint.length>0"
                                         ng-click="volume.ShowSncPanel=!volume.ShowSncPanel;ShowWDPanel=false" type="button" class="btn btn-info">
                                     Sync Config.
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr ng-show="volume.ShowWDPanel" class="note-primary">
-                        <th>
-                            Set Webdav Server
-                        </th>
-                        <td>
-                            <input placeholder="Ip Address" ng-model="volume.wdIp" class="form-control" type="text">
-                        </td>
-                        <td>
-                            <input placeholder="Port" ng-model="volume.wdPort" min="0" class="form-control" type="number">
-                        </td>
-                        <td>
-                            <input placeholder="User" ng-model="volume.wdUser" class="form-control" type="text">
-                        </td>
-                        <td>
-                            <input placeholder="Password" ng-model="volume.wdPassword" class="form-control" type="password">
-                        </td>
-                        <td colspan="4">
-                            <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="webdavStart(volume.wdIp, volume.wdPort, volume.mountpoint, volume.wdUser, volume.wdPassword)"
-                                        type="button"
-                                        class="btn btn-success">
-                                    Start Webdav Server
                                 </button>
                             </div>
                         </td>

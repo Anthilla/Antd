@@ -4,15 +4,17 @@ using System;
 using System.Text;
 
 namespace AntdUi2.Modules {
-    public class VolumesModule : NancyModule {
+    public class WebdavModule : NancyModule {
 
-        public VolumesModule() : base("/volumes") {
+        public WebdavModule() : base("/webdav") {
 
             Get("/", x => ApiGet());
 
-            Post("/mount", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/umount", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
-            Post("/sync", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+            Post("/save", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+
+            Post("/start", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+
+            Post("/stop", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
 
         }
 

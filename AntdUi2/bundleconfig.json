@@ -106,5 +106,11 @@
     "inputFiles": [
       "Views/pages/webdav.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/user.min.html",
+    "inputFiles": [
+      "Views/pages/user.html"
+    ]
   }
 ]

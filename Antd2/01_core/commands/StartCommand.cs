@@ -11,6 +11,10 @@ using Bash = Antd2.cmds.Bash;
 using Systemctl = Antd2.cmds.Systemctl;
 using antd.core;
 using System.Threading;
+using System.Collections.Generic;
+using Antd2.Storage;
+using System.Security.Principal;
+using System.Security.Permissions;
 
 #if NETCOREAPP
 using Antd2.Init;
@@ -24,10 +28,27 @@ namespace Antd2 {
 #if NETCOREAPP
         public static ServiceInit ServiceInit;
 #endif
+
+        public static readonly IDictionary<string, WebDavServer> WebdavInstances = new Dictionary<string, WebDavServer>();
+        public static readonly IDictionary<string, bool> WebdavStatus = new Dictionary<string, bool>();
+
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
         public static void Start(string[] args) {
             STOPWATCH = new Stopwatch();
             STOPWATCH.Start();
             Scheduler = new JobManager();
+
+
+            Console.WriteLine("Before impersonation: " + WindowsIdentity.GetCurrent().Name);
+
+            // Impersonate a user
+            using (WindowsIdentity newId = new WindowsIdentity("Your user name"))
+            using (WindowsImpersonationContext impersonatedUser = newId.Impersonate()) {
+                // Check the identity.
+                Console.WriteLine("After impersonation: " + WindowsIdentity.GetCurrent().Name);
+            }
+
 
             OsReadAndWrite();
             RemoveLimits();
@@ -76,6 +97,8 @@ namespace Antd2 {
             ApplySetupCommands();
 
             LaunchJobs();
+
+            StartWebdavInstances();
 
             StartWebserver();
 
@@ -461,6 +484,29 @@ namespace Antd2 {
         private static void LaunchCronJobs() {
             foreach (var job in ConfigManager.Config.Saved.Cron)
                 Cron.Jobs.Add(job.Name, job.Command, job.Time);
+        }
+
+        private static void StartWebdavInstances() {
+            foreach (var webdavConf in ConfigManager.Config.Saved.Webdav) {
+                if (webdavConf.Enable == false)
+                    continue;
+
+                var activeUsers = ConfigManager.Config.Saved.Users
+                    .Where(_ => webdavConf.Users.Contains(_.Name))
+                    .ToList();
+
+                if (!activeUsers.Any())
+                    continue;
+
+                webdavConf.MappedUsers = activeUsers;
+
+                System.Threading.Tasks.Task.Factory.StartNew(() => {
+                    var wd = new WebDavServer(webdavConf);
+                    WebdavStatus[webdavConf.Target] = true;
+                    WebdavInstances[webdavConf.Target] = wd;
+                    wd.Start();
+                });
+            }
         }
 
         private static void StartWebserver() {
