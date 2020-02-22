@@ -44,7 +44,7 @@
                         <td colspan="39">
                             Elements in this directory: <b>{{ (SrcDirectory.Folders.length + SrcDirectory.Files.length) }}</b>
                         </td>
-                        <td colspan="31">
+                        <td colspan="31" class="no-padding">
                             <div class="btn-group btn-group-xs float-right">
                                 <button ng-disabled="SelectedSrcVolume==undefined||SelectedDstVolume==undefined"
                                         ng-click="syncFolder(SrcDirectory.Path, DstDirectory.Path)"
