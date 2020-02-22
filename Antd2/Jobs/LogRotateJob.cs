@@ -41,7 +41,8 @@ namespace Antd2.Jobs {
         #endregion
 
         public override void DoJob() {
-            LogRotation.Rotate(ConfigManager.Config.Saved.LogRotation);
+            if (ConfigManager.Config.Saved.LogRotation.Enable)
+                LogRotation.Rotate(ConfigManager.Config.Saved.LogRotation);
         }
     }
 }
