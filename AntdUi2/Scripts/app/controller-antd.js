@@ -600,7 +600,7 @@ function DisksController($scope, $http, notificationService) {
     };
 
     $scope.checkFs = function (partition) {
-        $http.get("/disks/check/fs/" + partition.name).then(function (r) {
+        $http.get("/disks/check/fs/" + partition.path).then(function (r) {
             partition.Check = r.data;
         }).catch(function (r) {
             console.log(r);

@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                     <tr class="note-primary">
-                        <td>{{ disk.name }}</td>
+                        <td>{{ disk.path }}</td>
                         <td class="text-right">{{ disk.size | bytes }}</td>
                         <td>{{ disk.pttype }}</td>
                         <td>{{ disk.tran }} {{ disk.model }}</td>
@@ -107,7 +107,7 @@
                 </tbody>
                 <tbody ng-repeat="part in disk.children">
                     <tr>
-                        <td style="padding-left: 25px;">{{ part.name }}</td>
+                        <td style="padding-left: 25px;">{{ part.path }}</td>
                         <td class="text-right">{{ part.size | bytes }}</td>
                         <td>{{ part.fstype }}</td>
                         <td>{{ part.label }}</td>
