@@ -13,5 +13,8 @@
         public string Password { get; set; } = string.Empty;
 
         public string Group { get; set; } = string.Empty;
+
+        [Nett.TomlIgnore]
+        public bool IsSelected { get; set; }
     }
 }

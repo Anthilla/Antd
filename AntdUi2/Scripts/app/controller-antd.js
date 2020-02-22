@@ -155,6 +155,52 @@ function TimedateController($scope, $http, notificationService) {
     };
 }
 
+app.controller("UsersController", ["$scope", "$http", "notificationService", UsersController]);
+
+function UsersController($scope, $http, notificationService) {
+    $scope.Users = [];
+
+    $scope.NewUser = {
+        Name: '',
+        Password: ''
+    };
+
+    $scope.load = function () {
+        console.log("loadUsers");
+        $http.get("/user/config").then(function (r) {
+            $scope.Users = r.data;
+        }).catch(function (r) {
+            console.log(r);
+        });
+    };
+    $scope.load();
+
+    $scope.save = function () {
+        var data = $.param({
+            Data: angular.toJson($scope.Users)
+        });
+        console.log("saveUsers");
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/user/config/save", data).then(function () {
+            $scope.load();
+            notificationService.success('Data saved');
+        }, function (r) {
+            console.log(r);
+        });
+    };
+
+    $scope.apply = function () {
+        console.log("applyUsers");
+        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        $http.post("/user/config/apply").then(function () {
+            $scope.load();
+            notificationService.success('Data applied');
+        }, function (r) {
+            console.log(r);
+        });
+    };
+}
+
 app.controller("SysctlController", ["$scope", "$http", "notificationService", SysctlController]);
 
 function SysctlController($scope, $http, notificationService) {
@@ -647,50 +693,39 @@ app.controller("WebdavController", ["$scope", "$http", "notificationService", We
 
 function WebdavController($scope, $http, notificationService) {
 
-    $scope.Volumes = [];
+    $scope.Webdav = [];
+    $scope.Targets = [];
+    $scope.Users = [];
 
     $scope.load = function () {
-        $http.get("/volumes/mounted").then(function (r) {
-            $scope.Volumes = r.data;
+        $http.get("/webdav").then(function (r) {
+            $scope.Webdav = r.data.Webdav;
+            $scope.Targets = r.data.Targets;
+            $scope.Users = r.data.Users;
         }).catch(function (r) {
             console.log(r);
         });
     };
     $scope.load();
 
-    $scope.mountVolume = function (partition, label) {
+    $scope.save = function () {
         var data = $.param({
-            Partition: partition,
-            Label: label
+            Data: angular.toJson($scope.Webdav)
         });
+        console.log("saveBootServices");
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/mount", data).then(function () {
+        $http.post("/webdav/save", data).then(function () {
             $scope.load();
-            notificationService.success('Volume mounted');
+            notificationService.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
-    $scope.umountVolume = function (mountpoint) {
+    $scope.webdavStart = function (mountpoint) {
         var data = $.param({
             Mountpoint: mountpoint
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/umount", data).then(function () {
-            $scope.load();
-            notificationService.success('Volume unmounted');
-        }, function (r) { console.log(r); });
-    };
-
-    $scope.webdavStart = function (ip, port, mountpoint, user, password) {
-        var data = $.param({
-            Ip: ip,
-            Port: port,
-            Mountpoint: mountpoint,
-            User: user,
-            Password: password
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/webdav/start", data).then(function () {
+        $http.post("/webdav/start", data).then(function () {
             $scope.load();
             notificationService.success('Webdav Started');
         }, function (r) { console.log(r); });
@@ -701,7 +736,7 @@ function WebdavController($scope, $http, notificationService) {
             Mountpoint: mountpoint
         });
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/webdav/stop", data).then(function () {
+        $http.post("/webdav/stop", data).then(function () {
             $scope.load();
             notificationService.success('Webdav Stopped');
         }, function (r) { console.log(r); });

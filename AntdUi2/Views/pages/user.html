@@ -1,0 +1,67 @@
+<div ng-controller="UsersController">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Users</h3>
+        </div>
+        <div class="title_right">
+            <div class="btn-group float-right">
+                <a ng-click="load()" class="btn btn-app">
+                    <i class="fa fa-refresh"></i> Reload
+                </a>
+                <a ng-click="save()" class="btn btn-app">
+                    <i class="fa fa-save"></i> Save
+                </a>
+                <a ng-click="apply()" class="btn btn-app">
+                    <i class="fa fa-play"></i> Apply
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <!--pannello configurazione-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <table class="table table-condensed no-border table-fixed">
+                <thead>
+                    <tr>
+                        <th colspan="50">Name</th>
+                        <th colspan="50">Password</th>
+                        <th colspan="20"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="50">
+                            <input ng-model="NewUser.Name" class="form-control" type="text">
+                        </td>
+                        <td colspan="50">
+                            <input ng-model="NewUser.Password" class="form-control" type="password">
+                        </td>
+                        <td colspan="20">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="addToList(NewUser, Users)" type="button" class="btn btn-success">
+                                    Add
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="el in Users">
+                        <td colspan="50">
+                            <input ng-model="el.Name" class="form-control" type="text">
+                        </td>
+                        <td colspan="50">
+                            <input ng-model="el.Password" class="form-control" type="password">
+                        </td>
+                        <td colspan="20">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="removeFromList($index, Users)" type="button" class="btn btn-danger">
+                                    Remove
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -59,6 +59,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("time", {
             cache: false, url: "^/time", views: { 'content': { templateUrl: "pg/time.min.html?v=" + new Date() } }
         })
+        .state("user", {
+            cache: false, url: "^/user", views: { 'content': { templateUrl: "pg/user.min.html?v=" + new Date() } }
+        })
 
         .state("sysctl", {
             cache: false, url: "^/sysctl", views: { 'content': { templateUrl: "pg/sysctl.min.html?v=" + new Date() } }
@@ -123,8 +126,8 @@ app.directive("convertToNumber", function () {
     };
 });
 
-app.filter('bytes', function() {
-    return function(bytes, precision) {
+app.filter('bytes', function () {
+    return function (bytes, precision) {
         if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
         if (typeof precision === 'undefined') precision = 1;
         var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
@@ -188,184 +191,29 @@ function SidebarController($scope, $http) {
 
     $scope.Menu = [{
         Elements: [
-            //{ Name: 'Home', Icon: 'fa-square fg-info', Destination: 'home', Active: activeClass },
-            { Name: 'Host', Icon: 'fa-square fg-info', Destination: 'host', Active: activeClass },
-            { Name: 'Time and Date', Icon: 'fa-square fg-info', Destination: 'time', Active: '' },
+            { Name: 'Host', Icon: 'fa-square fg-info', Destination: 'host' },
+            { Name: 'Time and Date', Icon: 'fa-square fg-info', Destination: 'time' },
+            { Name: 'Users', Icon: 'fa-square fg-info', Destination: 'user' },
 
-            { Name: 'Sysctl', Icon: 'fa-square fg-success', Destination: 'sysctl', Active: '' },
-            { Name: 'Modules', Icon: 'fa-square fg-success', Destination: 'modules', Active: '' },
-            { Name: 'Services', Icon: 'fa-square fg-success', Destination: 'services', Active: '' },
+            { Name: 'Sysctl', Icon: 'fa-square fg-success', Destination: 'sysctl' },
+            { Name: 'Modules', Icon: 'fa-square fg-success', Destination: 'modules' },
+            { Name: 'Services', Icon: 'fa-square fg-success', Destination: 'services' },
 
-            //{ Name: 'DNS Client', Icon: 'fa-square fg-warning', Destination: 'dns_client', Active: '' },
-            { Name: 'Interfaces', Icon: 'fa-square fg-warning', Destination: 'interfaces', Active: '' },
-            { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables', Active: '' },
-            { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing', Active: '' },
+            //{ Name: 'DNS Client', Icon: 'fa-square fg-warning', Destination: 'dns_client' },
+            { Name: 'Interfaces', Icon: 'fa-square fg-warning', Destination: 'interfaces' },
+            { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables' },
+            { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing' },
 
-            { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks', Active: '' },
-            { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes', Active: '' },
-            { Name: 'Webdav', Icon: 'fa-square fg-violet', Destination: 'webdav', Active: '' },
-            { Name: 'File Manager', Icon: 'fa-square fg-violet', Destination: 'filemanager', Active: '' },
+            { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks' },
+            { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes' },
+            { Name: 'Webdav', Icon: 'fa-square fg-violet', Destination: 'webdav' },
+            { Name: 'File Manager', Icon: 'fa-square fg-violet', Destination: 'filemanager' },
 
-            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands', Active: '' },
-            { Name: 'Scheduler', Icon: 'fa-square fg-danger', Destination: 'scheduler', Active: '' },
+            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands' },
+            { Name: 'Scheduler', Icon: 'fa-square fg-danger', Destination: 'scheduler' },
 
-            { Name: 'Terminal', Icon: 'fa-square fg-dark', Destination: 'terminal', Active: '' },
+            { Name: 'Terminal', Icon: 'fa-square fg-dark', Destination: 'terminal' },
         ]
     }];
-
-    $scope.MenuOLD = [
-        {
-            Name: 'Status',
-            Elements: [
-                {
-                    Name: 'Home',
-                    Icon: 'fa-tachometer',
-                    Links: [
-                        { Name: 'Dashboard', Destination: 'home_dashboard', ActiveClass: 'active' }
-                    ]
-                }
-            ]
-        },
-        {
-            Name: 'Machine Configuration',
-            Elements: [
-                {
-                    Name: 'Host',
-                    Icon: 'fa-laptop',
-                    Links: [
-                        { Name: 'Info', Destination: 'host_info', ActiveClass: '' },
-                        { Name: 'Time and Date', Destination: 'host_timedate', ActiveClass: '' },
-                        { Name: 'Webservice', Destination: 'host_webservice', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Boot',
-                    Icon: 'fa-flash',
-                    Links: [
-                        { Name: 'Parameters (sysctl)', Destination: 'boot_parameters', ActiveClass: '' },
-                        { Name: 'Modules', Destination: 'boot_modules', ActiveClass: '' },
-                        { Name: 'Services', Destination: 'boot_services', ActiveClass: '' },
-                        { Name: 'Commands', Destination: 'boot_commands', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Log',
-                    Icon: 'fa-info',
-                    Links: [
-                        { Name: 'View', Destination: 'log_view', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Network',
-                    Icon: 'fa-wifi',
-                    Links: [
-                        { Name: 'Internal Network', Destination: 'network_internalnetwork', ActiveClass: '' },
-                        { Name: 'External Network', Destination: 'network_externalnetwork', ActiveClass: '' },
-                        { Name: 'Interfaces', Destination: 'network_interfaces', ActiveClass: '' },
-                        { Name: 'DNS Client', Destination: 'network_dnsclient', ActiveClass: '' },
-                        { Name: 'Known Hosts', Destination: 'network_knownhosts', ActiveClass: '' },
-                        { Name: 'Known Networks', Destination: 'network_knownnetworks', ActiveClass: '' },
-                        { Name: 'Bridge', Destination: 'network_bridge', ActiveClass: '' },
-                        { Name: 'Bond', Destination: 'network_bond', ActiveClass: '' },
-                        { Name: 'Tun', Destination: 'network_tun', ActiveClass: '' },
-                        { Name: 'Tap ', Destination: 'network_tap', ActiveClass: '' },
-                        { Name: 'Gateways', Destination: 'network_gateways', ActiveClass: '' },
-                        { Name: 'Routing', Destination: 'network_routing', ActiveClass: '' },
-                        { Name: 'Routing Table', Destination: 'network_routingtable', ActiveClass: '' },
-                        { Name: 'Wi-Fi', Destination: 'network_wifi', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'SSH',
-                    Icon: 'fa-sitemap',
-                    Links: [
-                        { Name: 'Public Key', Destination: 'ssh_publickey', ActiveClass: '' },
-                        { Name: 'Authorized Keys', Destination: 'ssh_authorizedkeys', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'User',
-                    Icon: 'fa-users',
-                    Links: [
-                        { Name: 'Group', Destination: 'user_group', ActiveClass: '' },
-                        { Name: 'System', Destination: 'user_system', ActiveClass: '' },
-                        { Name: 'Applicative', Destination: 'user_applicative', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Bind',
-                    Icon: 'fa-share-square-o',
-                    Links: [
-                        { Name: 'Configuration', Destination: 'bind_configuration', ActiveClass: '' },
-                        { Name: 'Zones', Destination: 'bind_zones', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Virsh',
-                    Icon: 'fa-tasks',
-                    Links: [
-                        { Name: 'Configuration', Destination: 'virsh_configuration', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Firewall',
-                    Icon: 'fa-shield',
-                    Links: [
-                        { Name: 'Configuration', Destination: 'firewall_configuration', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'Syslogng',
-                    Icon: 'fa-list-ol',
-                    Links: [
-                        { Name: 'Configuration', Destination: 'virsh_configuration', ActiveClass: '' }
-                    ]
-                },
-                {
-                    Name: 'App',
-                    Icon: 'fa-list-ol',
-                    Links: [
-                        { Name: 'Local', Destination: 'app_local', ActiveClass: '' }
-                    ]
-                }
-            ]
-        },
-        {
-            Name: 'Cluster',
-            Elements: [
-                {
-                    Name: 'Status',
-                    Icon: 'fa-bug',
-                    Links: [
-                        { Name: 'Dashboard', Destination: 'cluster_status', ActiveClass: '' }
-                    ]
-                },
-                //{
-                //    Name: 'Neighborhood',
-                //    Icon: 'fa-windows',
-                //    Links: [
-                //        { Name: 'Find devices', Destination: 'cluster_neighborhood', ActiveClass: '' }
-                //    ]
-                //},
-                {
-                    Name: 'Cluster',
-                    Icon: 'fa-sitemap',
-                    Links: [
-                        { Name: 'Configuration', Destination: 'cluster_configuration', ActiveClass: '' },
-                        { Name: 'Shared Network', Destination: 'cluster_sharednetwork', ActiveClass: '' },
-                        { Name: 'Shared Services', Destination: 'cluster_sharedservices', ActiveClass: '' },
-                        { Name: 'Shared FS', Destination: 'cluster_sharedfs', ActiveClass: '' }
-                    ]
-                }
-            ]
-        }
-    ];
-
-    $scope.itemClicked = function (index, elements) {
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].Active = '';
-        }
-        elements[index] = activeClass;
-    };
 }
 
