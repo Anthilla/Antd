@@ -26,23 +26,22 @@ namespace Antd2.Modules {
         }
 
         private dynamic ApiGet() {
-            var disks = Lsblk.Get();
+            var disks = Lsblk.GetAsString();
 
-            try {
-                foreach (var kvp in Jobs.CheckNewDiskJob.NewDiskNotify)
-                    Jobs.CheckNewDiskJob.NewDiskNotify[kvp.Key] = false;
-            }
-            catch (Exception) { }
-
-            var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
-            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            //var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
+            var jsonBytes = Encoding.UTF8.GetBytes(disks);
             return new Response {
                 ContentType = "application/json",
                 Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
             };
         }
+
         private dynamic ApiGetNew() {
-            var disks = Jobs.CheckNewDiskJob.NewDiskNotify.Where(_ => _.Value);
+            var disks = Jobs.CheckNewDiskJob.NewDiskNotify.Where(_ => _.Value).Select(_ => _.Key).ToList();
+
+            foreach (var kvp in Jobs.CheckNewDiskJob.NewDiskNotify)
+                Jobs.CheckNewDiskJob.NewDiskNotify[kvp.Key] = false;
+
             var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(disks);
             var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
             return new Response {

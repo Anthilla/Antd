@@ -26,6 +26,12 @@ namespace Antd2.cmds {
             { "fsuse%",     "fsuseperc" }
         };
 
+
+        public static string GetAsString() {
+            var commandResultLines = Bash.Execute($"{lsblkCommand} -banJO");
+            return string.Join("", commandResultLines);
+        }
+
         public static List<LsblkBlockdevice> Get() {
             var commandResultLines = Bash.Execute($"{lsblkCommand} -banJO");
             var commandResult = string.Join("", commandResultLines);
