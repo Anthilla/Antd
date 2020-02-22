@@ -134,7 +134,7 @@
                         <th>
                             Create EXT4 File System
                         </th>
-                        <td>
+                        <td colspan="2">
                             <input placeholder="Label" ng-model="part.Ext4Label" class="form-control" type="text">
                         </td>
                         <td colspan="4">
@@ -157,7 +157,7 @@
                         <td>
                             <input placeholder="Zfs Label" ng-model="part.ZfsLabel" class="form-control" type="text">
                         </td>
-                        <td colspan="3">
+                        <td colspan="4">
                             <div class="btn-group btn-group-xs float-right">
                                 <button ng-click="createFsZfs(part.Name, part.ZfsPool, part.ZfsLabel)"
                                         type="button"
@@ -168,7 +168,7 @@
                         </td>
                     </tr>
                     <tr ng-show="part.ShowCKPanel" class="note-info">
-                        <td colspan="6" style="padding-left: 25px;">
+                        <td colspan="7" style="padding-left: 25px;">
                             <p ng-repeat="l in part.Check track by $index" class="no-margin">{{ l }}</p>
                         </td>
                     </tr>
