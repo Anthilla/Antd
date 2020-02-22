@@ -9,6 +9,7 @@ namespace AntdUi2.Modules {
         public VolumesModule() : base("/volumes") {
 
             Get("/", x => ApiGet());
+            Get("/mounted", x => ApiGet());
 
             Post("/mount", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
             Post("/umount", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));

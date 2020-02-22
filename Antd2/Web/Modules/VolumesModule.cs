@@ -18,6 +18,7 @@ namespace Antd2.Modules {
         public VolumesModule() : base("/volumes") {
 
             Get("/", x => ApiGet());
+            Get("/mounted", x => ApiGetMounted());
 
             Post("/mount", x => ApiPostMount());
 
@@ -94,6 +95,53 @@ namespace Antd2.Modules {
             };
         }
 
+        private dynamic ApiGetMounted() {
+            var disks = Lsblk.Get();
+
+            var volumes = new List<LsblkBlockdeviceChild>();
+            foreach (var disk in disks) {
+                foreach (var partition in disk.Children) {
+
+                    if (string.IsNullOrEmpty(partition.Mountpoint))
+                        partition.Mountpoint = "";
+
+                    if (!string.IsNullOrEmpty(partition.Fstype) &&
+                                partition.Label != "EFI" &&
+                                partition.Label != "System01" &&
+                                partition.Label != "BootExt01" &&
+                                partition.Fstype != "linux_raid_member" &&
+                                partition.Fstype != "swap" &&
+                                partition.Fstype != "zfs_member"
+                                )
+                        volumes.Add(partition);
+                }
+            }
+
+            var df = Df.Get();
+            var zfsParts = df.Where(_ => _.Type == "zfs").ToArray();
+            Console.WriteLine($"zfs: {zfsParts.Length}");
+            foreach (var d in zfsParts) {
+                //Console.WriteLine($"zfs: {d.FS}");
+                var partition = new LsblkBlockdeviceChild();
+                partition.Fstype = d.Type;
+                partition.Label = d.FS;
+                partition.FsUsePerc = d.Used;
+                partition.Size = int.Parse(d.Avail);
+                partition.Mountpoint = d.Mountpoint;
+                //partition.Name = disksBlkid.FirstOrDefault(_ => _.Label.StartsWith(partition.Label)).Partition;
+
+                volumes.Add(partition);
+            }
+
+            var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(volumes
+                .Where(_ => !string.IsNullOrEmpty(_.Mountpoint))
+                .OrderBy(_ => _.Name).ToArray());
+            var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+            return new Response {
+                ContentType = "application/json",
+                Contents = s => s.Write(jsonBytes, 0, jsonBytes.Length)
+            };
+        }
 
         private dynamic ApiPostMount() {
             string partition = Request.Form.Partition;
