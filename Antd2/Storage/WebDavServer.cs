@@ -1,10 +1,12 @@
-﻿using NWebDav.Server;
+﻿using Antd2.Configuration;
+using NWebDav.Server;
 using NWebDav.Server.Http;
 using NWebDav.Server.HttpListener;
 using NWebDav.Server.Stores;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -16,9 +18,12 @@ namespace Antd2.Storage {
         private readonly int WebdavPort;
         private readonly bool UseHttps;
 
+        /// <summary>
+        /// Target directory
+        /// </summary>
         private readonly string Root;
-        private readonly string User;
-        private readonly string Password;
+
+        private readonly List<WebdavUser> Users;
 
         private readonly IDictionary<string, WebDavDispatcher> WEBDAV_DISPATCHERS = new Dictionary<string, WebDavDispatcher>();
 
@@ -38,8 +43,23 @@ namespace Antd2.Storage {
             CancellationTokenSource = new CancellationTokenSource();
 
             Root = root;
-            User = user;
-            Password = password;
+
+            Users.Add(new WebdavUser() { User = user, Password = password });
+        }
+
+        public WebDavServer(WebdavParameters webdavConf, bool useHttps = false) {
+
+            if (!Directory.Exists(webdavConf.Target)) {
+                throw new DirectoryNotFoundException($"Cannot init Webdav server on this root {webdavConf.Target}");
+            }
+            Realm = webdavConf.Target.Replace("/", "_");
+            WebdavIp = webdavConf.Address;
+            WebdavPort = webdavConf.Port;
+            UseHttps = useHttps;
+            CancellationTokenSource = new CancellationTokenSource();
+
+            Root = webdavConf.Target;
+            Users = webdavConf.MappedUsers;
         }
 
         public void Start() {
@@ -75,29 +95,25 @@ namespace Antd2.Storage {
                 (httpListenerContext = await httpListener.GetContextAsync().ConfigureAwait(false)) != null) {
                 IHttpContext httpContext;
                 Console.WriteLine(httpListenerContext.Request.IsAuthenticated);
-                //if (httpListenerContext.Request.IsAuthenticated) {
                 try {
                     var id = httpListenerContext.User.Identity as HttpListenerBasicIdentity;
-                    if (id.Name == User && id.Password == Password) {
+
+                    var confUser = Users.FirstOrDefault(_ => _.User == id.Name && _.Password == id.Password);
+
+                    if (confUser != null) {
                         Console.WriteLine($"[webdav] manage {id.Name}");
                         if (!WEBDAV_DISPATCHERS.ContainsKey(id.Name)) {
                             Console.WriteLine($"[webdav] init dispatcher for {id.Name} at {Root}");
                             WEBDAV_DISPATCHERS[id.Name] = new WebDavDispatcher(new DiskStore(Root), requestHandlerFactory);
                         }
                         httpContext = new HttpBasicContext(httpListenerContext,
-                           checkIdentity: i => i.Name == User && i.Password == Password);
+                           checkIdentity: i => i.Name == confUser.User && i.Password == confUser.Password);
                         webDavDispatcher = WEBDAV_DISPATCHERS[id.Name];
-                        //await WEBDAV_DISPATCHERS[webdavUser.UserGuid].DispatchRequestAsync(httpContext).ConfigureAwait(false);
                     }
                     else {
                         httpContext = new HttpContext(httpListenerContext);
                         webDavDispatcher = nullDispatcher;
                     }
-                    //}
-                    //else {
-                    //httpContext = new HttpContext(httpListenerContext);
-                    //webDavDispatcher = nullDispatcher;
-                    //}
                     await webDavDispatcher.DispatchRequestAsync(httpContext).ConfigureAwait(false);
                 }
                 catch (Exception ex) {
