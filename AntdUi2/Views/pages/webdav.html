@@ -4,27 +4,35 @@
             <h3>Webdav</h3>
         </div>
         <div class="title_right">
-            <div class="btn-group float-right">
-                <a ng-click="load()" class="btn btn-app">
+            <div class="btn-group btn-group-xs float-right">
+                <button ng-click="load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
-                </a>
+                </button>
             </div>
         </div>
     </div>
     <div class="clearfix"></div>
     <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
+        <div ng-if="Volumes.length==0">
+            <h5 style="padding-left: 15px;">
+                There are no mounted volumes yet
+            </h5>
+        </div>
+
+        <div ng-if="Volumes.length>0" class="col-md-12 col-sm-12 col-xs-12">
             <table class="table table-condensed table-striped no-border table-fixed">
                 <thead>
                     <tr class="bg-page-light">
+                        <th>Label</th>
                         <th>Mountpoint</th>
                         <th colspan="5"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="volume in Volumes"
-                        ng-if="volume.Name!='/dev/sda2'&&volume.Name!='/dev/sda4'">
-                        <td style="overflow: visible !important;">{{ volume.Mountpoint }}</td>
+                        ng-if="volume.name!='/dev/sda2'&&volume.name!='/dev/sda4'">
+                        <td style="overflow: visible !important;">{{ volume.name }}</td>
+                        <td style="overflow: visible !important;">{{ volume.mountpoint }}</td>
                         <td>
                             <input ng-disabled="volume.WebdavRunning==true" placeholder="Ip Address" ng-model="volume.wdIp" class="form-control" type="text">
                         </td>

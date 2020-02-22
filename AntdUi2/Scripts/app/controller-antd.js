@@ -650,7 +650,7 @@ function WebdavController($scope, $http, notificationService) {
     $scope.Volumes = [];
 
     $scope.load = function () {
-        $http.get("/volumes").then(function (r) {
+        $http.get("/volumes/mounted").then(function (r) {
             $scope.Volumes = r.data;
         }).catch(function (r) {
             console.log(r);
