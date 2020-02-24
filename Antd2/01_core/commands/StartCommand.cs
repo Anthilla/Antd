@@ -29,7 +29,6 @@ namespace Antd2 {
         public static readonly IDictionary<string, WebDavServer> WebdavInstances = new Dictionary<string, WebDavServer>();
         public static readonly IDictionary<string, bool> WebdavStatus = new Dictionary<string, bool>();
 
-
         public static void Start(string[] args) {
             STOPWATCH = new Stopwatch();
             STOPWATCH.Start();

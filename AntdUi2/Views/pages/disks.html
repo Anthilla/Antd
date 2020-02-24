@@ -60,11 +60,27 @@
                             <input placeholder="Label" ng-model="disk.PartitionTableLabel" class="form-control" type="text">
                         </td>
                         <td colspan="4">
-                            <div class="btn-group btn-group-xs float-right">
+                            <div ng-if="disk.showAlert01==false" class="btn-group btn-group-xs float-right">
+                                <button ng-click="disk.showAlert01=true"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Create Partition Table
+                                </button>
+                            </div>
+
+                            <div ng-if="disk.showAlert01" class="btn-group btn-group-xs float-right">
+                                <span class="float-left" style="margin-right: 3px;">
+                                    Confirm:
+                                </span>
                                 <button ng-click="createPartitionTable(disk.Name, disk.PartitionTableLabel)"
                                         type="button"
                                         class="btn btn-default">
                                     Create Partition Table
+                                </button>
+                                <button ng-click="disk.showAlert01=false"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Cancel
                                 </button>
                             </div>
                         </td>
@@ -86,11 +102,27 @@
                             <input placeholder="End" ng-model="disk.End" class="form-control float-left" type="text">
                         </td>
                         <td>
-                            <div class="btn-group btn-group-xs float-right">
+                            <div ng-if="disk.showAlert02==false" class="btn-group btn-group-xs float-right">
+                                <button ng-click="disk.showAlert02=true"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Create New Partition
+                                </button>
+                            </div>
+
+                            <div ng-if="disk.showAlert02" class="btn-group btn-group-xs float-right">
+                                <span class="float-left" style="margin-right: 3px;">
+                                    Confirm:
+                                </span>
                                 <button ng-click="createPartition(disk.Name, disk.PartitionType, disk.PartitionName, disk.FsType, disk.Start, disk.End)"
                                         type="button"
                                         class="btn btn-default">
                                     Create New Partition
+                                </button>
+                                <button ng-click="disk.showAlert02=false"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Cancel
                                 </button>
                             </div>
                         </td>
@@ -138,11 +170,27 @@
                             <input placeholder="Label" ng-model="part.Ext4Label" class="form-control" type="text">
                         </td>
                         <td colspan="4">
-                            <div class="btn-group btn-group-xs float-right">
+                            <div ng-if="disk.showAlert03==false" class="btn-group btn-group-xs float-right">
+                                <button ng-click="disk.showAlert03=true"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Create ext4 file system
+                                </button>
+                            </div>
+
+                            <div ng-if="disk.showAlert03" class="btn-group btn-group-xs float-right">
+                                <span class="float-left" style="margin-right: 3px;">
+                                    Confirm:
+                                </span>
                                 <button ng-click="createFsExt4(part.Name, part.Ext4Label)"
                                         type="button"
                                         class="btn btn-default">
                                     Create ext4 file system
+                                </button>
+                                <button ng-click="disk.showAlert03=false"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Cancel
                                 </button>
                             </div>
                         </td>
@@ -158,11 +206,27 @@
                             <input placeholder="Zfs Label" ng-model="part.ZfsLabel" class="form-control" type="text">
                         </td>
                         <td colspan="4">
-                            <div class="btn-group btn-group-xs float-right">
+                            <div ng-if="disk.showAlert04==false" class="btn-group btn-group-xs float-right">
+                                <button ng-click="disk.showAlert04=true"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Create ZFS file system
+                                </button>
+                            </div>
+
+                            <div ng-if="disk.showAlert04" class="btn-group btn-group-xs float-right">
+                                <span class="float-left" style="margin-right: 3px;">
+                                    Confirm:
+                                </span>
                                 <button ng-click="createFsZfs(part.Name, part.ZfsPool, part.ZfsLabel)"
                                         type="button"
                                         class="btn btn-default">
                                     Create ZFS file system
+                                </button>
+                                <button ng-click="disk.showAlert04=false"
+                                        type="button"
+                                        class="btn btn-default">
+                                    Cancel
                                 </button>
                             </div>
                         </td>
