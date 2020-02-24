@@ -1,17 +1,17 @@
-<div ng-controller="UsersController">
+<div ng-controller="UsersController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Users</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -32,20 +32,20 @@
                 <tbody>
                     <tr class="note-success">
                         <td colspan="50">
-                            <input ng-model="NewUser.Name" class="form-control" type="text">
+                            <input ng-model="vm.NewUser.Name" class="form-control" type="text">
                         </td>
                         <td colspan="50">
-                            <input ng-model="NewUser.Password" class="form-control" type="password">
+                            <input ng-model="vm.NewUser.Password" class="form-control" type="password">
                         </td>
                         <td colspan="20">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="sh.addToList(NewUser, Users)" type="button" class="btn btn-success">
+                                <button ng-click="sh.addToList(vm.NewUser, vm.Users)" type="button" class="btn btn-success">
                                     Add
                                 </button>
                             </div>
                         </td>
                     </tr>
-                    <tr ng-repeat="el in Users">
+                    <tr ng-repeat="el in vm.Users">
                         <td colspan="50">
                             <input ng-model="el.Name" class="form-control" type="text">
                         </td>

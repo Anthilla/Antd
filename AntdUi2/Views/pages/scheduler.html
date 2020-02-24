@@ -1,17 +1,17 @@
-<div ng-controller="SchedulerController">
+<div ng-controller="SchedulerController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Scheduler</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -32,23 +32,23 @@
                 <tbody>
                     <tr class="note-success">
                         <td colspan="30">
-                            <input ng-model="NewScheduler.Name" class="form-control" type="text">
+                            <input ng-model="vm.NewScheduler.Name" class="form-control" type="text">
                         </td>
                         <td colspan="60">
-                            <input ng-model="NewScheduler.Command" class="form-control" type="text">
+                            <input ng-model="vm.NewScheduler.Command" class="form-control" type="text">
                         </td>
                         <td colspan="20">
-                            <input ng-model="NewScheduler.Time" class="form-control" min="0" type="number">
+                            <input ng-model="vm.NewScheduler.Time" class="form-control" min="0" type="number">
                         </td>
                         <td colspan="10">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="sh.addToList(NewScheduler, Scheduler)" type="button" class="btn btn-xs btn-success">
+                                <button ng-click="sh.addToList(vm.NewScheduler, vm.Scheduler)" type="button" class="btn btn-xs btn-success">
                                     Add
                                 </button>
                             </div>
                         </td>
                     </tr>
-                    <tr ng-repeat="el in Scheduler">
+                    <tr ng-repeat="el in vm.Scheduler">
                         <td colspan="30">
                             <input ng-model="el.Name" class="form-control" type="text">
                         </td>
@@ -60,7 +60,7 @@
                         </td>
                         <td colspan="10">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="sh.removeFromList($index, Scheduler)" type="button" class="btn btn-xs btn-danger">
+                                <button ng-click="sh.removeFromList($index, vm.Scheduler)" type="button" class="btn btn-xs btn-danger">
                                     Remove
                                 </button>
                             </div>

@@ -1,17 +1,17 @@
-﻿<div ng-controller="HostController">
+﻿<div ng-controller="HostController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Host</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -25,21 +25,21 @@
                 <tbody>
                     <tr>
                         <th scope="row">Host UID</th>
-                        <td class="fg-dark" colspan="2">{{ Host.Uid }}</td>
+                        <td class="fg-dark" colspan="2">{{ vm.Host.Uid }}</td>
                         <td></td>
                     </tr>
                     <tr>
                         <th scope="row">Host Name</th>
                         <td>
-                            <input ng-model="Host.Name" class="form-control" type="text">
+                            <input ng-model="vm.Host.Name" class="form-control" type="text">
                         </td>
                         <td></td>
-                        <td class="fg-dark">{{ Host.RunningName }}</td>
+                        <td class="fg-dark">{{ vm.Host.RunningName }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Chassis</th>
                         <td>
-                            <select ng-model="Host.Chassis" class="form-control">
+                            <select ng-model="vm.Host.Chassis" class="form-control">
                                 <option value="desktop">desktop</option>
                                 <option value="laptop">laptop</option>
                                 <option value="server">server</option>
@@ -52,28 +52,28 @@
                             </select>
                         </td>
                         <td></td>
-                        <td class="fg-dark">{{ Host.RunningChassis }}</td>
+                        <td class="fg-dark">{{ vm.Host.RunningChassis }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Deployment</th>
                         <td>
-                            <input ng-model="Host.Deployment" class="form-control" type="text">
+                            <input ng-model="vm.Host.Deployment" class="form-control" type="text">
                         </td>
                         <td></td>
-                        <td class="fg-dark">{{ Host.RunningDeployment }}</td>
+                        <td class="fg-dark">{{ vm.Host.RunningDeployment }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Host Location</th>
                         <td>
-                            <input ng-model="Host.Location" class="form-control" type="text">
+                            <input ng-model="vm.Host.Location" class="form-control" type="text">
                         </td>
                         <td></td>
-                        <td class="fg-dark">{{ Host.RunningLocation }}</td>
+                        <td class="fg-dark">{{ vm.Host.RunningLocation }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Web Password</th>
                         <td>
-                            <input ng-model="Host.Password" class="form-control" type="password">
+                            <input ng-model="vm.Host.Password" class="form-control" type="password">
                         </td>
                         <td></td>
                         <td class="fg-dark"></td>

@@ -1,17 +1,17 @@
-﻿<div ng-controller="VolumesController" class="">
+﻿<div ng-controller="VolumesController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Volumes</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="Mode=0" class="btn btn-default" ng-class="{'btn-primary':Mode==0}">
+                <button ng-click="vm.Mode=0" class="btn btn-default" ng-class="{'btn-primary':vm.Mode==0}">
                     Basic
                 </button>
-                <button ng-click="Mode=1" class="btn btn-default" ng-class="{'btn-primary':Mode==1}">
+                <button ng-click="vm.Mode=1" class="btn btn-default" ng-class="{'btn-primary':vm.Mode==1}">
                     Advanced
                 </button>
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
             </div>
@@ -34,7 +34,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody ng-repeat="volume in Volumes">
+                <tbody ng-repeat="volume in vm.Volumes">
                     <tr>
                         <td>{{ volume.name }}</td>
                         <th>{{ volume.label }}</th>
@@ -45,11 +45,11 @@
                         <td colspan="3">
                             <div class="btn-group btn-group-xs float-right">
                                 <button ng-if="volume.mountpoint.length==0"
-                                        ng-click="mountVolume(volume.name, volume.label)" type="button" class="btn btn-success">
+                                        ng-click="vm.mountVolume(volume.name, volume.label)" type="button" class="btn btn-success">
                                     Mount Volume
                                 </button>
                                 <button ng-if="volume.mountpoint.length>0&&volume.WebdavRunning==false"
-                                        ng-click="umountVolume(volume.mountpoint)" type="button" class="btn btn-default">
+                                        ng-click="vm.umountVolume(volume.mountpoint)" type="button" class="btn btn-default">
                                     Umount Volume
                                 </button>
                             </div>

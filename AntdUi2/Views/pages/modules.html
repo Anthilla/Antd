@@ -1,17 +1,17 @@
-﻿<div ng-controller="ModulesController" class="">
+﻿<div ng-controller="ModulesController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Modules</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -28,11 +28,11 @@
                             Active
                         </th>
                         <td>
-                            <textarea rows="6" ng-model="BootModules.ActiveModulesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="vm.BootModules.ActiveModulesTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                         <td class="fg-dark" rowspan="2">
-                            <p ng-repeat="p in BootModules.RunningModules" class="no-margin">{{p}}</p>
+                            <p ng-repeat="p in vm.BootModules.RunningModules" class="no-margin">{{p}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -40,7 +40,7 @@
                             Inactive
                         </th>
                         <td>
-                            <textarea rows="6" ng-model="BootModules.InactiveModulesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="vm.BootModules.InactiveModulesTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                     </tr>

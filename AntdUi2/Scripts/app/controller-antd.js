@@ -78,308 +78,335 @@ function $Shared($H, $I, $N) {
     };
 }
 
-app.controller("HostController", ["$scope", "HttpService", "notificationService", $Host]);
+app.controller("HostController", ["HttpService", "notificationService", $Host]);
 
-function $Host($scope, $H, $N) {
+function $Host($H, $N) {
 
-    $scope.Host = null;
+    var vm = this;
 
-    $scope.load = function () {
-        $scope.Host = null;
+    vm.Host = null;
+
+    vm.load = function () {
         $H.GET("/host/config").then(function (r) {
-            $scope.Host = r.data;
+            vm.Host = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/host/config/save", jsonParam($scope.Host)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/host/config/save", jsonParam(vm.Host)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/host/config/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("TimedateController", ["$scope", "HttpService", "notificationService", $Timedate]);
+app.controller("TimedateController", ["HttpService", "notificationService", $Timedate]);
 
-function $Timedate($scope, $H, $N) {
-    $scope.TimeDate = null;
+function $Timedate($H, $N) {
 
-    $scope.load = function () {
-        $scope.TimeDate = null;
+    var vm = this;
+
+    vm.TimeDate = null;
+
+    vm.load = function () {
         $H.GET("/timedate/config").then(function (r) {
-            $scope.TimeDate = r.data;
+            vm.TimeDate = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/timedate/config/save", jsonParam($scope.TimeDate)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/timedate/config/save", jsonParam(vm.TimeDate)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/timedate/config/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("UsersController", ["$scope", "HttpService", "notificationService", $Users]);
+app.controller("UsersController", ["HttpService", "notificationService", $Users]);
 
-function $Users($scope, $H, $N) {
-    $scope.Users = [];
+function $Users($H, $N) {
+    vm.Users = [];
 
-    $scope.NewUser = {
+    vm.NewUser = {
         Name: '',
         Password: ''
     };
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/user/config").then(function (r) {
-            $scope.Users = r.data;
+            vm.Users = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/user/config/save", jsonParam($scope.Users)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/user/config/save", jsonParam(vm.Users)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/user/config/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("SysctlController", ["$scope", "HttpService", "notificationService", $Sysctl]);
+app.controller("SysctlController", ["HttpService", "notificationService", $Sysctl]);
 
-function $Sysctl($scope, $H, $N) {
-    $scope.BootSysctl = null;
+function $Sysctl($H, $N) {
 
-    $scope.load = function () {
+    var vm = this;
+
+    vm.BootSysctl = null;
+
+    vm.load = function () {
         $H.GET("/boot/config/sysctl").then(function (r) {
-            $scope.BootSysctl = r.data;
+            vm.BootSysctl = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/boot/config/sysctl/save", jsonParam($scope.BootSysctl.SysctlTxt)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/boot/config/sysctl/save", jsonParam(vm.BootSysctl.SysctlTxt)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/boot/config/sysctl/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("ModulesController", ["$scope", "HttpService", "notificationService", $Modules]);
+app.controller("ModulesController", ["HttpService", "notificationService", $Modules]);
 
-function $Modules($scope, $H, $N) {
-    $scope.BootModules = null;
+function $Modules($H, $N) {
 
-    $scope.load = function () {
+    var vm = this;
+
+    vm.BootModules = null;
+
+    vm.load = function () {
         $H.GET("/boot/config/modules").then(function (r) {
-            $scope.BootModules = r.data;
+            vm.BootModules = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/boot/config/modules/save", jsonParam($scope.BootModules)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/boot/config/modules/save", jsonParam(vm.BootModules)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/boot/config/modules/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("ServicesController", ["$scope", "HttpService", "notificationService", $Services]);
+app.controller("ServicesController", ["HttpService", "notificationService", $Services]);
 
-function $Services($scope, $H, $N) {
-    $scope.BootServices = [];
+function $Services($H, $N) {
 
-    $scope.load = function () {
+    var vm = this;
+
+    vm.BootServices = [];
+
+    vm.load = function () {
         $H.GET("/boot/config/services").then(function (r) {
-            $scope.BootServices = r.data;
+            vm.BootServices = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/boot/config/services/save", jsonParam($scope.BootServices)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/boot/config/services/save", jsonParam(vm.BootServices)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/boot/config/services/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("CommandsController", ["$scope", "HttpService", "$interval", "$timeout", "$filter", "notificationService", $Commands]);
+app.controller("CommandsController", ["HttpService", "notificationService", $Commands]);
 
-function $Commands($scope, $H, $interval, $timeout, $filter, $N) {
-    $scope.SetupCommandsTxt = null;
+function $Commands($H, $N) {
 
-    $scope.load = function () {
+    var vm = this;
+
+    vm.SetupCommandsTxt = null;
+
+    vm.load = function () {
         $H.GET("/setupcmd/config").then(function (r) {
-            $scope.SetupCommandsTxt = r.data;
+            vm.SetupCommandsTxt = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/setupcmd/config/save", jsonParam($scope.SetupCommandsTxt)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/setupcmd/config/save", jsonParam(vm.SetupCommandsTxt)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/setupcmd/config/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("SchedulerController", ["$scope", "HttpService", "notificationService", $Scheduler]);
+app.controller("SchedulerController", ["HttpService", "notificationService", $Scheduler]);
 
-function $Scheduler($scope, $H, $N) {
-    $scope.Scheduler = [];
+function $Scheduler($H, $N) {
 
-    $scope.NewScheduler = {
+    var vm = this;
+
+    vm.Scheduler = [];
+
+    vm.NewScheduler = {
         Id: '',
         Name: '',
         RulesTxt: ''
     };
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/scheduler").then(function (r) {
-            $scope.Scheduler = r.data;
+            vm.Scheduler = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/scheduler/save", jsonParam($scope.Scheduler)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/scheduler/save", jsonParam(vm.Scheduler)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/scheduler/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("RoutingTablesController", ["$scope", "HttpService", "notificationService", $RoutingTables]);
+app.controller("RoutingTablesController", ["HttpService", "notificationService", $RoutingTables]);
 
-function $RoutingTables($scope, $H, $N) {
-    $scope.RoutingTables = [];
+function $RoutingTables($H, $N) {
 
-    $scope.NewRoutingTable = {
+    var vm = this;
+
+    vm.RoutingTables = [];
+
+    vm.NewRoutingTable = {
         Id: '',
         Name: '',
         RulesTxt: ''
     };
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/network/config/routingtables").then(function (r) {
-            $scope.RoutingTables = r.data;
+            vm.RoutingTables = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/network/config/routingtables/save", jsonParam($scope.RoutingTables)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/network/config/routingtables/save", jsonParam(vm.RoutingTables)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/network/config/routingtables/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("RoutingController", ["$scope", "HttpService", "notificationService", $Routing]);
+app.controller("RoutingController", ["HttpService", "notificationService", $Routing]);
 
-function $Routing($scope, $H, $N) {
-    $scope.Routes = [];
+function $Routing($H, $N) {
 
-    $scope.NewRoute = {
+    var vm = this;
+
+    vm.Routes = [];
+
+    vm.NewRoute = {
         Destination: '',
         Gateway: '',
         Device: ''
     };
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/network/config/routing").then(function (r) {
-            $scope.Routes = r.data;
+            vm.Routes = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/network/config/routing/save", jsonParam($scope.Routes)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/network/config/routing/save", jsonParam(vm.Routes)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/network/config/routing/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("InterfacesController", ["$scope", "HttpService", "notificationService", $Interfaces]);
+app.controller("InterfacesController", ["HttpService", "notificationService", $Interfaces]);
 
-function $Interfaces($scope, $H, $N) {
-    $scope.Interfaces = [];
+function $Interfaces($H, $N) {
 
-    $scope.NewInterface = {
+    var vm = this;
+
+    vm.Interfaces = [];
+
+    vm.NewInterface = {
         AutoBool: true,
         Iface: '',
         Address: '',
@@ -389,41 +416,43 @@ function $Interfaces($scope, $H, $N) {
         PostDownTxt: ''
     };
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/network/config/interfaces").then(function (r) {
-            $scope.Interfaces = r.data;
+            vm.Interfaces = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        $H.POST("/network/config/interfaces/save", jsonParam($scope.Interfaces)).then(function () {
-            $scope.load();
+    vm.save = function () {
+        $H.POST("/network/config/interfaces/save", jsonParam(vm.Interfaces)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
 
-    $scope.apply = function () {
+    vm.apply = function () {
         $H.POST("/network/config/interfaces/apply").then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Data applied');
         });
     };
 }
 
-app.controller("DisksController", ["$scope", "HttpService", "notificationService", $Disks]);
+app.controller("DisksController", ["HttpService", "notificationService", $Disks]);
 
-function $Disks($scope, $H, $N) {
+function $Disks($H, $N) {
 
-    $scope.Disks = [];
-    $scope.Mode = 0;
+    var vm = this;
 
-    $scope.load = function () {
+    vm.Disks = [];
+    vm.Mode = 0;
+
+    vm.load = function () {
         $H.GET("/disks").then(function (r) {
-            $scope.Disks = r.data;
+            vm.Disks = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
     function p1(d, l) {
         return $.param({
@@ -432,14 +461,14 @@ function $Disks($scope, $H, $N) {
         });
     }
 
-    $scope.createPartitionTable = function (d, l) {
+    vm.createPartitionTable = function (d, l) {
         $H.POST("/disks/create/partition/table", p1(d, l)).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Partition Table Created');
         });
     };
 
-    $scope.createPartition = function (device, partType, partName, fsType, start, end) {
+    vm.createPartition = function (device, partType, partName, fsType, start, end) {
         var data = $.param({
             Device: device,
             PartName: partName,
@@ -448,31 +477,31 @@ function $Disks($scope, $H, $N) {
             End: end
         });
         $H.POST("/disks/create/partition", data).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Partition Created');
         });
     };
 
-    $scope.createFsExt4 = function (d, l) {
+    vm.createFsExt4 = function (d, l) {
         $H.POST("/disks/create/fs/ext4", p1(d, l)).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Ext4 Created');
         });
     };
 
-    $scope.createFsZfs = function (device, pool, label) {
+    vm.createFsZfs = function (device, pool, label) {
         var data = $.param({
             Device: device,
             Pool: pool,
             Label: label
         });
         $H.POST("/disks/create/fs/zfs", data).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Zfs Created');
         });
     };
 
-    $scope.checkFs = function (partition) {
+    vm.checkFs = function (partition) {
         $H.GET("/disks/check/fs/" + partition.path).then(function (r) {
             partition.Check = r.data;
         });
@@ -480,19 +509,20 @@ function $Disks($scope, $H, $N) {
 
 }
 
-app.controller("VolumesController", ["$scope", "HttpService", "notificationService", $Volumes]);
+app.controller("VolumesController", ["HttpService", "notificationService", $Volumes]);
 
-function $Volumes($scope, $H, $N) {
+function $Volumes($H, $N) {
+    var vm = this;
 
-    $scope.Volumes = [];
-    $scope.Mode = 0;
+    vm.Volumes = [];
+    vm.Mode = 0;
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/volumes").then(function (r) {
-            $scope.Volumes = r.data;
+            vm.Volumes = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
     function p1(p, l) {
         return $.param({
@@ -507,31 +537,32 @@ function $Volumes($scope, $H, $N) {
         });
     }
 
-    $scope.mountVolume = function (p, l) {
+    vm.mountVolume = function (p, l) {
         $H.POST("/volumes/mount", p1(p, l)).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Volume mounted');
         });
     };
 
-    $scope.umountVolume = function (m) {
+    vm.umountVolume = function (m) {
         $H.POST("/volumes/umount", p2(m)).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Volume unmounted');
         });
     };
 }
 
-app.controller("WebdavController", ["$scope", "HttpService", "notificationService", $Webdav]);
+app.controller("WebdavController", ["HttpService", "notificationService", $Webdav]);
 
-function $Webdav($scope, $H, $N) {
+function $Webdav($H, $N) {
+    var vm = this;
 
-    $scope.Webdav = [];
-    $scope.Targets = [];
-    $scope.Users = [];
-    $scope.IpAddressList = [];
+    vm.Webdav = [];
+    vm.Targets = [];
+    vm.Users = [];
+    vm.IpAddressList = [];
 
-    $scope.NewWebdav = {
+    vm.NewWebdav = {
         Target: '',
         Address: '',
         Port: 0,
@@ -539,30 +570,30 @@ function $Webdav($scope, $H, $N) {
         MappedUsers: []
     };
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/webdav").then(function (r) {
-            $scope.Webdav = r.data.Webdav;
-            $scope.Targets = r.data.Targets;
-            $scope.Users = r.data.Users;
-            $scope.IpAddressList = r.data.IpAddressList;
+            vm.Webdav = r.data.Webdav;
+            vm.Targets = r.data.Targets;
+            vm.Users = r.data.Users;
+            vm.IpAddressList = r.data.IpAddressList;
 
-            $scope.NewWebdav.MappedUsers = angular.copy($scope.Users);
+            vm.NewWebdav.MappedUsers = angular.copy(vm.Users);
 
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.save = function () {
-        for (var i = 0; i < $scope.Webdav.length; i++) {
-            $scope.Webdav[i].Users = [];
-            for (var u = 0; u < $scope.Webdav[i].MappedUsers.length; u++) {
-                if ($scope.Webdav[i].MappedUsers[u].IsSelected) {
-                    $scope.Webdav[i].Users.push($scope.Webdav[i].MappedUsers[u].Name);
+    vm.save = function () {
+        for (var i = 0; i < vm.Webdav.length; i++) {
+            vm.Webdav[i].Users = [];
+            for (var u = 0; u < vm.Webdav[i].MappedUsers.length; u++) {
+                if (vm.Webdav[i].MappedUsers[u].IsSelected) {
+                    vm.Webdav[i].Users.push(vm.Webdav[i].MappedUsers[u].Name);
                 }
             }
         }
-        $H.POST("/webdav/save", jsonParam($scope.Webdav)).then(function () {
-            $scope.load();
+        $H.POST("/webdav/save", jsonParam(vm.Webdav)).then(function () {
+            vm.load();
             $N.success('Data saved');
         });
     };
@@ -573,30 +604,31 @@ function $Webdav($scope, $H, $N) {
         });
     }
 
-    $scope.webdavStart = function (v) {
+    vm.webdavStart = function (v) {
         $H.POST("/webdav/start", p(v)).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Webdav Started');
         });
     };
 
-    $scope.webdavStop = function (v) {
+    vm.webdavStop = function (v) {
         $H.POST("/webdav/stop", p(v)).then(function () {
-            $scope.load();
+            vm.load();
             $N.success('Webdav Stopped');
         });
     };
 }
 
-app.controller("TerminalController", ["$scope", "HttpService", "notificationService", $Terminal]);
+app.controller("TerminalController", ["HttpService", "notificationService", $Terminal]);
 
-function $Terminal($scope, $H, $N) {
+function $Terminal($H, $N) {
+    var vm = this;
 
-    $scope.$on('terminal-input', function (e, ci) {
+    vm.$on('terminal-input', function (e, ci) {
         $H.POST("/terminal", $.param({
             Command: ci[0]
         })).then(function (r) {
-            $scope.$broadcast('terminal-output', {
+            vm.$broadcast('terminal-output', {
                 output: true,
                 text: r.data,
                 breakLine: true
@@ -605,30 +637,31 @@ function $Terminal($scope, $H, $N) {
     });
 }
 
-app.controller("FileManagerController", ["$scope", "HttpService", "notificationService", $FileManager]);
+app.controller("FileManagerController", ["HttpService", "notificationService", $FileManager]);
 
-function $FileManager($scope, $H, $N) {
+function $FileManager($H, $N) {
+    var vm = this;
 
-    $scope.Volumes = [];
-    $scope.SrcDirectory = null;
-    $scope.DstDirectory = null;
+    vm.Volumes = [];
+    vm.SrcDirectory = null;
+    vm.DstDirectory = null;
 
-    $scope.load = function () {
+    vm.load = function () {
         $H.GET("/volumes/mounted").then(function (r) {
-            $scope.Volumes = r.data;
+            vm.Volumes = r.data;
         });
     };
-    $scope.load();
+    vm.load();
 
-    $scope.loadSrcDirectory = function (path) {
+    vm.loadSrcDirectory = function (path) {
         $H.GET("/fm/" + path).then(function (r) {
-            $scope.SrcDirectory = r.data;
+            vm.SrcDirectory = r.data;
         });
     };
 
-    $scope.loadDstDirectory = function (path) {
+    vm.loadDstDirectory = function (path) {
         $H.GET("/fm/" + path).then(function (r) {
-            $scope.DstDirectory = r.data;
+            vm.DstDirectory = r.data;
         });
     };
 
@@ -639,16 +672,16 @@ function $FileManager($scope, $H, $N) {
         });
     }
 
-    $scope.syncFolder = function (src, dst) {
+    vm.syncFolder = function (src, dst) {
         $H.POST("/fm/folder/sync", p(src, dst)).then(function () {
-            $scope.loadDstDirectory($scope.DstDirectory.Path);
+            vm.loadDstDirectory(vm.DstDirectory.Path);
             $N.success('Sync ' + src + ' to ' + dst);
         });
     };
 
-    $scope.syncFile = function (src, dst) {
+    vm.syncFile = function (src, dst) {
         $H.POST("/fm/file/sync", p(src, dst)).then(function () {
-            $scope.loadDstDirectory($scope.DstDirectory.Path);
+            vm.loadDstDirectory(vm.DstDirectory.Path);
             $N.success('Sync ' + src + ' to ' + dst);
         });
     };

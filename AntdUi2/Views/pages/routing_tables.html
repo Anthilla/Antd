@@ -1,17 +1,17 @@
-<div ng-controller="RoutingTablesController">
+<div ng-controller="RoutingTablesController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Routing Tables</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -33,23 +33,23 @@
                 <tbody>
                     <tr class="note-success">
                         <td colspan="10">
-                            <input ng-model="NewRoutingTable.Id" class="form-control" type="text">
+                            <input ng-model="vm.NewRoutingTable.Id" class="form-control" type="text">
                         </td>
                         <td colspan="20">
-                            <input ng-model="NewRoutingTable.Name" class="form-control" type="text">
+                            <input ng-model="vm.NewRoutingTable.Name" class="form-control" type="text">
                         </td>
                         <td colspan="80">
-                            <textarea rows="3" ng-model="NewRoutingTable.RulesTxt" class="form-control"></textarea>
+                            <textarea rows="3" ng-model="vm.NewRoutingTable.RulesTxt" class="form-control"></textarea>
                         </td>
                         <td colspan="10">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="sh.addToList(NewRoutingTable, RoutingTables)" type="button" class="btn btn-xs btn-success">
+                                <button ng-click="sh.addToList(vm.NewRoutingTable, vm.RoutingTables)" type="button" class="btn btn-xs btn-success">
                                     Add
                                 </button>
                             </div>
                         </td>
                     </tr>
-                    <tr ng-repeat="el in RoutingTables">
+                    <tr ng-repeat="el in vm.RoutingTables">
                         <td colspan="10">
                             <input ng-model="el.Id" class="form-control" type="text">
                         </td>
@@ -61,7 +61,7 @@
                         </td>
                         <td colspan="10">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="sh.removeFromList($index, RoutingTables)" type="button" class="btn btn-xs btn-danger">
+                                <button ng-click="sh.removeFromList($index, vm.RoutingTables)" type="button" class="btn btn-xs btn-danger">
                                     Remove
                                 </button>
                             </div>

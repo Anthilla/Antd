@@ -1,17 +1,17 @@
-﻿<div ng-controller="ServicesController" class="">
+﻿<div ng-controller="ServicesController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Services</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -28,11 +28,11 @@
                             <p>Active</p>
                         </th>
                         <td>
-                            <textarea rows="6" ng-model="BootServices.ActiveServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="vm.BootServices.ActiveServicesTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                         <td class="fg-dark" rowspan="4">
-                            <p ng-repeat="p in BootServices.RunningServices" class="no-margin">{{p}}</p>
+                            <p ng-repeat="p in vm.BootServices.RunningServices" class="no-margin">{{p}}</p>
                         </td>
                     </tr>
                     <tr>
@@ -40,7 +40,7 @@
                             <p>Inactive</p>
                         </th>
                         <td>
-                            <textarea rows="6" ng-model="BootServices.InactiveServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="vm.BootServices.InactiveServicesTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                     </tr>
@@ -49,7 +49,7 @@
                             <p>Disabled</p>
                         </th>
                         <td>
-                            <textarea rows="6" ng-model="BootServices.DisabledServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="vm.BootServices.DisabledServicesTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                     </tr>
@@ -58,7 +58,7 @@
                             <p>Blocked</p>
                         </th>
                         <td>
-                            <textarea rows="6" ng-model="BootServices.BlockedServicesTxt" class="form-control"></textarea>
+                            <textarea rows="6" ng-model="vm.BootServices.BlockedServicesTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                     </tr>

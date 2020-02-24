@@ -1,17 +1,17 @@
-﻿<div ng-controller="TimedateController">
+﻿<div ng-controller="TimedateController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Time and Date</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i> Reload
                 </button>
-                <button ng-click="save()" class="btn btn-default">
+                <button ng-click="vm.save()" class="btn btn-default">
                     <i class="fa fa-save"></i> Save
                 </button>
-                <button ng-click="apply()" class="btn btn-default">
+                <button ng-click="vm.apply()" class="btn btn-default">
                     <i class="fa fa-play"></i> Apply
                 </button>
             </div>
@@ -27,12 +27,12 @@
                         <th scope="row">Date</th>
                         <td></td>
                         <td></td>
-                        <td class="fg-dark">{{ TimeDate.RunningDate }}</td>
+                        <td class="fg-dark">{{ vm.TimeDate.RunningDate }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Timezone</th>
                         <td>
-                            <select ng-model="TimeDate.Timezone" class="form-control">
+                            <select ng-model="vm.TimeDate.Timezone" class="form-control">
                                 <option value="Africa/Abidjan">Africa/Abidjan</option>
                                 <option value="Africa/Accra">Africa/Accra</option>
                                 <option value="Africa/Addis_Ababa">Africa/Addis_Ababa</option>
@@ -461,18 +461,18 @@
                             </select>
                         </td>
                         <td></td>
-                        <td class="fg-dark">{{ TimeDate.RunningTimezone }}</td>
+                        <td class="fg-dark">{{ vm.TimeDate.RunningTimezone }}</td>
                     </tr>
                     <tr>
                         <th scope="row">
                             Remote Ntp Server
                             <span class="float-right">
                                 Enable
-                                <input ng-model="TimeDate.EnableNtpSync" type="checkbox" style="margin-left: 5px; margin-top: 0;">
+                                <input ng-model="vm.TimeDate.EnableNtpSync" type="checkbox" style="margin-left: 5px; margin-top: 0;">
                             </span>
                         </th>
                         <td>
-                            <textarea rows="3" ng-model="TimeDate.NtpServerTxt" class="form-control"></textarea>
+                            <textarea rows="3" ng-model="vm.TimeDate.NtpServerTxt" class="form-control"></textarea>
                         </td>
                         <td></td>
                         <td></td>

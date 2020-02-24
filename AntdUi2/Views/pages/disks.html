@@ -1,17 +1,17 @@
-﻿<div ng-controller="DisksController" class="">
+﻿<div ng-controller="DisksController as vm">
     <div class="page-title">
         <div class="title_left">
             <h3 class="no-margin">Disks</h3>
         </div>
         <div class="title_right">
             <div class="btn-group btn-group-xs float-right">
-                <button ng-click="Mode=0" class="btn btn-default" ng-class="{'btn-primary':Mode==0}">
+                <button ng-click="vm.Mode=0" class="btn btn-default" ng-class="{'btn-primary':vm.Mode==0}">
                     Basic
                 </button>
-                <button ng-click="Mode=1" class="btn btn-default" ng-class="{'btn-primary':Mode==1}">
+                <button ng-click="vm.Mode=1" class="btn btn-default" ng-class="{'btn-primary':vm.Mode==1}">
                     Advanced
                 </button>
-                <button ng-click="load()" class="btn btn-default">
+                <button ng-click="vm.load()" class="btn btn-default">
                     <i class="fa fa-refresh"></i>&nbsp;Reload
                 </button>
             </div>
@@ -20,7 +20,7 @@
     <div class="clearfix"></div>
     <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
-            <table ng-repeat="disk in Disks.blockdevices"
+            <table ng-repeat="disk in vm.Disks.blockdevices"
                    class="table table-condensed bg-white no-border table-fixed">
                 <thead>
                     <tr class="bg-page-light">
@@ -72,7 +72,7 @@
                                 <span class="float-left" style="margin-right: 3px;">
                                     Confirm:
                                 </span>
-                                <button ng-click="createPartitionTable(disk.Name, disk.PartitionTableLabel)"
+                                <button ng-click="vm.createPartitionTable(disk.Name, disk.PartitionTableLabel)"
                                         type="button"
                                         class="btn btn-default">
                                     Create Partition Table
@@ -114,7 +114,7 @@
                                 <span class="float-left" style="margin-right: 3px;">
                                     Confirm:
                                 </span>
-                                <button ng-click="createPartition(disk.Name, disk.PartitionType, disk.PartitionName, disk.FsType, disk.Start, disk.End)"
+                                <button ng-click="vm.createPartition(disk.Name, disk.PartitionType, disk.PartitionName, disk.FsType, disk.Start, disk.End)"
                                         type="button"
                                         class="btn btn-default">
                                     Create New Partition
@@ -146,7 +146,7 @@
                         <td>{{ part.mountpoint }}</td>
                         <td colspan="2">
                             <div class="btn-group btn-group-xs float-right">
-                                <button ng-click="checkFs(part);part.ShowCKPanel=true" type="button"
+                                <button ng-click="vm.checkFs(part);part.ShowCKPanel=true" type="button"
                                         class="btn btn-info">
                                     Check Fs
                                 </button>
@@ -182,7 +182,7 @@
                                 <span class="float-left" style="margin-right: 3px;">
                                     Confirm:
                                 </span>
-                                <button ng-click="createFsExt4(part.Name, part.Ext4Label)"
+                                <button ng-click="vm.createFsExt4(part.Name, part.Ext4Label)"
                                         type="button"
                                         class="btn btn-default">
                                     Create ext4 file system
@@ -218,7 +218,7 @@
                                 <span class="float-left" style="margin-right: 3px;">
                                     Confirm:
                                 </span>
-                                <button ng-click="createFsZfs(part.Name, part.ZfsPool, part.ZfsLabel)"
+                                <button ng-click="vm.createFsZfs(part.Name, part.ZfsPool, part.ZfsLabel)"
                                         type="button"
                                         class="btn btn-default">
                                     Create ZFS file system
