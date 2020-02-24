@@ -6,7 +6,7 @@
                                 <div class=col-lg-4>
                                     <textarea rows=3 ng-model=NewNetworkInterface.PreDownTxt class=form-control></textarea></div><div class=col-lg-2><p>Post Down</p></div>
                                 <div class=col-lg-4>
-                                    <textarea rows=3 ng-model=NewNetworkInterface.PostDownTxt class=form-control></textarea></div></div></td><td colspan=10><div class="btn-group btn-group-xs float-right"><button ng-click="addToList(NewNetworkInterface, Interfaces)" type=button class="btn btn-success">Add</button></div></td></tr><tr ng-repeat="el in Interfaces"><td colspan=5><input ng-model=el.AutoBool type=checkbox /></td><td colspan=20><input ng-model=el.Iface class=form-control type=text /></td><td colspan=20><input ng-model=el.Address class=form-control type=text /></td><td colspan=65><div class=row><div class=col-lg-2><p>Pre Up</p></div>
+                                    <textarea rows=3 ng-model=NewNetworkInterface.PostDownTxt class=form-control></textarea></div></div></td><td colspan=10><div class="btn-group btn-group-xs float-right"><button ng-click="sh.addToList(NewNetworkInterface, Interfaces)" type=button class="btn btn-success">Add</button></div></td></tr><tr ng-repeat="el in Interfaces"><td colspan=5><input ng-model=el.AutoBool type=checkbox /></td><td colspan=20><input ng-model=el.Iface class=form-control type=text /></td><td colspan=20><input ng-model=el.Address class=form-control type=text /></td><td colspan=65><div class=row><div class=col-lg-2><p>Pre Up</p></div>
                                 <div class=col-lg-4>
                                     <textarea rows=3 ng-model=el.PreUpTxt class=form-control></textarea></div><div class=col-lg-2><p>Post Up</p></div>
                                 <div class=col-lg-4>
@@ -14,4 +14,4 @@
                                 <div class=col-lg-4>
                                     <textarea rows=3 ng-model=el.PreDownTxt class=form-control></textarea></div><div class=col-lg-2><p>Post Down</p></div>
                                 <div class=col-lg-4>
-                                    <textarea rows=3 ng-model=el.PostDownTxt class=form-control></textarea></div></div></td><td colspan=10><div class="btn-group btn-group-xs float-right"><button ng-click="removeFromList($index, Interfaces)" type=button class="btn btn-danger">Remove</button></div></td></tr></tbody></table></div></div></div>
+                                    <textarea rows=3 ng-model=el.PostDownTxt class=form-control></textarea></div></div></td><td colspan=10><div class="btn-group btn-group-xs float-right"><button ng-click="sh.removeFromList($index, Interfaces)" type=button class="btn btn-danger">Remove</button></div></td></tr></tbody></table></div></div></div>
