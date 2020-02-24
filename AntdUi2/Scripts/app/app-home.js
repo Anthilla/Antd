@@ -98,6 +98,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("filemanager", {
             cache: false, url: "^/filemanager", views: { 'content': { templateUrl: "pg/filemanager.min.html?v=" + new Date() } }
         })
+        .state("finder", {
+            cache: false, url: "^/finder", views: { 'content': { templateUrl: "pg/finder.min.html?v=" + new Date() } }
+        })
 
         .state("commands", {
             cache: false, url: "^/commands", views: { 'content': { templateUrl: "pg/commands.min.html?v=" + new Date() } }
@@ -150,6 +153,19 @@ app.service('HttpService', ['$http', '$window', 'notificationService', function 
         return $http.post(url, data);
     };
 }]);
+
+app.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.$eval(attrs.ngEnter);
+                });
+                event.preventDefault();
+            }
+        });
+    };
+});
 
 app.controller("LanguageSwitchController", ["$scope", "$rootScope", "$translate", LanguageSwitchController]);
 
@@ -208,6 +224,7 @@ function SidebarController($scope, $http) {
             { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes' },
             { Name: 'Webdav', Icon: 'fa-square fg-violet', Destination: 'webdav' },
             { Name: 'File Manager', Icon: 'fa-square fg-violet', Destination: 'filemanager' },
+            { Name: 'Finder', Icon: 'fa-square fg-violet', Destination: 'finder' },
 
             { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands' },
             { Name: 'Scheduler', Icon: 'fa-square fg-danger', Destination: 'scheduler' },

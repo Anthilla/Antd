@@ -1,0 +1,44 @@
+<div ng-controller="FinderController as vm">
+    <div class="page-title">
+        <div class="title_left">
+            <h3 class="no-margin">Finder</h3>
+        </div>
+        <div class="title_right">
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="input-group no-margin float-left" style="width: 80%;">
+            <input ng-model="vm.Query"
+                   ng-enter="vm.search(vm.Query)"
+                   placeholder="Search..."
+                   type="text"
+                   class="form-control"
+                   style="height: 34px; border-bottom-left-radius: 3px; border-top-left-radius: 3px;">
+            <span class="input-group-btn">
+                <button ng-click="vm.Query='';vm.search(vm.Query)" type="button" style="height: 22px;  padding-top: 0px;" class="btn btn-default no-margin">
+                    <i class="fa fa-times fg-dark"></i>
+                </button>
+                <button ng-click="vm.search(vm.Query)" type="button" class="btn btn-default" style="height: 22px; padding-top: 0px;">
+                    <i class="fa fa-search fg-primary"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <table class="table table-condensed table-striped table-hover no-border table-fixed">
+            <tbody>
+                <tr ng-repeat="file in vm.Files track by $index">
+                    <td colspan="120">
+                        {{ file }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

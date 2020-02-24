@@ -841,3 +841,22 @@ function FileManagerController($scope, $http, notificationService) {
         }, function (r) { console.log(r); });
     };
 }
+
+app.controller("FinderController", ["$http", $Finder]);
+
+function $Finder($H) {
+
+    var vm = this;
+
+    vm.Files = [];
+    vm.Query = '';
+
+    vm.search = function () {
+        $H.get("/finder?p=" + vm.Query).then(function (r) {
+            vm.Files = r.data;
+        }).catch(function (r) {
+            console.log(r);
+        });
+    };
+}
+

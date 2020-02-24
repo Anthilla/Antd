@@ -48,9 +48,7 @@ function LoginController($scope, HttpService) {
             Password: $scope.Password
         });
         HttpService.POST("/login", data).then(function () {
-            console.log(0);
         }, function (r) {
-            console.log(1);
         });
     };
 }

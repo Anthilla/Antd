@@ -7,7 +7,9 @@ namespace Antd2.cmds {
 
         public static IEnumerable<string> File(string path, string pattern, string type = "f") {
             var typeString = string.IsNullOrEmpty(type) ? "" : $" -type {type} ";
-            return Bash.Execute($"{findCommand} {path} {typeString} -name {pattern}");
+            var command = $"{findCommand} {path} {typeString} -name {pattern}";
+            System.Console.WriteLine(command);
+            return Bash.Execute(command);
         }
     }
 }

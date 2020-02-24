@@ -112,5 +112,11 @@
     "inputFiles": [
       "Views/pages/user.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/finder.min.html",
+    "inputFiles": [
+      "Views/pages/finder.html"
+    ]
   }
 ]

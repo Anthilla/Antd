@@ -652,6 +652,9 @@
     <None Update="Views\pages\filemanager.min.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Views\pages\finder.min.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Views\pages\host.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
