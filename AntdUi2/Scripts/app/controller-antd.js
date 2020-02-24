@@ -1,13 +1,13 @@
-app.controller("SharedController", ["$scope", "$http", "$interval", "notificationService", SharedController]);
+app.controller("SharedController", ["$scope", "$http", "$interval", "notificationService", $Shared]);
 
-function SharedController($scope, $http, $interval, notificationService) {
+function $Shared($scope, $http, $interval, $N) {
 
     var sync;
 
     function checkNewDisk() {
         $http.get("/disks/new").then(function (r) {
             for (var i = 0; i < r.data.length; i++)
-                notificationService.newDisk('New disk detected: ' + r.data[i]);
+                $N.newDisk('New disk detected: ' + r.data[i]);
 
         }).catch(function (r) {
             console.log(r);
@@ -74,9 +74,9 @@ function SharedController($scope, $http, $interval, notificationService) {
     };
 }
 
-app.controller("HostController", ["$scope", "$http", "notificationService", HostController]);
+app.controller("HostController", ["$scope", "$http", "notificationService", $Host]);
 
-function HostController($scope, $http, notificationService) {
+function $Host($scope, $http, $N) {
 
     $scope.Host = null;
 
@@ -99,7 +99,7 @@ function HostController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/config/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) {
             console.log(r);
         });
@@ -110,16 +110,16 @@ function HostController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/host/config/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) {
             console.log(r);
         });
     };
 }
 
-app.controller("TimedateController", ["$scope", "$http", "notificationService", TimedateController]);
+app.controller("TimedateController", ["$scope", "$http", "notificationService", $Timedate]);
 
-function TimedateController($scope, $http, notificationService) {
+function $Timedate($scope, $http, $N) {
     $scope.TimeDate = null;
 
     $scope.load = function () {
@@ -141,7 +141,7 @@ function TimedateController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/timedate/config/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -150,14 +150,14 @@ function TimedateController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/timedate/config/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("UsersController", ["$scope", "$http", "notificationService", UsersController]);
+app.controller("UsersController", ["$scope", "$http", "notificationService", $Users]);
 
-function UsersController($scope, $http, notificationService) {
+function $Users($scope, $http, $N) {
     $scope.Users = [];
 
     $scope.NewUser = {
@@ -183,7 +183,7 @@ function UsersController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/user/config/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) {
             console.log(r);
         });
@@ -194,16 +194,16 @@ function UsersController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/user/config/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) {
             console.log(r);
         });
     };
 }
 
-app.controller("SysctlController", ["$scope", "$http", "notificationService", SysctlController]);
+app.controller("SysctlController", ["$scope", "$http", "notificationService", $Sysctl]);
 
-function SysctlController($scope, $http, notificationService) {
+function $Sysctl($scope, $http, $N) {
     $scope.BootSysctl = null;
 
     $scope.load = function () {
@@ -224,7 +224,7 @@ function SysctlController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/sysctl/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -233,14 +233,14 @@ function SysctlController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/sysctl/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("ModulesController", ["$scope", "$http", "notificationService", ModulesController]);
+app.controller("ModulesController", ["$scope", "$http", "notificationService", $Modules]);
 
-function ModulesController($scope, $http, notificationService) {
+function $Modules($scope, $http, $N) {
     $scope.BootModules = null;
 
     $scope.load = function () {
@@ -261,7 +261,7 @@ function ModulesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/modules/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -270,14 +270,14 @@ function ModulesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/modules/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("ServicesController", ["$scope", "$http", "notificationService", ServicesController]);
+app.controller("ServicesController", ["$scope", "$http", "notificationService", $Services]);
 
-function ServicesController($scope, $http, notificationService) {
+function $Services($scope, $http, $N) {
     $scope.BootServices = [];
 
     $scope.load = function () {
@@ -298,7 +298,7 @@ function ServicesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/services/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -307,14 +307,14 @@ function ServicesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/boot/config/services/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("CommandsController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", CommandsController]);
+app.controller("CommandsController", ["$scope", "$http", "$interval", "$timeout", "$filter", "notificationService", $Commands]);
 
-function CommandsController($scope, $http, $interval, $timeout, $filter, notificationService) {
+function $Commands($scope, $http, $interval, $timeout, $filter, $N) {
     $scope.SetupCommandsTxt = null;
 
     $scope.load = function () {
@@ -335,7 +335,7 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/setupcmd/config/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -344,14 +344,14 @@ function CommandsController($scope, $http, $interval, $timeout, $filter, notific
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/setupcmd/config/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("SchedulerController", ["$scope", "$http", "notificationService", SchedulerController]);
+app.controller("SchedulerController", ["$scope", "$http", "notificationService", $Scheduler]);
 
-function SchedulerController($scope, $http, notificationService) {
+function $Scheduler($scope, $http, $N) {
     $scope.Scheduler = [];
 
     $scope.NewScheduler = {
@@ -378,7 +378,7 @@ function SchedulerController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/scheduler/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -387,15 +387,15 @@ function SchedulerController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/scheduler/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
 
-app.controller("RoutingTablesController", ["$scope", "$http", "notificationService", RoutingTablesController]);
+app.controller("RoutingTablesController", ["$scope", "$http", "notificationService", $RoutingTables]);
 
-function RoutingTablesController($scope, $http, notificationService) {
+function $RoutingTables($scope, $http, $N) {
     $scope.RoutingTables = [];
 
     $scope.NewRoutingTable = {
@@ -422,7 +422,7 @@ function RoutingTablesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routingtables/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -431,14 +431,14 @@ function RoutingTablesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routingtables/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("RoutingController", ["$scope", "$http", "notificationService", RoutingController]);
+app.controller("RoutingController", ["$scope", "$http", "notificationService", $Routing]);
 
-function RoutingController($scope, $http, notificationService) {
+function $Routing($scope, $http, $N) {
     $scope.Routes = [];
 
     $scope.NewRoute = {
@@ -465,7 +465,7 @@ function RoutingController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routing/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -474,14 +474,14 @@ function RoutingController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/routing/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("InterfacesController", ["$scope", "$http", "notificationService", InterfacesController]);
+app.controller("InterfacesController", ["$scope", "$http", "notificationService", $Interfaces]);
 
-function InterfacesController($scope, $http, notificationService) {
+function $Interfaces($scope, $http, $N) {
     $scope.Interfaces = [];
 
     $scope.NewInterface = {
@@ -512,7 +512,7 @@ function InterfacesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/interfaces/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) {
             console.log(r);
         });
@@ -523,16 +523,16 @@ function InterfacesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/network/config/interfaces/apply").then(function () {
             $scope.load();
-            notificationService.success('Data applied');
+            $N.success('Data applied');
         }, function (r) {
             console.log(r);
         });
     };
 }
 
-app.controller("DisksController", ["$scope", "$http", "notificationService", DisksController]);
+app.controller("DisksController", ["$scope", "$http", "notificationService", $Disks]);
 
-function DisksController($scope, $http, notificationService) {
+function $Disks($scope, $http, $N) {
 
     $scope.Disks = [];
     $scope.Mode = 0;
@@ -554,7 +554,7 @@ function DisksController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/partition/table", data).then(function () {
             $scope.load();
-            notificationService.success('Partition Table Created');
+            $N.success('Partition Table Created');
         }, function (r) { console.log(r); });
     };
 
@@ -570,7 +570,7 @@ function DisksController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/partition", data).then(function () {
             $scope.load();
-            notificationService.success('Partition Created');
+            $N.success('Partition Created');
         }, function (r) { console.log(r); });
     };
 
@@ -582,7 +582,7 @@ function DisksController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/fs/ext4", data).then(function () {
             $scope.load();
-            notificationService.success('Ext4 Created');
+            $N.success('Ext4 Created');
         }, function (r) { console.log(r); });
     };
 
@@ -595,7 +595,7 @@ function DisksController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/disks/create/fs/zfs", data).then(function () {
             $scope.load();
-            notificationService.success('Zfs Created');
+            $N.success('Zfs Created');
         }, function (r) { console.log(r); });
     };
 
@@ -611,9 +611,9 @@ function DisksController($scope, $http, notificationService) {
 
 }
 
-app.controller("VolumesController", ["$scope", "$http", "notificationService", VolumesController]);
+app.controller("VolumesController", ["$scope", "$http", "notificationService", $Volumes]);
 
-function VolumesController($scope, $http, notificationService) {
+function $Volumes($scope, $http, $N) {
 
     $scope.Volumes = [];
     $scope.Mode = 0;
@@ -635,7 +635,7 @@ function VolumesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/mount", data).then(function () {
             $scope.load();
-            notificationService.success('Volume mounted');
+            $N.success('Volume mounted');
         }, function (r) { console.log(r); });
     };
 
@@ -646,52 +646,14 @@ function VolumesController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/volumes/umount", data).then(function () {
             $scope.load();
-            notificationService.success('Volume unmounted');
-        }, function (r) { console.log(r); });
-    };
-
-    $scope.webdavStart = function (ip, port, mountpoint, user, password) {
-        var data = $.param({
-            Ip: ip,
-            Port: port,
-            Mountpoint: mountpoint,
-            User: user,
-            Password: password
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/webdav/start", data).then(function () {
-            $scope.load();
-            notificationService.success('Webdav Started');
-        }, function (r) { console.log(r); });
-    };
-
-    $scope.webdavStop = function (mountpoint) {
-        var data = $.param({
-            Mountpoint: mountpoint
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/webdav/stop", data).then(function () {
-            $scope.load();
-            notificationService.success('Webdav Stopped');
-        }, function (r) { console.log(r); });
-    };
-
-    $scope.syncVolumes = function (s, d) {
-        var data = $.param({
-            Source: s,
-            Destination: d
-        });
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        $http.post("/volumes/sync", data).then(function () {
-            $scope.load();
-            notificationService.success('Volumes sync start');
+            $N.success('Volume unmounted');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("WebdavController", ["$scope", "$http", "notificationService", WebdavController]);
+app.controller("WebdavController", ["$scope", "$http", "notificationService", $Webdav]);
 
-function WebdavController($scope, $http, notificationService) {
+function $Webdav($scope, $http, $N) {
 
     $scope.Webdav = [];
     $scope.Targets = [];
@@ -736,7 +698,7 @@ function WebdavController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/webdav/save", data).then(function () {
             $scope.load();
-            notificationService.success('Data saved');
+            $N.success('Data saved');
         }, function (r) { console.log(r); });
     };
 
@@ -747,7 +709,7 @@ function WebdavController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/webdav/start", data).then(function () {
             $scope.load();
-            notificationService.success('Webdav Started');
+            $N.success('Webdav Started');
         }, function (r) { console.log(r); });
     };
 
@@ -758,14 +720,14 @@ function WebdavController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/webdav/stop", data).then(function () {
             $scope.load();
-            notificationService.success('Webdav Stopped');
+            $N.success('Webdav Stopped');
         }, function (r) { console.log(r); });
     };
 }
 
-app.controller("TerminalController", ["$scope", "$http", "notificationService", TerminalController]);
+app.controller("TerminalController", ["$scope", "$http", "notificationService", $Terminal]);
 
-function TerminalController($scope, $http, notificationService) {
+function $Terminal($scope, $http, $N) {
 
     $scope.$on('terminal-input', function (e, consoleInput) {
         var cmd = consoleInput[0];
@@ -784,9 +746,9 @@ function TerminalController($scope, $http, notificationService) {
     });
 }
 
-app.controller("FileManagerController", ["$scope", "$http", "notificationService", FileManagerController]);
+app.controller("FileManagerController", ["$scope", "$http", "notificationService", $FileManager]);
 
-function FileManagerController($scope, $http, notificationService) {
+function $FileManager($scope, $http, $N) {
 
     $scope.Volumes = [];
     $scope.SrcDirectory = null;
@@ -825,7 +787,7 @@ function FileManagerController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/fm/folder/sync", data).then(function () {
             $scope.loadDstDirectory($scope.DstDirectory.Path);
-            notificationService.success('Sync ' + src + ' to ' + dst);
+            $N.success('Sync ' + src + ' to ' + dst);
         }, function (r) { console.log(r); });
     };
 
@@ -837,7 +799,7 @@ function FileManagerController($scope, $http, notificationService) {
         $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
         $http.post("/fm/file/sync", data).then(function () {
             $scope.loadDstDirectory($scope.DstDirectory.Path);
-            notificationService.success('Sync ' + src + ' to ' + dst);
+            $N.success('Sync ' + src + ' to ' + dst);
         }, function (r) { console.log(r); });
     };
 }

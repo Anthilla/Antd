@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="templateApp">
+<html ng-app="antdLogin">
 <head>
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
@@ -38,23 +38,15 @@
     <script src="/js/base/angular-ui-router.min.js"></script>
     <script src="/js/base/angular-aria.min.js"></script>
     <script src="/js/base/angular-messages.min.js"></script>
-    <script src="/js/base/angular-sanitize.min.js"></script>
-    <script src="/js/base/angular-translate.min.js"></script>
-    <script src="/js/base/angular-translate-loader-url.js"></script>
     <script src="/js/base/angular-cookies.min.js"></script>
-    <!-- jQuery custom content scroller -->
-    <script src="/js/base/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="/js/base/scrollbars.min.js"></script>
     <!-- Custom Theme scripts -->
     <script src="/js/base/custom.js"></script>
-    <!--pageTitle-->
-    <script src="/js/base/pageTitle.js"></script>
 
     <script src="/js/app/app-login.js"></script>
 
 </head>
 <body class="login" ng-cloak>
-    <div ng-controller="LoginController" ng-cloak>
+    <div ng-controller="LoginController as vm" ng-cloak>
         <div class="login_wrapper">
             <div class="animate form login_form" style="padding: 20px; background-color: rgba(255, 255, 255, 0.5)">
                 <section class="login_content">
@@ -62,30 +54,30 @@
                         <img src="/img/antdlogo.png" style="max-height: 200px; max-width: 200px;" />
                     </div>
                     <br />
-                    <form ng-submit='submitForm()'
+                    <form ng-submit='vm.submitForm()'
                           action="/login"
                           method="POST"
                           enctype="multipart/form-data"
                           style="background-color: white; padding: 20px; border-radius: 2px;">
                         <div>
-                            <h6>{{ 'USER' | translate }}</h6>
+                            <h6>User</h6>
                             <input type="text"
                                    class="form-control no-margin"
-                                   ng-model="Username"
-                                   ng-change="Password=''"
+                                   ng-model="vm.Username"
+                                   ng-change="vm.Password=''"
                                    name="Username"
                                    required="" />
                         </div>
                         <div>
-                            <h6>{{ 'PASSWORD' | translate }}</h6>
-                            <input type="password" class="form-control" ng-model="Password" name="Password" required="" />
+                            <h6>Password</h6>
+                            <input type="password" class="form-control" ng-model="vm.Password" name="Password" required="" />
                         </div>
 
                         <div>
                             <button type="submit"
-                                    ng-mousedown='doSubmit=true'
+                                    ng-mousedown='vm.doSubmit=true'
                                     class="btn btn-xs btn-success width100">
-                                {{ 'LOGIN' | translate }}
+                                Login
                             </button>
                         </div>
                         <div class="clearfix"></div>
@@ -95,7 +87,7 @@
                     @If.Errored
                     <br>
                     <div ng-show="Username.length==0" style="padding: 20px; border: 1px solid #2A3F54; border-radius: 8px;">
-                        <p class="fg-danger no-margin">{{ 'LOGIN_ERROR' | translate }}</p>
+                        <p class="fg-danger no-margin">Invalid password</p>
                     </div>
                     @EndIf
 

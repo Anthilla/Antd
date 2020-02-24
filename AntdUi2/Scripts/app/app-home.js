@@ -1,4 +1,4 @@
-var app = angular.module("templateApp", [
+var app = angular.module("antdApp", [
     "ngSanitize",
     "pascalprecht.translate",
     "ui.router",
@@ -139,18 +139,17 @@ app.filter('bytes', function () {
     };
 });
 
-app.service('HttpService', ['$http', '$window', 'notificationService', function ($http, $window, notificationService) {
+app.service('HttpService', ['$http', function ($H) {
     this.GET = function (url, data) {
-        var config = {
+        return $H.get(url, {
             params: data,
             headers: { 'Accept': 'application/json' }
-        };
-        return $http.get(url, config);
+        });
     };
 
     this.POST = function (url, data) {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        return $http.post(url, data);
+        $H.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        return $H.post(url, data);
     };
 }]);
 
@@ -167,69 +166,63 @@ app.directive('ngEnter', function () {
     };
 });
 
-app.controller("LanguageSwitchController", ["$scope", "$rootScope", "$translate", LanguageSwitchController]);
+app.controller("LanguageSwitchController", ["$rootScope", "$translate", $LanguageSwitch]);
 
-function LanguageSwitchController($scope, $rootScope, $translate) {
+function $LanguageSwitch($R, $T) {
+    var vm = this;
 
-    $scope.SelectedLanguage = "it";
+    vm.SelectedLanguage = "it";
 
-    $scope.changeLanguage = function (langKey) {
-        $translate.use(langKey);
-        $scope.SelectedLanguage = langKey;
+    vm.changeLanguage = function (langKey) {
+        $T.use(langKey);
+        vm.SelectedLanguage = langKey;
     };
 
-    $rootScope.$on("$translateChangeSuccess", function (event, data) {
-        var language = data.language;
-        $rootScope.lang = language;
-        var now = new Date();
-        var exp = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+    $R.$on("$translateChangeSuccess", function (event, data) {
+        $R.lang = data.language;
     });
 }
 
-app.controller("NavbarController", ["$scope", "$http", "$window", "$interval", NavbarController]);
+app.controller("NavbarController", [$Navbar]);
 
-function NavbarController($scope, $http, $window, $interval) {
+function $Navbar() {
+    var vm = this;
 
-    $scope.User = {
+    vm.User = {
         Name: "master"
-    };
-
-    $scope.AclHide = function (functionCode) {
-        if (functionCode === "0000000a") { return false; }
     };
 }
 
-app.controller("SidebarController", ["$scope", "$http", SidebarController]);
+app.controller("SidebarController", [$Sidebar]);
 
-function SidebarController($scope, $http) {
+function $Sidebar() {
+    var vm = this;
 
-    var activeClass = "text-underline";
+    vm.Menu = [{
+        List: [
+            { Lbl: 'Host', Ico: 'fa-square fg-info', Dst: 'host' },
+            { Lbl: 'Time and Date', Ico: 'fa-square fg-info', Dst: 'time' },
+            { Lbl: 'Users', Ico: 'fa-square fg-info', Dst: 'user' },
 
-    $scope.Menu = [{
-        Elements: [
-            { Name: 'Host', Icon: 'fa-square fg-info', Destination: 'host' },
-            { Name: 'Time and Date', Icon: 'fa-square fg-info', Destination: 'time' },
-            { Name: 'Users', Icon: 'fa-square fg-info', Destination: 'user' },
+            { Lbl: 'Sysctl', Ico: 'fa-square fg-success', Dst: 'sysctl' },
+            { Lbl: 'Modules', Ico: 'fa-square fg-success', Dst: 'modules' },
+            { Lbl: 'Services', Ico: 'fa-square fg-success', Dst: 'services' },
 
-            { Name: 'Sysctl', Icon: 'fa-square fg-success', Destination: 'sysctl' },
-            { Name: 'Modules', Icon: 'fa-square fg-success', Destination: 'modules' },
-            { Name: 'Services', Icon: 'fa-square fg-success', Destination: 'services' },
+            //{ Lbl: 'DNS Client', Ico: 'fa-square fg-warning', Dst: 'dns_client' },
+            { Lbl: 'Interfaces', Ico: 'fa-square fg-warning', Dst: 'interfaces' },
+            { Lbl: 'Routing Tables', Ico: 'fa-square fg-warning', Dst: 'routing_tables' },
+            { Lbl: 'Routing', Ico: 'fa-square fg-warning', Dst: 'routing' },
 
-            //{ Name: 'DNS Client', Icon: 'fa-square fg-warning', Destination: 'dns_client' },
-            { Name: 'Interfaces', Icon: 'fa-square fg-warning', Destination: 'interfaces' },
-            { Name: 'Routing Tables', Icon: 'fa-square fg-warning', Destination: 'routing_tables' },
-            { Name: 'Routing', Icon: 'fa-square fg-warning', Destination: 'routing' },
+            { Lbl: 'Disks', Ico: 'fa-square fg-violet', Dst: 'disks' },
+            { Lbl: 'Volumes', Ico: 'fa-square fg-violet', Dst: 'volumes' },
+            { Lbl: 'Webdav', Ico: 'fa-square fg-violet', Dst: 'webdav' },
+            { Lbl: 'File Manager', Ico: 'fa-square fg-violet', Dst: 'filemanager' },
+            { Lbl: 'Finder', Ico: 'fa-square fg-violet', Dst: 'finder' },
 
-            { Name: 'Disks', Icon: 'fa-square fg-violet', Destination: 'disks' },
-            { Name: 'Volumes', Icon: 'fa-square fg-violet', Destination: 'volumes' },
-            { Name: 'Webdav', Icon: 'fa-square fg-violet', Destination: 'webdav' },
-            { Name: 'File Manager', Icon: 'fa-square fg-violet', Destination: 'filemanager' },
-            { Name: 'Finder', Icon: 'fa-square fg-violet', Destination: 'finder' },
+            { Lbl: 'Commands', Ico: 'fa-square fg-danger', Dst: 'commands' },
+            { Lbl: 'Scheduler', Ico: 'fa-square fg-danger', Dst: 'scheduler' },
 
-            { Name: 'Commands', Icon: 'fa-square fg-danger', Destination: 'commands' },
-            { Name: 'Scheduler', Icon: 'fa-square fg-danger', Destination: 'scheduler' },
-
-            { Name: 'Terminal', Icon: 'fa-square fg-dark', Destination: 'terminal' },
+            { Lbl: 'Terminal', Ico: 'fa-square fg-dark', Dst: 'terminal' }
         ]
     }];
 }

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="templateApp">
+<html ng-app="antdApp">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -74,14 +74,13 @@
                     </div>
                     <div class="clearfix"></div>
                     <!-- sidebar menu -->
-                    <div ng-controller="SidebarController" ng-cloak id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                        <div ng-repeat="section in Menu" class="menu_section">
-                            <h3>{{ section.Name }}</h3>
+                    <div ng-controller="SidebarController as sideVm" ng-cloak id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div ng-repeat="sect in sideVm.Menu" class="menu_section">
                             <ul class="nav side-menu">
-                                <li ng-repeat="element in section.Elements">
-                                    <a ui-sref="{{ element.Destination }}">
-                                        <i class="fa {{ element.Icon }}"></i>
-                                        {{ element.Name }}
+                                <li ng-repeat="el in sect.List">
+                                    <a ui-sref="{{ el.Dst }}">
+                                        <i class="fa {{ el.Ico }}"></i>
+                                        {{ el.Lbl }}
                                     </a>
                                 </li>
                             </ul>
@@ -91,7 +90,7 @@
                 </div>
             </div>
             <!-- top navigation -->
-            <div class="top_nav" ng-controller="NavbarController">
+            <div class="top_nav" ng-controller="NavbarController as navVm">
                 <div class="nav_menu">
                     <nav>
                         <div class="nav toggle">
@@ -100,7 +99,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li id="UserMenu" class="">
                                 <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <span>{{ User.Name }}</span>
+                                    <span>{{ navVm.User.Name }}</span>
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">

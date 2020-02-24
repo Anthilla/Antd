@@ -1,55 +1,37 @@
-var app = angular.module("templateApp", [
-    "ngSanitize",
-    "pascalprecht.translate"
-]);
+var app = angular.module("antdLogin", []);
 
-//translate config
-app.config(function ($translateProvider) {
-    $translateProvider.useUrlLoader("/translate");
-    $translateProvider.preferredLanguage("it");
-    $translateProvider.useSanitizeValueStrategy('escape'); //sanitize, sanitizeParameters, escape, escapeParameters 
-});
-
-app.service('HttpService', ['$http', '$window', function ($http, $window) {
+app.service('HttpService', ['$http', function ($H) {
     this.GET = function (url, data) {
-        var config = {
+        return $H.get(url, {
             params: data,
             headers: { 'Accept': 'application/json' }
-        };
-        return $http.get(url, config);
+        });
     };
 
     this.POST = function (url, data) {
-        $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        return $http.post(url, data);
+        $H.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+        return $H.post(url, data);
     };
 }]);
 
-app.controller("LoginController", ["$scope", "HttpService", LoginController]);
+app.controller("LoginController", ["$scope", "HttpService", $Login]);
 
-function LoginController($scope, HttpService) {
+function $Login($scope, $H) {
+    var vm = this;
 
-    $scope.Username = "";
-    $scope.Password = "";
+    vm.Username = "";
+    vm.Password = "";
+    vm.UserExists = false;
 
-    $scope.UserExists = false;
-
-    $scope.VerifyUsername = function () {
-        $scope.UserExists = $scope.Username.length > 0;
-    };
-
-    $scope.submitForm = function () {
-        if (!$scope.doSubmit) {
+    vm.submitForm = function () {
+        if (!vm.doSubmit) {
             return;
         }
-        $scope.doSubmit = false;
-        var data = $.param({
-            Username: $scope.Username,
-            Password: $scope.Password
-        });
-        HttpService.POST("/login", data).then(function () {
-        }, function (r) {
-        });
+        vm.doSubmit = false;
+        $H.POST("/login", $.param({
+            Username: vm.Username,
+            Password: vm.Password
+        }));
     };
 }
 
