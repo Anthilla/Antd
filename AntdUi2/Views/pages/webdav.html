@@ -32,7 +32,7 @@
                     <tr class="note-success">
                         <td colspan="25">
                             <select ng-model="vm.NewWebdav.Target" class="form-control">
-                                <option ng-repeat="target in Targets track by $index"
+                                <option ng-repeat="target in vm.Targets track by $index"
                                         value="{{target}}">
                                     {{target}}
                                 </option>
@@ -40,7 +40,7 @@
                         </td>
                         <td colspan="15">
                             <select ng-model="vm.NewWebdav.Address" class="form-control">
-                                <option ng-repeat="address in IpAddressList track by $index"
+                                <option ng-repeat="address in vm.IpAddressList track by $index"
                                         value="{{address}}">
                                     {{address}}
                                 </option>
@@ -68,10 +68,10 @@
                             </div>
                         </td>
                     </tr>
-                    <tr ng-repeat="el in Webdav track by $index">
+                    <tr ng-repeat="el in vm.Webdav track by $index">
                         <td colspan="25">
                             <select ng-model="el.Target" class="form-control">
-                                <option ng-repeat="target in Targets track by $index"
+                                <option ng-repeat="target in vm.Targets track by $index"
                                         value="{{target}}">
                                     {{target}}
                                 </option>
@@ -79,7 +79,7 @@
                         </td>
                         <td colspan="15">
                             <select ng-model="el.Address" class="form-control">
-                                <option ng-repeat="address in IpAddressList track by $index"
+                                <option ng-repeat="address in vm.IpAddressList track by $index"
                                         value="{{address}}">
                                     {{address}}
                                 </option>
@@ -101,6 +101,9 @@
                         </td>
                         <td colspan="20">
                             <div class="btn-group btn-group-xs float-right">
+                                <button ng-click="sh.removeFromList($index, vm.Webdav)" type="button" class="btn btn-xs btn-danger">
+                                    Remove
+                                </button>
                                 <button ng-if="el.IsActive==false" ng-click="vm.webdavStart(el.Target)" type="button" class="btn btn-success">
                                     Start
                                 </button>
