@@ -33,7 +33,7 @@ namespace Antd2.cmds {
         }
 
         public static List<LsblkBlockdevice> Get() {
-            var commandResultLines = Bash.Execute($"{lsblkCommand} -banJO");
+            var commandResultLines = Bash.Execute($"{lsblkCommand} -bnJO");
             var commandResult = string.Join("", commandResultLines);
             var js = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore,
