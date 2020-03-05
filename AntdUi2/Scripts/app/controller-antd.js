@@ -7,7 +7,6 @@ function jsonParam(o) {
 app.controller("SharedController", ["HttpService", "$interval", "notificationService", $Shared]);
 
 function $Shared($H, $I, $N) {
-
     var vm = this;
 
     var sync;
@@ -81,7 +80,6 @@ function $Shared($H, $I, $N) {
 app.controller("HostController", ["HttpService", "notificationService", $Host]);
 
 function $Host($H, $N) {
-
     var vm = this;
 
     vm.Host = null;
@@ -111,7 +109,6 @@ function $Host($H, $N) {
 app.controller("TimedateController", ["HttpService", "notificationService", $Timedate]);
 
 function $Timedate($H, $N) {
-
     var vm = this;
 
     vm.TimeDate = null;
@@ -141,6 +138,8 @@ function $Timedate($H, $N) {
 app.controller("UsersController", ["HttpService", "notificationService", $Users]);
 
 function $Users($H, $N) {
+    var vm = this;
+
     vm.Users = [];
 
     vm.NewUser = {

@@ -21,6 +21,8 @@ namespace Antd2.Modules {
 
             Post("/folder/sync", x => ApiPostFolderSync());
 
+            Post("/file/rename", x => ApiPostFileRename());
+
             Post("/file/move", x => ApiPostFileMove());
 
             Post("/file/delete", x => ApiPostFileDelete());
@@ -70,6 +72,13 @@ namespace Antd2.Modules {
             dst += "/";
             Console.WriteLine($"[sync] {src} > {dst}");
             Rsync.SyncArchive(src, dst);
+            return HttpStatusCode.OK;
+        }
+
+        private dynamic ApiPostFileRename() {
+            string path = Request.Form.Path;
+            string newName = Request.Form.Name;
+            FileManagerRepository.RenameFile(path, newName);
             return HttpStatusCode.OK;
         }
 

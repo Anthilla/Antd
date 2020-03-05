@@ -18,6 +18,8 @@ namespace AntdUi2.Modules {
 
             Post("/folder/sync", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
 
+            Post("/file/rename", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
+
             Post("/file/move", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));
 
             Post("/file/delete", x => Application.RestConsumer.Redirect(Request, Guid.NewGuid().ToString()));

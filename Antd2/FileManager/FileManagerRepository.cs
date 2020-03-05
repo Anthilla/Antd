@@ -80,6 +80,10 @@ namespace Antd2.FileManager {
             Directory.Delete(directoryPath, force);
         }
 
+        public static void RenameFile(string filePath, string newName) {
+            File.Move(filePath, Path.Combine(Path.GetDirectoryName(filePath), newName));
+        }
+
         public static void MoveFile(string filePath, string newFolder) {
             File.Move(filePath, Path.Combine(newFolder, Path.GetFileName(filePath)));
         }

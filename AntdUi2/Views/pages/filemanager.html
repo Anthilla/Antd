@@ -25,7 +25,7 @@
                         <td colspan="80">
                             <select ng-change="vm.loadSrcDirectory(vm.SelectedSrcVolume)" ng-model="vm.SelectedSrcVolume"
                                     style="border: 0px; width: 100%;">
-                                <option ng-repeat="vol in Volumes"
+                                <option ng-repeat="vol in vm.Volumes"
                                         value="{{vol.mountpoint}}">
                                     {{ vol.label }} {{ vol.mountpoint }}
                                 </option>
@@ -123,7 +123,15 @@
                         <td colspan="31" class="text-right">
                             {{ file.Dimension | bytes }}
                         </td>
-                        <td colspan="10">
+                        <td colspan="10" class="no-padding">
+                            <div class="btn-group btn-group-xs float-right">
+                                <button ng-disabled="vm.SelectedSrcVolume==undefined||vm.SelectedDstVolume==undefined"
+                                        ng-click="vm.syncFile(file.Path, vm.DstDirectory.Path)"
+                                        type="button" class="btn btn-default">
+                                    <i class="fa fa-arrow-right fg-success"></i>
+                                    Sync
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -140,7 +148,7 @@
                         <td colspan="80">
                             <select ng-change="vm.loadDstDirectory(vm.SelectedDstVolume)" ng-model="vm.SelectedDstVolume"
                                     style="border: 0px; width: 100%;">
-                                <option ng-repeat="vol in Volumes"
+                                <option ng-repeat="vol in vm.Volumes"
                                         value="{{vol.mountpoint}}">
                                     {{ vol.label }} {{ vol.mountpoint }}
                                 </option>
