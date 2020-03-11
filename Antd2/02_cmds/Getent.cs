@@ -16,7 +16,7 @@ namespace Antd2.cmds {
         private const string shadowArg = "shadow";
         private const string passwdArg = "passwd";
         private const string groupArg = "group";
-        private const string mkpasswdFileLocation = "/usr/bin/mkpasswd";
+        private const string mkpasswdCommand = "mkpasswd";
 
         public static IEnumerable<string> GetGroups() {
             return Bash.Execute($"{getentCommand} {groupArg}")
@@ -74,8 +74,7 @@ namespace Antd2.cmds {
 
         public static string HashPasswd(string input) {
             var arg = CommonString.Append("-m sha-512 '", input, "'");
-            var result = CommonProcess.Execute(mkpasswdFileLocation, arg).ToArray();
-            return result[0];
+            return Bash.Execute($"{mkpasswdCommand} {arg}").FirstOrDefault();
         }
 
         public static void SetPassword(string user, string password) {
