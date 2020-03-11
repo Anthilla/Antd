@@ -1,5 +1,5 @@
 ﻿using antd.core;
-using System.Linq;
+using Antd2.Configuration;
 
 namespace Antd2.cmds {
 
@@ -13,32 +13,8 @@ namespace Antd2.cmds {
         private const string showArg = "show";
         private const string stpArg = "stp";
 
-        //public static NetBridge[] Get() {
-        //    var interfaces = Network.Get().Where(_ => _.Type == NetworkAdapterType.Bridge).ToArray();
-        //    var brs = new NetBridge[interfaces.Length];
-        //    for (var i = 0; i < brs.Length; i++) {
-        //        brs[i] = new NetBridge() {
-        //            Id = interfaces[i].Id,
-        //            Lower = interfaces[i].LowerInterfaces
-        //        };
-        //    }
-        //    return brs;
-        //}
-
-        public static bool Apply() {
-            //var current = Application.CurrentConfiguration.Network.Bridges;
-            //var running = Application.RunningConfiguration.Network.Bridges;
-            //for (var i = 0; i < current.Length; i++) {
-            //    var br = current[i];
-            //    var run = running.FirstOrDefault(_ => _.Id == br.Id)?.ToString() ?? string.Empty;
-            //    if (CommonString.AreEquals(run, br.ToString()) == false) {
-            //        Create(br.Id);
-            //        for (var l = 0; l < br.Lower.Length; l++) {
-            //            AddNetworkAdapter(br.Id, br.Lower[l]);
-            //        }
-            //    }
-            //}
-            return true;
+        public static NetBridge[] Get() {
+            throw new System.NotImplementedException();
         }
 
         public static bool Create(string bridge) {

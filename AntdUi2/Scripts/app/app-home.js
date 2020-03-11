@@ -76,6 +76,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state("dns_client", {
             cache: false, url: "^/dns/client", views: { 'content': { templateUrl: "pg/dns_client.min.html?v=" + new Date() } }
         })
+        .state("interfaces_virtual", {
+            cache: false, url: "^/interfaces/virtual", views: { 'content': { templateUrl: "pg/interfaces_virtual.min.html?v=" + new Date() } }
+        })
         .state("interfaces", {
             cache: false, url: "^/interfaces", views: { 'content': { templateUrl: "pg/interfaces.min.html?v=" + new Date() } }
         })
@@ -209,6 +212,7 @@ function $Sidebar() {
             { Lbl: 'Services', Ico: 'fa-square fg-success', Dst: 'services' },
 
             //{ Lbl: 'DNS Client', Ico: 'fa-square fg-warning', Dst: 'dns_client' },
+            { Lbl: 'Virtual IF', Ico: 'fa-square fg-warning', Dst: 'interfaces_virtual' },
             { Lbl: 'Interfaces', Ico: 'fa-square fg-warning', Dst: 'interfaces' },
             { Lbl: 'Routing Tables', Ico: 'fa-square fg-warning', Dst: 'routing_tables' },
             { Lbl: 'Routing', Ico: 'fa-square fg-warning', Dst: 'routing' },

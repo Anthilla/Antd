@@ -49,14 +49,32 @@ namespace Antd2.Configuration {
         public string Domain { get; set; } = string.Empty;
     }
 
-    public class NetTun {
+    public abstract class NetInterfaceParameter {
+
+        public string[] PreUp { get; set; } = Array.Empty<string>();
+        public string[] PostUp { get; set; } = Array.Empty<string>();
+        public string[] PreDown { get; set; } = Array.Empty<string>();
+        public string[] PostDown { get; set; } = Array.Empty<string>();
+
+
+        [TomlIgnoreAttribute]
+        public string PreUpTxt { get; set; } = string.Empty;
+        [TomlIgnoreAttribute]
+        public string PostUpTxt { get; set; } = string.Empty;
+        [TomlIgnoreAttribute]
+        public string PreDownTxt { get; set; } = string.Empty;
+        [TomlIgnoreAttribute]
+        public string PostDownTxt { get; set; } = string.Empty;
+    }
+
+    public class NetTun : NetInterfaceParameter {
         /// <summary>
         /// Nome dell'interfaccia virtuale
         /// </summary>
         public string Name { get; set; }
     }
 
-    public class NetTap {
+    public class NetTap : NetInterfaceParameter {
         /// <summary>
         /// Nome dell'interfaccia virtuale
         /// </summary>
@@ -66,7 +84,7 @@ namespace Antd2.Configuration {
     /// <summary>
     /// Configurazione di interfacce Bridge
     /// </summary>
-    public class NetBridge {
+    public class NetBridge : NetInterfaceParameter {
         /// <summary>
         /// Nome del bridge
         /// </summary>
@@ -76,12 +94,15 @@ namespace Antd2.Configuration {
         /// Interfacce collegate
         /// </summary>
         public string[] Lower { get; set; } = new string[0];
+
+        [TomlIgnoreAttribute]
+        public string LowerTxt { get; set; } = string.Empty;
     }
 
     /// <summary>
     /// Configurazione di interfacce Bond
     /// </summary>
-    public class NetBond {
+    public class NetBond : NetInterfaceParameter {
         /// <summary>
         /// Nome del bond
         /// </summary>
@@ -91,12 +112,15 @@ namespace Antd2.Configuration {
         /// Interfacce collegate
         /// </summary>
         public string[] Lower { get; set; } = new string[0];
+
+        [TomlIgnoreAttribute]
+        public string LowerTxt { get; set; } = string.Empty;
     }
 
     /// <summary>
     /// Configurazione dell'interfaccia di rete
     /// </summary>
-    public class NetInterface {
+    public class NetInterface : NetInterfaceParameter {
 
         /// <summary>
         /// Indica se l'interfaccia deve essere attivata all'avvio
@@ -115,30 +139,7 @@ namespace Antd2.Configuration {
         /// </summary>
         public string Address { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Classe della rete di appartenenza
-        /// </summary>
-        //public string Netmask { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Indirizzo IP primario
-        ///     deve appartenere alla rete definita da NetworkClass
-        /// </summary>
-        public string[] PreUp { get; set; } = Array.Empty<string>();
-        public string[] PostUp { get; set; } = Array.Empty<string>();
-        public string[] PreDown { get; set; } = Array.Empty<string>();
-        public string[] PostDown { get; set; } = Array.Empty<string>();
-
         public bool AutoBool { get; set; }
-
-        [TomlIgnoreAttribute]
-        public string PreUpTxt { get; set; } = string.Empty;
-        [TomlIgnoreAttribute]
-        public string PostUpTxt { get; set; } = string.Empty;
-        [TomlIgnoreAttribute]
-        public string PreDownTxt { get; set; } = string.Empty;
-        [TomlIgnoreAttribute]
-        public string PostDownTxt { get; set; } = string.Empty;
 
     }
 

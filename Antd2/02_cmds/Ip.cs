@@ -1,4 +1,5 @@
 ﻿using antd.core;
+using Antd2.Configuration;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -7,8 +8,9 @@ namespace Antd2.cmds {
     public class Ip {
 
         private const string ipCommand = "ip";
-        private const string ifenslaveFileLocation = "/sbin/ifenslave";
-        private const string processName = "haproxy";
+        //private const string ifenslaveFileLocation = "/sbin/ifenslave";
+        //private const string processName = "haproxy";
+        private const string tuntapArg = "tuntap";
 
 
         public static List<string> GetIpAddressList() {
@@ -179,6 +181,21 @@ namespace Antd2.cmds {
             //todo map to model
             var args = CommonString.Append("route show ", networkAdapter);
             return Bash.Execute($"{ipCommand} {args}");
+        }
+
+
+        public static bool CreateTun(NetTun netInterface) {
+            var args = CommonString.Append(tuntapArg, " add dev ", netInterface.Name, " mode tun");
+            Bash.Do($"{ipCommand} {args}");
+            Ip.EnableNetworkAdapter(netInterface.Name);
+            return true;
+        }
+
+        public static bool CreateTap(NetTap netInterface) {
+            var args = CommonString.Append(tuntapArg, " add dev ", netInterface.Name, " mode tap");
+            Bash.Do($"{ipCommand} {args}");
+            Ip.EnableNetworkAdapter(netInterface.Name);
+            return true;
         }
     }
 }

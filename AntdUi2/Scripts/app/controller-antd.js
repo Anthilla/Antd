@@ -397,6 +397,144 @@ function $Routing($H, $N) {
     };
 }
 
+app.controller("BridgeController", ["HttpService", "notificationService", $Bridge]);
+
+function $Bridge($H, $N) {
+
+    var vm = this;
+
+    vm.Bridges = [];
+
+    vm.NewBridge = {
+        Name: '',
+        LowerTxt: ''
+    };
+
+    vm.load = function () {
+        $H.GET("/network/config/bridge").then(function (r) {
+            vm.Bridges = r.data;
+        });
+    };
+    vm.load();
+
+    vm.save = function () {
+        $H.POST("/network/config/bridge/save", jsonParam(vm.Bridges)).then(function () {
+            vm.load();
+            $N.success('Data saved');
+        });
+    };
+
+    vm.apply = function () {
+        $H.POST("/network/config/bridge/apply").then(function () {
+            vm.load();
+            $N.success('Data applied');
+        });
+    };
+}
+
+app.controller("BondController", ["HttpService", "notificationService", $Bond]);
+
+function $Bond($H, $N) {
+
+    var vm = this;
+
+    vm.Bonds = [];
+
+    vm.NewBond = {
+        Name: '',
+        LowerTxt: ''
+    };
+
+    vm.load = function () {
+        $H.GET("/network/config/bond").then(function (r) {
+            vm.Bonds = r.data;
+        });
+    };
+    vm.load();
+
+    vm.save = function () {
+        $H.POST("/network/config/bond/save", jsonParam(vm.Bonds)).then(function () {
+            vm.load();
+            $N.success('Data saved');
+        });
+    };
+
+    vm.apply = function () {
+        $H.POST("/network/config/bond/apply").then(function () {
+            vm.load();
+            $N.success('Data applied');
+        });
+    };
+}
+
+app.controller("TunController", ["HttpService", "notificationService", $Tun]);
+
+function $Tun($H, $N) {
+
+    var vm = this;
+
+    vm.Tuns = [];
+
+    vm.NewTun = {
+        Name: ''
+    };
+
+    vm.load = function () {
+        $H.GET("/network/config/tun").then(function (r) {
+            vm.Tuns = r.data;
+        });
+    };
+    vm.load();
+
+    vm.save = function () {
+        $H.POST("/network/config/tun/save", jsonParam(vm.Tuns)).then(function () {
+            vm.load();
+            $N.success('Data saved');
+        });
+    };
+
+    vm.apply = function () {
+        $H.POST("/network/config/tun/apply").then(function () {
+            vm.load();
+            $N.success('Data applied');
+        });
+    };
+}
+
+app.controller("TapController", ["HttpService", "notificationService", $Tap]);
+
+function $Tap($H, $N) {
+
+    var vm = this;
+
+    vm.Taps = [];
+
+    vm.NewTap = {
+        Name: ''
+    };
+
+    vm.load = function () {
+        $H.GET("/network/config/tap").then(function (r) {
+            vm.Taps = r.data;
+        });
+    };
+    vm.load();
+
+    vm.save = function () {
+        $H.POST("/network/config/tap/save", jsonParam(vm.Taps)).then(function () {
+            vm.load();
+            $N.success('Data saved');
+        });
+    };
+
+    vm.apply = function () {
+        $H.POST("/network/config/tap/apply").then(function () {
+            vm.load();
+            $N.success('Data applied');
+        });
+    };
+}
+
 app.controller("InterfacesController", ["HttpService", "notificationService", $Interfaces]);
 
 function $Interfaces($H, $N) {

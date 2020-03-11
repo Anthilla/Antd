@@ -350,7 +350,58 @@ namespace Antd2 {
 
         private static void SetNetwork() {
             if (Application.IsUnix == false) { return; }
+            SetNetworkDnsClient();
+
+            SetNetworkTun();
+            SetNetworkTap();
+            SetNetworkBond();
+            SetNetworkBridge();
+
+            SetNetworkInterfaces();
+
+            SetNetworkRouting();
+            Console.WriteLine("[net] ready");
+        }
+
+        private static void SetNetworkDnsClient() {
             Dns.SetResolv(ConfigManager.Config.Saved.Network.Dns);
+        }
+        private static void SetNetworkTun() {
+            foreach (var i in ConfigManager.Config.Saved.Network.Tuns)
+                Ip.CreateTun(i);
+        }
+        private static void SetNetworkTap() {
+            foreach (var i in ConfigManager.Config.Saved.Network.Taps)
+                Ip.CreateTap(i);
+        }
+        private static void SetNetworkBond() {
+            foreach (var i in ConfigManager.Config.Saved.Network.Bonds) {
+                foreach (var na in i.Lower)
+                    Ip.EnableNetworkAdapter(na);
+                Bond.Create(i.Name);
+                foreach (var na in i.Lower) {
+                    Bond.AddNetworkAdapter(i.Name, na);
+                    Ip.EnableNetworkAdapter(na);
+                }
+                Ip.EnableNetworkAdapter(i.Name);
+            }
+        }
+        private static void SetNetworkBridge() {
+            foreach (var i in ConfigManager.Config.Saved.Network.Bridges) {
+                foreach (var na in i.Lower)
+                    Ip.EnableNetworkAdapter(na);
+                Console.WriteLine($"[net] brctl add {i.Name}");
+                Brctl.Create(i.Name);
+                foreach (var na in i.Lower) {
+                    Console.WriteLine($"[net] brctl add {i.Name} - {na}");
+                    Brctl.AddNetworkAdapter(i.Name, na);
+                    Ip.EnableNetworkAdapter(na);
+                }
+                Ip.EnableNetworkAdapter(i.Name);
+            }
+        }
+
+        private static void SetNetworkInterfaces() {
             foreach (var i in ConfigManager.Config.Saved.Network.Interfaces) {
                 Console.WriteLine($"[net] configuring {i.Iface} {i.Address}");
                 if (i.Auto == "up" || i.Auto == "on") {
@@ -384,12 +435,15 @@ namespace Antd2 {
                     }
                 }
             }
+        }
+
+        private static void SetNetworkRouting() {
             foreach (var r in ConfigManager.Config.Saved.Network.Routing) {
                 Console.WriteLine($"[net] routing {r.Gateway} {r.Destination} {r.Device}");
                 Ip.AddRoute(r.Device, r.Gateway, r.Destination);
             }
-            Console.WriteLine("[net] ready");
         }
+
 
         private static void SetRoutingRules() {
             if (Application.IsUnix == false) { return; }

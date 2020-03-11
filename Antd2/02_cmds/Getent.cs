@@ -13,7 +13,7 @@ namespace Antd2.cmds {
         private const string usermodCommand = "usermod";
         private const string groupaddCommand = "groupadd";
         private const string groupmodCommand = "groupmod";
-        private const string shadowArg = "shadow";
+        //private const string shadowArg = "shadow";
         private const string passwdArg = "passwd";
         private const string groupArg = "group";
         private const string mkpasswdCommand = "mkpasswd";

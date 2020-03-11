@@ -118,5 +118,11 @@
     "inputFiles": [
       "Views/pages/finder.html"
     ]
+  },
+  {
+    "outputFileName": "Views/pages/interfaces_virtual.min.html",
+    "inputFiles": [
+      "Views/pages/interfaces_virtual.html"
+    ]
   }
 ]
