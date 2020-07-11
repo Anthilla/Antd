@@ -36,8 +36,8 @@ namespace Antd2 {
 
             OsReadAndWrite();
             RemoveLimits();
-            MountWorkingDirectories();
             CreateWorkingDirectories();
+            MountWorkingDirectories();
 
             Console.WriteLine("[conf] load antd conf");
             ConfigManager.Config.Reload();
