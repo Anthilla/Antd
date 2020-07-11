@@ -2,6 +2,8 @@
 
     public class MachineConfiguration {
 
+        public AntdParameter Antd { get; set; } = new AntdParameter();
+
         /// <summary>
         /// Configurazione da applicare in fase di avvio di antd
         ///     - parametri di sistema (sysctl)
