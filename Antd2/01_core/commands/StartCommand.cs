@@ -1,8 +1,6 @@
 ﻿using Antd2.cmds;
 using Antd2.Configuration;
 using Antd2.Jobs;
-using Antd2.Web;
-using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -83,8 +81,6 @@ namespace Antd2 {
             LaunchJobs();
 
             StartWebdavInstances();
-
-            StartWebserver();
 
             Console.WriteLine($"antd started in: {STOPWATCH.ElapsedMilliseconds} ms");
         }
@@ -546,19 +542,6 @@ namespace Antd2 {
                     wd.Start();
                 });
             }
-        }
-
-        private static void StartWebserver() {
-            System.Threading.Tasks.Task.Factory.StartNew(() => {
-                var url = $"http://{ConfigManager.Config.Saved.App.Address}:{ConfigManager.Config.Saved.App.HttpPort}";
-                var host = new WebHostBuilder()
-                  .UseContentRoot(Directory.GetCurrentDirectory())
-                  .UseKestrel()
-                  .UseStartup<Startup>()
-                  .UseUrls(url)
-                  .Build();
-                host.Run();
-            });
         }
     }
 }

@@ -54,8 +54,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
-    <PackageReference Include="Nancy" Version="2.0.0" />
-    <PackageReference Include="Nancy.Owin" Version="2.0.0" />
     <PackageReference Include="Nett" Version="0.13.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Octodiff" Version="1.2.1" />
