@@ -3,16 +3,24 @@
     /// Raccoglie alcuni valori che devono essere applicati in fase di avvio di antd
     /// </summary>
     public class BootParameters {
+
+
+        public bool UseSysctlFile { get; set; } = true;
+
+        public string SysctlFile { get; set; } = string.Empty;
+
         /// <summary>
         /// Parametri di sistema (sysctl)
         /// </summary>
         public string[] Sysctl { get; set; } = new string[0];
+
 
         /// <summary>
         /// Moduli
         /// </summary>
         public string[] ActiveModules { get; set; } = new string[0];
         public string[] InactiveModules { get; set; } = new string[0];
+
 
         /// <summary>
         /// Servizi di systemctl

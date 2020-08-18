@@ -270,9 +270,10 @@ namespace Antd2 {
 
         private static void SetParameters() {
             if (Application.IsUnix == false) { return; }
-            foreach (var sysctl in ConfigManager.Config.Saved.Boot.Sysctl) {
-                Sysctl.Set(sysctl);
-            }
+            Sysctl.Apply(ConfigManager.Config.Saved.Boot);
+            //foreach (var sysctl in ConfigManager.Config.Saved.Boot.Sysctl) {
+            //    Sysctl.Set(sysctl);
+            //}
         }
 
         private static void SetServices() {
