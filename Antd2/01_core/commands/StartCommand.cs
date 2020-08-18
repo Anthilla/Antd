@@ -456,9 +456,23 @@ namespace Antd2 {
 
         private static void ApplySetupCommands() {
             if (Application.IsUnix == false) { return; }
-            foreach (var command in ConfigManager.Config.Saved.Commands.Run) {
-                Console.WriteLine($"[cmd] {command}");
-                Bash.Do(command);
+            if (ConfigManager.Config.Saved.Commands.UseCommandFile) {
+                if (File.Exists(ConfigManager.Config.Saved.Commands.CommandFilePath)) {
+                    var lines = File.ReadAllLines(ConfigManager.Config.Saved.Commands.CommandFilePath);
+                    foreach (var line in lines) {
+                        Console.WriteLine($"[cmd] {line}");
+                        Bash.Do(line);
+                    }
+                }
+                else {
+                    Console.WriteLine($"[cmd] error: using cmd file ['{ConfigManager.Config.Saved.Commands.CommandFilePath}' not found]");
+                }
+            }
+            else {
+                foreach (var command in ConfigManager.Config.Saved.Commands.Run) {
+                    Console.WriteLine($"[cmd] {command}");
+                    Bash.Do(command);
+                }
             }
             Console.WriteLine("[cmd] ready");
         }

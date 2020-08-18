@@ -6,6 +6,11 @@ namespace Antd2.Configuration {
     /// </summary>
     public class SetupCommandParameters {
         public string[] Run { get; set; } = Array.Empty<string>();
+
+        public bool UseCommandFile { get; set; } = false;
+
+        public string CommandFilePath { get; set; } = string.Empty;
+
     }
 
     public class ScheduledCommand {
