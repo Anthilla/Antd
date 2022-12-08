@@ -37,7 +37,7 @@
     <PackageReference Include="Nancy.Authentication.Forms" Version="2.0.0" />
     <PackageReference Include="Nancy.Owin" Version="2.0.0" />
     <PackageReference Include="Nett" Version="0.13.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="RestSharp" Version="106.6.10" />
   </ItemGroup>
 
